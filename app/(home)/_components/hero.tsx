@@ -17,10 +17,10 @@ const Hero = async () => {
           </div>
           <Link
             href="/"
-            className="p-4 py-2 inline-flex bg-primary text-primary-foreground text-6xl items-center gap-6"
+            className="p-4 py-2 inline-flex bg-primary text-primary-foreground text-2xl items-center gap-6"
           >
             Mua Ngay
-            <MoveRightIcon className="size-16" />
+            <MoveRightIcon className="size-8" />
           </Link>
         </div>
       </div>
