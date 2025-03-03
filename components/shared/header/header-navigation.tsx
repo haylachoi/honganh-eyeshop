@@ -107,7 +107,7 @@ export const NavigationMenu = async ({ className }: { className?: string }) => {
               {mainlink.title}
               <ChevronDown className="size-6 inline-block max-lg:group-data-[accordion-active='true']:rotate-180 transition-all duration-300 lg:group-hover:rotate-180" />
             </AccordionTrigger>
-            <AccordionContent className="lg:hidden lg:group-hover:block lg:top-full lg:absolute lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm">
+            <AccordionContent className="lg:hidden lg:group-hover:block lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm">
               {/* fake gap */}
               <div className="hidden lg:block w-full h-1 bg-foreground" />
               <ul className="lg:container lg:mx-auto flex flex-col gap-3 bg-background py-2 lg:flex-row justify-between">
@@ -125,7 +125,7 @@ export const NavigationMenu = async ({ className }: { className?: string }) => {
                           {content.links.map((link) => (
                             <li
                               key={link.title}
-                              className="hover:border-b border-b-foreground"
+                              className="border-b hover:border-b-foreground border-b-transparent"
                             >
                               <Link
                                 className="inline-block w-full"

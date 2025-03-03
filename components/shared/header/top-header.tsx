@@ -8,17 +8,19 @@ const TopHeader = ({ className }: { className?: string }) => {
     <div className={cn("h-[48px] w-full lg:relative", className)}>
       <div className="container h-full flex items-center justify-between gap-4">
         <Logo />
-        <div className="max-lg:h-0 h-full max-lg:overflow-hidden max-lg:has-[>#header-navigation-trigger:checked]:grid max-lg:fixed left-0 top-0 max-lg:bg-background max-lg:w-full max-lg:has-[>#header-navigation-trigger:checked]:h-dvh grid-rows-[auto_auto_1fr] transition-all">
-          <div className="w-full h-1 bg-foreground lg:hidden" />
+        <div className="max-lg:h-0 h-full max-lg:overflow-hidden max-lg:has-[>#header-navigation-trigger:checked]:grid max-lg:fixed z-50 left-0 top-0 max-lg:w-full max-lg:has-[>#header-navigation-trigger:checked]:h-dvh grid-rows-[auto_1fr] transition-all">
+          {/* <div className="w-full h-1 bg-foreground lg:hidden" /> */}
           <input
             type="checkbox"
             id="header-navigation-trigger"
             className="hidden"
           />
-          <NavigationMenu className="max-lg:container h-full max-lg:overflow-y-auto overscroll-contain" />
+          <div className="max-lg:bg-background">
+            <NavigationMenu className="max-lg:container h-full max-lg:overflow-y-auto overscroll-contain" />
+          </div>
           <label
             htmlFor="header-navigation-trigger"
-            className="lg:hidden bg-black/70"
+            className="lg:hidden bg-black/70 cursor-pointer"
           />
         </div>
         <ActionButtons />

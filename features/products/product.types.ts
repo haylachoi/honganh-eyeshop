@@ -1,5 +1,5 @@
-import { Id } from "..";
-import { CategoryId } from "../categories";
+import { Id } from "../../types";
+import { CategoryId } from "../categories/category.types";
 
 export type ProductId = Id;
 export type ProductPreview = {

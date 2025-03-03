@@ -1,4 +1,4 @@
-import { CategoryPreview } from "@/types/categories";
+import { CategoryPreview } from "@/features/categories/category.types";
 
 export const getCategoryPreviews = async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
