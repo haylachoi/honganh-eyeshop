@@ -1,10 +1,16 @@
 import React from "react";
 import Hero from "./_components/hero";
+import Trending from "./_components/trending";
+import Featured from "./_components/featured";
+import NewArrival from "./_components/new-arrival";
 
 const HomePage = () => {
   return (
-    <div className="">
+    <div className="space-y-12">
       <Hero />
+      <Trending />
+      <Featured />
+      <NewArrival />
     </div>
   );
 };

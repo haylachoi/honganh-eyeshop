@@ -1,0 +1,24 @@
+import { z } from "zod";
+import { IdSchema, MongoIdSchema } from "@/lib/validator";
+
+export const CategoryInputSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  description: z.string().optional(),
+  attributes: z.array(
+    z.object({ name: z.string().min(1), display: z.string().min(1) }),
+  ),
+});
+
+export const CategoryTypeSchema = CategoryInputSchema.extend({
+  _id: MongoIdSchema,
+})
+  .strip()
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+  }));
+
+export const CategoryUpdateSchema = CategoryInputSchema.extend({
+  id: IdSchema,
+});

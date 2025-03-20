@@ -93,7 +93,7 @@ const links: LinkType[] = [
     ],
   },
 ];
-export const NavigationMenu = async ({ className }: { className?: string }) => {
+export const NavigationMenu = ({ className }: { className?: string }) => {
   return (
     <nav className={cn("w-full", className)}>
       <Accordion className="w-full lg:flex gap-4">

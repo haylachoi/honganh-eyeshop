@@ -10,7 +10,7 @@ export default function Layout({
     <div>
       <Header />
       {children}
-      <Footer />
+      <Footer className="mt-12" />
     </div>
   );
 }

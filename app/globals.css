@@ -7,6 +7,7 @@
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-link: oklch(60% 0.2 240);
 }
 
 :root {
@@ -23,7 +24,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.87 0 0);
@@ -145,6 +146,106 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .blog_post,
+  .tiptap {
+    /* Link styles */
+    a {
+      @apply text-blue-600;
+      cursor: pointer;
+
+      &:hover {
+        @apply underline;
+      }
+    }
+
+    :is(h1, h2, h3, h4, h5, h6) {
+      line-height: 1.1;
+      margin-top: 1.5rem;
+      text-wrap: pretty;
+    }
+
+    :is(h1, h2, h3, h4, h5, h6):first-child {
+      margin-top: 0;
+    }
+
+    h1,
+    h2 {
+      margin-top: 2.5rem;
+      margin-bottom: 1hrem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    h4,
+    h5,
+    h6 {
+      font-size: 1rem;
+    }
+
+    /* list style */
+    ul,
+    ol {
+      padding: 0 1rem;
+      margin: 1.25rem 1rem 1.25rem 0.4rem;
+    }
+    ul li {
+      list-style-type: disc;
+
+      p {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+      }
+    }
+
+    ol li {
+      list-style-type: decimal;
+
+      p {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+      }
+    }
+    /* Task list specific styles */
+    ul[data-type="taskList"] {
+      list-style: none;
+      margin-left: 0;
+      padding: 0;
+
+      li {
+        align-items: flex-start;
+        display: flex;
+
+        > label {
+          flex: 0 0 auto;
+          margin-right: 0.5rem;
+          user-select: none;
+        }
+
+        > div {
+          flex: 1 1 auto;
+        }
+      }
+
+      input[type="checkbox"] {
+        cursor: pointer;
+      }
+
+      ul[data-type="taskList"] {
+        margin: 0;
+      }
+    }
   }
 }
 

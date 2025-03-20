@@ -7,13 +7,14 @@ import {
   PHONE_LINK,
 } from "@/constants";
 import { getPolicyPreviews } from "@/features/others/other.services";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 
-const Footer = async () => {
+const Footer = async ({ className }: Readonly<{ className?: string }>) => {
   const policyPreviews = await getPolicyPreviews();
   return (
-    <footer className="bg-foreground text-background py-12">
+    <footer className={cn("bg-foreground text-background py-12", className)}>
       <div className="container grid lg:grid-cols-2 gap-6">
         <div>
           <FooterGroupTitle title="Thông tin liên hệ" />
