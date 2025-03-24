@@ -1,11 +1,17 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Control, FieldValues, Path } from "react-hook-form";
+import {
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 interface FormTextInputProps<T extends FieldValues> {
   control: Control<T>;
-  name: keyof T;
-  label: string;
+  name: Path<T>;
+  label?: string;
   placeholder?: string;
 }
 
@@ -16,15 +22,22 @@ const FormTextInput = <T extends FieldValues>({
   placeholder,
 }: FormTextInputProps<T>) => {
   return (
-    <Controller
+    <FormField
       control={control}
-      name={name as Path<T>}
+      name={name}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
+        <FormItem className="">
+          {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input {...field} placeholder={placeholder} />
+            <Input
+              {...field}
+              placeholder={placeholder}
+              onFocus={(e) => {
+                if (e.target.value == "0") e.target.select();
+              }}
+            />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

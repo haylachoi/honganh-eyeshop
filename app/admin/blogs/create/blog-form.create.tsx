@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -27,6 +27,9 @@ import { useDebounce } from "use-debounce";
 import slugify from "slugify";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import Image from "next/image";
+import { TrashIcon } from "lucide-react";
+import { compressImage } from "@/lib/utils";
 
 const defaultValues: BlogInputType = {
   title: "",
@@ -124,6 +127,7 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
             </FormItem>
           )}
         />
+        <ImageUploader control={control} />
 
         <FormField
           control={control}
@@ -173,3 +177,81 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
 };
 
 export default BlogCreateForm;
+
+interface ImageUploaderProps {
+  control: Control<BlogInputType>;
+}
+
+const ImageUploader: React.FC<ImageUploaderProps> = ({ control }) => {
+  const [previewImage, setImagePreview] = React.useState<string | undefined>();
+  const [, setFile] = React.useState<File | undefined>();
+
+  React.useEffect(() => {
+    return () => {
+      if (previewImage) URL.revokeObjectURL(previewImage);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <FormField
+      control={control}
+      name="wallImage"
+      render={({ field: { ref, name, onBlur, onChange } }) => (
+        <FormItem className="mt-4">
+          <FormLabel>Ảnh</FormLabel>
+          {previewImage && (
+            <div className="relative size-[150px]">
+              <Image
+                width={150}
+                height={150}
+                alt="preview"
+                className="size-full object-cover"
+                src={previewImage}
+              />
+              <button
+                type="button"
+                className="absolute top-1 right-1 z-10 cursor-pointer size-8 grid place-content-center text-sm bg-destructive text-destructive-foreground opacity-90 rounded-sm"
+                onClick={() => {
+                  URL.revokeObjectURL(previewImage);
+                  setImagePreview(undefined);
+                  setFile(undefined);
+                  onChange(undefined);
+                }}
+              >
+                <TrashIcon className="h-full w-full" />
+              </button>
+            </div>
+          )}
+          <FormControl>
+            <label className="inline-block w-max px-4 py-2 bg-secondary rounded-md cursor-pointer shadow-sm">
+              Up ảnh
+              <Input
+                className="hidden"
+                accept="image/*"
+                type="file"
+                name={name}
+                ref={ref}
+                onBlur={onBlur}
+                onChange={async (e) => {
+                  if (!e.target.files) return;
+
+                  const newFile = e.target.files[0];
+                  const compressedFile = await compressImage(newFile, 0.7, 800);
+
+                  const url = URL.createObjectURL(compressedFile);
+
+                  setImagePreview(url);
+                  setFile(compressedFile);
+                  onChange(compressedFile);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};

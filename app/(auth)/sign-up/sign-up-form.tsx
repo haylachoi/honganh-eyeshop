@@ -44,7 +44,6 @@ export default function SignUpForm() {
   const { control, handleSubmit } = form;
 
   const onSubmit = async (data: SignUpInputType) => {
-    console.log(data);
     execute(data);
   };
 

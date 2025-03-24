@@ -1,7 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import { cookies } from "next/headers";
 import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
@@ -134,8 +133,8 @@ export async function compressImage(
 
 export const getLink = {
   product: {
-    update({ productSlug }: { productSlug: string }) {
-      return `${ADMIN_ENDPOINTS.PRODUCTS}/update/${productSlug}`;
+    update({ id }: { id: string }) {
+      return `${ADMIN_ENDPOINTS.PRODUCTS}/update/${id}`;
     },
     home({
       categorySlug,
@@ -148,16 +147,16 @@ export const getLink = {
     },
   },
   blog: {
-    update({ blogSlug }: { blogSlug: string }) {
-      return `${ADMIN_ENDPOINTS.BLOGS}/update/${blogSlug}`;
+    update({ id }: { id: string }) {
+      return `${ADMIN_ENDPOINTS.BLOGS}/update/${id}`;
     },
     home({ blogSlug }: { blogSlug: string }) {
       return `${ENDPOINTS.BLOGS}/${blogSlug}`;
     },
   },
   category: {
-    update({ categorySlug }: { categorySlug: string }) {
-      return `${ADMIN_ENDPOINTS.CATEGORIES}/update/${categorySlug}`;
+    update({ id }: { id: string }) {
+      return `${ADMIN_ENDPOINTS.CATEGORIES}/update/${id}`;
     },
     home({ categorySlug }: { categorySlug: string }) {
       return `${ENDPOINTS.CATEGORIES}/${categorySlug}`;

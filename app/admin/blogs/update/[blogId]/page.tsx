@@ -1,12 +1,12 @@
 import React from "react";
 import BlogUpdateForm from "./blog-form.update";
-import { getBlogBySlug } from "@/features/blogs/blog.query";
+import { getBlogById } from "@/features/blogs/blog.query";
 
-type params = Promise<{ blogSlug: string }>;
+type params = Promise<{ blogId: string }>;
 
 const BlogUpdatePage = async ({ params }: { params: params }) => {
-  const { blogSlug } = await params;
-  const result = await getBlogBySlug(blogSlug);
+  const { blogId } = await params;
+  const result = await getBlogById(blogId);
 
   if (!result.success) {
     return <div>Blog không tồn tại</div>;

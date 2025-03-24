@@ -11,6 +11,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { Button } from "../ui/button";
 
 type DialogContextType = {
   showDialog: (options: {
@@ -69,12 +70,13 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={closeDialog}>Hủy</AlertDialogCancel>
             <AlertDialogAction
+              asChild
               onClick={() => {
                 dialogContent.onConfirm?.();
                 closeDialog();
               }}
             >
-              Đồng ý
+              <Button variant="destructive">Đồng ý</Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,9 +1,11 @@
 import { ProductType } from "@/features/products/product.types";
 import React from "react";
 import ImageSection from "./image-section";
-import VariantSection from "./variant-section";
+import VariantSelector from "./variant-section";
+import BuyButton from "./buy-btn";
 
 type topContextProps = {
+  product: ProductType;
   currentImage: string;
   setCurrentImage: React.Dispatch<React.SetStateAction<string>>;
   currentVariant: ProductType["variants"][0] | undefined;
@@ -13,6 +15,8 @@ type topContextProps = {
 };
 
 export const TopContext = React.createContext<topContextProps>({
+  // todo: create empty product
+  product: {} as ProductType,
   currentImage: "",
   setCurrentImage: () => {},
   currentVariant: undefined,
@@ -25,33 +29,29 @@ const TopSection = ({ product }: { product: ProductType }) => {
   );
 
   const [currentVariant, setCurrentVariant] = React.useState<
-    ProductType["variants"][0]
+    ProductType["variants"][0] | undefined
   >(product.variants?.[0]);
   return (
     <TopContext.Provider
       value={{
+        product,
         currentImage,
         setCurrentImage,
         currentVariant,
         setCurrentVariant,
       }}
     >
-      <div className="grid grid-cols-2 gap-2">
-        <ImageSection
-          product={product}
-          // currentImage={currentImage}
-          // setCurrentImage={setCurrentImage}
-        />
-        <div>
+      <div className="flex flex-col lg:flex-row [&>*]:flex-1 gap-4">
+        <ImageSection product={product} />
+        <div className="flex flex-col gap-4 justify-between">
           <h1 className="text-4xl text-primary font-bold capitalize mb-5">
             {product.name}
           </h1>
 
-          <VariantSection
-            variants={product.variants}
-            // currentImage={currentImage}
-            // setCurrentImage={setCurrentImage}
-          />
+          <div className="space-y-4">
+            <VariantSelector variants={product.variants} />
+            <BuyButton />
+          </div>
         </div>
       </div>
     </TopContext.Provider>

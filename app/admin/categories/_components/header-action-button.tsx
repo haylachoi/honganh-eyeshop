@@ -29,7 +29,13 @@ export const HeaderButton = ({ table }: { table: Table<CategoryType> }) => {
   return (
     <ThreeDotsMenuForHeader canOpen={!selectedIds.length}>
       <ThreeDotsMenuButtonItem
-        action={() => showDialog({ onConfirm: () => execute(selectedIds) })}
+        action={() =>
+          showDialog({
+            description:
+              "Xóa danh mục cũng sẽ xóa các hàng hóa thuộc danh mục này. Có muốn xóa?",
+            onConfirm: () => execute(selectedIds),
+          })
+        }
         isPending={isPending}
       >
         Xóa

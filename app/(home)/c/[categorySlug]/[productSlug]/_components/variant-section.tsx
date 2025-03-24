@@ -18,18 +18,13 @@ const getGroupedAttributes = (
   );
 };
 
-function VariantSection({
+function VariantSelector({
   variants,
-  // currentImage,
-  // setCurrentImage,
 }: {
   variants: Pick<ProductType, "variants">["variants"];
-  // currentImage: string;
-  // setCurrentImage: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const { currentImage, setCurrentImage, setCurrentVariant } =
     React.use(TopContext);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const groupedAttributes = React.useMemo(
     () => getGroupedAttributes(variants),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,38 +95,40 @@ function VariantSection({
   const formatter = currencyFormatter;
   return (
     <div className="space-y-4">
-      {Object.entries(groupedAttributes).map(([name, values]) => (
-        <div key={name}>
-          <p className="font-semibold mb-2 capitalize">{name}</p>
-          <div className="flex gap-2">
-            {values.map((value) => {
-              const isDisabled =
-                !getValidAttributes(name)[name]?.includes(value);
-              const isSelected = selectedAttrs[name] === value;
-              return (
-                <button
-                  key={value}
-                  onClick={() => !isDisabled && handleSelect(name, value)}
-                  className={cn(
-                    "px-4 py-2 border cursor-pointer  capitalize",
-                    isSelected && "bg-primary/80 text-primary-foreground",
-                    isDisabled && "opacity-50 cursor-not-allowed",
-                  )}
-                  disabled={isDisabled}
-                >
-                  {value}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ))}
+      <ul className="max-h-[300px] overflow-y-auto">
+        {Object.entries(groupedAttributes).map(([name, values]) => (
+          <li key={name}>
+            <p className="font-semibold mb-2 capitalize">{name}</p>
+            <div className="flex gap-2">
+              {values.map((value) => {
+                const isDisabled =
+                  !getValidAttributes(name)[name]?.includes(value);
+                const isSelected = selectedAttrs[name] === value;
+                return (
+                  <button
+                    key={value}
+                    onClick={() => !isDisabled && handleSelect(name, value)}
+                    className={cn(
+                      "px-4 py-2 border cursor-pointer  capitalize",
+                      isSelected && "bg-primary/80 text-primary-foreground",
+                      isDisabled && "opacity-50 cursor-not-allowed",
+                    )}
+                    disabled={isDisabled}
+                  >
+                    {value}
+                  </button>
+                );
+              })}
+            </div>
+          </li>
+        ))}
+      </ul>
 
-      <div className="h-8">
+      <div className="">
         {currentVariant ? (
-          <p className="flex gap-2 items-baseline text-2xl">
+          <div className="flex gap-2 items-baseline text-xl">
             <span>Giá: </span>
-            <span className="text-destructive text-6xl">
+            <span className="text-destructive text-3xl">
               {formatter.format(currentVariant.price)}
             </span>
             {currentVariant.price !== currentVariant.originPrice && (
@@ -139,7 +136,8 @@ function VariantSection({
                 {formatter.format(currentVariant.originPrice)}
               </span>
             )}
-          </p>
+            <span>Còn:&nbsp; {currentVariant.countInStock} sản phẩm</span>
+          </div>
         ) : (
           <p className="text-red-500 mt-4">Hãy chọn thêm</p>
         )}
@@ -148,4 +146,4 @@ function VariantSection({
   );
 }
 
-export default VariantSection;
+export default VariantSelector;

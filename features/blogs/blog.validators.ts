@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const titleSchema = z.string().trim().min(3).max(200);
 export const blogSlugSchema = z.string().trim().min(3).max(200);
-const wallImageSchema = z.string().url().optional();
+const wallImageSchema = z.union([z.string(), z.instanceof(File)]);
 const imagesSchema = z.array(z.string()).default([]);
 const dateSchema = z.date();
 const contentSchema = z.string();
@@ -44,11 +44,13 @@ export const blogUpdateSchema = blogInputSchema.extend({
 
 export const blogTypeSchema = blogInputSchema
   .omit({
+    wallImage: true,
     authorId: true,
   })
   .extend({
     _id: MongoIdSchema,
     author: authorSchema,
+    wallImage: z.string().optional(),
   })
   .transform(({ _id, ...res }) => ({
     ...res,

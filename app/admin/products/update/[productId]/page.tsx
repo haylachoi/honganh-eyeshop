@@ -1,18 +1,18 @@
-import { ERROR_MESSAGES } from "@/constants";
-import { getProductBySlug } from "@/features/products/product.query";
+import { getProductById } from "@/features/products/product.query";
 import ProductUpdateForm from "./product-form.update";
 import { getAllCategories } from "@/features/categories/category.query";
 import { getAllTags } from "@/features/tags/tag.query";
 
-type Params = Promise<{ productSlug: string }>;
+type Params = Promise<{ productId: string }>;
 
 const UpdateProductPage = async ({ params }: { params: Params }) => {
-  const { productSlug } = await params;
+  const { productId } = await params;
   const [productResult, categoriesResult, tagsResult] = await Promise.all([
-    getProductBySlug({ productSlug }),
+    getProductById(productId),
     getAllCategories(),
     getAllTags(),
   ]);
+  console.log(productResult);
 
   if (
     !productResult.success ||

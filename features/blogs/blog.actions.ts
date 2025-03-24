@@ -8,6 +8,7 @@ import { AppError } from "@/types";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
+import { writeFileToDisk } from "@/lib/server-utils";
 
 export const createBlogAction = authActionClient
   .metadata({
@@ -15,7 +16,7 @@ export const createBlogAction = authActionClient
   })
   .schema(blogInputSchema)
   .action(async ({ parsedInput }) => {
-    const { authorId, ...rest } = parsedInput;
+    const { authorId, wallImage, ...rest } = parsedInput;
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
@@ -29,8 +30,17 @@ export const createBlogAction = authActionClient
       name: user.name,
     };
 
+    const wallImageUrl =
+      wallImage instanceof File
+        ? await writeFileToDisk({
+            file: wallImage,
+            to: "blogs",
+          })
+        : wallImage;
+
     const result = await blogsRepository.createBlog({
       ...rest,
+      wallImage: wallImageUrl,
       author: newUserInput,
     });
 

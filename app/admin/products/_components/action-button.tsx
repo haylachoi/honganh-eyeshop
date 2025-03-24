@@ -29,9 +29,7 @@ export const ActionButton = ({ product }: { product: ProductType }) => {
         Xóa
       </ThreeDotsMenuButtonItem>
       <DropdownMenuItem>
-        <Link href={getLink.product.update({ productSlug: product.slug })}>
-          Cập nhật
-        </Link>
+        <Link href={getLink.product.update({ id: product.id })}>Cập nhật</Link>
       </DropdownMenuItem>
     </ThreeDotsMenu>
   );

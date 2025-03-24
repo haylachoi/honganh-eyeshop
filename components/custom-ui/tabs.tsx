@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import {
+import React, {
   createContext,
   Dispatch,
   MouseEventHandler,
@@ -39,14 +39,6 @@ export const Tabs = ({ className, children, defaultValue }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue ?? "");
   const [tabs, setTabs] = useState<string[]>([]);
   const [indexActiveTab, setIndexActiveTab] = useState(0);
-
-  // useEffect(() => {
-  //   console.log(tabs, activeTab);
-  //   if (!tabs.includes(activeTab) && tabs.length > 0) {
-  //     setActiveTab(tabs[0]);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [tabs.length, activeTab]);
 
   return (
     <div className={cn("", className)}>

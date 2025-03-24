@@ -20,8 +20,6 @@ const getAllProducts = unstable_cache(
       ProductTypeSchema.parse(product),
     ) as ProductType[];
 
-    // console.log(result);
-
     return result;
   },
   CACHE.PRODUCTS.ALL.KEY_PARTS,
@@ -63,6 +61,24 @@ const getProductById = async (id: Id) => {
   return product;
 };
 
+const getCountInStockOfVariant = async (input: {
+  productId: string;
+  variantId: string;
+}) => {
+  await connectToDatabase();
+  const result = await Product.findOne(
+    {
+      _id: input.productId,
+      "variants.uniqueId": input.variantId,
+    },
+    {
+      "variants.$": 1, // get first item
+      _id: 0,
+    },
+  );
+  return result?.variants?.[0].countInStock;
+};
+
 const createProduct = async (
   input: z.input<typeof ProductServerInputSchema>,
 ) => {
@@ -102,6 +118,7 @@ const productRepository = {
   getProductById,
   getProductByTags,
   getProductBySlug,
+  getCountInStockOfVariant,
   createProduct,
   updateProduct,
   deleteProduct,

@@ -1,40 +1,56 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Result } from "@/types";
 import { ZodSchema } from "zod";
 
-export type MiddlewareContext<P> = {
-  inputParams: P;
-  [key: string]: any;
-};
+export type MiddlewareResult<Extra extends object> = Extra;
 
-export type Middleware<P> = (
-  ctx: MiddlewareContext<P>,
-  next: (ctx: MiddlewareContext<P>) => Promise<void>,
-) => Promise<void>;
+export type Middleware<
+  P,
+  Extra extends object,
+  NewExtra extends object,
+> = (opt: {
+  clientInput?: P;
+  ctx: MiddlewareResult<Extra>;
+  next: <NC extends object = {}>(
+    ctx: MiddlewareResult<NC>,
+  ) => Promise<MiddlewareResult<NC>>;
+}) => Promise<MiddlewareResult<Extra & NewExtra>>;
 
-class SafeQuery<E> {
+// Lớp SafeQuery
+class SafeQuery<E, Extra extends object = {}> {
   private errorHandler: (error: unknown) => E;
-  private middlewares: Middleware<any>[] = [];
+  private middlewares: Middleware<any, any, any>[] = [];
 
   constructor(config: { errorHandler: (error: unknown) => E }) {
     this.errorHandler = config.errorHandler;
   }
 
-  use<P>(middleware: Middleware<P>): this {
-    this.middlewares.push(middleware as Middleware<any>);
-    return this;
+  // Phương thức use mở rộng Extra
+  use<NewExtra extends object>(
+    middleware: Middleware<any, Extra, NewExtra>,
+  ): SafeQuery<E, Extra & NewExtra> {
+    const newInstance = new SafeQuery<E, Extra & NewExtra>({
+      errorHandler: this.errorHandler,
+    });
+
+    newInstance.middlewares = [...this.middlewares, middleware];
+
+    return newInstance;
   }
 
   schema<P>(schema: ZodSchema<P>) {
     return {
-      query: <T>(fetcher: (ctx: MiddlewareContext<P>) => Promise<T>) => {
-        return async (params: P): Promise<Result<T, E>> => {
+      query: <T>(
+        fetcher: (opt: { parsedInput: P; ctx: Extra }) => Promise<T>,
+      ) => {
+        return async (clientInput: P): Promise<Result<T, E>> => {
           try {
-            const ctx: MiddlewareContext<P> = { inputParams: params };
+            let ctx: MiddlewareResult<Extra> = {} as Extra;
 
-            await this.runMiddlewares(ctx);
+            ctx = await this.runMiddlewares({ clientInput, ctx });
 
-            const validation = schema.safeParse(ctx.inputParams);
+            const validation = schema.safeParse(clientInput);
             if (!validation.success) {
               return {
                 success: false,
@@ -42,10 +58,7 @@ class SafeQuery<E> {
               };
             }
 
-            const data = await fetcher({
-              ...ctx,
-              inputParams: validation.data,
-            });
+            const data = await fetcher({ parsedInput: validation.data, ctx });
             return { success: true, data };
           } catch (error) {
             return { success: false, error: this.errorHandler(error) };
@@ -55,12 +68,14 @@ class SafeQuery<E> {
     };
   }
 
-  query<T, P = undefined>(fetcher: (ctx: MiddlewareContext<P>) => Promise<T>) {
-    return async (params?: P): Promise<Result<T, E>> => {
+  query<T>(fetcher: (opt: { ctx: MiddlewareResult<Extra> }) => Promise<T>) {
+    return async (): Promise<Result<T, E>> => {
       try {
-        const ctx: MiddlewareContext<P> = { inputParams: params as P };
-        await this.runMiddlewares(ctx);
-        const data = await fetcher(ctx);
+        let ctx: MiddlewareResult<Extra> = {} as Extra;
+
+        ctx = await this.runMiddlewares({ ctx });
+
+        const data = await fetcher({ ctx });
         return { success: true, data };
       } catch (error) {
         return { success: false, error: this.errorHandler(error) };
@@ -68,15 +83,30 @@ class SafeQuery<E> {
     };
   }
 
-  private async runMiddlewares<P>(ctx: MiddlewareContext<P>): Promise<void> {
+  private async runMiddlewares<P>({
+    clientInput,
+    ctx,
+  }: {
+    ctx: MiddlewareResult<Extra>;
+    clientInput?: P | undefined;
+  }): Promise<MiddlewareResult<Extra>> {
     let index = -1;
-    const runner = async (ctx: MiddlewareContext<P>): Promise<void> => {
+
+    const runner = async <NC extends object = {}>(
+      newCtx: MiddlewareResult<NC>,
+    ): Promise<MiddlewareResult<NC>> => {
       index++;
       if (index < this.middlewares.length) {
-        await this.middlewares[index](ctx, runner);
+        return this.middlewares[index]({
+          clientInput,
+          ctx: newCtx,
+          next: runner,
+        });
       }
+      return newCtx;
     };
-    await runner(ctx);
+
+    return runner(ctx);
   }
 }
 

@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ENDPOINTS } from "@/constants";
 import { useAuth } from "@/hooks/use-auth";
+import useCartStore from "@/hooks/use-cart";
+import { CartBadge } from "./cart-badge";
 
 const TopHeader = ({ className }: { className?: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -47,14 +49,16 @@ const TopHeader = ({ className }: { className?: string }) => {
 export default TopHeader;
 
 const Logo = () => {
-  return <div>Logo</div>;
+  return <Link href={ENDPOINTS.HOME}>Logo</Link>;
 };
 
 const ActionButtons = () => {
-  const { user } = useAuth();
-  console.log("🚀 ~ file: top-header.tsx:100 ~ user:", user);
+  const items = useCartStore((state) => state.items);
+  // const { user } = useAuth();
   return (
     <div className="flex items-center gap-2">
+      <div>items: {items?.[0]?.quantity}</div>
+      {/* <CartBadge /> */}
       <label
         htmlFor="header-navigation-trigger"
         className="flex py-2 items-center gap-2 cursor-pointer lg:hidden"

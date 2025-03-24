@@ -24,13 +24,19 @@ export const ActionButton = ({ category }: { category: CategoryType }) => {
   return (
     <ThreeDotsMenu>
       <ThreeDotsMenuButtonItem
-        action={() => showDialog({ onConfirm: () => execute(category.id) })}
+        action={() =>
+          showDialog({
+            description:
+              "Xóa danh mục cũng sẽ xóa các hàng hóa thuộc danh mục này. Có muốn xóa?",
+            onConfirm: () => execute(category.id),
+          })
+        }
         isPending={isPending}
       >
         Xóa
       </ThreeDotsMenuButtonItem>
       <DropdownMenuItem>
-        <Link href={getLink.category.update({ categorySlug: category.slug })}>
+        <Link href={getLink.category.update({ id: category.id })}>
           Cập nhật
         </Link>
       </DropdownMenuItem>

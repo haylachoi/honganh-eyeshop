@@ -26,7 +26,6 @@ const TagFormUpdate = ({
   defaultValues: TagUpdateType;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  console.log(defaultValues);
   const { execute, isPending } = useAction(updateTagAction, {
     onSuccess: () => {
       toast.success(TOAST_MESSAGES.UPDATE.SUCCESS);

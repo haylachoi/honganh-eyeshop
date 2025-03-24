@@ -17,7 +17,7 @@ const CategoryPage = async () => {
     <div>
       <AdminMainTopSection
         title="Danh sách danh mục"
-        addNewLink={`${ADMIN_ENDPOINTS.PRODUCTS}/create`}
+        addNewLink={`${ADMIN_ENDPOINTS.CATEGORIES}/create`}
       />
 
       <CategoriesView categories={categories} />

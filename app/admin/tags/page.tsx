@@ -9,7 +9,6 @@ const Tags = async () => {
     return <div>Error</div>;
   }
   const tags = result.data;
-  console.log(tags);
   return (
     <div>
       <MainPageHeading className="mb-4" title="Danh sách tags" />

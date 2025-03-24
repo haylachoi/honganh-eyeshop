@@ -17,7 +17,6 @@ async function middlewareAuth(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
     if (result.data.role !== "admin") {
-      console.log(result.data.role);
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

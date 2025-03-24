@@ -34,7 +34,6 @@ export const updateTagAction = authActionClient
   .schema(tagUpdateSchema)
   .action(async ({ parsedInput }) => {
     const result = await tagsRepository.updateTag(parsedInput);
-    console.log("update end");
     revalidateTag(CACHE.TAGS.ALL.TAGS);
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
     return result;

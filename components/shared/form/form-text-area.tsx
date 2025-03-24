@@ -1,5 +1,11 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { Control, FieldValues, Path } from "react-hook-form";
+import {
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormField,
+  FormMessage,
+} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
 interface FormTextAreaProps<T extends FieldValues> {
@@ -16,7 +22,7 @@ const FormTextArea = <T extends FieldValues>({
   placeholder,
 }: FormTextAreaProps<T>) => {
   return (
-    <Controller
+    <FormField
       control={control}
       name={name as Path<T>}
       render={({ field }) => (
@@ -25,6 +31,7 @@ const FormTextArea = <T extends FieldValues>({
           <FormControl>
             <Textarea {...field} placeholder={placeholder} />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

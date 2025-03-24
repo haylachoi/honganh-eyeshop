@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const getCategoryById = safeQuery
   .schema(z.string().min(3))
-  .query(async ({ inputParams: id }) => {
+  .query(async ({ parsedInput: id }) => {
     const category = await categoriesRepository.getCategoryById(id);
     return category;
   });

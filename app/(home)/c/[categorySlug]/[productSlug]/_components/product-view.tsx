@@ -5,9 +5,8 @@ import TopSection from "./top-section";
 import MiddleSection from "./middle-section";
 
 const ProductView = ({ product }: { product: ProductType }) => {
-  console.log(product);
   return (
-    <div>
+    <div className="space-y-10">
       <TopSection product={product} />
       <MiddleSection product={product} />
     </div>

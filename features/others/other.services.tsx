@@ -29,7 +29,6 @@ const data: BenefitInfo[] = [
 ];
 
 export const getPolicyPreviews = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   return policyPreviewsSample;
 };
 

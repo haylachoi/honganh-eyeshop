@@ -6,7 +6,7 @@ import { z } from "zod";
 
 export const getTagById = safeQuery
   .schema(z.string().min(3))
-  .query(async ({ inputParams: id }) => {
+  .query(async ({ parsedInput: id }) => {
     const tag = await tagsRepository.getTagById(id);
     return tag;
   });

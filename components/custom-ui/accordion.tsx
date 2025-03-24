@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import {
   useState,
@@ -8,7 +9,6 @@ import {
   useEffect,
 } from "react";
 
-// ✅ Định nghĩa kiểu dữ liệu cho Context
 interface AccordionContextType {
   activeValue: string;
   handleToggle: (value: string) => void;
@@ -18,7 +18,6 @@ interface AccordionItemContextType {
   value: string;
 }
 
-// ✅ Tạo Context
 const AccordionContext = createContext<AccordionContextType>({
   activeValue: "",
   handleToggle: () => {},
@@ -27,7 +26,6 @@ const AccordionItemContext = createContext<
   AccordionItemContextType | undefined
 >(undefined);
 
-// ✅ Accordion tổng thể
 interface AccordionProps {
   className?: string;
   children: ReactNode;
@@ -69,7 +67,6 @@ export const Accordion = ({
   );
 };
 
-// ✅ Accordion Item
 interface AccordionItemProps {
   className?: string;
   children: ReactNode;
@@ -99,7 +96,6 @@ export const AccordionItem = ({
   );
 };
 
-// ✅ Accordion Trigger
 interface AccordionTriggerProps {
   className?: string;
   children: ReactNode;
@@ -126,7 +122,6 @@ export const AccordionTrigger = ({
   );
 };
 
-// ✅ Accordion Content
 interface AccordionContentProps {
   className?: string;
   children: ReactNode;

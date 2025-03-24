@@ -25,7 +25,15 @@ export const CarouselImages = ({
 }: {
   className?: string;
   images: ImageType[];
-  render: (product: ImageType) => React.ReactNode;
+  render: ({
+    image,
+    index,
+    scrollTo,
+  }: {
+    image: ImageType;
+    index: number;
+    scrollTo?: (index: number, jump?: boolean) => void;
+  }) => React.ReactNode;
   isDotButtonVisible?: boolean;
   isArrowButtonVisible?: boolean;
 }) => {
@@ -42,12 +50,12 @@ export const CarouselImages = ({
       className={cn("", className)}
     >
       <CarouselContent className="-ml-2">
-        {images.map((image) => (
+        {images.map((image, index) => (
           <CarouselItem
             key={image.imageUrl}
             className="pl-2 basis-1/2 md:basis-1/3 xl:basis-1/4"
           >
-            {render(image)}
+            {render({ image, index, scrollTo: opts.emblaApi?.scrollTo })}
           </CarouselItem>
         ))}
       </CarouselContent>

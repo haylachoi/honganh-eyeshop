@@ -30,9 +30,7 @@ export const ActionButton = ({ blog }: { blog: BlogType }) => {
         Xóa
       </ThreeDotsMenuButtonItem>
       <DropdownMenuItem>
-        <Link href={getLink.blog.update({ blogSlug: blog.slug })}>
-          Cập nhật
-        </Link>
+        <Link href={getLink.blog.update({ id: blog.id })}>Cập nhật</Link>
       </DropdownMenuItem>
     </ThreeDotsMenu>
   );

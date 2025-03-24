@@ -73,6 +73,19 @@ export const ERROR_MESSAGES = {
       SINGLE: "Slug không tồn tại",
       MULTIPLE: "Một hoặc nhiều slug không tồn tại",
     },
+    USER: {
+      SINGLE: "Người dùng không tồn tại",
+      MULTIPLE: "Một hoặc nhiều người dùng không tồn tại",
+    },
+    PRODUCT: {
+      SINGLE: "Sản phẩm không tồn tại",
+      MULTIPLE: "Một hoặc nhiều sản phẩm không tồn tại",
+      NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
+    },
+    VARIANT: {
+      SINGLE: "Variant không tồn tại",
+      MULTIPLE: "Một hoặc nhiều variant không tồn tại",
+    },
   },
 };
 
@@ -88,6 +101,9 @@ export const TOAST_MESSAGES = {
   CREATE: {
     SUCCESS: "Đã tạo thông tin thành công",
     ERROR: "Tạo thông tin thất bại",
+  },
+  PRODUCT: {
+    NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
   },
   AUTH: {
     SIGN_UP: {

@@ -79,7 +79,6 @@ export const createProductAction = authActionClient
       ...parsedInput,
       category: newCategory,
       variants: newVariants,
-      isPublished: true,
       tags: newTags,
     };
 
@@ -111,12 +110,12 @@ export const updateProductAction = authActionClient
       ...parsedInput,
       category: newCategory,
       variants: newVariants,
-      isPublished: true,
       tags: newTags,
     };
 
     await productRepository.updateProduct(input);
     //todo: delete images
+    // todo: delete variant in cart if change. Should move to repository
 
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
   });
@@ -129,6 +128,8 @@ export const deleteProductAction = authActionClient
   .action(async ({ parsedInput }) => {
     await productRepository.deleteProduct(parsedInput);
     //todo: delete images
+
+    // delete item from cart
 
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
   });

@@ -98,6 +98,10 @@ export const columns: ColumnDef<ProductType>[] = [
       <ul className="">
         {row.original.variants.map((variant, index) => (
           <li key={index}>
+            <span>
+              {variant.originPrice}-{variant.price}:
+            </span>
+
             {variant.attributes
               .map((attr) => `${attr.name} - ${attr.value}`)
               .join(", ")}
@@ -112,6 +116,13 @@ export const columns: ColumnDef<ProductType>[] = [
     cell: ({ row }) => {
       return <div>{row.original.tags.map((tag) => tag.name).join(", ")}</div>;
     },
+  },
+  {
+    accessorKey: "isPublished",
+    header: "Trạng thái",
+    cell: ({ row }) => (
+      <div>{row.getValue("isPublished") ? "Đang bán" : "Chưa bán"}</div>
+    ),
   },
   {
     id: "actions",

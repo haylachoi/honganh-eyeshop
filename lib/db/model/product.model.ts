@@ -2,9 +2,8 @@ import { ProductTypeSchema } from "@/features/products/product.validator";
 import mongoose, { Document, Model, model, models, Schema } from "mongoose";
 import { z } from "zod";
 
-export interface ProductModel
-  extends Document,
-    z.input<typeof ProductTypeSchema> {
+type DbModel = z.input<typeof ProductTypeSchema>;
+export interface ProductModel extends Document, DbModel {
   _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -38,6 +37,7 @@ const productSchema = new Schema<ProductModel>(
         value: {
           type: String,
           required: true,
+          default: "",
         },
       },
     ],
@@ -54,14 +54,6 @@ const productSchema = new Schema<ProductModel>(
       type: Boolean,
       default: true,
     },
-    // price: {
-    //   type: Number,
-    //   required: true,
-    // },
-    // countInStock: {
-    //   type: Number,
-    //   required: true,
-    // },
     tags: {
       type: [
         {
@@ -69,11 +61,12 @@ const productSchema = new Schema<ProductModel>(
           name: { type: String, required: true },
         },
       ],
-      default: [], // 🔹 Nếu không có `tags`, tự động gán thành []
+      default: [],
     },
     variants: [
       {
         _id: false,
+        uniqueId: { type: String, required: true },
         attributes: [
           {
             name: { type: String, required: true },

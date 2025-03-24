@@ -22,6 +22,17 @@ const getAllBlogs = unstable_cache(
   },
 );
 
+const getBlogById = async (id: string) => {
+  await connectToDatabase();
+  const result = await Blog.findById(id).lean();
+
+  if (!result) {
+    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.SLUG.SINGLE });
+  }
+  const blog = blogTypeSchema.parse(result);
+  return blog;
+};
+
 const getBlogBySlug = async (slug: string) => {
   await connectToDatabase();
   const result = await Blog.findOne({ slug });
@@ -65,6 +76,7 @@ const deleteBlog = async (ids: string | string[]) => {
 
 const blogsRepository = {
   getAllBlogs,
+  getBlogById,
   getBlogBySlug,
   createBlog,
   updateBlog,
