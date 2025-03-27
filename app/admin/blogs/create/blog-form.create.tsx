@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import useTipTapEditor from "@/hooks/use-editor";
-import TipTapEditor from "@/components/shared/editor";
+// import TipTapEditor from "@/components/shared/editor";
 import { BlogInputType } from "@/features/blogs/blog.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { blogInputSchema } from "@/features/blogs/blog.validators";
@@ -30,10 +30,17 @@ import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { TrashIcon } from "lucide-react";
 import { compressImage } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
 
 const defaultValues: BlogInputType = {
   title: "",
   slug: "",
+  wallImage: "",
   images: [],
   content: "",
   authorId: "",
@@ -170,7 +177,6 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
           isLoading={isPending}
           disabled={isPending}
         />
-        {/* <Button type="submit">Lưu bài viết</Button> */}
       </form>
     </Form>
   );

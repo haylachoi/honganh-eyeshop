@@ -92,6 +92,10 @@ export const productUpdateSchema = baseProductSchema.extend({
   variants: z.array(variantUpdateSchema),
 });
 
+export const variantTypeSchema = baseVariantSchema
+  .omit({ images: true })
+  .extend({ images: z.array(z.string()) });
+
 export const productTypeWithoutTransformSchema = z.object({
   _id: MongoIdSchema,
   name: nameSchema,
@@ -115,11 +119,7 @@ export const productTypeWithoutTransformSchema = z.object({
         id: _id.toString(),
       })),
     ),
-  variants: z.array(
-    baseVariantSchema
-      .omit({ images: true })
-      .extend({ images: z.array(z.string()) }),
-  ),
+  variants: z.array(variantTypeSchema),
   avgRating: z.number().default(0),
   numReviews: z.number().default(0),
   // ratingDistribution: z.array(

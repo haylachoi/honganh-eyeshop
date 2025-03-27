@@ -1,7 +1,11 @@
-import { TagType } from "@/features/tags/tag.type";
-import { Model, model, models, Schema, Document } from "mongoose";
+import { tagTypeSchema } from "@/features/tags/tag.validator";
+import mongoose, { Model, model, models, Schema, Document } from "mongoose";
+import { z } from "zod";
 
-export interface TagModel extends Document, Omit<TagType, "id"> {
+type DbModel = z.input<typeof tagTypeSchema>;
+
+export interface TagModel extends Document, DbModel {
+  _id: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

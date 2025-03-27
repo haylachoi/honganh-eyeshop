@@ -1,9 +1,17 @@
-import { getCartByUserId } from "@/features/cart/cart.queries";
+import { getCartWithProductDetailBySession } from "@/features/cart/cart.queries";
+import { Suspense } from "react";
+import CartView from "./cart-view";
 
 export const CartPage = async () => {
-  const result = await getCartByUserId();
-  console.log(result);
-  return <div>{JSON.stringify(result)}</div>;
+  const cartResult = getCartWithProductDetailBySession();
+
+  return (
+    <div className="container">
+      <Suspense fallback={<div>Loading...</div>}>
+        <CartView className="overflow-x-hidden" cartPromise={cartResult} />
+      </Suspense>
+    </div>
+  );
 };
 
 export default CartPage;

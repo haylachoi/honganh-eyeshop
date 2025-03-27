@@ -12,7 +12,6 @@ const UpdateProductPage = async ({ params }: { params: Params }) => {
     getAllCategories(),
     getAllTags(),
   ]);
-  console.log(productResult);
 
   if (
     !productResult.success ||

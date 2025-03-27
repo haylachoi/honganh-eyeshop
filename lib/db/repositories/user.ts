@@ -4,9 +4,10 @@ import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "..";
 import User from "@/lib/db/model/user.model";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { AppError, Id } from "@/types";
+import { Id } from "@/types";
 import { SignUpType, UserType } from "@/features/auth/auth.type";
 import { userSchema } from "@/features/auth/auth.validator";
+import { NotFoundError } from "@/lib/error";
 
 // const getUsers = async () => {
 //   await connectToDatabase();
@@ -42,19 +43,13 @@ const getAllUsers = unstable_cache(
 const getUserById = async (id: Id) => {
   await connectToDatabase();
   const result = await User.findById(id).lean();
-  // todo: check if user exist
-  const user = userSchema.parse(result);
-  return user;
+  return result ? userSchema.parse(result) : null;
 };
 
 const getUserByEmail = async (email: string) => {
   await connectToDatabase();
   const result = await User.findOne({ email }).lean();
-  if (!result) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.INFO.SINGLE });
-  }
-  const user = userSchema.parse(result);
-  return user;
+  return result ? userSchema.parse(result) : null;
 };
 
 const createUser = async (input: SignUpType) => {
@@ -77,8 +72,9 @@ const deleteUser = async (ids: string | string[]) => {
 
   const existingUsers = await User.find({ _id: { $in: idsArray } });
   if (existingUsers.length !== idsArray.length) {
-    throw new AppError({
-      message: ERROR_MESSAGES.NOT_FOUND.ID.MULTIPLE,
+    throw new NotFoundError({
+      resource: "user",
+      message: ERROR_MESSAGES.USER.NOT_FOUND,
     });
   }
 

@@ -4,26 +4,37 @@ import {
 } from "next-safe-action";
 import { z, ZodError } from "zod";
 import mongoose from "mongoose";
-import { AppError } from "@/types";
 import { auth } from "@/features/auth/auth.query";
+import { AppError, AuthenticationError, ERROR_TYPES } from "../error";
+import { ERROR_MESSAGES } from "@/constants";
 
 export const actionClient = createSafeActionClient({
   handleServerError: (e) => {
     console.error(e);
     if (e instanceof ZodError) {
-      return DEFAULT_SERVER_ERROR_MESSAGE;
+      return {
+        message: DEFAULT_SERVER_ERROR_MESSAGE,
+      };
     }
 
     if (e instanceof mongoose.mongo.MongoServerError && e.code === 11000) {
       const duplicateField = Object.keys(e.keyValue)[0];
-      return `${duplicateField} already exists`;
+      return {
+        message: `${duplicateField} already exists`,
+        type: ERROR_TYPES.VALIDATION,
+      };
     }
 
     if (e instanceof AppError) {
-      return e.message;
+      return {
+        message: e.message,
+        type: e.type,
+      };
     }
 
-    return DEFAULT_SERVER_ERROR_MESSAGE;
+    return {
+      message: DEFAULT_SERVER_ERROR_MESSAGE,
+    };
   },
   defineMetadataSchema: () =>
     z.object({
@@ -33,7 +44,10 @@ export const actionClient = createSafeActionClient({
 
 export const customerActionClient = actionClient.use(async ({ next }) => {
   const session = await auth();
-  if (!session) throw new AppError({ message: "Not logged in" });
+  if (!session)
+    throw new AuthenticationError({
+      message: ERROR_MESSAGES.AUTH.UNAUTHENTICATED,
+    });
 
   const userId = session.id;
   return next({ ctx: { userId } });

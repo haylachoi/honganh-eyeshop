@@ -1,9 +1,11 @@
 import { z } from "zod";
 import { IdSchema, MoneySchema, MongoIdSchema } from "@/lib/validator";
-import { variantAttributeSchema } from "../products/product.validator";
+import {
+  productTypeWithoutTransformSchema,
+  variantTypeSchema,
+} from "../products/product.validator";
 
 // general
-const moneySchema = MoneySchema;
 const quantitySchema = z.coerce
   .number()
   .int()
@@ -19,18 +21,26 @@ const baseCartItemSchema = z.object({
 // main
 export const cartItemInputSchema = baseCartItemSchema;
 
-export const cartItemDisplaySchema = z.object({
-  productId: IdSchema,
-  variantId: z.string().uuid(),
-  attributes: z.array(variantAttributeSchema),
-  price: moneySchema,
-  originPrice: moneySchema,
-  quantity: quantitySchema,
-  countInStock: z.coerce
-    .number()
-    .int()
-    .min(1, "Countin stock must be at least 1"),
-});
+export const cartItemDisplaySchema = productTypeWithoutTransformSchema
+  .pick({
+    name: true,
+    slug: true,
+    category: true,
+    brand: true,
+    tags: true,
+    // avgRating: true,
+    // numReviews: true,
+    // numSales: true,
+  })
+  .extend({
+    variant: variantTypeSchema,
+    productId: MongoIdSchema,
+    quantity: quantitySchema,
+  })
+  .transform(({ productId, ...rest }) => ({
+    ...rest,
+    productId: productId.toString(),
+  }));
 
 export const cartItemTypeSchema = z
   .object({

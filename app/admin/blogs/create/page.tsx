@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import BlogCreateForm from "./blog-form.create";
 import { auth } from "@/features/auth/auth.query";
 
@@ -7,7 +7,11 @@ const BlogCreatePage = async () => {
 
   if (!user) return null;
 
-  return <BlogCreateForm user={user} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogCreateForm user={user} />
+    </Suspense>
+  );
 };
 
 export default BlogCreatePage;

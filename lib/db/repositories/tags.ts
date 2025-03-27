@@ -3,10 +3,11 @@ import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "..";
 import Tags from "../model/tag.model";
 import { TagInputType, TagType, TagUpdateType } from "@/features/tags/tag.type";
-import { AppError, Id } from "@/types";
+import { Id } from "@/types";
 import { tagTypeSchema } from "@/features/tags/tag.validator";
 import Product from "../model/product.model";
 import mongoose from "mongoose";
+import { NotFoundError } from "@/lib/error";
 
 const getTagById = async (id: Id) => {
   await connectToDatabase();
@@ -48,7 +49,10 @@ const updateTag = async (tag: TagUpdateType) => {
       session,
     });
     if (!result) {
-      throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE });
+      throw new NotFoundError({
+        resource: "tag",
+        message: ERROR_MESSAGES.TAG.NOT_FOUND,
+      });
     }
 
     await Product.updateMany(
@@ -72,7 +76,10 @@ const deleteTag = async (ids: string | string[]) => {
   const count = await Tags.countDocuments({ _id: { $in: idsArray } });
 
   if (count !== idsArray.length) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.MULTIPLE });
+    throw new NotFoundError({
+      resource: "tag",
+      message: ERROR_MESSAGES.TAG.NOT_FOUND,
+    });
   }
 
   const session = await mongoose.startSession();

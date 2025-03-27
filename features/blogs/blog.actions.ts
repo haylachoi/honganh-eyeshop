@@ -4,11 +4,11 @@ import { authActionClient } from "@/lib/actions";
 import { blogInputSchema, blogUpdateSchema } from "./blog.validators";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import userRepository from "@/lib/db/repositories/user";
-import { AppError } from "@/types";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { writeFileToDisk } from "@/lib/server-utils";
+import { NotFoundError } from "@/lib/error";
 
 export const createBlogAction = authActionClient
   .metadata({
@@ -20,8 +20,9 @@ export const createBlogAction = authActionClient
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
-      throw new AppError({
-        message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE,
+      throw new NotFoundError({
+        resource: "user",
+        message: ERROR_MESSAGES.USER.NOT_FOUND,
       });
     }
 
@@ -59,8 +60,9 @@ export const updateBlogAction = authActionClient
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
-      throw new AppError({
-        message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE,
+      throw new NotFoundError({
+        message: ERROR_MESSAGES.USER.NOT_FOUND,
+        resource: "user",
       });
     }
 

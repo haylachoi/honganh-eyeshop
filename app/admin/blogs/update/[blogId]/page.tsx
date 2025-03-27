@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import BlogUpdateForm from "./blog-form.update";
 import { getBlogById } from "@/features/blogs/blog.query";
 
@@ -15,12 +15,14 @@ const BlogUpdatePage = async ({ params }: { params: params }) => {
   const { author, ...rest } = result.data;
 
   return (
-    <BlogUpdateForm
-      defaultValues={{
-        ...rest,
-        authorId: author.id,
-      }}
-    />
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogUpdateForm
+        defaultValues={{
+          ...rest,
+          authorId: author.id,
+        }}
+      />
+    </Suspense>
   );
 };
 

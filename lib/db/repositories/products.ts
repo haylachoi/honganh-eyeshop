@@ -3,13 +3,14 @@ import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { AppError, Id } from "@/types";
+import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
   ProductServerInputSchema,
   ProductTypeSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
+import { NotFoundError } from "@/lib/error";
 
 const getAllProducts = unstable_cache(
   async () => {
@@ -29,6 +30,14 @@ const getAllProducts = unstable_cache(
   },
 );
 
+type QueryType = z.input<typeof ProductTypeSchema>;
+const getProductByQuery = async (query: QueryFilter<QueryType>) => {
+  await connectToDatabase();
+  const products = await Product.find(query).lean();
+  const result = products.map((product) => ProductTypeSchema.parse(product));
+  return result;
+};
+
 const getProductByTags = async (tags: string[]) => {
   await connectToDatabase();
   const products = await Product.find({ "tags.name": { $in: tags } }).lean();
@@ -44,13 +53,7 @@ const getProductBySlug = async (
     slug: input.productSlug,
   });
 
-  if (!result) {
-    throw new AppError({
-      message: ERROR_MESSAGES.NOT_FOUND.SLUG.SINGLE,
-    });
-  }
-
-  const product = ProductTypeSchema.parse(result);
+  const product = result ? ProductTypeSchema.parse(result) : null;
   return product;
 };
 
@@ -91,11 +94,16 @@ const updateProduct = async (
   input: z.input<typeof ProductServerInputSchema> & { id: string },
 ) => {
   await connectToDatabase();
+  // todo: check product exist
   const result = await Product.findOneAndUpdate({ _id: input.id }, input, {
     new: true,
   });
   if (!result) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE });
+    // todo: this error is wrong, check if product exist before update
+    throw new NotFoundError({
+      resource: "product",
+      message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
+    });
   }
 };
 
@@ -106,7 +114,10 @@ const deleteProduct = async (ids: string | string[]) => {
   const count = await Product.countDocuments({ _id: { $in: idsArray } });
 
   if (count !== idsArray.length) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.MULTIPLE });
+    throw new NotFoundError({
+      resource: "product",
+      message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
+    });
   }
   await Product.deleteMany({ _id: { $in: idsArray } });
 
@@ -118,6 +129,7 @@ const productRepository = {
   getProductById,
   getProductByTags,
   getProductBySlug,
+  getProductByQuery,
   getCountInStockOfVariant,
   createProduct,
   updateProduct,

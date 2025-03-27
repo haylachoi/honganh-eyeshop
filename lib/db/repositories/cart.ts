@@ -1,19 +1,83 @@
 import { CartInputType } from "@/features/cart/cart.types";
 import Cart from "../model/cart.model";
 import {
+  cartItemDisplaySchema,
   cartItemTypeSchema,
   cartTypeSchema,
 } from "@/features/cart/cart.validator";
-import { AppError } from "@/types";
-import { ERROR_MESSAGES } from "@/constants";
+import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { connectToDatabase } from "..";
+import { unstable_cache } from "next/cache";
+import { NotFoundError, ServerError } from "@/lib/error";
+import { Id } from "@/types";
+import mongoose from "mongoose";
 
-const getCartByUserId = async (userId: string) => {
-  await connectToDatabase();
-  const result = await Cart.findOne({ userId }).lean();
-  if (!result) return;
-  const cart = cartTypeSchema.parse(result);
-  return cart;
+const getCartByUserId = unstable_cache(
+  async (userId: string) => {
+    await connectToDatabase();
+    const result = await Cart.findOne({ userId }).lean();
+    if (!result) return;
+    const cart = cartTypeSchema.parse(result);
+    return cart;
+  },
+  CACHE.CART.USER.KEY_PARTS,
+  {
+    tags: [CACHE.CART.USER.TAGS],
+    revalidate: 3600,
+  },
+);
+
+const getCartWithProductDetails = async ({ userId }: { userId: string }) => {
+  const cartItems = await Cart.aggregate([
+    {
+      $match: { userId: new mongoose.Types.ObjectId(userId) },
+    },
+    {
+      $unwind: "$items",
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "items.productId",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    { $unwind: "$productDetails" },
+    { $unwind: "$productDetails.variants" },
+    {
+      $match: {
+        $expr: {
+          $eq: ["$items.variantId", "$productDetails.variants.uniqueId"],
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        userId: 1,
+        productId: "$items.productId",
+        quantity: "$items.quantity",
+        name: "$productDetails.name",
+        slug: "$productDetails.slug",
+        category: "$productDetails.category",
+        brand: "$productDetails.brand",
+        tags: "$productDetails.tags",
+        variant: {
+          uniqueId: "$productDetails.variants.uniqueId",
+          attributes: "$productDetails.variants.attributes",
+          images: "$productDetails.variants.images",
+          stock: "$productDetails.variants.countInStock",
+          price: "$productDetails.variants.price",
+          originPrice: "$productDetails.variants.originPrice",
+          countInStock: "$productDetails.variants.countInStock",
+        },
+      },
+    },
+  ]);
+  const result = cartItems.map((item) => cartItemDisplaySchema.parse(item));
+
+  return result;
 };
 
 const getCartItem = async (input: {
@@ -40,57 +104,94 @@ const getCartItem = async (input: {
   return cartItemTypeSchema.parse(result.items[0]);
 };
 
-const addNewItemToCart = async ({ userId, item }: CartInputType) => {
+const createCart = async ({ userId }: { userId: Id }) => {
   await connectToDatabase();
-  const updatedCart = await Cart.findOneAndUpdate(
-    { userId },
-    { $push: { items: item } },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
-  );
-
-  if (!updatedCart) {
-    throw new AppError({
-      message: ERROR_MESSAGES.NOT_FOUND.USER.SINGLE,
-    });
-  }
-
-  return cartTypeSchema.parse(updatedCart);
+  const result = await Cart.create({ userId });
+  return cartTypeSchema.parse(result);
 };
 
-const updateItemQuantity = async ({ userId, item }: CartInputType) => {
+const updateItemQuantity = async ({
+  userId,
+  item,
+  mode,
+}: CartInputType & { mode: "increase" | "replace" }) => {
   await connectToDatabase();
+
+  const updateQuery =
+    mode === "increase"
+      ? { $inc: { "items.$.quantity": item.quantity } }
+      : { $set: { "items.$.quantity": item.quantity } };
+
   const result = await Cart.findOneAndUpdate(
     {
       userId,
       "items.productId": item.productId,
       "items.variantId": item.variantId,
     },
-    { $inc: { "items.$.quantity": item.quantity } }, // Tăng số lượng
+    updateQuery,
     { new: true },
   );
 
-  // return cartTypeSchema.parse(result);
+  if (!result) {
+    throw new ServerError({});
+  }
+  console.log("update item quantity", result.items);
+
+  return cartTypeSchema.parse(result);
 };
 
 const addItemToCart = async ({ userId, item }: CartInputType) => {
-  // let updatedCart = await updateItemQuantity({ userId, item });
-  //
-  // if (!updatedCart) {
-  //   updatedCart = await addNewItemToCart({ userId, item });
-  // }
-  //
-  // if (!updatedCart) {
-  //   throw new AppError({
-  //     message: ERROR_MESSAGES.NOT_FOUND.USER.SINGLE,
-  //   });
-  // }
-  updateItemQuantity({ userId, item });
-  // return cartTypeSchema.parse(updatedCart);
+  await connectToDatabase();
+  const result = await Cart.findOneAndUpdate(
+    { userId },
+    { $push: { items: item } },
+    { new: true, upsert: true, setDefaultsOnInsert: true },
+  );
+
+  if (!result) {
+    throw new ServerError({});
+  }
+
+  console.log("add item to cart", result.items);
+
+  return cartTypeSchema.parse(result);
+};
+
+const removeCartItem = async ({
+  userId,
+  productId,
+  variantId,
+}: {
+  userId: string;
+  productId: string;
+  variantId: string;
+}) => {
+  await connectToDatabase();
+
+  const updatedCart = await Cart.findOneAndUpdate(
+    { userId },
+    {
+      $pull: { items: { productId, variantId } },
+    },
+    { new: true },
+  );
+
+  if (!updatedCart) {
+    throw new NotFoundError({
+      resource: "cart",
+      message: ERROR_MESSAGES.CART.NOT_FOUND,
+    });
+  }
+
+  return cartTypeSchema.parse(updatedCart);
 };
 
 export const cartRepository = {
+  getCartWithProductDetails,
   getCartByUserId,
   getCartItem,
+  createCart,
   addItemToCart,
   updateItemQuantity,
+  removeCartItem,
 };

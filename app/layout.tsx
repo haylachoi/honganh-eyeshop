@@ -3,15 +3,24 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { DialogProvider } from "@/components/shared/alert-dialog-provider";
+import { Rubik } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+//
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Import font với các trọng số mong muốn
+const rubik = Rubik({
+  subsets: ["latin"], // Hỗ trợ chữ Latin
+  variable: "--font-rubik",
+  weight: ["300", "400", "500", "700"], // Chọn các trọng số cần dùng
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,9 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${rubik.variable} antialiased`}>
         <DialogProvider>
           {children}
           <Toaster />

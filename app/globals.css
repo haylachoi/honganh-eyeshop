@@ -5,9 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* --font-sans: var(--font-geist-sans); */
+  /* --font-mono: var(--font-geist-mono); */
+  --font-rubik: var(--font-rubik);
   --color-link: oklch(60% 0.2 240);
+  --default-font-family: var(--font-rubik);
 }
 
 :root {
@@ -251,4 +253,8 @@
 
 @utility container {
   margin-inline: auto;
+}
+
+body:has(#header-navigation-trigger:checked) {
+  overflow: hidden !important;
 }

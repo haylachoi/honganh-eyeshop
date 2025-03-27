@@ -1,0 +1,47 @@
+"use client";
+
+import { House } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
+  const pathname = usePathname();
+  if (!pathname?.[1]) return null;
+
+  const segments = pathname.split("/").filter(Boolean); // Loại bỏ phần tử rỗng
+
+  const breadcrumbs = segments
+    .slice(0, -1)
+    .map((segment, index) => {
+      const href = "/" + segments.slice(0, index + 1).join("/");
+      return {
+        label: map[segment] || segment, // Lấy tên từ map, fallback là segment gốc
+        href,
+      };
+    })
+    .filter((segment) => segment.href !== "/c");
+
+  console.log(breadcrumbs);
+
+  return (
+    <nav className="">
+      <ul className="flex items-center gap-3">
+        <li className="after:content-['>'] flex items-center gap-1">
+          <Link href="/" className="hover:underline">
+            <House className="size-5" />
+          </Link>
+        </li>
+        {breadcrumbs.map((crumb) => (
+          <li
+            key={crumb.href}
+            className="not-last:after:content-['>'] flex items-center gap-1"
+          >
+            <Link href={crumb.href} className="hover:underline">
+              {crumb.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};

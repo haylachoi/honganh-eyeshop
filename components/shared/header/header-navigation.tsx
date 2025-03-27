@@ -97,17 +97,22 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
   return (
     <nav className={cn("w-full", className)}>
       <Accordion className="w-full lg:flex gap-4">
+        {/* overlay */}
+        <div className="fixed z-0 bg-foreground inset-0 top-[48px] pointer-events-none opacity-0 lg:has-[~[data-accordion-active]:hover]:opacity-70 transition-all"></div>
         {links.map((mainlink) => (
           <AccordionItem
             key={mainlink.title}
             value={mainlink.title}
-            className="group"
+            className="group overflow-hidden"
           >
-            <AccordionTrigger className="py-2 flex justify-between items-center gap-2 text-xl font-bold cursor-pointer">
+            <AccordionTrigger className="h-full py-2 flex justify-between items-center gap-2 text-xl font-bold cursor-pointer">
               {mainlink.title}
               <ChevronDown className="size-6 inline-block max-lg:group-data-[accordion-active='true']:rotate-180 transition-all duration-300 lg:group-hover:rotate-180" />
             </AccordionTrigger>
-            <AccordionContent className="lg:hidden lg:group-hover:block lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm">
+            <AccordionContent
+              // className="lg:hidden lg:group-hover:block lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm"
+              className="lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:translate-y-[10px] lg:group-hover:translate-y-0 lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm transition-all duration-500 ease-out"
+            >
               {/* fake gap */}
               <div className="hidden lg:block w-full h-1 bg-foreground" />
               <ul className="lg:container lg:mx-auto flex flex-col gap-3 bg-background py-2 lg:flex-row justify-between">

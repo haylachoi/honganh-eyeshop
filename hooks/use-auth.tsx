@@ -5,7 +5,7 @@ import { SafeUserInfo } from "@/features/auth/auth.type";
 
 export function useAuth() {
   const [user, setUser] = useState<SafeUserInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
@@ -16,12 +16,12 @@ export function useAuth() {
       } catch (error) {
         console.error("Lỗi khi lấy user:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
 
     fetchUser();
   }, []);
 
-  return { user, loading };
+  return { user, isLoading };
 }

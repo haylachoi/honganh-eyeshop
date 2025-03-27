@@ -25,14 +25,20 @@ export async function decrypt(session: string | undefined = "") {
     return payload;
   } catch (e) {
     console.error(e);
-    throw e;
+    // throw e;
   }
 }
 
 export async function getSession(): Promise<Result<UserSessionPayload, Error>> {
   const cookieStore = await cookies();
   const session = cookieStore.get("session");
-  const payload = await decrypt(session?.value);
+  if (!session) {
+    return {
+      success: false,
+      error: new Error("session not found"),
+    };
+  }
+  const payload = await decrypt(session.value);
 
   if (!payload) {
     return {

@@ -1,12 +1,13 @@
 import { ERROR_MESSAGES } from "@/constants";
 import categoriesRepository from "@/lib/db/repositories/categories";
-import { AppError } from "@/types";
+import { NotFoundError } from "@/lib/error";
 
 export const getCategoryInfoById = async (id: string) => {
   const category = await categoriesRepository.getCategoryById(id);
   if (!category) {
-    throw new AppError({
-      message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE,
+    throw new NotFoundError({
+      resource: "category",
+      message: ERROR_MESSAGES.CATEGORY.NOT_FOUND,
     });
   }
   return {

@@ -1,6 +1,13 @@
 import { getBlogBySlug } from "@/features/blogs/blog.query";
 import BlogView from "./blog-view";
 
+export async function generateStaticParams() {
+  return [];
+}
+export const dynamic = "force-static";
+
+export const revalidate = 3600;
+
 type params = Promise<{ blogSlug: string }>;
 
 const BlogPage = async ({ params }: { params: params }) => {

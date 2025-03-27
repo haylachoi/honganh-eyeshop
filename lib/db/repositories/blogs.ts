@@ -2,9 +2,9 @@ import { BlogDbInputType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
-import { AppError } from "@/types";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { unstable_cache } from "next/cache";
+import { NotFoundError, RESOURCE_TYPES } from "@/lib/error";
 
 const getAllBlogs = unstable_cache(
   async () => {
@@ -26,20 +26,14 @@ const getBlogById = async (id: string) => {
   await connectToDatabase();
   const result = await Blog.findById(id).lean();
 
-  if (!result) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.SLUG.SINGLE });
-  }
-  const blog = blogTypeSchema.parse(result);
+  const blog = result ? blogTypeSchema.parse(result) : null;
   return blog;
 };
 
 const getBlogBySlug = async (slug: string) => {
   await connectToDatabase();
   const result = await Blog.findOne({ slug });
-  if (!result) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.SLUG.SINGLE });
-  }
-  const blog = blogTypeSchema.parse(result);
+  const blog = result ? blogTypeSchema.parse(result) : null;
   return blog;
 };
 
@@ -66,7 +60,10 @@ const deleteBlog = async (ids: string | string[]) => {
   const count = await Blog.countDocuments({ _id: { $in: idsArray } });
 
   if (count !== idsArray.length) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.MULTIPLE });
+    throw new NotFoundError({
+      resource: RESOURCE_TYPES.BLOG,
+      message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+    });
   }
 
   await Blog.deleteMany({ _id: { $in: idsArray } });

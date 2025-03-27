@@ -7,6 +7,8 @@ import { addItemToCart } from "@/features/cart/cart.actions";
 import useCartStore from "@/hooks/use-cart";
 import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants";
+import QuantityInput from "@/components/shared/quantity-input/index";
+import { AdjustQuantityButton } from "@/components/shared/quantity-input/adjust-quantity-button";
 
 const BuyButton = () => {
   const { currentVariant, product } = React.use(TopContext);
@@ -18,40 +20,23 @@ const BuyButton = () => {
     setValue("1");
   }, [currentVariant?.uniqueId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-    if (inputValue === "") {
-      setValue("");
-      return;
-    }
-
-    const numValue = Math.min(+inputValue, max);
-    setValue(numValue.toString());
-  };
-
-  const handleBlur = () => {
-    if (value === "" || value === "0") {
-      setValue("1");
-    }
-  };
-
   const canBuy =
     currentVariant && +value <= currentVariant.countInStock && +value > 0;
   const handleBuy = async () => {
     if (!canBuy) {
-      console.log("not enough");
       toast.error(TOAST_MESSAGES.PRODUCT.NOT_ENOUGH_STOCK);
       return;
     }
     if (currentVariant) {
       addToCart({
-        variantId: currentVariant.uniqueId,
         productId: product.id,
+        name: product.name,
+        category: product.category,
+        brand: product.brand,
+        slug: product.slug,
+        tags: product.tags,
         quantity: +value,
-        countInStock: currentVariant.countInStock,
-        attributes: currentVariant.attributes,
-        price: currentVariant.price,
-        originPrice: currentVariant.price,
+        variant: currentVariant,
       });
       const result = await addItemToCart({
         productId: product.id,
@@ -59,17 +44,22 @@ const BuyButton = () => {
         quantity: +value,
       });
 
+      if (result?.data) {
+        toast.success(TOAST_MESSAGES.CART.ADD.SUCCESS);
+      }
+
       if (result?.serverError || result?.validationErrors) {
         addToCart({
-          variantId: currentVariant.uniqueId,
           productId: product.id,
+          name: product.name,
+          category: product.category,
+          brand: product.brand,
+          slug: product.slug,
+          tags: product.tags,
           quantity: -Number(value),
-          countInStock: currentVariant.countInStock,
-          attributes: currentVariant.attributes,
-          price: currentVariant.price,
-          originPrice: currentVariant.price,
+          variant: currentVariant,
         });
-        toast.error(result.serverError);
+        toast.error(result.serverError?.message);
       }
     }
   };
@@ -86,15 +76,11 @@ const BuyButton = () => {
           }
           disabled={value === "1"}
         />
-        <input
-          type="text"
-          inputMode="numeric"
-          pattern="\d*"
+        <QuantityInput
+          className="max-w-16"
           value={value}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className="border p-2 w-16 text-center"
-          placeholder="Nhập số"
+          setValue={setValue}
+          max={max}
         />
         <AdjustQuantityButton
           type="increase"
@@ -121,29 +107,3 @@ const BuyButton = () => {
 };
 
 export default BuyButton;
-
-const AdjustQuantityButton = ({
-  type,
-  onClick,
-  disabled,
-  className,
-}: {
-  type: "increase" | "decrease";
-  onClick: () => void;
-  disabled?: boolean;
-  className?: string;
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={cn(
-        "px-3 py-1 border cursor-pointer",
-        className,
-        disabled && "opacity-50",
-      )}
-    >
-      {type === "increase" ? "+" : "-"}
-    </button>
-  );
-};

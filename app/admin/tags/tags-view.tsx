@@ -16,7 +16,7 @@ const TagsView = ({ tags }: { tags: TagType[] }) => {
   return (
     <div>
       <TagFormCreate />
-      <ul className="flex flex-col gap-4">
+      <ul className="mt-4">
         {tags.map((tag) => (
           <li key={tag.id}>
             <TagItem tag={tag} />
@@ -48,19 +48,22 @@ const TagItem = ({ tag }: { tag: TagType }) => {
   }
 
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-4">
+    <div className="grid grid-cols-[1fr_auto] gap-4 border-b border-input">
       <span>{tag.name}</span>
-      <div>
+      <div className="">
         <Button
           type="button"
+          variant="ghost"
+          className="text-primary"
           onClick={() => setIsEditing(true)}
           disabled={isEditing}
         >
-          Chỉnh sửa
+          Sửa
         </Button>
         <Button
+          className="text-destructive"
           type="button"
-          variant="destructive"
+          variant="ghost"
           disabled={isEditing || isDeletePending}
           onClick={() => showDialog({ onConfirm: () => executeDelete(tag.id) })}
         >

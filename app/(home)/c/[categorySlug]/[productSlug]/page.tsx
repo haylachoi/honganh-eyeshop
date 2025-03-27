@@ -1,6 +1,15 @@
 import ProductView from "@/app/(home)/c/[categorySlug]/[productSlug]/_components/product-view";
 import { getProductBySlug } from "@/features/products/product.query";
 
+// todo: generate metadata
+
+export async function generateStaticParams() {
+  return [];
+}
+export const dynamic = "force-static";
+
+export const revalidate = 3600;
+
 type Params = Promise<{ categorySlug: string; productSlug: string }>;
 const ProductPage = async ({ params }: { params: Params }) => {
   const { categorySlug, productSlug } = await params;
@@ -12,7 +21,11 @@ const ProductPage = async ({ params }: { params: Params }) => {
 
   const product = result.data;
 
-  return <ProductView product={product} />;
+  return (
+    <div className="container">
+      <ProductView product={product} />
+    </div>
+  );
 };
 
 export default ProductPage;

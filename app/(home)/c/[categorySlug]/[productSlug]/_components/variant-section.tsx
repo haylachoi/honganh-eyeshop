@@ -136,7 +136,9 @@ function VariantSelector({
                 {formatter.format(currentVariant.originPrice)}
               </span>
             )}
-            <span>Còn:&nbsp; {currentVariant.countInStock} sản phẩm</span>
+            <span className="mx-3 text-foreground/70 text-sm">
+              Còn:&nbsp; {currentVariant.countInStock} sản phẩm
+            </span>
           </div>
         ) : (
           <p className="text-red-500 mt-4">Hãy chọn thêm</p>

@@ -3,8 +3,10 @@ export const BASE_URL = "http://localhost:3000";
 
 export const ENDPOINTS = {
   HOME: "/",
+  PROFILE: "/profile",
   LOGIN: "/login",
   SIGN_UP: "/signup",
+  CART: "/cart",
   CATEGORIES: "/c",
   PRODUCTS: "/c",
   BLOGS: "/blogs",
@@ -57,6 +59,16 @@ export const CACHE = {
       TAGS: "blogs",
     },
   },
+  CART: {
+    ALL: {
+      KEY_PARTS: ["cart"],
+      TAGS: "cart",
+    },
+    USER: {
+      KEY_PARTS: ["cart", "user"],
+      TAGS: "user_cart",
+    },
+  },
 };
 
 export const ERROR_MESSAGES = {
@@ -73,19 +85,42 @@ export const ERROR_MESSAGES = {
       SINGLE: "Slug không tồn tại",
       MULTIPLE: "Một hoặc nhiều slug không tồn tại",
     },
-    USER: {
-      SINGLE: "Người dùng không tồn tại",
-      MULTIPLE: "Một hoặc nhiều người dùng không tồn tại",
-    },
-    PRODUCT: {
-      SINGLE: "Sản phẩm không tồn tại",
-      MULTIPLE: "Một hoặc nhiều sản phẩm không tồn tại",
-      NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
-    },
+    // USER: {
+    //   SINGLE: "Người dùng không tồn tại",
+    //   MULTIPLE: "Một hoặc nhiều người dùng không tồn tại",
+    // },
+    // PRODUCT: {
+    //   SINGLE: "Sản phẩm không tồn tại",
+    //   MULTIPLE: "Một hoặc nhiều sản phẩm không tồn tại",
+    //   NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
+    // },
     VARIANT: {
       SINGLE: "Variant không tồn tại",
       MULTIPLE: "Một hoặc nhiều variant không tồn tại",
     },
+  },
+  AUTH: {
+    UNAUTHENTICATED: "Bạn chưa đăng nhập",
+    UNAUTHORIZED: "Bạn không có quyền truy cập",
+  },
+  USER: {
+    NOT_FOUND: "Người dùng không tồn tại",
+  },
+  BLOG: {
+    NOT_FOUND: "Blog không tồn tại",
+  },
+  CATEGORY: {
+    NOT_FOUND: "Danh mục không tồn tại",
+  },
+  PRODUCT: {
+    NOT_FOUND: "Sản phẩm không tồn tại",
+    NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
+  },
+  TAG: {
+    NOT_FOUND: "Thẻ không tồn tại",
+  },
+  CART: {
+    NOT_FOUND: "Giỏ hàng trống",
   },
 };
 
@@ -114,6 +149,12 @@ export const TOAST_MESSAGES = {
       SUCCESS: "Đã đăng nhập thành công",
       NOT_MATCH: "Email hoặc Mật khẩu không khớp",
       ERROR: "Đăng nhập thất bại",
+    },
+  },
+  CART: {
+    ADD: {
+      SUCCESS: "Đã thêm vào giỏ thành công",
+      ERROR: "Thêm vào giỏ thất bại",
     },
   },
 };

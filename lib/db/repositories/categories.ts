@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "..";
 import Category from "@/lib/db/model/category.model";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { AppError, Id } from "@/types";
+import { Id } from "@/types";
 import {
   CategoryType,
   CategoryUpdateType,
@@ -13,6 +13,7 @@ import {
 import { CategoryTypeSchema } from "@/features/categories/category.validator";
 import mongoose from "mongoose";
 import Product from "../model/product.model";
+import { NotFoundError } from "@/lib/error";
 
 // const getCategories = async () => {
 //   await connectToDatabase();
@@ -82,7 +83,10 @@ const updateCategory = async (category: CategoryUpdateType) => {
     );
 
     if (!result) {
-      throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE });
+      throw new NotFoundError({
+        resource: "category",
+        message: ERROR_MESSAGES.CATEGORY.NOT_FOUND,
+      });
     }
 
     await Product.updateMany(
@@ -114,7 +118,10 @@ const deleteCategory = async (ids: string | string[]) => {
   const count = await Category.countDocuments({ _id: { $in: idsArray } });
 
   if (count !== idsArray.length) {
-    throw new AppError({ message: ERROR_MESSAGES.NOT_FOUND.ID.MULTIPLE });
+    throw new NotFoundError({
+      resource: "category",
+      message: ERROR_MESSAGES.CATEGORY.NOT_FOUND,
+    });
   }
 
   const session = await mongoose.startSession();
