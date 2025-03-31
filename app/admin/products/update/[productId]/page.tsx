@@ -1,6 +1,6 @@
 import { getProductById } from "@/features/products/product.query";
 import ProductUpdateForm from "./product-form.update";
-import { getAllCategories } from "@/features/categories/category.query";
+import { getAllCategories } from "@/features/categories/category.queries";
 import { getAllTags } from "@/features/tags/tag.query";
 
 type Params = Promise<{ productId: string }>;

@@ -1,15 +1,16 @@
 import React from "react";
 import { NavigationMenu } from "./header-navigation";
-import { CircleUserRound, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ENDPOINTS } from "@/constants";
 import { CartBadge } from "./cart-badge";
 import UserButton from "../user-button";
+import SearchBox from "./search-box";
 
 const TopHeader = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("h-[48px] w-full lg:relative", className)}>
+    <div className={cn("h-[48px] w-full lg:relative z-index-40", className)}>
       <div className="container h-full flex items-center justify-between gap-4">
         <Logo />
         <div className="max-lg:h-0 h-full max-lg:overflow-hidden max-lg:has-[>#header-navigation-trigger:checked]:grid max-lg:absolute z-50 left-0 top-[48px] max-lg:w-full max-lg:has-[>#header-navigation-trigger:checked]:h-[calc(100dvh-48px)] grid-rows-[auto_auto_1fr] transition-all">
@@ -27,7 +28,10 @@ const TopHeader = ({ className }: { className?: string }) => {
             className="lg:hidden bg-black/70 cursor-pointer"
           />
         </div>
-        <ActionButtons />
+        <div className="flex items-center gap-4">
+          <SearchBox />
+          <ActionButtons />
+        </div>
       </div>
     </div>
   );

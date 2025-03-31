@@ -11,6 +11,8 @@ const links = [
   { name: "Products", href: ADMIN_ENDPOINTS.PRODUCTS },
   { name: "Tags", href: ADMIN_ENDPOINTS.TAGS },
   { name: "Blogs", href: ADMIN_ENDPOINTS.BLOGS },
+  { name: "Coupons", href: ADMIN_ENDPOINTS.COUPONS },
+  { name: "Order", href: ADMIN_ENDPOINTS.ORDERS },
 ];
 
 const AdminHeader = () => {

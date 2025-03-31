@@ -8,21 +8,21 @@ export const PreviewCard = ({ product }: { product: ProductPreview }) => {
   const formater = currencyFormatter;
   const imageUrl = product.variants[0].images[0] ?? "/images/none-image.png";
   return (
-    <div className="p-2">
+    <div className="max-w-max border-5 border-secondary border-t-transparent border-r-transparent">
       <Link
         href={getLink.product.home({
           categorySlug: product.category.slug,
           productSlug: product.slug,
         })}
-        className="relative inline-block cursor-pointer border-b-5 border-l-5 border-secondary hover:border-transparent hover:outline-2 outline-foreground"
+        className="p-1 relative inline-block cursor-pointer hover:border-transparent hover:outline-2 outline-foreground"
       >
         <ProductBadge product={product} className="absolute top-2 right-2" />
         <Image
           className="w-full"
           src={imageUrl}
           alt={product.name}
-          width={400}
-          height={300}
+          width={300}
+          height={200}
         />
         <div className="p-4">
           <p className="text-xl">{product.name}</p>

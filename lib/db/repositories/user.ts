@@ -26,6 +26,7 @@ const getAllUsers = unstable_cache(
     await connectToDatabase();
     const user = await User.find().sort().lean();
 
+    // todo: use schema
     const result = user.map(({ _id, ...user }) => ({
       ...user,
       id: _id.toString(),

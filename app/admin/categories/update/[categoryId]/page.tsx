@@ -1,6 +1,6 @@
 import React from "react";
 import CategoryUpdateForm from "@/app/admin/categories/update/[categoryId]/category-form.update";
-import { getCategoryById } from "@/features/categories/category.query";
+import { getCategoryById } from "@/features/categories/category.queries";
 
 const CategoryUpdatePage = async ({
   params,

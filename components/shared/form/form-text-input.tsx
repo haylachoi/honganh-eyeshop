@@ -7,12 +7,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import React from "react";
 
 interface FormTextInputProps<T extends FieldValues> {
   control: Control<T>;
   name: Path<T>;
   label?: string;
-  placeholder?: string;
 }
 
 const FormTextInput = <T extends FieldValues>({
@@ -20,7 +20,12 @@ const FormTextInput = <T extends FieldValues>({
   name,
   label,
   placeholder,
-}: FormTextInputProps<T>) => {
+  ...rest
+}: FormTextInputProps<T> &
+  Omit<
+    React.ComponentProps<"input">,
+    "name" | "value" | "onChange" | "onBlur"
+  >) => {
   return (
     <FormField
       control={control}
@@ -30,6 +35,7 @@ const FormTextInput = <T extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <Input
+              {...rest}
               {...field}
               placeholder={placeholder}
               onFocus={(e) => {

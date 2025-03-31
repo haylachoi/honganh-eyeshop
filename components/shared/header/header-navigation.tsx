@@ -112,6 +112,7 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
             <AccordionContent
               // className="lg:hidden lg:group-hover:block lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm"
               className="lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:translate-y-[10px] lg:group-hover:translate-y-0 lg:top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm transition-all duration-500 ease-out"
+              // className="lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:z-40 lg:group-hover:top-[48px] lg:-top-full lg:absolute z-40 lg:left-0 lg:w-full lg:bg-background lg:border-b-2 border-b-foreground lg:shadow-sm transition-all duration-500 ease-out"
             >
               {/* fake gap */}
               <div className="hidden lg:block w-full h-1 bg-foreground" />

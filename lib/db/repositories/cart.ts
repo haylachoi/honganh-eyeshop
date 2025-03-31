@@ -135,7 +135,6 @@ const updateItemQuantity = async ({
   if (!result) {
     throw new ServerError({});
   }
-  console.log("update item quantity", result.items);
 
   return cartTypeSchema.parse(result);
 };
@@ -151,8 +150,6 @@ const addItemToCart = async ({ userId, item }: CartInputType) => {
   if (!result) {
     throw new ServerError({});
   }
-
-  console.log("add item to cart", result.items);
 
   return cartTypeSchema.parse(result);
 };

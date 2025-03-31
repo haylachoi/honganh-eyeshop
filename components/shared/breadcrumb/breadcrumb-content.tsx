@@ -21,10 +21,8 @@ export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
     })
     .filter((segment) => segment.href !== "/c");
 
-  console.log(breadcrumbs);
-
   return (
-    <nav className="">
+    <nav className="py-2">
       <ul className="flex items-center gap-3">
         <li className="after:content-['>'] flex items-center gap-1">
           <Link href="/" className="hover:underline">

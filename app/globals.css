@@ -255,6 +255,6 @@
   margin-inline: auto;
 }
 
-body:has(#header-navigation-trigger:checked) {
+body:has(:is(#header-navigation-trigger, #search-box-trigger):checked) {
   overflow: hidden !important;
 }

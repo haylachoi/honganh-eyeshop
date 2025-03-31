@@ -42,6 +42,13 @@ export const safeQuery = new SafeQuery({
 
 export const customerQueryClient = safeQuery.use(async ({ ctx, next }) => {
   const session = await auth();
+
+  const userId = session?.id;
+  return next({ ...ctx, userId });
+});
+
+export const authCustomerQueryClient = safeQuery.use(async ({ ctx, next }) => {
+  const session = await auth();
   if (!session) throw new AuthenticationError({});
 
   const userId = session.id;

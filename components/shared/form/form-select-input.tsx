@@ -19,9 +19,9 @@ interface FormSelectInputProps<Q, T extends FieldValues> {
   name: keyof T;
   label: string;
   placeholder?: string;
-  list: Q[];
-  listIdKey: keyof Q;
-  listValueKey: keyof Q;
+  list: readonly Q[];
+  listIdKey?: keyof Q;
+  listValueKey?: keyof Q;
 }
 
 const FormSelectInput = <Q, T extends FieldValues>({
@@ -46,14 +46,15 @@ const FormSelectInput = <Q, T extends FieldValues>({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent>
-                {list.map((item) => (
-                  <SelectItem
-                    key={String(item[listIdKey])}
-                    value={String(item[listIdKey])}
-                  >
-                    {String(item[listValueKey])}
-                  </SelectItem>
-                ))}
+                {list.map((item) => {
+                  const id = listIdKey ? String(item[listIdKey]) : String(item);
+                  const value = listValueKey ? String(item[listValueKey]) : id;
+                  return (
+                    <SelectItem key={id} value={id}>
+                      {value}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </FormControl>

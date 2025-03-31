@@ -15,6 +15,10 @@ const productSchema = new Schema<ProductModel>(
       type: String,
       required: true,
     },
+    nameNoAccent: {
+      type: String,
+      required: true,
+    },
     slug: {
       type: String,
       required: true,
@@ -41,7 +45,6 @@ const productSchema = new Schema<ProductModel>(
         },
       },
     ],
-    // images: [String],
     brand: {
       type: String,
       required: true,
@@ -133,6 +136,7 @@ productSchema.index({ slug: 1 }, { unique: true });
 productSchema.index({ "category.slug": 1 });
 // productSchema.index({ slug: 1, "category.slug": 1 }, { unique: true });
 productSchema.index({ tags: 1 });
+productSchema.index({ nameNoAccent: "text" }, { default_language: "none" });
 
 const Product =
   (models.Product as Model<ProductModel>) ||

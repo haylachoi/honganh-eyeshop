@@ -3,7 +3,7 @@ import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { Id, QueryFilter } from "@/types";
+import { Id, QueryFilter, SearchFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
   ProductServerInputSchema,
@@ -11,6 +11,7 @@ import {
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
+import { FilterQuery } from "mongoose";
 
 const getAllProducts = unstable_cache(
   async () => {
@@ -34,6 +35,19 @@ type QueryType = z.input<typeof ProductTypeSchema>;
 const getProductByQuery = async (query: QueryFilter<QueryType>) => {
   await connectToDatabase();
   const products = await Product.find(query).lean();
+  const result = products.map((product) => ProductTypeSchema.parse(product));
+  return result;
+};
+
+const searchProductByQuery = async ({
+  query,
+  limit = 20,
+}: {
+  query: FilterQuery<ProductType>;
+  limit?: number;
+}) => {
+  await connectToDatabase();
+  const products = await Product.find(query).limit(limit).lean();
   const result = products.map((product) => ProductTypeSchema.parse(product));
   return result;
 };
@@ -134,6 +148,7 @@ const productRepository = {
   createProduct,
   updateProduct,
   deleteProduct,
+  searchProductByQuery,
 };
 
 export default productRepository;

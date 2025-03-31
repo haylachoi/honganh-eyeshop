@@ -56,7 +56,9 @@ const CartView = ({
 export default CartView;
 
 const CartItem = ({ item }: { item: CartItemDisplayType }) => {
-  const { fetch } = useCartStore();
+  const fetch = useCartStore((state) => state.fetch);
+  const addToSelectedItems = useCartStore((state) => state.addToSelectedItems);
+
   const { execute, isPending } = useAction(removeItemFromCart, {
     onSuccess: () => {
       fetch();
@@ -92,7 +94,10 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
       <div className="bg-secondary py-2 px-4 border-b border-foreground flex justify-between items-center">
         <span className="text-xl ">{item.name}</span>
         <div className="flex gap-4">
-          <button className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer">
+          <button
+            className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer"
+            onClick={() => addToSelectedItems(item)}
+          >
             Chọn
           </button>
           <button

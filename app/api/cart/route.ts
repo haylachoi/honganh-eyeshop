@@ -5,7 +5,6 @@ import { AppError } from "@/lib/error";
 export async function GET(req: NextRequest) {
   try {
     const result = await getCartWithProductDetailBySession();
-    console.log(result);
 
     if (result.success) {
       const cart = result.data;

@@ -36,9 +36,9 @@ export const CarouselProducts = ({
     <Carousel
       opts={{ align: "start" }}
       setApi={setEmblaApi}
-      className={cn("", className)}
+      className={cn("max-sm:contents", className)}
     >
-      <CarouselContent className="-ml-2">
+      <CarouselContent className="-ml-2 max-sm:grid grid-cols-2">
         {products.map((product) => (
           <CarouselItem
             key={product.id}
@@ -55,7 +55,10 @@ export const CarouselProducts = ({
         </div>
       )}
       {isDotButtonVisible && (
-        <CarouselDotButton className="mt-3 justify-center" {...opts} />
+        <CarouselDotButton
+          className="max-sm:hidden mt-3 justify-center"
+          {...opts}
+        />
       )}
     </Carousel>
   );

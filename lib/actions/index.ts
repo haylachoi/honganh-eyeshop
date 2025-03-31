@@ -44,6 +44,12 @@ export const actionClient = createSafeActionClient({
 
 export const customerActionClient = actionClient.use(async ({ next }) => {
   const session = await auth();
+  const userId = session?.id;
+  return next({ ctx: { userId } });
+});
+
+export const authCustomerActionClient = actionClient.use(async ({ next }) => {
+  const session = await auth();
   if (!session)
     throw new AuthenticationError({
       message: ERROR_MESSAGES.AUTH.UNAUTHENTICATED,

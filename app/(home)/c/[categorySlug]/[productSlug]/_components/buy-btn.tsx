@@ -9,12 +9,14 @@ import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants";
 import QuantityInput from "@/components/shared/quantity-input/index";
 import { AdjustQuantityButton } from "@/components/shared/quantity-input/adjust-quantity-button";
+import { useAuth } from "@/hooks/use-auth";
 
 const BuyButton = () => {
   const { currentVariant, product } = React.use(TopContext);
   const addToCart = useCartStore((state) => state.addToCart);
   const [value, setValue] = React.useState("1");
   const max = currentVariant?.countInStock ?? 1;
+  const { user, isLoading: isAuthLoading } = useAuth();
 
   React.useEffect(() => {
     setValue("1");
@@ -25,6 +27,11 @@ const BuyButton = () => {
   const handleBuy = async () => {
     if (!canBuy) {
       toast.error(TOAST_MESSAGES.PRODUCT.NOT_ENOUGH_STOCK);
+      return;
+    }
+    if (isAuthLoading) return;
+    if (!user) {
+      // todo: use local storage
       return;
     }
     if (currentVariant) {

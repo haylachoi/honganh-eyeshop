@@ -13,8 +13,7 @@ export function useAuth() {
         const res = await fetch("/api/auth");
         const data = await res.json();
         setUser(data.user);
-      } catch (error) {
-        console.error("Lỗi khi lấy user:", error);
+      } catch (e) {
       } finally {
         setIsLoading(false);
       }

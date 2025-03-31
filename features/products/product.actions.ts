@@ -1,10 +1,7 @@
 "use server";
 
-import { writeFile } from "fs/promises";
-import { authActionClient } from "@/lib/actions";
+import { actionClient, authActionClient } from "@/lib/actions";
 import { ProductInputSchema, productUpdateSchema } from "./product.validator";
-import crypto from "crypto";
-import path from "path";
 import productRepository from "@/lib/db/repositories/products";
 import { CACHE } from "@/constants";
 import { z } from "zod";
@@ -14,6 +11,7 @@ import {
   transformCreateInputVariantToDbVariant,
   transformUpdateInputVariantToDbVariant,
 } from "./product.utils";
+import { removeDiacritics } from "@/lib/utils";
 
 export const createProductAction = authActionClient
   .metadata({
@@ -21,48 +19,6 @@ export const createProductAction = authActionClient
   })
   .schema(ProductInputSchema)
   .action(async ({ parsedInput }) => {
-    // const progress: Promise<void>[] = [];
-    //
-    // const newVariants = parsedInput.variants.map(({ images, ...rest }) => {
-    //   const imageUrls: string[] = [];
-    //   const localProgress = images.map(async (file) => {
-    //     const data = await file.arrayBuffer();
-    //     const buffer = Buffer.from(data);
-    //     const fileName = `${parsedInput.name}_${crypto.randomUUID()}${path.extname(file.name)}`;
-    //     const basePath = path.join("images", "products", fileName);
-    //     const fileLink = path.join("/", basePath);
-    //     const filePath = path.join(process.cwd(), "public", basePath);
-    //     imageUrls.push(fileLink);
-    //     return writeFile(filePath, buffer);
-    //   });
-    //   progress.push(...localProgress);
-    //
-    //   return {
-    //     ...rest,
-    //     images: imageUrls,
-    //   };
-    // });
-    //
-    // await Promise.all(progress);
-
-    // // todo: get from safe query
-    // const categories = await categoriesRepository.getAllCategories();
-    // const category = categories.find(
-    //   (category) => category.id === parsedInput.category,
-    // );
-    //
-    // if (!category) {
-    //   throw new AppError({
-    //     message: ERROR_MESSAGES.NOT_FOUND.ID.SINGLE,
-    //   });
-    // }
-    //
-    // const newCatgory = {
-    //   _id: category.id,
-    //   name: category.name,
-    //   slug: category.slug,
-    // };
-
     const newVariants = await transformCreateInputVariantToDbVariant({
       variants: parsedInput.variants,
       productName: parsedInput.name,
@@ -77,6 +33,7 @@ export const createProductAction = authActionClient
 
     const input = {
       ...parsedInput,
+      nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
       tags: newTags,
@@ -108,6 +65,7 @@ export const updateProductAction = authActionClient
 
     const input = {
       ...parsedInput,
+      nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
       tags: newTags,
@@ -132,4 +90,33 @@ export const deleteProductAction = authActionClient
     // delete item from cart
 
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+  });
+
+export const searchProductsAction = actionClient
+  .metadata({
+    actionName: "searchProducts",
+  })
+  .schema(z.string())
+  .action(async ({ parsedInput: keyword }) => {
+    const [textSearchResults, regexSearchResults] = await Promise.all([
+      productRepository.searchProductByQuery({
+        query: { $text: { $search: keyword } },
+      }),
+      productRepository.searchProductByQuery({
+        query: {
+          nameNoAccent: { $regex: keyword, $options: "i" },
+        },
+      }),
+    ]);
+
+    const mergedResults = [
+      ...new Map(
+        [...textSearchResults, ...regexSearchResults].map((item) => [
+          item.id,
+          item,
+        ]),
+      ).values(),
+    ];
+
+    return mergedResults;
   });

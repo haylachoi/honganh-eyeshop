@@ -7,6 +7,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const removeDiacritics = (str: string) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[đĐ]/g, "d")
+    .replace(/([^0-9a-z-\s])/g, "");
+
 // todo: use env
 export const currencyFormatter = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -19,6 +27,10 @@ export const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   month: "2-digit",
   year: "numeric",
 });
+
+export const formatDateTimeLocal = (date: Date) => {
+  return date.toISOString().slice(0, 16); // Lấy YYYY-MM-DDTHH:MM
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatError = (error: any) => {
@@ -162,6 +174,16 @@ export const getLink = {
     },
     home({ categorySlug }: { categorySlug: string }) {
       return `${ENDPOINTS.CATEGORIES}/${categorySlug}`;
+    },
+  },
+  coupon: {
+    update({ id }: { id: string }) {
+      return `${ADMIN_ENDPOINTS.COUPONS}/update/${id}`;
+    },
+  },
+  checkout: {
+    home({ checkoutId }: { checkoutId: string }) {
+      return `${ENDPOINTS.CHECKOUT}/${checkoutId}`;
     },
   },
 };

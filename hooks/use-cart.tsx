@@ -6,7 +6,11 @@ import { create } from "zustand";
 
 interface Cart {
   items: CartItemDisplayType[];
+  selectedItems: CartItemDisplayType[];
+  addToSelectedItems: (input: CartItemDisplayType) => void;
+  removeFromSelectedItems: (input: CartItemDisplayType) => void;
   fetch: () => Promise<void>;
+  setItems: (items: CartItemDisplayType[]) => void;
   addToCart: (input: CartItemDisplayType) => void;
   removeFromCart: (
     item: Pick<CartItemInputType, "productId" | "variantId">,
@@ -15,6 +19,22 @@ interface Cart {
 
 const useCartStore = create<Cart>()((set, get) => ({
   items: [],
+  selectedItems: [],
+  addToSelectedItems: (input) => {
+    set((state) => ({
+      ...state,
+      selectedItems: [...state.selectedItems, input],
+    }));
+  },
+
+  removeFromSelectedItems: (input) => {
+    set((state) => ({
+      ...state,
+      selectedItems: state.selectedItems.filter(
+        (item) => item.productId !== input.productId,
+      ),
+    }));
+  },
   fetch: async () => {
     const data = await fetch("/api/cart").then((result) => result.json());
     const cart = data.cart as CartItemDisplayType[] | undefined;
@@ -22,6 +42,12 @@ const useCartStore = create<Cart>()((set, get) => ({
     set((state) => ({
       ...state,
       items: cart,
+    }));
+  },
+  setItems: (items) => {
+    set((state) => ({
+      ...state,
+      items,
     }));
   },
   addToCart: (input) => {

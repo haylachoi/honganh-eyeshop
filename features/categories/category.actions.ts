@@ -10,36 +10,6 @@ import categoriesRepository from "@/lib/db/repositories/categories";
 import { authActionClient } from "@/lib/actions";
 import { z } from "zod";
 
-// export const getCategoryByIdAction = actionClient
-//   .metadata({
-//     actionName: "getCategoryById",
-//   })
-//   .schema(z.string())
-//   .action(async ({ parsedInput }) => {
-//     const category = await categoriesRepository.getCategoryById(parsedInput);
-//     return category;
-//   });
-//
-// export const getCategoryBySlugAction = authActionClient
-//   .metadata({
-//     actionName: "getCategoryBySlug",
-//   })
-//   .schema(z.string())
-//   .action(async ({ parsedInput }) => {
-//     const category = await categoriesRepository.getCategoryBySlug(parsedInput);
-//     console.log(category);
-//     return category;
-//   });
-//
-// export const getAllCategoriesAction = actionClient
-//   .metadata({
-//     actionName: "getAllCategoriesAction",
-//   })
-//   .action(async () => {
-//     const categories = await categoriesRepository.getAllCategories();
-//     return categories;
-//   });
-
 export const createCategoryAction = authActionClient
   .metadata({
     actionName: "createCategoryAction",

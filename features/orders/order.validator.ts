@@ -1,119 +1,81 @@
-import { IdSchema, MoneySchema, MongoIdSchema } from "@/lib/validator";
+import { MoneySchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
-import { couponInputSchema } from "../coupons/coupon.validator";
+import { dbCouponInputSchema } from "../coupons/coupon.validator";
+import {
+  checkoutProductSchema,
+  paymentMethodSchema,
+} from "../checkouts/checkout.validator";
 
 // general
 const moneySchema = MoneySchema;
-const paymentMethodSchema = z.enum(["cod", "online"]);
 const paymentStatusSchema = z.enum(["pending", "paid", "failed"]);
-const trackingNumberSchema = z.string().optional();
+const trackingNumberSchema = z.string();
 const orderStatusSchema = z.enum([
-  "pending", // Đơn hàng mới tạo, chờ xác nhận
-  "confirmed", // Đã xác nhận
-  "processing", // Đang xử lý (đóng gói, chuẩn bị giao)
-  "shipped", // Đã gửi đi
-  "delivered", // Đã giao thành công
-  "canceled", // Đã hủy
-  "returned", // Khách trả hàng
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "canceled",
+  "returned",
 ]);
-const cancelReasonSchema = z.string().optional();
+const cancelReasonSchema = z.string();
 
 // base
-const baseUserSchema = z.object({
+const customerSchema = z.object({
   name: z.string().min(1, "Tên không được để trống"),
   email: z.string().email("Email không đúng định dạng"),
   phone: z.string().min(1, "Số điện thoại không được để trống"),
 });
 
-const baseProductSchema = z.object({
-  variant: z.array(
-    z.object({
-      name: z.string(),
-      value: z.string(),
-    }),
-  ),
-  price: z.number(),
-  quantity: z.number(),
-});
-
-const baseShippingAddressSchema = z.object({
-  name: z.string().min(1, "Tên không được để trống"),
-  phone: z.string().min(1, "Số điện thoại không được để trống"),
+const shippingAddressSchema = z.object({
   address: z.string().min(1, "Địa chỉ không được để trống"),
-  city: z.string().min(1, "Thành phố không được để trống"),
+  ward: z.string().min(1, "Phường/xã không được để trống"),
+  district: z.string().min(1, "Quận/huyện không được để trống"),
+  city: z.string().min(1, "Thành phố/tỉnh không được để trống"),
 });
-
-const baseCouponCodeSchema = z
-  .string()
-  .min(1, "Mã không được để trống")
-  .optional();
 
 // input
-const inputUserSchema = baseUserSchema.extend({
-  id: IdSchema,
+
+export const orderCouponSchema = dbCouponInputSchema.pick({
+  code: true,
+  value: true,
+  maxDiscount: true,
+  type: true,
+  expiryDate: true,
 });
-
-const inputProductSchema = baseProductSchema.extend({
-  id: IdSchema,
-});
-
-// db
-const dbUserSchema = baseUserSchema
-  .extend({
-    _id: MongoIdSchema,
-  })
-  .transform(({ _id, ...rest }) => ({
-    ...rest,
-    id: _id.toString(),
-  }));
-
-const dbProductSchema = baseProductSchema
-  .extend({
-    _id: MongoIdSchema,
-  })
-  .transform(({ _id, ...rest }) => ({
-    ...rest,
-    id: _id.toString(),
-  }));
-
-const dbCouponSchema = couponInputSchema
-  .pick({ code: true, value: true })
-  .extend({
-    _id: MongoIdSchema,
-  })
-  .transform(({ _id, ...rest }) => ({
-    ...rest,
-    id: _id.toString(),
-  }));
 
 // main
 const baseOrderSchema = z.object({
-  user: inputUserSchema,
-  shippingAddress: baseShippingAddressSchema,
-  products: z.array(inputProductSchema),
+  customer: customerSchema,
+  shippingAddress: shippingAddressSchema,
+  items: z.array(checkoutProductSchema),
   paymentMethod: paymentMethodSchema,
 });
 
 export const orderInputSchema = baseOrderSchema.extend({
-  couponCode: baseCouponCodeSchema,
+  couponCode: z.string().min(1, "Mã không được để trống").optional(),
 });
 
-export const orderTypeSchema = baseOrderSchema
+export const orderDbInputSchema = baseOrderSchema.extend({
+  userId: MongoIdSchema.optional(),
+  coupon: orderCouponSchema.optional(),
+  discount: moneySchema,
+  subTotal: moneySchema,
+  total: moneySchema,
+  paymentStatus: paymentStatusSchema,
+  shippingFee: moneySchema,
+  trackingNumber: trackingNumberSchema.optional(),
+  orderStatus: orderStatusSchema,
+  cancelReason: cancelReasonSchema.optional(),
+});
+
+export const orderTypeSchema = orderDbInputSchema
   .extend({
     _id: MongoIdSchema,
-    user: dbUserSchema,
-    products: z.array(dbProductSchema),
-    coupon: dbCouponSchema,
-    discount: moneySchema,
-    total: moneySchema,
-    paymentMethod: paymentMethodSchema,
-    paymentStatus: paymentStatusSchema,
-    shippingFee: moneySchema,
-    trackingNumber: trackingNumberSchema,
-    orderStatus: orderStatusSchema,
-    cancelReason: cancelReasonSchema,
   })
-  .transform(({ _id, ...rest }) => ({
+  .transform(({ _id, userId, ...rest }) => ({
     ...rest,
     id: _id.toString(),
+    userId: userId?.toString(),
   }));

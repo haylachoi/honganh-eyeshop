@@ -13,6 +13,7 @@ const TrendingContent = ({
   products: ProductPreview[];
 }) => {
   return (
+    // toto: fix mobile screen with no carousel
     <CarouselProducts
       products={products}
       className={className}

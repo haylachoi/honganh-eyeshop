@@ -1,9 +1,11 @@
 import { z } from "zod";
 import { IdSchema, MongoIdSchema } from "@/lib/validator";
 
+export const categorySlugSchema = z.string().min(1, "Slug is required");
+
 export const CategoryInputSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  slug: z.string().min(1, "Slug is required"),
+  slug: categorySlugSchema,
   description: z.string().optional(),
   attributes: z.array(
     z.object({ name: z.string().min(1), display: z.string().min(1) }),

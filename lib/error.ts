@@ -9,6 +9,8 @@ export const RESOURCE_TYPES = {
   SERVER: "server",
   UNKNOWN: "unknown",
   CART: "cart",
+  CHECKOUT: "checkout",
+  COUPON: "coupon",
 } as const;
 
 export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];

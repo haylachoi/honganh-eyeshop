@@ -73,8 +73,9 @@ export const ProductInputSchema = baseProductSchema.extend({
 
 export const ProductServerInputSchema = z.object({
   name: nameSchema,
+  nameNoAccent: nameSchema,
   slug: slugSchema,
-  category: z.object({ _id: z.string(), name: z.string(), slug: z.string() }),
+  category: z.object({ _id: IdSchema, name: z.string(), slug: z.string() }),
   attributes: z.array(attributeSchema),
   brand: brandSchema,
   description: descriptionSchema,
@@ -99,6 +100,7 @@ export const variantTypeSchema = baseVariantSchema
 export const productTypeWithoutTransformSchema = z.object({
   _id: MongoIdSchema,
   name: nameSchema,
+  nameNoAccent: nameSchema,
   slug: slugSchema,
   category: z
     .object({ _id: MongoIdSchema, name: z.string(), slug: z.string() })

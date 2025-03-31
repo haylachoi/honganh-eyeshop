@@ -11,3 +11,7 @@ export type MoneyType = number;
 export type QueryFilter<T> = Partial<{
   [K in Path<T>]: PathValue<T, K>;
 }>;
+
+export type SearchFilter<T> = Partial<{
+  [K in Path<T>]: unknown;
+}>;

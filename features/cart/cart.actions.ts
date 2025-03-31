@@ -1,6 +1,6 @@
 "use server";
 
-import { customerActionClient } from "@/lib/actions";
+import { authCustomerActionClient } from "@/lib/actions";
 import { cartItemInputSchema } from "./cart.validator";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import productRepository from "@/lib/db/repositories/products";
@@ -10,7 +10,7 @@ import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
 
-export const addItemToCart = customerActionClient
+export const addItemToCart = authCustomerActionClient
   .metadata({
     actionName: "addItemToCart",
   })
@@ -61,7 +61,7 @@ export const addItemToCart = customerActionClient
     return result;
   });
 
-export const updateItemQuantity = customerActionClient
+export const updateItemQuantity = authCustomerActionClient
   .metadata({
     actionName: "updateItemQuantity",
   })
@@ -116,7 +116,7 @@ export const updateItemQuantity = customerActionClient
     return result;
   });
 
-export const removeItemFromCart = customerActionClient
+export const removeItemFromCart = authCustomerActionClient
   .metadata({
     actionName: "removeItemFromCart",
   })

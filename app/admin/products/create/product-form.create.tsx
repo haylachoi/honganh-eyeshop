@@ -86,7 +86,13 @@ const ProductCreateForm = ({
 
   useEffect(() => {
     if (!isManualSlug) {
-      setValue("slug", slugify(debouncedName, { lower: true, strict: true }));
+      setValue(
+        "slug",
+        slugify(debouncedName.replace(/[đĐ]/g, "d"), {
+          lower: true,
+          strict: true,
+        }),
+      );
     }
   }, [debouncedName, isManualSlug, setValue]);
 

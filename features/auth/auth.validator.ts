@@ -1,16 +1,16 @@
 import { IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
-const nameSchema = z.string().min(2).trim();
+export const userNameSchema = z.string().min(2).trim();
+export const userEmailSchema = z.string().min(3).trim();
+export const userPhoneSchema = z.string().min(5).trim();
 const roleSchema = z.string().min(2).trim();
-const emailSchema = z.string().min(3).trim();
 const avatarSchema = z.string().trim().optional();
-const phoneSchema = z.string().min(5).trim();
 const passwordSchema = z.string().min(2).trim();
 const saltSchema = z.string();
 
 export const signInInputSchema = z.object({
-  email: emailSchema,
+  email: userEmailSchema,
   password: passwordSchema,
 });
 
@@ -18,11 +18,11 @@ export const userSchema = z
   .object({
     // _id: IdSchema,
     _id: MongoIdSchema,
-    name: nameSchema,
-    email: emailSchema,
+    name: userNameSchema,
+    email: userEmailSchema,
     role: roleSchema,
     avatar: avatarSchema,
-    phone: phoneSchema,
+    phone: userPhoneSchema,
     password: passwordSchema,
     salt: saltSchema,
   })
@@ -36,11 +36,11 @@ export const userWithoutPasswordSchema = z
   .object({
     // _id: IdSchema,
     _id: MongoIdSchema,
-    name: nameSchema,
+    name: userNameSchema,
     avatar: avatarSchema,
     role: roleSchema,
-    email: emailSchema,
-    phone: phoneSchema,
+    email: userEmailSchema,
+    phone: userPhoneSchema,
   })
   .strip()
   .transform(({ _id, ...rest }) => ({
@@ -50,9 +50,9 @@ export const userWithoutPasswordSchema = z
 
 export const signUpInputSchema = signInInputSchema
   .extend({
-    name: nameSchema,
+    name: userNameSchema,
     role: roleSchema.optional(),
-    phone: phoneSchema,
+    phone: userPhoneSchema,
     confirmPassword: passwordSchema,
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -60,25 +60,25 @@ export const signUpInputSchema = signInInputSchema
   });
 
 export const signUpSchema = z.object({
-  name: nameSchema,
-  email: emailSchema,
+  name: userNameSchema,
+  email: userEmailSchema,
   role: roleSchema,
-  phone: phoneSchema,
+  phone: userPhoneSchema,
   password: passwordSchema,
   salt: saltSchema,
 });
 
 export const profileUpdateSchema = z.object({
   id: IdSchema,
-  name: nameSchema,
-  email: emailSchema,
+  name: userNameSchema,
+  email: userEmailSchema,
   role: roleSchema,
-  phone: phoneSchema,
+  phone: userPhoneSchema,
 });
 
 export const safeUserInfoSchema = z.object({
   id: IdSchema,
-  name: nameSchema,
+  name: userNameSchema,
   role: roleSchema,
   avatar: avatarSchema,
 });

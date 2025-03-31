@@ -44,6 +44,10 @@ const couponSchema = new Schema<CouponModel>(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      required: true,
+    },
     startDate: {
       type: Date,
       required: true,

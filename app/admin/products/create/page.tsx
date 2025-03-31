@@ -3,7 +3,7 @@ import ProductCreateForm from "./product-form.create";
 import Link from "next/link";
 import { ADMIN_ENDPOINTS } from "@/constants";
 import { getAllTags } from "@/features/tags/tag.query";
-import { getAllCategories } from "@/features/categories/category.query";
+import { getAllCategories } from "@/features/categories/category.queries";
 
 const CreateProductPage = async () => {
   const [categoriesResult, tagsResult] = await Promise.all([

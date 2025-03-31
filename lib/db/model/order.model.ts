@@ -12,45 +12,88 @@ export interface OrderModel extends Document, DbModel {
 
 const orderSchema = new Schema<OrderModel>(
   {
-    user: {
-      _id: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    customer: {
       name: { type: String, required: true },
       email: { type: String, required: true },
       phone: { type: String, required: true },
     },
     shippingAddress: {
-      name: { type: String, required: true },
-      phone: { type: String, required: true },
-      address: { type: String, required: true },
-      city: { type: String, required: true },
+      address: { type: String },
+      ward: { type: String },
+      district: { type: String },
+      city: { type: String },
     },
-    products: [
-      {
-        _id: false,
-        variant: [
-          {
-            name: { type: String, required: true },
-            value: { type: String, required: true },
+    items: {
+      type: [
+        {
+          productId: {
+            type: Schema.Types.ObjectId,
+            ref: "Product",
+            required: true,
           },
-        ],
-        price: { type: Number, required: true },
-        quantity: { type: Number, required: true },
-      },
-    ],
+          variantId: {
+            type: String,
+            required: true,
+          },
+          productName: {
+            type: String,
+            required: true,
+          },
+          productUrl: {
+            type: String,
+            required: true,
+          },
+          attributes: [
+            {
+              _id: false,
+              name: {
+                type: String,
+                required: true,
+              },
+              value: {
+                type: String,
+                required: true,
+              },
+            },
+          ],
+          price: {
+            type: Number,
+            required: true,
+          },
+          imageUrl: {
+            type: String,
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+    },
     coupon: {
-      _id: {
-        type: Schema.Types.ObjectId,
-        ref: "Coupon",
-        required: true,
+      type: {
+        code: { type: String, required: true },
+        value: { type: Number, required: true },
+        discountType: {
+          type: String,
+          enum: ["fixed", "percent"],
+          required: true,
+        },
+        maxDiscount: { type: Number, required: true },
+        expiryDate: { type: Date, required: true },
       },
-      code: { type: String, required: true },
-      value: { type: Number, required: true },
+      required: false,
     },
     discount: {
+      type: Number,
+      default: 0,
+    },
+    subTotal: {
       type: Number,
       required: true,
     },
@@ -72,7 +115,6 @@ const orderSchema = new Schema<OrderModel>(
     },
     trackingNumber: {
       type: String,
-      default: null,
     },
     orderStatus: {
       type: String,
@@ -80,7 +122,6 @@ const orderSchema = new Schema<OrderModel>(
     },
     cancelReason: {
       type: String,
-      default: null,
     },
   },
   { timestamps: true },

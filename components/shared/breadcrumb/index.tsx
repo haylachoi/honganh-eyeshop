@@ -1,4 +1,4 @@
-import { getAllCategories } from "@/features/categories/category.query";
+import { getAllCategories } from "@/features/categories/category.queries";
 import { BreadcrumbContent } from "./breadcrumb-content";
 
 const Breadcrumb = async () => {
@@ -9,7 +9,7 @@ const Breadcrumb = async () => {
     ...Object.fromEntries(categories.map(({ slug, name }) => [slug, name])),
   };
   return (
-    <div className="py-2 container">
+    <div className="container">
       <BreadcrumbContent map={dic} />
     </div>
   );

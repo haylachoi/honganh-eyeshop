@@ -1,3 +1,5 @@
+import { parseInt } from "lodash";
+
 export const APP_NAME = "honganh-eyeshop";
 export const BASE_URL = "http://localhost:3000";
 
@@ -7,6 +9,7 @@ export const ENDPOINTS = {
   LOGIN: "/login",
   SIGN_UP: "/signup",
   CART: "/cart",
+  CHECKOUT: "/checkout",
   CATEGORIES: "/c",
   PRODUCTS: "/c",
   BLOGS: "/blogs",
@@ -26,6 +29,8 @@ export const ADMIN_ENDPOINTS = {
   PRODUCTS: "/admin/products",
   TAGS: "/admin/tags",
   BLOGS: "/admin/blogs",
+  COUPONS: "/admin/coupons",
+  ORDERS: "/admin/orders",
 };
 
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";
@@ -59,6 +64,12 @@ export const CACHE = {
       TAGS: "blogs",
     },
   },
+  COUPONS: {
+    ALL: {
+      KEY_PARTS: ["coupons"],
+      TAGS: "coupons",
+    },
+  },
   CART: {
     ALL: {
       KEY_PARTS: ["cart"],
@@ -67,6 +78,12 @@ export const CACHE = {
     USER: {
       KEY_PARTS: ["cart", "user"],
       TAGS: "user_cart",
+    },
+  },
+  ORDER: {
+    ALL: {
+      KEY_PARTS: ["order"],
+      TAGS: "order",
     },
   },
 };
@@ -119,8 +136,14 @@ export const ERROR_MESSAGES = {
   TAG: {
     NOT_FOUND: "Thẻ không tồn tại",
   },
+  COUPON: {
+    NOT_FOUND: "Mã giảm giá không tồn tại",
+  },
   CART: {
     NOT_FOUND: "Giỏ hàng trống",
+  },
+  CHECKOUT: {
+    NOT_FOUND: "Thanh toán không tồn tại",
   },
 };
 
@@ -151,6 +174,12 @@ export const TOAST_MESSAGES = {
       ERROR: "Đăng nhập thất bại",
     },
   },
+  CHECKOUT: {
+    CREATE: {
+      SUCCESS: "Thanh toán thành công",
+      ERROR: "Thanh toán thất bại",
+    },
+  },
   CART: {
     ADD: {
       SUCCESS: "Đã thêm vào giỏ thành công",
@@ -158,3 +187,5 @@ export const TOAST_MESSAGES = {
     },
   },
 };
+
+export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);
