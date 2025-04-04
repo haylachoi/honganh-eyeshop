@@ -4,10 +4,10 @@ import path from "path";
 import crypto from "crypto";
 
 export const transformCreateInputVariantToDbVariant = async ({
-  productName,
+  identity,
   variants,
 }: {
-  productName: string;
+  identity: string;
   variants: ProductInputType["variants"];
 }) => {
   const progress: Promise<void>[] = [];
@@ -17,7 +17,7 @@ export const transformCreateInputVariantToDbVariant = async ({
     const localProgress = images.map(async (file) => {
       const data = await file.arrayBuffer();
       const buffer = Buffer.from(data);
-      const fileName = `${productName}_${crypto.randomUUID()}${path.extname(file.name)}`;
+      const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
       const basePath = path.join("images", "products", fileName);
       const fileLink = path.join("/", basePath);
       const filePath = path.join(process.cwd(), "public", basePath);
@@ -37,10 +37,10 @@ export const transformCreateInputVariantToDbVariant = async ({
 };
 
 export const transformUpdateInputVariantToDbVariant = async ({
-  productName,
+  identity,
   variants,
 }: {
-  productName: string;
+  identity: string;
   variants: ProductUpdateType["variants"];
 }) => {
   const progress: Promise<void>[] = [];
@@ -52,7 +52,7 @@ export const transformUpdateInputVariantToDbVariant = async ({
       const localProgress = images.map(async (file) => {
         const data = await file.arrayBuffer();
         const buffer = Buffer.from(data);
-        const fileName = `${productName}_${crypto.randomUUID()}${path.extname(file.name)}`;
+        const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
         const basePath = path.join("images", "products", fileName);
         const fileLink = path.join("/", basePath);
         const filePath = path.join(process.cwd(), "public", basePath);

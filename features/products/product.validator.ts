@@ -71,7 +71,7 @@ export const ProductInputSchema = baseProductSchema.extend({
   variants: z.array(baseVariantSchema),
 });
 
-export const ProductServerInputSchema = z.object({
+export const ProductDbInputSchema = z.object({
   name: nameSchema,
   nameNoAccent: nameSchema,
   slug: slugSchema,
@@ -123,14 +123,8 @@ export const productTypeWithoutTransformSchema = z.object({
     ),
   variants: z.array(variantTypeSchema),
   avgRating: z.number().default(0),
-  numReviews: z.number().default(0),
-  // ratingDistribution: z.array(
-  //   z.object({
-  //     rating: z.number(),
-  //     count: z.number(),
-  //   }),
-  // ),
-  numSales: z.number().default(0),
+  totalReviews: z.number().default(0),
+  totalSales: z.number().default(0),
 });
 
 export const ProductTypeSchema = productTypeWithoutTransformSchema.transform(

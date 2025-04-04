@@ -31,7 +31,7 @@ export const baseCouponSchema = z.object({
   code: CodeSchema,
   value: ValueSchema,
   description: DescriptionSchema,
-  type: TypeSchema,
+  discountType: TypeSchema,
   minOrderValue: MinOrderValueSchema,
   maxDiscount: MaxDiscountSchema,
   usageLimit: UsageLimitSchema,

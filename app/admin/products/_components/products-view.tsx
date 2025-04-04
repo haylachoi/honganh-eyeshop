@@ -92,6 +92,11 @@ export const columns: ColumnDef<ProductType>[] = [
     cell: ({ row }) => <div className="">{row.getValue("brand")}</div>,
   },
   {
+    accessorKey: "avgRating",
+    header: "Đánh giá",
+    cell: ({ row }) => <div className="">{row.getValue("avgRating")}</div>,
+  },
+  {
     accessorKey: "variants",
     header: "Variants",
     cell: ({ row }) => (

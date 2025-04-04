@@ -18,7 +18,7 @@ const customerInfoSchema = z.object({
   phone: z.string().optional(),
 });
 
-const baseProductSchema = z.object({
+const baseItemSchema = z.object({
   productId: IdSchema,
   variantId: z.string().uuid(),
   productName: z.string(),
@@ -36,9 +36,9 @@ const shippingAddressSchema = z.object({
   city: z.string().optional(),
 });
 
-export const checkoutProductInputSchema = baseProductSchema;
+export const checkoutItemInputSchema = baseItemSchema;
 
-export const checkoutProductSchema = baseProductSchema
+export const checkoutItemSchema = baseItemSchema
   .extend({
     productId: MongoIdSchema,
     variantId: z.string().uuid(),
@@ -52,7 +52,7 @@ export const checkoutProductSchema = baseProductSchema
 const baseCheckoutSchema = z.object({
   customer: customerInfoSchema.optional(),
   shippingAddress: shippingAddressSchema.optional(),
-  items: z.array(checkoutProductSchema),
+  items: z.array(checkoutItemSchema),
   total: moneySchema,
   paymentMethod: paymentMethodSchema,
   shippingFee: moneySchema,
@@ -64,7 +64,7 @@ export const checkoutInputSchema = baseCheckoutSchema
     total: true,
   })
   .extend({
-    items: z.array(checkoutProductInputSchema),
+    items: z.array(checkoutItemInputSchema),
   });
 
 export const checkoutDbInputSchema = baseCheckoutSchema.extend({

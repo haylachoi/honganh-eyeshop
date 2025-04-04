@@ -9,11 +9,11 @@ export default function Layout({
 }>) {
   return (
     <div className="home__layout h-dvh grid grid-rows-[auto_1fr_auto]">
-      <div>
+      <div className="space-y-2">
         <Header />
         <Breadcrumb />
       </div>
-      <div>{children}</div>
+      <div className="mt-2">{children}</div>
       <Footer className="mt-12" />
     </div>
   );

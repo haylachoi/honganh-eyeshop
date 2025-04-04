@@ -1,12 +1,11 @@
-import { formatDateTimeLocal } from "@/lib/utils";
 import { CouponType } from "./coupon.types";
 
 const COUPON_MESSAGES = {
-  VALID: "Coupon is valid",
-  INACTIVE: "Coupon is not active",
-  LIMIT: "Coupon limit reached",
-  NOT_FOUND: "Coupon not found",
-  MIN_ORDER_VALUE: "Order value is less than minimum order value",
+  VALID: "Mã giảm giá hợp lệ",
+  LIMIT: "Mã giảm giá đã đạt giới hạn sử dụng",
+  NOT_FOUND: "Mã giảm giá không tồn tại",
+  MIN_ORDER_VALUE: "Giá trị đơn hàng chưa đạt mức tối thiểu",
+  EXPIRED: "Mã giảm giá đã hết hạn",
 };
 
 export const calculateDiscount = ({
@@ -16,13 +15,13 @@ export const calculateDiscount = ({
   total: number;
   coupon?: {
     value: number;
-    type: "percent" | "fixed";
+    discountType: "percent" | "fixed";
     maxDiscount: number;
   };
 }): number => {
   if (!coupon) return 0;
 
-  const { value, type, maxDiscount } = coupon;
+  const { value, discountType: type, maxDiscount } = coupon;
 
   const discount =
     type === "fixed"
@@ -44,14 +43,18 @@ export const validateCoupon = ({
   }
 
   if (coupon.status === "inactive") {
-    return { valid: false, message: COUPON_MESSAGES.INACTIVE };
+    return { valid: false, message: COUPON_MESSAGES.NOT_FOUND };
+  }
+
+  if (coupon.expiryDate < new Date()) {
+    return { valid: false, message: COUPON_MESSAGES.EXPIRED };
   }
 
   if (coupon.usedCount > coupon.usageLimit) {
     return { valid: false, message: COUPON_MESSAGES.LIMIT };
   }
 
-  if (coupon.minOrderValue > subTotal) {
+  if (subTotal < coupon.minOrderValue) {
     return {
       valid: false,
       message: `${COUPON_MESSAGES.MIN_ORDER_VALUE}: ${coupon.minOrderValue}`,
@@ -63,11 +66,11 @@ export const validateCoupon = ({
     message: COUPON_MESSAGES.VALID,
     couponInfo: {
       code: coupon.code,
-      type: coupon.type,
+      discountType: coupon.discountType,
       value: coupon.value,
       description: coupon.description,
       maxDiscount: coupon.maxDiscount,
-      expiryDate: formatDateTimeLocal(coupon.expiryDate),
+      expiryDate: coupon.expiryDate,
     },
   };
 };

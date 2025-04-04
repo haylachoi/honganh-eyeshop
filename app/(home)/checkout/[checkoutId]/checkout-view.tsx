@@ -8,21 +8,89 @@ import { calculateDiscount } from "@/features/coupons/coupon.utils";
 import { createOrderAction } from "@/features/orders/order.actions";
 import { orderInputSchema } from "@/features/orders/order.validator";
 import { useCheckoutStore } from "@/hooks/use-checkout";
-import { onActionError } from "@/lib/actions/action.helper";
 import { cn, currencyFormatter } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import React from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
+import { ZodError } from "zod";
 
-const CheckoutView = ({ checkout }: { checkout: CheckoutType }) => {
+const formatZodError = (error: ZodError): Record<string, string> => {
+  return error.errors.reduce<Record<string, string>>((acc, err) => {
+    if (err.path.length > 0) {
+      acc[err.path.join(".")] = err.message;
+    } else {
+      acc["_global"] = err.message;
+    }
+    return acc;
+  }, {});
+};
+
+const getFormFields = (checkout: CheckoutType) => [
+  {
+    label: "Tên khách hàng",
+    name: "customer.name",
+    type: "text",
+    value: checkout?.customer?.name,
+  },
+  {
+    label: "Email",
+    name: "customer.email",
+    type: "text",
+    value: checkout?.customer?.email,
+  },
+  {
+    label: "Số điện thoại",
+    name: "customer.phone",
+    type: "tel",
+    value: checkout?.customer?.phone,
+  },
+  {
+    label: "Địa chỉ",
+    name: "shippingAddress.address",
+    type: "text",
+    value: checkout?.shippingAddress?.address,
+  },
+  {
+    label: "Phường/xã",
+    name: "shippingAddress.ward",
+    type: "text",
+    value: checkout?.shippingAddress?.ward,
+  },
+  {
+    label: "Quận/huyện",
+    name: "shippingAddress.district",
+    type: "text",
+    value: checkout?.shippingAddress?.district,
+  },
+  {
+    label: "Thành phố/tỉnh",
+    name: "shippingAddress.city",
+    type: "text",
+    value: checkout?.shippingAddress?.city,
+  },
+];
+
+const CheckoutView = ({
+  checkout,
+  className,
+}: {
+  checkout: CheckoutType;
+  className?: string;
+}) => {
   const coupon = useCheckoutStore((state) => state.coupon);
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
   const { execute, isPending } = useAction(createOrderAction, {
     onSuccess: (result) => {
       console.log(result);
     },
-    onError: onActionError,
+    onError: (e) => {
+      if (e.error?.serverError) {
+        toast.error(e.error.serverError.message);
+        return;
+      }
+    },
   });
 
   const discount = calculateDiscount({
@@ -31,100 +99,82 @@ const CheckoutView = ({ checkout }: { checkout: CheckoutType }) => {
   });
   const total = Math.max(checkout.total - discount, 0);
 
+  const onSubmit = (formData: FormData) => {
+    const rawData = Object.fromEntries(formData.entries());
+    const data = Object.keys(rawData).reduce(
+      (acc, key) => {
+        const keys = key.split(".");
+        keys.reduce((nestedObj, k, index) => {
+          if (index === keys.length - 1) {
+            nestedObj[k] = rawData[key];
+          } else {
+            nestedObj[k] = nestedObj[k] || {};
+          }
+          return nestedObj[k];
+        }, acc);
+        return acc;
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      {} as Record<string, any>,
+    );
+
+    const input = {
+      ...data,
+      couponCode: coupon?.code,
+      items: checkout.items,
+    };
+    const inputResult = orderInputSchema.safeParse(input);
+    if (!inputResult.success) {
+      console.log(formatZodError(inputResult.error));
+      setErrors(formatZodError(inputResult.error));
+      return;
+    }
+
+    execute(inputResult.data);
+  };
+
   return (
-    <div className="grid lg:grid-cols-2 border border-input">
-      <div className="bg-background p-4">
-        <form
-          action={(formData) => {
-            const rawData = Object.fromEntries(formData.entries());
-            const data = Object.keys(rawData).reduce(
-              (acc, key) => {
-                const keys = key.split(".");
-                keys.reduce((nestedObj, k, index) => {
-                  if (index === keys.length - 1) {
-                    nestedObj[k] = rawData[key]; // Gán giá trị cuối
-                  } else {
-                    nestedObj[k] = nestedObj[k] || {}; // Tạo object nếu chưa tồn tại
-                  }
-                  return nestedObj[k];
-                }, acc);
-                return acc;
-              },
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              {} as Record<string, any>,
-            );
+    <div
+      className={cn(
+        "grid lg:grid-cols-2 gap-x-8 gap-y-4 max-lg:flex flex-col-reverse",
+        className,
+      )}
+    >
+      <div className="">
+        <form action={onSubmit} className="flex flex-col gap-4">
+          {getFormFields(checkout).map((field) => (
+            <FormInput
+              key={field.name}
+              label={field.label}
+              name={field.name}
+              type={field.type}
+              checkoutId={checkout.id}
+              value={field.value}
+              errors={errors}
+            />
+          ))}
 
-            const input = {
-              ...data,
-              couponCode: coupon?.code,
-              items: checkout.items,
-              paymentMethod: checkout.paymentMethod,
-            };
-            const inputResult = orderInputSchema.safeParse(input);
-            if (!inputResult.success) {
-              toast.error(inputResult.error.message);
-              return;
-            }
-
-            execute(inputResult.data);
-          }}
-        >
-          <FormInput
-            label="Tên khách hàng"
-            name="customer.name"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.customer?.name}
-          />
-          <FormInput
-            label="Email"
-            name="customer.email"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.customer?.email}
-          />
-          <FormInput
-            label="Số điện thoại"
-            name="customer.phone"
-            type="tel"
-            checkoutId={checkout.id}
-            value={checkout?.customer?.phone}
-          />
-          <FormInput
-            label="Địa chỉ"
-            name="shippingAddress.address"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.shippingAddress?.address}
-          />
-          <FormInput
-            label="Phường/xã"
-            name="shippingAddress.ward"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.shippingAddress?.ward}
-          />
-          <FormInput
-            label="Quận/huyện"
-            name="shippingAddress.district"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.shippingAddress?.district}
-          />
-          <FormInput
-            label="Thành phố/tỉnh"
-            name="shippingAddress.city"
-            type="text"
-            checkoutId={checkout.id}
-            value={checkout?.shippingAddress?.city}
-          />
-          <SubmitButton label="Đăng ký" />
+          <div>
+            <p>Phương thức thanh toán</p>
+            <div>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  defaultChecked={checkout.paymentMethod === "cod"}
+                />
+                <span>COD</span>
+              </label>
+            </div>
+          </div>
+          <SubmitButton label="Đặt hàng" isLoading={isPending} />
         </form>
       </div>
-      <div className="bg-secondary p-4">
+      <div className="max-lg:bg-secondary max-lg:py-4 max-lg:shadow-[0_0_0_20rem_var(--secondary)] clip-x">
         <ul className="space-y-4">
           {checkout?.items.map((item) => (
-            <li key={item.productId}>
+            <li key={`${item.productId}-${item.variantId}`}>
               <div className="grid grid-cols-[auto_1fr] gap-4">
                 <div className="relative">
                   <Image
@@ -166,7 +216,7 @@ const CheckoutView = ({ checkout }: { checkout: CheckoutType }) => {
             <span
               className={cn(
                 "hidden text-foreground/80",
-                coupon?.type === "percent" && "block",
+                coupon?.discountType === "percent" && "block",
               )}
             >
               {`(-${coupon?.value}%)`}
@@ -192,12 +242,16 @@ const FormInput = ({
   type,
   checkoutId,
   value: initialValue,
+  optional: isOptional = true,
+  errors,
   ...props
 }: React.ComponentProps<"input"> & {
   name: string;
   value: string | undefined;
   label: string;
   checkoutId: string;
+  optional?: boolean;
+  errors: Record<string, string>;
 }) => {
   const [value, setValue] = React.useState<string>(initialValue ?? "");
   const [debouncedValue] = useDebounce(value, 1000);
@@ -213,17 +267,22 @@ const FormInput = ({
 
   return (
     <div className="gap-2">
-      <label className="text-foreground/70 grid grid-rows-[auto_1fr]">
-        {label}
+      <label className="grid grid-rows-[auto_1fr]">
+        <div className="flex items-center gap-1">
+          {label}
+          {isOptional && <span className="text-destructive text-sm">*</span>}
+        </div>
         <input
           className="border border-input px-2 py-1"
           type={type}
           name={name}
           value={value}
+          required={!isOptional}
           onChange={(e) => setValue(e.target.value)}
           {...props}
         />
       </label>
+      <span className="text-destructive text-sm">{errors[name]}</span>
     </div>
   );
 };
@@ -231,7 +290,7 @@ const FormInput = ({
 const CouponForm = ({ checkout }: { checkout: CheckoutType }) => {
   const [code, setCode] = React.useState<string>("");
   const setCoupon = useCheckoutStore((state) => state.setCoupon);
-  const { execute, result } = useAction(checkValidCouponCodeAction, {
+  const { execute, result, isPending } = useAction(checkValidCouponCodeAction, {
     onSuccess: (result) => {
       if (result.data?.valid) {
         setCoupon(result.data.couponInfo);
@@ -244,7 +303,7 @@ const CouponForm = ({ checkout }: { checkout: CheckoutType }) => {
   });
 
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-2 ">
+    <div className="grid grid-cols-[1fr_auto] gap-x-2 ">
       <div>
         <input
           className="border border-foreground size-full"
@@ -253,19 +312,22 @@ const CouponForm = ({ checkout }: { checkout: CheckoutType }) => {
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
-        <span>{result?.data?.message}</span>
       </div>
-      <button
-        className="bg-primary text-white px-4 py-2 cursor-pointer"
-        onClick={() =>
-          execute({
-            code,
-            checkoutId: checkout.id,
-          })
-        }
+      <SubmitButton
+        type="button"
+        label="Áp dụng"
+        isLoading={isPending}
+        disabled={!code}
+        onClick={() => execute({ code, checkoutId: checkout.id })}
+      />
+      <span
+        className={cn(
+          "text-destructive",
+          result?.data?.valid && "text-success",
+        )}
       >
-        Áp dụng
-      </button>
+        {result?.data?.message}
+      </span>
     </div>
   );
 };

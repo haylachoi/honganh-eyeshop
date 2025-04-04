@@ -11,12 +11,26 @@ const SubmitButton = ({
   className,
   label,
   isLoading,
+  type = "submit",
   ...props
 }: SubmitButtonProps) => {
   return (
-    <Button className={cn("", className)} type="submit" {...props}>
-      {label}
-      {isLoading && <span className="ml-2 inline-block animate-spin">🌀</span>}
+    <Button
+      className={cn("grid grid-cols-[1fr_auto_1fr] gap-1", className)}
+      type={type}
+      {...props}
+    >
+      <span className="col-start-2">{label}</span>
+      <div className="col-start-3 text-left">
+        <span
+          className={cn(
+            "inline-block invisible",
+            isLoading && "visible animate-spin",
+          )}
+        >
+          🌀
+        </span>
+      </div>
     </Button>
   );
 };

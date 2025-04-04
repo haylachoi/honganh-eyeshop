@@ -12,9 +12,11 @@ const CheckoutPage = async ({ params }: { params: Params }) => {
   const checkout = checkoutResult.data;
 
   return (
-    <div className="container">
-      <h1>Checkout</h1>
-      <CheckoutView checkout={checkout} />
+    <div>
+      <h1 className="container text-3xl font-bold mb-4">Checkout</h1>
+      <div className="lg:bg-[linear-gradient(to_right,var(--background)_50%,var(--secondary)_50%)] lg:border-t border-input pt-4">
+        <CheckoutView className="container" checkout={checkout} />
+      </div>
     </div>
   );
 };

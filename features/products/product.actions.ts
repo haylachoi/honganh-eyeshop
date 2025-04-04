@@ -21,7 +21,7 @@ export const createProductAction = authActionClient
   .action(async ({ parsedInput }) => {
     const newVariants = await transformCreateInputVariantToDbVariant({
       variants: parsedInput.variants,
-      productName: parsedInput.name,
+      identity: parsedInput.slug,
     });
 
     const newCategory = await getCategoryInfoById(parsedInput.category);
@@ -45,6 +45,7 @@ export const createProductAction = authActionClient
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
   });
 
+// todo: update only changed value
 export const updateProductAction = authActionClient
   .metadata({
     actionName: "updateProduct",
@@ -53,7 +54,7 @@ export const updateProductAction = authActionClient
   .action(async ({ parsedInput }) => {
     const newVariants = await transformUpdateInputVariantToDbVariant({
       variants: parsedInput.variants,
-      productName: parsedInput.name,
+      identity: parsedInput.slug,
     });
 
     const newCategory = await getCategoryInfoById(parsedInput.category);
@@ -75,6 +76,16 @@ export const updateProductAction = authActionClient
     //todo: delete images
     // todo: delete variant in cart if change. Should move to repository
 
+    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+  });
+
+export const updateRatingAction = authActionClient
+  .metadata({
+    actionName: "updateRating",
+  })
+  .schema(z.object({ productId: z.string(), rating: z.number() }))
+  .action(async ({ parsedInput }) => {
+    await productRepository.updateRating(parsedInput);
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
   });
 

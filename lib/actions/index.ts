@@ -5,7 +5,12 @@ import {
 import { z, ZodError } from "zod";
 import mongoose from "mongoose";
 import { auth } from "@/features/auth/auth.query";
-import { AppError, AuthenticationError, ERROR_TYPES } from "../error";
+import {
+  AppError,
+  AuthenticationError,
+  ERROR_TYPES,
+  ValidationError,
+} from "../error";
 import { ERROR_MESSAGES } from "@/constants";
 
 export const actionClient = createSafeActionClient({
@@ -22,6 +27,14 @@ export const actionClient = createSafeActionClient({
       return {
         message: `${duplicateField} already exists`,
         type: ERROR_TYPES.VALIDATION,
+      };
+    }
+
+    if (e instanceof ValidationError) {
+      return {
+        message: e.message,
+        type: e.type,
+        detail: e.detail,
       };
     }
 

@@ -7,7 +7,7 @@ import {
 import { ProductType } from "@/features/products/product.types";
 import React from "react";
 
-const header = ["Details", "Reviews"];
+const header = ["Chi tiết", "Miêu tả"];
 
 const MiddleSection = ({ product }: { product: ProductType }) => {
   return (
@@ -26,7 +26,7 @@ const MiddleSection = ({ product }: { product: ProductType }) => {
           ))}
         </TabList>
         <TabPanel value={header[0]}>content</TabPanel>
-        <TabPanel value={header[1]}>content reviews</TabPanel>
+        <TabPanel value={header[1]}>{product.description}</TabPanel>
       </Tabs>
     </div>
   );

@@ -94,38 +94,21 @@ const productSchema = new Schema<ProductModel>(
     ],
     avgRating: {
       type: Number,
+      min: 0,
+      max: 5,
       required: true,
       default: 0,
     },
-    numReviews: {
+    totalReviews: {
       type: Number,
       required: true,
       default: 0,
     },
-    // ratingDistribution: [
-    //   {
-    //     rating: {
-    //       type: Number,
-    //       required: true,
-    //     },
-    //     count: {
-    //       type: Number,
-    //       required: true,
-    //     },
-    //   },
-    // ],
-    numSales: {
+    totalSales: {
       type: Number,
       required: true,
       default: 0,
     },
-    // reviews: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Review",
-    //     default: [],
-    //   },
-    // ],
   },
   {
     timestamps: true,

@@ -47,6 +47,7 @@ const TopSection = ({ product }: { product: ProductType }) => {
           <h1 className="text-4xl text-primary font-bold capitalize mb-5">
             {product.name}
           </h1>
+          <span>{product.avgRating.toFixed(1)}</span>
 
           <div className="space-y-4">
             <VariantSelector variants={product.variants} />

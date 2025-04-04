@@ -1,10 +1,10 @@
 "use server";
 
-import { actionClient } from "@/lib/actions";
+import { actionClient, customerActionClient } from "@/lib/actions";
 import { signUpInputSchema, signInInputSchema } from "./auth.validator";
 import userRepository from "@/lib/db/repositories/user";
 import { comparePasswords, generateSalt, hashPassword } from "@/lib/utils";
-import { createSession } from "../session/session.core";
+import { createSession, deleteSession } from "../session/session.core";
 
 export const signUp = actionClient
   .metadata({
@@ -33,6 +33,10 @@ export const signIn = actionClient
   .schema(signInInputSchema)
   .action(async ({ parsedInput }) => {
     const user = await userRepository.getUserByEmail(parsedInput.email);
+    console.log("user", user);
+    if (!user) {
+      return false;
+    }
     const isMatched = await comparePasswords({
       password: parsedInput.password,
       salt: user.salt,
@@ -48,4 +52,16 @@ export const signIn = actionClient
     }
 
     return isMatched;
+  });
+
+export const logoutAction = customerActionClient
+  .metadata({
+    actionName: "logout",
+  })
+  .action(async ({ ctx }) => {
+    if (ctx.userId) {
+      await deleteSession();
+      return true;
+    }
+    return false;
   });

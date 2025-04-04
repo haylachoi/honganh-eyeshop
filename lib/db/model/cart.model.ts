@@ -43,7 +43,7 @@ const cartSchema = new Schema<CartModel>(
 );
 
 cartSchema.index(
-  { "items.productId": 1, "items.variantId": 1 },
+  { userId: 1, "items.productId": 1, "items.variantId": 1 },
   { unique: true },
 );
 

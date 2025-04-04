@@ -1,7 +1,7 @@
-import { parseInt } from "lodash";
-
 export const APP_NAME = "honganh-eyeshop";
 export const BASE_URL = "http://localhost:3000";
+
+export const SESSION_NAME = "session";
 
 export const ENDPOINTS = {
   HOME: "/",
@@ -13,6 +13,7 @@ export const ENDPOINTS = {
   CATEGORIES: "/c",
   PRODUCTS: "/c",
   BLOGS: "/blogs",
+  ORDER: "/order",
   ON_SALE: "/on-sale",
   MOST_POPULAR: "/most-popular",
   TRENDING: "/trending",
@@ -38,6 +39,8 @@ export const PHONE = "123-456-7890";
 export const PHONE_LINK = `tel:${PHONE}`;
 export const EMAIL = "nv@nv.com.vn";
 export const EMAIL_LINK = `mailto:${EMAIL}`;
+
+export const REVIEW_ELIGIBILITY_PERIOD = 7;
 
 export const CACHE = {
   CATEGORIES: {
@@ -138,12 +141,23 @@ export const ERROR_MESSAGES = {
   },
   COUPON: {
     NOT_FOUND: "Mã giảm giá không tồn tại",
+    INVALID_COUPON: "Mã giảm giá không hợp lệ",
   },
   CART: {
     NOT_FOUND: "Giỏ hàng trống",
   },
   CHECKOUT: {
     NOT_FOUND: "Thanh toán không tồn tại",
+  },
+  ORDER: {
+    CREATE: {
+      SUCCESS: "Đã tạo đơn hàng thành công",
+      ERROR: {
+        GENERAL: "Tạo đơn hàng thất bại",
+        UNAVAILABLE: "Sản phẩm không hợp lệ hoặc không đủ hàng",
+      },
+    },
+    NOT_FOUND: "Đơn hàng không tồn tại",
   },
 };
 
@@ -184,6 +198,12 @@ export const TOAST_MESSAGES = {
     ADD: {
       SUCCESS: "Đã thêm vào giỏ thành công",
       ERROR: "Thêm vào giỏ thất bại",
+    },
+  },
+  REVIEW: {
+    CREATE: {
+      SUCCESS: "Đã gửi đánh giá thành công",
+      ERROR: "Gửi đánh giá thất bại",
     },
   },
 };

@@ -4,6 +4,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { UserSessionInput, UserSessionPayload } from "./session.type";
 import { cookies } from "next/headers";
 import { Result } from "@/types";
+import { SESSION_NAME } from "@/constants";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -31,7 +32,7 @@ export async function decrypt(session: string | undefined = "") {
 
 export async function getSession(): Promise<Result<UserSessionPayload, Error>> {
   const cookieStore = await cookies();
-  const session = cookieStore.get("session");
+  const session = cookieStore.get(SESSION_NAME);
   if (!session) {
     return {
       success: false,
@@ -61,7 +62,7 @@ export async function createSession(payload: UserSessionInput) {
   });
   const cookieStore = await cookies();
 
-  cookieStore.set("session", session, {
+  cookieStore.set(SESSION_NAME, session, {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
@@ -71,7 +72,7 @@ export async function createSession(payload: UserSessionInput) {
 }
 
 export async function updateSession() {
-  const session = (await cookies()).get("session")?.value;
+  const session = (await cookies()).get(SESSION_NAME)?.value;
   const payload = await decrypt(session);
 
   if (!session || !payload) {
@@ -81,7 +82,7 @@ export async function updateSession() {
   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   const cookieStore = await cookies();
-  cookieStore.set("session", session, {
+  cookieStore.set(SESSION_NAME, session, {
     httpOnly: true,
     secure: true,
     expires: expires,
@@ -91,6 +92,7 @@ export async function updateSession() {
 }
 
 export async function deleteSession() {
+  console.log("logout");
   const cookieStore = await cookies();
-  cookieStore.delete("session");
+  cookieStore.delete(SESSION_NAME);
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { DialogProvider } from "@/components/shared/alert-dialog-provider";
 import { Rubik } from "next/font/google";
 
 // const geistSans = Geist({
@@ -36,10 +34,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${rubik.variable} antialiased`}>
-        <DialogProvider>
-          {children}
-          <Toaster />
-        </DialogProvider>
+        {children}
+        <Toaster />
       </body>
     </html>
   );

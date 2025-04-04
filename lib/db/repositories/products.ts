@@ -3,15 +3,15 @@ import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { Id, QueryFilter, SearchFilter } from "@/types";
+import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
-  ProductServerInputSchema,
+  ProductDbInputSchema,
   ProductTypeSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, ProjectionType } from "mongoose";
 
 const getAllProducts = unstable_cache(
   async () => {
@@ -50,6 +50,25 @@ const searchProductByQuery = async ({
   const products = await Product.find(query).limit(limit).lean();
   const result = products.map((product) => ProductTypeSchema.parse(product));
   return result;
+};
+
+const getProductsByQueryAndProjection = async ({
+  query,
+  projection,
+  isPublished = true,
+  limit = 20,
+}: {
+  query: FilterQuery<ProductType>;
+  projection?: ProjectionType<ProductType>;
+  limit?: number;
+  isPublished?: boolean;
+}) => {
+  await connectToDatabase();
+  const products = await Product.find({ ...query, isPublished }, projection)
+    .limit(limit)
+    .lean();
+
+  return products;
 };
 
 const getProductByTags = async (tags: string[]) => {
@@ -96,24 +115,61 @@ const getCountInStockOfVariant = async (input: {
   return result?.variants?.[0].countInStock;
 };
 
-const createProduct = async (
-  input: z.input<typeof ProductServerInputSchema>,
-) => {
+const createProduct = async (input: z.input<typeof ProductDbInputSchema>) => {
   await connectToDatabase();
   const result = await Product.create(input);
   return result._id.toString();
 };
 
 const updateProduct = async (
-  input: z.input<typeof ProductServerInputSchema> & { id: string },
+  input: z.input<typeof ProductDbInputSchema> & { id: string },
 ) => {
   await connectToDatabase();
   // todo: check product exist
-  const result = await Product.findOneAndUpdate({ _id: input.id }, input, {
-    new: true,
-  });
+  const result = await Product.findOneAndUpdate(
+    { _id: input.id },
+    {
+      $set: input,
+    },
+    {
+      new: true,
+    },
+  );
   if (!result) {
-    // todo: this error is wrong, check if product exist before update
+    // todo: this error is not true, check if product exist before update
+    throw new NotFoundError({
+      resource: "product",
+      message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
+    });
+  }
+};
+
+const updateRating = async ({
+  productId,
+  rating,
+}: {
+  productId: Id;
+  rating: number;
+}) => {
+  await connectToDatabase();
+
+  const result = await Product.updateOne({ _id: productId }, [
+    {
+      $set: {
+        totalReviews: { $add: ["$totalReviews", 1] }, // Tăng totalReviews trước
+        avgRating: {
+          $divide: [
+            {
+              $add: [{ $multiply: ["$totalReviews", "$avgRating"] }, rating],
+            },
+            { $add: ["$totalReviews", 1] }, // Chia cho totalReviews mới
+          ],
+        },
+      },
+    },
+  ]);
+
+  if (!result) {
     throw new NotFoundError({
       resource: "product",
       message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
@@ -144,9 +200,11 @@ const productRepository = {
   getProductByTags,
   getProductBySlug,
   getProductByQuery,
+  getProductsByQueryAndProjection,
   getCountInStockOfVariant,
   createProduct,
   updateProduct,
+  updateRating,
   deleteProduct,
   searchProductByQuery,
 };

@@ -1,5 +1,6 @@
 import ProductView from "@/app/(home)/c/[categorySlug]/[productSlug]/_components/product-view";
 import { getProductBySlug } from "@/features/products/product.query";
+import { getReviewsWithUserNameByProductId } from "@/features/reviews/review.queries";
 
 // todo: generate metadata
 
@@ -20,10 +21,11 @@ const ProductPage = async ({ params }: { params: Params }) => {
   }
 
   const product = result.data;
+  const reviewsPromise = getReviewsWithUserNameByProductId(product.id);
 
   return (
     <div className="container">
-      <ProductView product={product} />
+      <ProductView product={product} reviewsPromise={reviewsPromise} />
     </div>
   );
 };

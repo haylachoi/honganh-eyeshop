@@ -1,5 +1,5 @@
 import { getAllOrders } from "@/features/orders/order.queries";
-import OrdersView from "./orders-view";
+import OrdersView from "./_components/orders-view";
 
 const OrdersPage = async () => {
   const result = await getAllOrders();

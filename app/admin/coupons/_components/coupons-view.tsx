@@ -93,7 +93,7 @@ export const columns: ColumnDef<CouponType>[] = [
     },
     cell: ({ row }) => (
       <div className="lowercase">
-        {row.original.type === "percent"
+        {row.original.discountType === "percent"
           ? `${row.getValue("value")} %`
           : currencyFormatter.format(row.getValue("value"))}
       </div>

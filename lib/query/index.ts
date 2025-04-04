@@ -40,6 +40,11 @@ export const safeQuery = new SafeQuery({
   },
 });
 
+export const authQueryClient = safeQuery.use(async ({ ctx, next }) => {
+  // toto: check permission
+  return next({});
+});
+
 export const customerQueryClient = safeQuery.use(async ({ ctx, next }) => {
   const session = await auth();
 

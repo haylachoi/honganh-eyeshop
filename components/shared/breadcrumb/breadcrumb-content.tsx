@@ -6,7 +6,9 @@ import { usePathname } from "next/navigation";
 
 export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
   const pathname = usePathname();
+  console.log(pathname);
   if (!pathname?.[1]) return null;
+  if (pathname.startsWith("/checkout")) return null;
 
   const segments = pathname.split("/").filter(Boolean); // Loại bỏ phần tử rỗng
 
@@ -22,7 +24,7 @@ export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
     .filter((segment) => segment.href !== "/c");
 
   return (
-    <nav className="py-2">
+    <nav className="">
       <ul className="flex items-center gap-3">
         <li className="after:content-['>'] flex items-center gap-1">
           <Link href="/" className="hover:underline">

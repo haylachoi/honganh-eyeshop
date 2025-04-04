@@ -86,7 +86,7 @@ const SearchBox = () => {
         // )}
       >
         <div className="overflow-hidden">
-          <div className="w-full h-[1px] bg-foreground" />
+          {isOpen && <div className="w-full h-[1px] bg-foreground" />}
           <ul>
             {searchResult.map((product) => (
               <li key={product.id}>{product.name}</li>

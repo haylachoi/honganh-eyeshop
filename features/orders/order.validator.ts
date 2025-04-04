@@ -2,23 +2,24 @@ import { MoneySchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { dbCouponInputSchema } from "../coupons/coupon.validator";
 import {
-  checkoutProductSchema,
+  checkoutItemSchema,
   paymentMethodSchema,
 } from "../checkouts/checkout.validator";
 
-// general
-const moneySchema = MoneySchema;
-const paymentStatusSchema = z.enum(["pending", "paid", "failed"]);
-const trackingNumberSchema = z.string();
-const orderStatusSchema = z.enum([
+export const ORDER_STATUS = [
   "pending",
   "confirmed",
-  "processing",
-  "shipped",
-  "delivered",
+  "completed",
   "canceled",
   "returned",
-]);
+] as const;
+
+// general
+export const orderIdSchema = z.string().uuid();
+const moneySchema = MoneySchema;
+const paymentStatusSchema = z.enum(["pending", "paid", "failed", "refund"]);
+const trackingNumberSchema = z.string();
+const orderStatusSchema = z.enum(ORDER_STATUS);
 const cancelReasonSchema = z.string();
 
 // base
@@ -41,7 +42,7 @@ export const orderCouponSchema = dbCouponInputSchema.pick({
   code: true,
   value: true,
   maxDiscount: true,
-  type: true,
+  discountType: true,
   expiryDate: true,
 });
 
@@ -49,7 +50,7 @@ export const orderCouponSchema = dbCouponInputSchema.pick({
 const baseOrderSchema = z.object({
   customer: customerSchema,
   shippingAddress: shippingAddressSchema,
-  items: z.array(checkoutProductSchema),
+  items: z.array(checkoutItemSchema),
   paymentMethod: paymentMethodSchema,
 });
 
@@ -58,6 +59,7 @@ export const orderInputSchema = baseOrderSchema.extend({
 });
 
 export const orderDbInputSchema = baseOrderSchema.extend({
+  orderId: orderIdSchema,
   userId: MongoIdSchema.optional(),
   coupon: orderCouponSchema.optional(),
   discount: moneySchema,
@@ -73,6 +75,8 @@ export const orderDbInputSchema = baseOrderSchema.extend({
 export const orderTypeSchema = orderDbInputSchema
   .extend({
     _id: MongoIdSchema,
+    completedAt: z.date().optional(),
+    createdAt: z.date(),
   })
   .transform(({ _id, userId, ...rest }) => ({
     ...rest,

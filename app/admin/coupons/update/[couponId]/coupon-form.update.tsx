@@ -66,7 +66,7 @@ export const CouponUpdateForm = ({
           control={control}
           name="type"
           label="Loại giảm giá"
-          defaultValue={defaultValues.type}
+          defaultValue={defaultValues.discountType}
           data={[
             { value: "percent", label: "Phần trăm" },
             { value: "fixed", label: "Giảm trực tiếp" },

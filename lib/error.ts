@@ -11,6 +11,7 @@ export const RESOURCE_TYPES = {
   CART: "cart",
   CHECKOUT: "checkout",
   COUPON: "coupon",
+  ORDER: "order",
 } as const;
 
 export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
@@ -31,20 +32,24 @@ export type ErrorType = (typeof ERROR_TYPES)[keyof typeof ERROR_TYPES];
 export class AppError extends Error {
   type: ErrorType;
   resource?: ResourceType;
+  detail?: string | object;
 
   constructor({
     type,
     message,
     resource,
+    detail,
   }: {
     type: ErrorType;
     message: string;
     resource?: ResourceType;
+    detail?: string | object;
   }) {
     super(message);
     this.name = type;
     this.type = type;
     this.resource = resource;
+    this.detail = detail;
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);
@@ -104,11 +109,13 @@ export class ValidationError extends AppError {
   constructor({
     resource,
     message = "Invalid input data",
+    detail,
   }: {
     resource: ResourceType;
     message?: string;
+    detail?: string | object; // detail có thể là string hoặc object chứa lỗi chi tiết
   }) {
-    super({ type: "ValidationError", message, resource });
+    super({ type: "ValidationError", message, resource, detail });
   }
 }
 

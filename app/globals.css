@@ -27,6 +27,7 @@
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
+  --success: oklch(0.7 0.2 150);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.87 0 0);
@@ -100,6 +101,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -253,8 +255,22 @@
 
 @utility container {
   margin-inline: auto;
+  @media (max-width: 48rem) {
+    padding-inline: 1rem;
+  }
 }
 
 body:has(:is(#header-navigation-trigger, #search-box-trigger):checked) {
   overflow: hidden !important;
+}
+
+.fluid-container {
+  box-shadow: 0 0 0 20rem var(--secondary);
+  clip-path: inset(0px -20rem 0px -20rem); /* Mở rộng ngang, giữ nguyên dọc */
+}
+
+.clip-x {
+  @media (max-width: 64rem) {
+    clip-path: inset(0px -20rem 0px -20rem); /* Mở rộng ngang, giữ nguyên dọc */
+  }
 }

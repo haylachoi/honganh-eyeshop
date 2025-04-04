@@ -1,4 +1,7 @@
-import { orderTypeSchema } from "@/features/orders/order.validator";
+import {
+  ORDER_STATUS,
+  orderTypeSchema,
+} from "@/features/orders/order.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
 
@@ -12,6 +15,10 @@ export interface OrderModel extends Document, DbModel {
 
 const orderSchema = new Schema<OrderModel>(
   {
+    orderId: {
+      type: String,
+      required: true,
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -79,13 +86,13 @@ const orderSchema = new Schema<OrderModel>(
       type: {
         code: { type: String, required: true },
         value: { type: Number, required: true },
+        maxDiscount: { type: Number, required: true },
+        expiryDate: { type: Date, required: true },
         discountType: {
           type: String,
           enum: ["fixed", "percent"],
           required: true,
         },
-        maxDiscount: { type: Number, required: true },
-        expiryDate: { type: Date, required: true },
       },
       required: false,
     },
@@ -104,10 +111,22 @@ const orderSchema = new Schema<OrderModel>(
     paymentMethod: {
       type: String,
       required: true,
+      enum: ["online", "cod"],
     },
     paymentStatus: {
       type: String,
       required: true,
+      enum: ["pending", "paid", "failed", "refund"],
+    },
+    completedAt: {
+      type: Date,
+      required: false,
+      validate: {
+        validator: function (value) {
+          return value.toDateString() >= this.createdAt.toDateString();
+        },
+        message: "paymentDate phải lớn hơn createdAt!",
+      },
     },
     shippingFee: {
       type: Number,
@@ -119,6 +138,7 @@ const orderSchema = new Schema<OrderModel>(
     orderStatus: {
       type: String,
       required: true,
+      enum: ORDER_STATUS,
     },
     cancelReason: {
       type: String,
@@ -126,6 +146,9 @@ const orderSchema = new Schema<OrderModel>(
   },
   { timestamps: true },
 );
+
+orderSchema.index({ orderId: 1 }, { unique: true });
+orderSchema.index({ userId: 1, "items.productId": 1, completedAt: 1 });
 
 const Order =
   (models.Order as Model<OrderModel>) ||

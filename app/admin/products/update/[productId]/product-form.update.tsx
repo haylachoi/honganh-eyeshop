@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { Switch } from "@/components/ui/switch";
 import { useDebounce } from "use-debounce";
-import slugify from "slugify";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import FormTextArea from "@/components/shared/form/form-text-area";
 import { useRouter } from "next/navigation";
@@ -37,6 +36,7 @@ import SubmitButton from "@/components/custom-ui/submit-button";
 import { AttributesForm } from "../../_components/form/attributes-form";
 import { TagsForm } from "../../_components/form/tags-form";
 import { VariantsForm } from "../../_components/form/variants-form";
+import { getDirtyValues, slugifyVn } from "@/lib/utils";
 
 const ProductUpdateForm = ({
   categories,
@@ -73,7 +73,12 @@ const ProductUpdateForm = ({
   });
 
   const [isManualSlug, setManualSlug] = useState(false);
-  const { watch, setValue, control } = form;
+  const {
+    watch,
+    setValue,
+    control,
+    formState: { dirtyFields },
+  } = form;
 
   const selectedCategory = watch("category");
 
@@ -83,7 +88,7 @@ const ProductUpdateForm = ({
 
   useEffect(() => {
     if (!isManualSlug) {
-      setValue("slug", slugify(debouncedName, { lower: true, strict: true }));
+      setValue("slug", slugifyVn(debouncedName));
     }
   }, [debouncedName, isManualSlug, setValue]);
 
@@ -115,6 +120,8 @@ const ProductUpdateForm = ({
     defaultValues.attributes,
   ]);
   const onSubmit = async (data: ProductUpdateType) => {
+    // const updatedFields = getDirtyValues(dirtyFields, data);
+    console.log(data);
     execute(data);
   };
 

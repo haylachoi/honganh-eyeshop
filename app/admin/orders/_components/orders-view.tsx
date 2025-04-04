@@ -34,8 +34,43 @@ import {
 import { OrderType } from "@/features/orders/order.types";
 import { Input } from "@/components/ui/input";
 import { currencyFormatter } from "@/lib/utils";
+import { ActionButton } from "./action-button";
 
 export const columns: ColumnDef<OrderType>[] = [
+  {
+    id: "orderId",
+    accessorKey: "orderId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mã ĐH
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="lowercase">{row.original.orderId}</div>,
+  },
+  {
+    id: "customer.email",
+    accessorKey: "customer.email",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">{row.original.customer.email}</div>
+    ),
+  },
   {
     id: "customer.name",
     accessorKey: "customer.name",
@@ -55,6 +90,24 @@ export const columns: ColumnDef<OrderType>[] = [
     ),
   },
   {
+    id: "discount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Giảm giá
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    accessorKey: "discount",
+    cell: ({ row }) => (
+      <div className="">{currencyFormatter.format(row.original.discount)}</div>
+    ),
+  },
+  {
     id: "total",
     header: ({ column }) => {
       return (
@@ -62,7 +115,7 @@ export const columns: ColumnDef<OrderType>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tổng tiền
+          Thành tiền
           <ArrowUpDown />
         </Button>
       );
@@ -71,6 +124,42 @@ export const columns: ColumnDef<OrderType>[] = [
     cell: ({ row }) => (
       <div className="">{currencyFormatter.format(row.original.total)}</div>
     ),
+  },
+  {
+    id: "paymentStatus",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Thanh toán
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    accessorKey: "total",
+    cell: ({ row }) => <div className="">{row.original.paymentStatus}</div>,
+  },
+  {
+    id: "orderStatus",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          TT Đơn hàng
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    accessorKey: "total",
+    cell: ({ row }) => <div className="">{row.original.orderStatus}</div>,
+  },
+  {
+    header: "Actions",
+    cell: ({ row }) => <ActionButton order={row.original} />,
   },
 ];
 

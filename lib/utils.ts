@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
 import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
+import slugify from "slugify";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,6 +33,13 @@ export const formatDateTimeLocal = (date: Date) => {
   return date.toISOString().slice(0, 16); // Lấy YYYY-MM-DDTHH:MM
 };
 
+export const slugifyVn = (text: string) => {
+  return slugify(text.replace(/[đĐ]/g, "d"), {
+    lower: true,
+    strict: true,
+  });
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatError = (error: any) => {
   if (error.name === "ZodError") {
@@ -51,6 +59,29 @@ export const formatError = (error: any) => {
     return `${duplicateField} already exists`;
   }
 };
+
+export function getDirtyValues<
+  DirtyFields extends Record<string, unknown>,
+  Values extends Record<keyof DirtyFields, unknown>,
+>(dirtyFields: DirtyFields, values: Values): Partial<typeof values> {
+  const dirtyValues = Object.keys(dirtyFields).reduce((prev, key) => {
+    // Unsure when RFH sets this to `false`, but omit the field if so.
+    if (!dirtyFields[key]) return prev;
+
+    return {
+      ...prev,
+      [key]:
+        typeof dirtyFields[key] === "object"
+          ? getDirtyValues(
+              dirtyFields[key] as DirtyFields,
+              values[key] as Values,
+            )
+          : values[key],
+    };
+  }, {});
+
+  return dirtyValues;
+}
 
 export function hashPassword(password: string, salt: string): Promise<string> {
   return new Promise((resolve, reject) => {

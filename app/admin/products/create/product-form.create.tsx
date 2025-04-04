@@ -33,6 +33,7 @@ import { VariantsForm } from "../_components/form/variants-form";
 import { useForm } from "react-hook-form";
 import { TagsForm } from "../_components/form/tags-form";
 import { AttributesForm } from "../_components/form/attributes-form";
+import { slugifyVn } from "@/lib/utils";
 
 const defaultValues: ProductInputType = {
   name: "ten",
@@ -86,13 +87,7 @@ const ProductCreateForm = ({
 
   useEffect(() => {
     if (!isManualSlug) {
-      setValue(
-        "slug",
-        slugify(debouncedName.replace(/[đĐ]/g, "d"), {
-          lower: true,
-          strict: true,
-        }),
-      );
+      setValue("slug", slugifyVn(debouncedName));
     }
   }, [debouncedName, isManualSlug, setValue]);
 

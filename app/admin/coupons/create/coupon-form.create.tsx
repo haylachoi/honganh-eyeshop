@@ -26,7 +26,7 @@ const defaultValues: InputType = {
   code: "",
   value: 10,
   description: "",
-  type: "percent",
+  discountType: "percent",
   minOrderValue: 500_000,
   maxDiscount: 20_000,
   usageLimit: 50,
@@ -72,7 +72,7 @@ export const CouponCreateForm = () => {
           control={control}
           name="type"
           label="Loại giảm giá"
-          defaultValue={defaultValues.type}
+          defaultValue={defaultValues.discountType}
           data={[
             { value: "percent", label: "Phần trăm" },
             { value: "fixed", label: "Giảm trực tiếp" },
