@@ -76,17 +76,11 @@ const SearchBox = () => {
       <div
         ref={ref}
         className={cn(
-          "fixed z-20 left-0 right-0 top-[48px] bg-background transition-all duration-400 ease-in-out",
+          "fixed z-20 left-0 right-0 top-[48px] bg-background transition-all duration-400 ease-in-out overflow-hidden",
         )}
-        // className={cn(
-        //   "fixed z-20 left-0 right-0 top-[48px] h-0 bg-background transition-all duration-500 ease-in-out",
-        //   isOpen
-        //     ? "opacity-100 h-[min(300px,calc(100dvh-100px))]"
-        //     : "opacity-0",
-        // )}
       >
         <div className="overflow-hidden">
-          {isOpen && <div className="w-full h-[1px] bg-foreground" />}
+          <div className="w-full h-[1px] bg-foreground" />
           <ul>
             {searchResult.map((product) => (
               <li key={product.id}>{product.name}</li>

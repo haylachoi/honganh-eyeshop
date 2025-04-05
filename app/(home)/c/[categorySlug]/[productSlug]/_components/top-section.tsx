@@ -51,7 +51,11 @@ const TopSection = ({ product }: { product: ProductType }) => {
             </h1>
             <div className="flex gap-2 items-center">
               <Star className="text-yellow-300 fill-current size-4" />
-              <span>{product.avgRating.toFixed(1)}</span>
+              <span>
+                {product.avgRating !== 0
+                  ? product.avgRating.toFixed(1)
+                  : "Chưa có đánh giá"}
+              </span>
             </div>
           </div>
 
