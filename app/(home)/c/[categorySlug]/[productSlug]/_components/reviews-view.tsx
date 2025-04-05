@@ -4,6 +4,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
 import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
+import { StarRatingDisplay } from "@/components/shared/star-rating-display";
 
 export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
   dayjs.extend(relativeTime);
@@ -31,16 +32,7 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
               </p>
             </div>
             <ul className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <li key={i}>
-                  <Star
-                    className={cn(
-                      "size-4 text-yellow-300 fill-current",
-                      i > review.rating && "text-muted-foreground fill-none",
-                    )}
-                  />
-                </li>
-              ))}
+              <StarRatingDisplay rating={review.rating} />
             </ul>
             <p className="mt-4">{review.comment}</p>
           </div>

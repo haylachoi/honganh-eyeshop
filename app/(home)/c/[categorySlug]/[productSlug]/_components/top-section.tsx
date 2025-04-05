@@ -3,6 +3,7 @@ import React from "react";
 import ImageSection from "./image-section";
 import VariantSelector from "./variant-section";
 import BuyButton from "./buy-btn";
+import { Star } from "lucide-react";
 
 type topContextProps = {
   product: ProductType;
@@ -41,13 +42,18 @@ const TopSection = ({ product }: { product: ProductType }) => {
         setCurrentVariant,
       }}
     >
-      <div className="flex flex-col lg:flex-row [&>*]:flex-1 gap-4">
+      <div className="flex flex-col lg:flex-row [&>*]:flex-1 gap-8">
         <ImageSection product={product} />
-        <div className="flex flex-col gap-4 justify-between">
-          <h1 className="text-4xl text-primary font-bold capitalize mb-5">
-            {product.name}
-          </h1>
-          <span>{product.avgRating.toFixed(1)}</span>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2 mb-5">
+            <h1 className="text-4xl text-primary font-bold capitalize">
+              {product.name}
+            </h1>
+            <div className="flex gap-2 items-center">
+              <Star className="text-yellow-300 fill-current size-4" />
+              <span>{product.avgRating.toFixed(1)}</span>
+            </div>
+          </div>
 
           <div className="space-y-4">
             <VariantSelector variants={product.variants} />
