@@ -206,10 +206,12 @@ function VariantSelector({
     let shouldUpdate = false;
 
     // Set default value nếu thiếu
-    for (const [key, values] of Object.entries(groupedAttributes)) {
-      if (!params.has(key) && values.length > 0) {
-        params.set(key, values[0]);
-        shouldUpdate = true;
+    if (params.size === 0) {
+      for (const [key, values] of Object.entries(groupedAttributes)) {
+        if (!params.has(key) && values.length > 0) {
+          params.set(key, values[0]);
+          shouldUpdate = true;
+        }
       }
     }
 
@@ -234,11 +236,31 @@ function VariantSelector({
       }
     }
 
+    const remainParams = Object.fromEntries(params.entries());
+
+    // Nếu không có variant nào chứa toàn bộ các param hiện tại → xóa hết search param
+    const isSubsetOfAnyVariant = variants.some((variant) => {
+      const attrMap = Object.fromEntries(
+        variant.attributes.map((attr) => [attr.name, attr.value]),
+      );
+
+      return Object.entries(remainParams).every(
+        ([key, value]) => attrMap[key] === value,
+      );
+    });
+
+    if (!isSubsetOfAnyVariant && params.toString() !== "") {
+      params.forEach((_, key) => params.delete(key));
+      shouldUpdate = true;
+    }
+
     if (shouldUpdate) {
       router.replace(`?${params.toString()}`, {
         scroll: false,
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, groupedAttributes, router]);
 
   React.useEffect(() => {
