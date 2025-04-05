@@ -101,7 +101,7 @@ export const columns: ColumnDef<BlogType>[] = [
     header: "Ngày tạo",
     cell: ({ row }) => (
       <div className="">
-        {dateFormatter.format(new Date(row.original.date))}
+        {dateFormatter.format(new Date(row.original.updatedAt))}
       </div>
     ),
   },

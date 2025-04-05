@@ -20,6 +20,7 @@ const BlogUpdatePage = async ({ params }: { params: params }) => {
         defaultValues={{
           ...rest,
           authorId: author.id,
+          imageSources: [],
         }}
       />
     </Suspense>

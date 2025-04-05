@@ -16,7 +16,6 @@ const blogSchema = new Schema<BlogModel>(
     slug: { type: String, required: true },
     wallImage: { type: String, required: false },
     images: { type: [String], required: false },
-    date: { type: Date, required: true },
     content: { type: String, required: true },
     author: {
       _id: { type: Schema.Types.ObjectId, ref: "User", required: true },

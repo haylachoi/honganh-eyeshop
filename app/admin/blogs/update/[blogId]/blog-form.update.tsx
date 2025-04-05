@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Control, useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -29,6 +29,7 @@ import { BlogUpdateType } from "@/features/blogs/blog.types";
 import Image from "next/image";
 import { TrashIcon } from "lucide-react";
 import { compressImage } from "@/lib/utils";
+import { useImageSourceStore } from "@/hooks/use-image-source";
 
 const BlogUpdateForm = ({
   defaultValues,
@@ -40,10 +41,9 @@ const BlogUpdateForm = ({
     defaultValues,
   });
   const { control, handleSubmit, setValue, watch } = form;
-
   const { execute, isPending } = useAction(updateBlogAction, {
     onSuccess: () => {
-      toast.success(TOAST_MESSAGES.CREATE.SUCCESS);
+      toast.success(TOAST_MESSAGES.UPDATE.SUCCESS);
     },
     onError: onActionError,
   });
@@ -54,6 +54,7 @@ const BlogUpdateForm = ({
       setValue("content", editor.getHTML());
     },
   });
+  const imageSources = useImageSourceStore((state) => state.imageSources);
 
   const [isManualSlug, setManualSlug] = React.useState(false);
 
@@ -70,6 +71,30 @@ const BlogUpdateForm = ({
   if (!editor) return null;
 
   const onSubmit = (data: BlogUpdateType) => {
+    const tiptap = document.querySelector(".tiptap");
+    if (!tiptap) return;
+
+    const imageElements = tiptap.querySelectorAll("img");
+
+    const oldImages: string[] = [];
+
+    imageElements.forEach((img) => {
+      const src = img.src;
+      const parsedUrl = new URL(src);
+      if (defaultValues.images.includes(parsedUrl.pathname)) {
+        oldImages.push(parsedUrl.pathname);
+        return;
+      }
+
+      data.imageSources.push({
+        fakeUrl: src,
+        file:
+          imageSources.find(({ fakeUrl }) => fakeUrl === src)?.file ??
+          new File([], src),
+      });
+    });
+    data.images = oldImages;
+    console.log(data.imageSources);
     execute(data);
   };
 
@@ -120,7 +145,7 @@ const BlogUpdateForm = ({
           )}
         />
 
-        <ImageUploader control={control} />
+        <ImageUploader />
 
         <FormField
           control={control}
@@ -171,12 +196,13 @@ const BlogUpdateForm = ({
 
 export default BlogUpdateForm;
 
-interface ImageUploaderProps {
-  control: Control<BlogUpdateType>;
-}
-
-const ImageUploader: React.FC<ImageUploaderProps> = ({ control }) => {
-  const [previewImage, setImagePreview] = React.useState<string | undefined>();
+const ImageUploader = () => {
+  const form = useFormContext<BlogUpdateType>();
+  const { watch, control } = form;
+  const oldImage = watch("wallImage");
+  const [previewImage, setImagePreview] = React.useState<string | undefined>(
+    typeof oldImage === "string" ? oldImage : undefined,
+  );
   const [, setFile] = React.useState<File | undefined>();
 
   React.useEffect(() => {

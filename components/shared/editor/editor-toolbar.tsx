@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { cn, compressImage } from "@/lib/utils";
 import { Editor } from "@tiptap/core";
 import { type Level } from "@tiptap/extension-heading";
 import { type ColorResult, SketchPicker } from "react-color";
@@ -16,7 +16,7 @@ import {
   AlignRightIcon,
   BoldIcon,
   ChevronDownIcon,
-  ImageIcon,
+  // ImageIcon,
   ItalicIcon,
   Link2Icon,
   ListIcon,
@@ -28,6 +28,7 @@ import {
   Redo2Icon,
   RemoveFormattingIcon,
   Undo2Icon,
+  ImageUp,
 } from "lucide-react";
 
 import {
@@ -35,6 +36,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useImageSourceStore } from "@/hooks/use-image-source";
 
 // type section = {
 //   label: string;
@@ -429,32 +431,71 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
   );
 };
 
-const ImageButton = ({ editor }: { editor: Editor }) => {
-  const [value, setValue] = React.useState("");
-  const onChange = (src: string) => {
-    editor?.chain().focus().setImage({ src }).run();
+const ImageFromDiskButton = ({ editor }: { editor: Editor }) => {
+  const addImage = useImageSourceStore((state) => state.addItem);
+  const images = useImageSourceStore((state) => state.imageSources);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+
+    const file = await compressImage(e.target.files[0]);
+    const url = URL.createObjectURL(file);
+
+    addImage({
+      fakeUrl: url,
+      file,
+    });
+
+    editor.chain().focus().setImage({ src: url }).run();
   };
+
+  React.useEffect(() => {
+    return () => {
+      images.forEach(({ fakeUrl }) => URL.revokeObjectURL(fakeUrl));
+    };
+  }, [images]);
 
   return (
     <div className="">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
-            <ImageIcon className="size-4" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="p-2.5 flex items-center gap-x-2">
-          <Input
-            placeholder="Image URL"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          <Button onClick={() => onChange(value)}>Apply</Button>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <label>
+        <input
+          className="hidden"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <ImageUp className="size-4" />
+      </label>
     </div>
   );
 };
+
+// const ImageButton = ({ editor }: { editor: Editor }) => {
+//   const [value, setValue] = React.useState("");
+//   const onChange = (src: string) => {
+//     editor?.chain().focus().setImage({ src }).run();
+//     setValue("");
+//   };
+//
+//   return (
+//     <div className="">
+//       <DropdownMenu>
+//         <DropdownMenuTrigger asChild>
+//           <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+//             <ImageIcon className="size-4" />
+//           </button>
+//         </DropdownMenuTrigger>
+//         <DropdownMenuContent className="p-2.5 flex items-center gap-x-2">
+//           <Input
+//             placeholder="Image URL"
+//             value={value}
+//             onChange={(e) => setValue(e.target.value)}
+//           />
+//           <Button onClick={() => onChange(value)}>Apply</Button>
+//         </DropdownMenuContent>
+//       </DropdownMenu>
+//     </div>
+//   );
+// };
 
 const LineHeightButton = ({ editor }: { editor: Editor }) => {
   const lineHeights = [
@@ -530,7 +571,8 @@ const EditorToolbar = ({ editor }: { editor: Editor }) => {
       <ListButton editor={editor} />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <LinkButton editor={editor} />
-      <ImageButton editor={editor} />
+      {/* <ImageButton editor={editor} /> */}
+      <ImageFromDiskButton editor={editor} />
       {sections[2].map((item) => (
         <ToolbarButton key={item.label} {...item} />
       ))}

@@ -5,6 +5,11 @@ const titleSchema = z.string().trim().min(3).max(200);
 export const blogSlugSchema = z.string().trim().min(3).max(200);
 const wallImageSchema = z.union([z.string(), z.instanceof(File)]);
 const imagesSchema = z.array(z.string()).default([]);
+export const imageSourceSchema = z.object({
+  fakeUrl: z.string(),
+  file: z.instanceof(File),
+});
+
 const dateSchema = z.date();
 const contentSchema = z.string();
 const isPublishedSchema = z.boolean().default(true);
@@ -18,19 +23,21 @@ const authorSchema = z
     id: _id.toString(),
   }));
 
-export const blogInputSchema = z.object({
+export const baseBlogInputSchema = z.object({
   title: titleSchema,
   slug: blogSlugSchema,
   wallImage: wallImageSchema,
   images: imagesSchema,
   authorId: IdSchema,
-  date: dateSchema,
   content: contentSchema,
   isPublished: isPublishedSchema,
 });
 
+export const blogInputSchema = baseBlogInputSchema.extend({
+  imageSources: z.array(imageSourceSchema),
+});
 export const blogDbInputSchema = blogInputSchema
-  .omit({ authorId: true })
+  .omit({ authorId: true, imageSources: true })
   .extend({
     author: z.object({
       _id: z.string(),
@@ -46,11 +53,13 @@ export const blogTypeSchema = blogInputSchema
   .omit({
     wallImage: true,
     authorId: true,
+    imageSources: true,
   })
   .extend({
     _id: MongoIdSchema,
     author: authorSchema,
     wallImage: z.string(),
+    updatedAt: dateSchema,
   })
   .transform(({ _id, ...res }) => ({
     ...res,

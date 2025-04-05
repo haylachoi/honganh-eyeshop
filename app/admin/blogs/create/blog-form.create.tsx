@@ -30,6 +30,7 @@ import Image from "next/image";
 import { TrashIcon } from "lucide-react";
 import { compressImage } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import { useImageSourceStore } from "@/hooks/use-image-source";
 
 const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
   ssr: false,
@@ -41,9 +42,9 @@ const defaultValues: BlogInputType = {
   slug: "",
   wallImage: "",
   images: [],
+  imageSources: [],
   content: "",
   authorId: "",
-  date: new Date(),
   isPublished: true,
 };
 
@@ -68,6 +69,7 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
       setValue("content", editor.getHTML());
     },
   });
+  const imageSources = useImageSourceStore((state) => state.imageSources);
 
   const [isManualSlug, setManualSlug] = React.useState(false);
 
@@ -84,6 +86,20 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
   // if (!editor) return <div>Loading...</div>;
 
   const onSubmit = (data: BlogInputType) => {
+    const tiptap = document.querySelector(".tiptap");
+    if (!tiptap) return;
+
+    const imageElements = tiptap.querySelectorAll("img");
+    imageElements.forEach((img) => {
+      const src = img.src;
+      data.imageSources.push({
+        fakeUrl: src,
+        file:
+          imageSources.find(({ fakeUrl }) => fakeUrl === src)?.file ??
+          new File([], src),
+      });
+    });
+
     execute(data);
   };
 

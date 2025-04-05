@@ -13,7 +13,7 @@ const BlogView = ({ blog }: { blog: BlogType }) => {
         </p>
         <p className="flex gap-2 items-center">
           <Timer />
-          {dateFormatter.format(new Date(blog.date))}
+          {dateFormatter.format(new Date(blog.updatedAt))}
         </p>
       </div>
       {blog.wallImage && (

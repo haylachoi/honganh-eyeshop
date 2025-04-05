@@ -7,7 +7,7 @@ import userRepository from "@/lib/db/repositories/user";
 import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { writeFileToDisk } from "@/lib/server-utils";
+import { writeFileToDisk, writeMultipleFilesToDisk } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
 
 export const createBlogAction = authActionClient
@@ -16,7 +16,8 @@ export const createBlogAction = authActionClient
   })
   .schema(blogInputSchema)
   .action(async ({ parsedInput }) => {
-    const { authorId, wallImage, ...rest } = parsedInput;
+    const { authorId, wallImage, content, images, imageSources, ...rest } =
+      parsedInput;
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
@@ -39,10 +40,24 @@ export const createBlogAction = authActionClient
           })
         : wallImage;
 
+    const imageSourcesMapping = await writeMultipleFilesToDisk({
+      imageSources: imageSources,
+      to: "blogs",
+    });
+
+    let newContent = content;
+
+    imageSourcesMapping.forEach(({ fileLink, fakeUrl }) => {
+      newContent = newContent.replace(fakeUrl, fileLink);
+      images.push(fileLink);
+    });
+
     const result = await blogsRepository.createBlog({
       ...rest,
       wallImage: wallImageUrl,
       author: newUserInput,
+      content: newContent,
+      images,
     });
 
     revalidateTag(CACHE.BLOGS.ALL.TAGS);
@@ -56,7 +71,8 @@ export const updateBlogAction = authActionClient
   })
   .schema(blogUpdateSchema)
   .action(async ({ parsedInput }) => {
-    const { authorId, ...rest } = parsedInput;
+    const { authorId, wallImage, content, images, imageSources, ...rest } =
+      parsedInput;
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
@@ -66,6 +82,28 @@ export const updateBlogAction = authActionClient
       });
     }
 
+    // todo: delete old image
+    const wallImageUrl =
+      wallImage instanceof File
+        ? await writeFileToDisk({
+            file: wallImage,
+            to: "blogs",
+          })
+        : wallImage;
+
+    // todo: delete unused image
+    const imageSourcesMapping = await writeMultipleFilesToDisk({
+      imageSources: imageSources,
+      to: "blogs",
+    });
+
+    let newContent = content;
+
+    imageSourcesMapping.forEach(({ fileLink, fakeUrl }) => {
+      newContent = newContent.replace(fakeUrl, fileLink);
+      images.push(fileLink);
+    });
+
     const newUserInput = {
       _id: user.id,
       name: user.name,
@@ -74,6 +112,9 @@ export const updateBlogAction = authActionClient
     const result = await blogsRepository.updateBlog({
       ...rest,
       author: newUserInput,
+      wallImage: wallImageUrl,
+      content: newContent,
+      images,
     });
 
     revalidateTag(CACHE.BLOGS.ALL.TAGS);
