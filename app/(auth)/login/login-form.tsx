@@ -19,7 +19,7 @@ import { signIn } from "../../../features/auth/auth.action";
 import { Input } from "@/components/ui/input";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { ADMIN_ENDPOINTS, ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { useRouter } from "next/navigation";
 
 const defaultValues: SignInInputType = {

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Control, useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import useTipTapEditor from "@/hooks/use-editor";
-// import TipTapEditor from "@/components/shared/editor";
 import { BlogInputType } from "@/features/blogs/blog.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { blogInputSchema } from "@/features/blogs/blog.validators";
@@ -82,7 +81,7 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
     }
   }, [debouncedName, isManualSlug, setValue]);
 
-  if (!editor) return null;
+  // if (!editor) return <div>Loading...</div>;
 
   const onSubmit = (data: BlogInputType) => {
     execute(data);
@@ -144,7 +143,11 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
               <FormLabel>Nội dung</FormLabel>
               <div className="border rounded-md p-2">
                 <FormControl>
-                  <TipTapEditor editor={editor} />
+                  {editor && (
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <TipTapEditor editor={editor} />
+                    </Suspense>
+                  )}
                 </FormControl>
               </div>
               <FormMessage />

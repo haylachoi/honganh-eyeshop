@@ -86,10 +86,10 @@ export const TabTrigger = ({
   const {
     activeTab,
     setActiveTab,
-    tabs,
-    setTabs,
-    indexActiveTab,
-    setIndexActiveTab,
+    // tabs,
+    // setTabs,
+    // indexActiveTab,
+    // setIndexActiveTab,
   } = use(TabContext);
   // const [isPending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);

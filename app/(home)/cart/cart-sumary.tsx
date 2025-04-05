@@ -56,6 +56,7 @@ export const CartSumary = ({
             paymentMethod: "cod",
           });
         }}
+        disabled={isPending}
       >
         Thanh toán
       </button>

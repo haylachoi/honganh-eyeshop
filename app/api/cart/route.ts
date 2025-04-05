@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getCartWithProductDetailBySession } from "@/features/cart/cart.queries";
 import { AppError } from "@/lib/error";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const result = await getCartWithProductDetailBySession();
 

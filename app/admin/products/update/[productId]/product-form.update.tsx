@@ -36,7 +36,7 @@ import SubmitButton from "@/components/custom-ui/submit-button";
 import { AttributesForm } from "../../_components/form/attributes-form";
 import { TagsForm } from "../../_components/form/tags-form";
 import { VariantsForm } from "../../_components/form/variants-form";
-import { getDirtyValues, slugifyVn } from "@/lib/utils";
+import { slugifyVn } from "@/lib/utils";
 
 const ProductUpdateForm = ({
   categories,
@@ -73,12 +73,7 @@ const ProductUpdateForm = ({
   });
 
   const [isManualSlug, setManualSlug] = useState(false);
-  const {
-    watch,
-    setValue,
-    control,
-    formState: { dirtyFields },
-  } = form;
+  const { watch, setValue, control } = form;
 
   const selectedCategory = watch("category");
 

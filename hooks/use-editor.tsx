@@ -5,6 +5,7 @@ import { EditorEvents } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { FontSizeExtension } from "@/components/shared/editor/extensions/font-size-ext";
 import { LineHeightExtension } from "@/components/shared/editor/extensions/line-height-ext";
+
 import TextStyle from "@tiptap/extension-text-style";
 import TextAlign from "@tiptap/extension-text-align";
 import { Color } from "@tiptap/extension-color";

@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants";
 import { Switch } from "@/components/ui/switch";
 import { useDebounce } from "use-debounce";
-import slugify from "slugify";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import FormTextArea from "@/components/shared/form/form-text-area";
 import FormSelectInput from "@/components/shared/form/form-select-input";

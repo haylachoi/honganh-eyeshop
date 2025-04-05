@@ -1,9 +1,7 @@
 import { ReviewType } from "@/features/reviews/review.type";
-import { Star } from "lucide-react";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
 import dayjs from "dayjs";
-import { cn } from "@/lib/utils";
 import { StarRatingDisplay } from "@/components/shared/star-rating-display";
 
 export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
@@ -40,5 +38,4 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
       ))}
     </ul>
   );
-  return;
 };

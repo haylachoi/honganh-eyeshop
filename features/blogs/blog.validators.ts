@@ -50,7 +50,7 @@ export const blogTypeSchema = blogInputSchema
   .extend({
     _id: MongoIdSchema,
     author: authorSchema,
-    wallImage: z.string().optional(),
+    wallImage: z.string(),
   })
   .transform(({ _id, ...res }) => ({
     ...res,

@@ -2,7 +2,7 @@ import { getCartWithProductDetailBySession } from "@/features/cart/cart.queries"
 import { Suspense } from "react";
 import CartView from "./cart-view";
 
-export const CartPage = async () => {
+const CartPage = async () => {
   const cartResult = getCartWithProductDetailBySession();
 
   return (

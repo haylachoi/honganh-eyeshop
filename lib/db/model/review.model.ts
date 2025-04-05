@@ -36,6 +36,7 @@ const reviewSchema = new Schema<ReviewModel>(
 
 reviewSchema.index({ productId: 1 });
 reviewSchema.index({ productId: 1, userId: 1 }, { unique: true });
+reviewSchema.index({ rating: 1 });
 
 const Review =
   (models.Review as Model<ReviewModel>) ||

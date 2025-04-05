@@ -8,7 +8,7 @@ const BlogUpdatePage = async ({ params }: { params: params }) => {
   const { blogId } = await params;
   const result = await getBlogById(blogId);
 
-  if (!result.success) {
+  if (!result.success || result.data === null) {
     return <div>Blog không tồn tại</div>;
   }
 

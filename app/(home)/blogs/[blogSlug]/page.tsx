@@ -13,7 +13,7 @@ type params = Promise<{ blogSlug: string }>;
 const BlogPage = async ({ params }: { params: params }) => {
   const { blogSlug } = await params;
   const result = await getBlogBySlug(blogSlug);
-  if (!result.success) {
+  if (!result.success || result.data === null) {
     return <div>Blog không tồn tại</div>;
   }
   const blog = result.data;

@@ -36,12 +36,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type section = {
-  label: string;
-  icon: LucideIcon;
-  onClick: () => void;
-  isActive?: boolean;
-};
+// type section = {
+//   label: string;
+//   icon: LucideIcon;
+//   onClick: () => void;
+//   isActive?: boolean;
+// };
 
 const getSections = (editor: Editor) => {
   return [

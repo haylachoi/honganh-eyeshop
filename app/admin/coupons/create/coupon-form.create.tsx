@@ -52,7 +52,7 @@ export const CouponCreateForm = () => {
   const { control, watch, setValue } = form;
   const startDate = watch("startDate");
   const maxDiscount = watch("maxDiscount");
-  const type = watch("type");
+  const type = watch("discountType");
 
   React.useEffect(() => {
     if (type === "fixed" && maxDiscount !== 0) {
@@ -70,7 +70,7 @@ export const CouponCreateForm = () => {
         <FormTextInput control={control} name="code" label="Mã giảm giá" />
         <FormRadioGroup
           control={control}
-          name="type"
+          name="discountType"
           label="Loại giảm giá"
           defaultValue={defaultValues.discountType}
           data={[
