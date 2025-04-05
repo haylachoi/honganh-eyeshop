@@ -12,7 +12,6 @@ interface CheckoutStoreProps {
 }
 export const useCheckoutStore = create<CheckoutStoreProps>((set) => ({
   items: [],
-
   setItems: (items) => set((state) => ({ ...state, items })),
   setCoupon: (coupon) => set((state) => ({ ...state, coupon })),
 }));
