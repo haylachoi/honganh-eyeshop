@@ -28,6 +28,7 @@ const getCartByUserId = unstable_cache(
 );
 
 const getCartWithProductDetails = async ({ userId }: { userId: string }) => {
+  await connectToDatabase();
   const cartItems = await Cart.aggregate([
     {
       $match: { userId: new mongoose.Types.ObjectId(userId) },
