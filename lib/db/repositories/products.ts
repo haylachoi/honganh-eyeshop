@@ -1,13 +1,17 @@
-import { ProductType } from "@/features/products/product.types";
+import {
+  ProductType,
+  searchProductResultType,
+} from "@/features/products/product.types";
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { CACHE, ERROR_MESSAGES, MAX_SEARCH_RESULT } from "@/constants";
 import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
   ProductDbInputSchema,
   ProductTypeSchema,
+  searchProductResultSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
@@ -41,7 +45,7 @@ const getProductByQuery = async (query: QueryFilter<QueryType>) => {
 
 const searchProductByQuery = async ({
   query,
-  limit = 20,
+  limit = MAX_SEARCH_RESULT,
 }: {
   query: FilterQuery<ProductType>;
   limit?: number;
@@ -50,6 +54,53 @@ const searchProductByQuery = async ({
   const products = await Product.find(query).limit(limit).lean();
   const result = products.map((product) => ProductTypeSchema.parse(product));
   return result;
+};
+
+const searchProductAndSimpleReturnByQuery = async ({
+  query,
+  limit = MAX_SEARCH_RESULT,
+}: {
+  query: FilterQuery<ProductType>;
+  limit?: number;
+}) => {
+  await connectToDatabase();
+  const result = await Product.aggregate([
+    { $match: { ...query } },
+    {
+      $facet: {
+        products: [
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              slug: 1,
+              "category.slug": 1,
+              image: {
+                $arrayElemAt: [
+                  {
+                    $ifNull: [{ $arrayElemAt: ["$variants.images", 0] }, []],
+                  },
+                  0,
+                ],
+              },
+              price: {
+                $ifNull: [{ $arrayElemAt: ["$variants.price", 0] }, 0],
+              },
+            },
+          },
+          { $limit: limit },
+        ],
+        total: [{ $count: "count" }],
+      },
+    },
+  ]);
+
+  const products: searchProductResultType[] = result[0].products.map(
+    searchProductResultSchema.parse,
+  );
+  const total: number = result[0].total[0]?.count || 0;
+
+  return { result: products, total };
 };
 
 const getProductsByQueryAndProjection = async ({
@@ -207,6 +258,7 @@ const productRepository = {
   updateRating,
   deleteProduct,
   searchProductByQuery,
+  searchProductAndSimpleReturnByQuery,
 };
 
 export default productRepository;

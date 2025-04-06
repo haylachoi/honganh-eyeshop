@@ -1,6 +1,6 @@
 "use server";
 
-import { actionClient, authActionClient } from "@/lib/actions";
+import { authActionClient } from "@/lib/actions";
 import { ProductInputSchema, productUpdateSchema } from "./product.validator";
 import productRepository from "@/lib/db/repositories/products";
 import { CACHE } from "@/constants";
@@ -101,33 +101,4 @@ export const deleteProductAction = authActionClient
     // delete item from cart
 
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
-  });
-
-export const searchProductsAction = actionClient
-  .metadata({
-    actionName: "searchProducts",
-  })
-  .schema(z.string())
-  .action(async ({ parsedInput: keyword }) => {
-    const [textSearchResults, regexSearchResults] = await Promise.all([
-      productRepository.searchProductByQuery({
-        query: { $text: { $search: keyword } },
-      }),
-      productRepository.searchProductByQuery({
-        query: {
-          nameNoAccent: { $regex: keyword, $options: "i" },
-        },
-      }),
-    ]);
-
-    const mergedResults = [
-      ...new Map(
-        [...textSearchResults, ...regexSearchResults].map((item) => [
-          item.id,
-          item,
-        ]),
-      ).values(),
-    ];
-
-    return mergedResults;
   });

@@ -1,3 +1,4 @@
+import { getLink } from "@/lib/utils";
 import { MoneySchema, IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
@@ -138,3 +139,23 @@ export const getProductBySlugQuerySchema = z.object({
   categorySlug: z.string().optional(),
   productSlug: z.string(),
 });
+
+export const searchProductResultSchema = z
+  .object({
+    _id: MongoIdSchema,
+    name: z.string(),
+    slug: z.string(),
+    category: z.object({
+      slug: z.string(),
+    }),
+    price: z.number(),
+    image: z.string(),
+  })
+  .transform(({ _id, category, slug, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+    link: getLink.product.home({
+      categorySlug: category.slug,
+      productSlug: slug,
+    }),
+  }));

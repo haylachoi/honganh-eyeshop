@@ -2,6 +2,8 @@ export const APP_NAME = "honganh-eyeshop";
 export const BASE_URL = "http://localhost:3000";
 
 export const SESSION_NAME = "session";
+export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;
+export const MAX_SEARCH_RESULT = 10;
 
 export const ENDPOINTS = {
   HOME: "/",
@@ -21,6 +23,7 @@ export const ENDPOINTS = {
   ORDER_ONLINE: "/order-online",
   CHEAP_GLASSES: "/cheap-glasses",
   POLICY: "/policy",
+  SEARCH: "/search",
 };
 
 export const ADMIN_ENDPOINTS = {

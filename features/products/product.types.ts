@@ -4,6 +4,7 @@ import {
   ProductInputSchema,
   ProductTypeSchema,
   productUpdateSchema,
+  searchProductResultSchema,
 } from "./product.validator";
 export type ProductId = Id;
 // export type ProductPreview = {
@@ -31,38 +32,6 @@ export type SimpleCategoryType = {
   slug: string;
 };
 
-// export type AttributeType = {
-//   name: string;
-//   value: string;
-// };
-//
-// export type VariantType = {
-//   key: string;
-//   value: string;
-//   price: MoneyType;
-//   countInStock: number;
-// };
-//
-// export type RatingDistributionType = {
-//   rating: number;
-//   count: number;
-// };
-//
-// export type ProductType = {
-//   id: string;
-//   name: string;
-//   slug: string;
-//   category: SimpleCategoryType;
-//   attributes: AttributeType[];
-//   images: string[];
-//   brand: string;
-//   description: string;
-//   isPublished: boolean;
-//   tags: string[];
-//   variants: VariantType[];
-//   avgRating: number;
-//   numReviews: number;
-//   ratingDistribution: RatingDistributionType[];
-//   // // reviews: ReviewType[];
-//   numSales: number;
-// };
+export type searchProductResultType = z.output<
+  typeof searchProductResultSchema
+>;

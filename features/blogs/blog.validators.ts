@@ -1,3 +1,4 @@
+import { getLink } from "@/lib/utils";
 import { IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
@@ -39,6 +40,7 @@ export const blogInputSchema = baseBlogInputSchema.extend({
 export const blogDbInputSchema = blogInputSchema
   .omit({ authorId: true, imageSources: true })
   .extend({
+    titleNoAccent: titleSchema,
     author: z.object({
       _id: z.string(),
       name: z.string(),
@@ -58,10 +60,25 @@ export const blogTypeSchema = blogInputSchema
   .extend({
     _id: MongoIdSchema,
     author: authorSchema,
+    titleNoAccent: titleSchema,
     wallImage: z.string(),
     updatedAt: dateSchema,
   })
   .transform(({ _id, ...res }) => ({
     ...res,
+    id: _id.toString(),
+  }));
+
+export const searchBlogResultSchema = z
+  .object({
+    _id: MongoIdSchema,
+    title: z.string(),
+    slug: blogSlugSchema,
+    image: z.string(),
+    updatedAt: dateSchema,
+  })
+  .transform(({ _id, slug, ...res }) => ({
+    ...res,
+    link: getLink.blog.home({ blogSlug: slug }),
     id: _id.toString(),
   }));

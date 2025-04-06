@@ -217,4 +217,7 @@ export const getLink = {
       return `${ENDPOINTS.CHECKOUT}/${checkoutId}`;
     },
   },
+  search({ keyword }: { keyword: string }) {
+    return `${ENDPOINTS.SEARCH}?keyword=${keyword}`;
+  },
 };

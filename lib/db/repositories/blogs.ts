@@ -1,10 +1,18 @@
-import { BlogDbInputType } from "@/features/blogs/blog.types";
+import {
+  BlogDbInputType,
+  BlogType,
+  SearchBlogResultType,
+} from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { blogTypeSchema } from "@/features/blogs/blog.validators";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import {
+  blogTypeSchema,
+  searchBlogResultSchema,
+} from "@/features/blogs/blog.validators";
+import { CACHE, ERROR_MESSAGES, MAX_SEARCH_RESULT } from "@/constants";
 import { unstable_cache } from "next/cache";
 import { NotFoundError, RESOURCE_TYPES } from "@/lib/error";
+import { FilterQuery } from "mongoose";
 
 const getAllBlogs = unstable_cache(
   async () => {
@@ -35,6 +43,54 @@ const getBlogBySlug = async (slug: string) => {
   const result = await Blog.findOne({ slug });
   const blog = result ? blogTypeSchema.parse(result) : null;
   return blog;
+};
+
+const searchBlogByQuery = async ({
+  query,
+}: {
+  query: FilterQuery<BlogType>;
+}) => {
+  await connectToDatabase();
+  const blogs = await Blog.find(query).lean();
+  const result = blogs.map((blog) => blogTypeSchema.parse(blog));
+  return result;
+};
+
+const searchBlogAndSimpleReturnByQuery = async ({
+  query,
+  limit = MAX_SEARCH_RESULT,
+}: {
+  query: FilterQuery<BlogType>;
+  limit?: number;
+}) => {
+  await connectToDatabase();
+  const result = await Blog.aggregate([
+    { $match: { ...query } },
+    {
+      $facet: {
+        blogs: [
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              slug: 1,
+              image: "$wallImage",
+              updatedAt: 1,
+            },
+          },
+          { $limit: limit },
+        ],
+        total: [{ $count: "count" }],
+      },
+    },
+  ]);
+  console.log(result[0].blogs);
+  const blogs: SearchBlogResultType[] = result[0].blogs.map(
+    searchBlogResultSchema.parse,
+  );
+  const total: number = result[0].total[0]?.count || 0;
+
+  return { result: blogs, total };
 };
 
 const createBlog = async (input: BlogDbInputType) => {
@@ -75,6 +131,8 @@ const blogsRepository = {
   getAllBlogs,
   getBlogById,
   getBlogBySlug,
+  searchBlogByQuery,
+  searchBlogAndSimpleReturnByQuery,
   createBlog,
   updateBlog,
   deleteBlog,

@@ -9,6 +9,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { writeFileToDisk, writeMultipleFilesToDisk } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
+import { removeDiacritics } from "@/lib/utils";
 
 export const createBlogAction = authActionClient
   .metadata({
@@ -54,6 +55,7 @@ export const createBlogAction = authActionClient
 
     const result = await blogsRepository.createBlog({
       ...rest,
+      titleNoAccent: removeDiacritics(rest.title),
       wallImage: wallImageUrl,
       author: newUserInput,
       content: newContent,
@@ -111,6 +113,7 @@ export const updateBlogAction = authActionClient
 
     const result = await blogsRepository.updateBlog({
       ...rest,
+      titleNoAccent: removeDiacritics(rest.title),
       author: newUserInput,
       wallImage: wallImageUrl,
       content: newContent,

@@ -13,6 +13,7 @@ interface BlogModel extends Document, DbModel {
 const blogSchema = new Schema<BlogModel>(
   {
     title: { type: String, required: true },
+    titleNoAccent: { type: String, required: true },
     slug: { type: String, required: true },
     wallImage: { type: String, required: false },
     images: { type: [String], required: false },
@@ -29,6 +30,7 @@ const blogSchema = new Schema<BlogModel>(
 );
 
 blogSchema.index({ title: 1 }, { unique: true });
+blogSchema.index({ titleNoAccent: "text" }, { default_language: "none" });
 blogSchema.index({ slug: 1 }, { unique: true });
 
 const Blog =
