@@ -15,3 +15,5 @@ export type QueryFilter<T> = Partial<{
 export type SearchFilter<T> = Partial<{
   [K in Path<T>]: unknown;
 }>;
+
+export type SearchParams = { [key: string]: string | string[] | undefined };

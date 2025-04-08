@@ -31,11 +31,25 @@ export const createProductAction = authActionClient
       name: tag.name,
     }));
 
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+
+    parsedInput.variants.forEach((variant) => {
+      if (variant.price < minPrice) {
+        minPrice = variant.price;
+      }
+      if (variant.price > maxPrice) {
+        maxPrice = variant.price;
+      }
+    });
+
     const input = {
       ...parsedInput,
       nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
+      minPrice,
+      maxPrice,
       tags: newTags,
     };
 
@@ -64,11 +78,25 @@ export const updateProductAction = authActionClient
       name: tag.name,
     }));
 
+    let minPrice = Infinity;
+    let maxPrice = -Infinity;
+
+    parsedInput.variants.forEach((variant) => {
+      if (variant.price < minPrice) {
+        minPrice = variant.price;
+      }
+      if (variant.price > maxPrice) {
+        maxPrice = variant.price;
+      }
+    });
+
     const input = {
       ...parsedInput,
       nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
+      minPrice,
+      maxPrice,
       tags: newTags,
     };
 

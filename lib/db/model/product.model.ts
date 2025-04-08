@@ -41,7 +41,9 @@ const productSchema = new Schema<ProductModel>(
         value: {
           type: String,
           required: true,
-          default: "",
+        },
+        valueSlug: {
+          type: String,
         },
       },
     ],
@@ -65,6 +67,14 @@ const productSchema = new Schema<ProductModel>(
         },
       ],
       default: [],
+    },
+    minPrice: {
+      type: Number,
+      required: true,
+    },
+    maxPrice: {
+      type: Number,
+      required: true,
     },
     variants: [
       {

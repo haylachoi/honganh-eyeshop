@@ -94,7 +94,6 @@ const BlogUpdateForm = ({
       });
     });
     data.images = oldImages;
-    console.log(data.imageSources);
     execute(data);
   };
 

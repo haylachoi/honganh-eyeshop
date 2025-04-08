@@ -3,7 +3,11 @@
 import { actionClient } from "@/lib/actions";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import productRepository from "@/lib/db/repositories/products";
+import { FilterQuery } from "mongoose";
 import { z } from "zod";
+import { ProductType } from "../products/product.types";
+import { getQueryOption, normalizeSearchParams } from "@/lib/utils";
+import { SORTING_OPTIONS } from "@/constants";
 
 export const searchAction = actionClient
   .metadata({
@@ -67,6 +71,64 @@ export const searchAction = actionClient
         ),
       },
     };
+  });
+
+export const searchProductByQuery = actionClient
+  .metadata({
+    actionName: "searchProductByQuery",
+  })
+  .schema(z.record(z.string()))
+  .action(async ({ parsedInput }) => {
+    const andConditions: FilterQuery<ProductType>[] = [];
+    const {
+      category: categoryFilter,
+      price: priceFilter,
+      search: searchFilter,
+      [SORTING_OPTIONS.SORT_BY]: sortBy,
+      [SORTING_OPTIONS.ORDER_BY]: orderBy,
+      ...attrFilters
+    } = parsedInput;
+
+    for (const [name, values] of Object.entries(
+      normalizeSearchParams(attrFilters),
+    )) {
+      andConditions.push({
+        attributes: {
+          $elemMatch: {
+            name,
+            valueSlug: { $in: values },
+          },
+        },
+      });
+    }
+
+    if (categoryFilter) {
+      andConditions.push({ "category.slug": categoryFilter });
+    }
+
+    if (searchFilter) {
+      console.log(searchFilter);
+      andConditions.push({
+        nameNoAccent: { $regex: searchFilter, $options: "i" },
+      });
+    }
+
+    if (priceFilter?.[0]) {
+      const [min, rawMax] = priceFilter.split("-").map(Number);
+      const max = rawMax === 0 ? 10_000_000 : rawMax;
+
+      andConditions.push({
+        $and: [{ maxPrice: { $gte: min } }, { minPrice: { $lte: max } }],
+      });
+    }
+
+    const query: FilterQuery<ProductType> = andConditions.length
+      ? { $and: andConditions }
+      : {};
+
+    const sortOptions = getQueryOption({ sortBy, orderBy });
+
+    return productRepository.searchProductByQuery({ query, sortOptions });
   });
 
 // export const searchAction = actionClient

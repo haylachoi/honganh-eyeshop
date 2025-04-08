@@ -1,0 +1,118 @@
+import { connectToDatabase } from "..";
+import Filter from "../model/filter.model";
+import Product from "../model/product.model";
+import Category from "../model/category.model";
+import { unstable_cache } from "next/cache";
+import { CACHE } from "@/constants";
+
+const getAllFilters = unstable_cache(
+  async () => {
+    await connectToDatabase();
+    const filter = await Filter.find().lean();
+
+    const result = filter.map((filter) => ({
+      name: filter.name,
+      values: filter.values,
+    }));
+
+    return result;
+  },
+  CACHE.FILTER.ALL.KEY_PARTS,
+  {
+    tags: [CACHE.FILTER.ALL.TAGS],
+    revalidate: CACHE.REVALIDATE_TIME.SM,
+  },
+);
+
+const getFilterByCategoryId = unstable_cache(
+  async (categoryId: string) => {
+    await connectToDatabase();
+    const filter = await Filter.find({ categoryId }).lean();
+
+    const result = filter.map((filter) => ({
+      name: filter.name,
+      values: filter.values,
+    }));
+
+    return result;
+  },
+  CACHE.FILTER.ID.KEY_PARTS,
+  {
+    tags: [CACHE.FILTER.ID.TAGS],
+    revalidate: CACHE.REVALIDATE_TIME.SM,
+  },
+);
+
+const getFilterByCategorySlug = unstable_cache(
+  async (categorySlug: string) => {
+    await connectToDatabase();
+    const filter = await Filter.find({ categorySlug }).lean();
+
+    const result = filter.map((filter) => ({
+      name: filter.name,
+      values: filter.values,
+    }));
+
+    return result;
+  },
+  CACHE.FILTER.SLUG.KEY_PARTS,
+  {
+    tags: [CACHE.FILTER.SLUG.TAGS],
+    revalidate: CACHE.REVALIDATE_TIME.SM,
+  },
+);
+
+export const createFilter = async () => {
+  await connectToDatabase();
+  const categories = await Category.find().lean();
+
+  const results = await Promise.all(
+    categories.map((category) =>
+      Product.aggregate([
+        {
+          $match: { "category._id": category._id },
+        },
+        {
+          $unwind: "$attributes",
+        },
+        {
+          $group: {
+            _id: {
+              name: "$attributes.name",
+              categoryId: "$category._id",
+              categorySlug: "$category.slug",
+            },
+            values: {
+              $addToSet: {
+                value: "$attributes.value",
+                valueSlug: "$attributes.valueSlug", // Lấy valueSlug từ attributes
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            categoryId: "$_id.categoryId",
+            categorySlug: "$_id.categorySlug",
+            name: "$_id.name",
+            values: 1,
+          },
+        },
+      ]),
+    ),
+  );
+
+  const input = results.flat();
+  await Filter.deleteMany({});
+  await Filter.insertMany(input);
+};
+
+const filtersRepository = {
+  getAllFilters,
+  getFilterByCategoryId,
+  getFilterByCategorySlug,
+  createFilter,
+};
+
+export default filtersRepository;

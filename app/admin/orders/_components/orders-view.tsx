@@ -164,7 +164,6 @@ export const columns: ColumnDef<OrderType>[] = [
 ];
 
 const OrdersView = ({ orders }: { orders: OrderType[] }) => {
-  console.log(orders);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],

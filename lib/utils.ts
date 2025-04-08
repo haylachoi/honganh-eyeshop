@@ -1,8 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS, ENDPOINTS, SORTING_OPTIONS } from "@/constants";
 import slugify from "slugify";
+import { SearchParams } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -38,6 +39,43 @@ export const slugifyVn = (text: string) => {
     lower: true,
     strict: true,
   });
+};
+
+export const normalizeSearchParams = (
+  params: SearchParams,
+): Record<string, string[]> => {
+  const result: Record<string, string[]> = {};
+
+  for (const key in params) {
+    const value = params[key];
+
+    if (typeof value === "string") {
+      result[key] = decodeURIComponent(value).split(",");
+    } else if (Array.isArray(value)) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+};
+
+export const getQueryOption = ({
+  sortBy,
+  orderBy,
+}: {
+  sortBy: string;
+  orderBy: string;
+}) => {
+  if (
+    ![SORTING_OPTIONS.NAME, SORTING_OPTIONS.PRICE].includes(sortBy) ||
+    ![SORTING_OPTIONS.ASC, SORTING_OPTIONS.DESC].includes(orderBy)
+  ) {
+    return undefined;
+  }
+
+  return {
+    [sortBy]: orderBy === SORTING_OPTIONS.ASC ? 1 : -1,
+  };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

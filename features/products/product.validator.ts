@@ -27,9 +27,10 @@ export const variantAttributeSchema = z.object({
   value: z.string().min(1).trim(),
 });
 
-const attributeSchema = z.object({
+export const attributeSchema = z.object({
   name: z.string().min(1).trim(),
   value: z.string().trim().optional().default(""),
+  valueSlug: z.string().trim().optional().default(""),
 });
 
 // base
@@ -68,9 +69,16 @@ export const baseProductSchema = z.object({
   tags: z.array(tagSchema),
 });
 
-export const ProductInputSchema = baseProductSchema.extend({
-  variants: z.array(baseVariantSchema),
-});
+export const ProductInputSchema = baseProductSchema
+  .extend({
+    variants: z.array(baseVariantSchema),
+  })
+  .transform(({ attributes, ...rest }) => {
+    return {
+      ...rest,
+      attributes: attributes.filter((attribute) => attribute.value.trim()),
+    };
+  });
 
 export const ProductDbInputSchema = z.object({
   name: nameSchema,
@@ -82,6 +90,8 @@ export const ProductDbInputSchema = z.object({
   description: descriptionSchema,
   isPublished: isPublishedSchema,
   tags: z.array(z.object({ _id: z.string(), name: z.string() })),
+  minPrice: MoneySchema,
+  maxPrice: MoneySchema,
   variants: z.array(
     baseVariantSchema
       .omit({ images: true })
@@ -89,10 +99,17 @@ export const ProductDbInputSchema = z.object({
   ),
 });
 
-export const productUpdateSchema = baseProductSchema.extend({
-  id: IdSchema,
-  variants: z.array(variantUpdateSchema),
-});
+export const productUpdateSchema = baseProductSchema
+  .extend({
+    id: IdSchema,
+    variants: z.array(variantUpdateSchema),
+  })
+  .transform(({ attributes, ...rest }) => {
+    return {
+      ...rest,
+      attributes: attributes.filter((attribute) => attribute.value.trim()),
+    };
+  });
 
 export const variantTypeSchema = baseVariantSchema
   .omit({ images: true })
@@ -122,6 +139,8 @@ export const productTypeWithoutTransformSchema = z.object({
         id: _id.toString(),
       })),
     ),
+  minPrice: MoneySchema,
+  maxPrice: MoneySchema,
   variants: z.array(variantTypeSchema),
   avgRating: z.number().default(0),
   totalReviews: z.number().default(0),

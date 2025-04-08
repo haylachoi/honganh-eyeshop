@@ -84,7 +84,7 @@ export const AccordionItem = ({
     <AccordionItemContext.Provider value={{ value }}>
       <div
         className={cn(
-          "grid grid-rows-[auto_0fr] transition-all lg:inline-block",
+          "grid grid-rows-[auto_0fr] transition-all",
           activeValue === value && "grid-rows-[auto_1fr]",
           className,
         )}

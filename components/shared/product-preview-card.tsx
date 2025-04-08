@@ -28,7 +28,7 @@ export const PreviewCard = ({ product }: { product: ProductPreview }) => {
           <p className="text-xl">{product.name}</p>
           <div className="flex gap-2">
             <span className="text-foreground font-bold">
-              {formater.format(product.variants[0].price)}
+              {`${formater.format(product.minPrice)} - ${formater.format(product.maxPrice)}`}
             </span>
             {product.variants[0].originPrice !== product.variants[0].price && (
               <span className="text-foreground/60 line-through">

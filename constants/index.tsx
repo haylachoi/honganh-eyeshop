@@ -35,6 +35,18 @@ export const ADMIN_ENDPOINTS = {
   BLOGS: "/admin/blogs",
   COUPONS: "/admin/coupons",
   ORDERS: "/admin/orders",
+  OTHERS: "/admin/others",
+};
+
+export const SORTING_OPTIONS = {
+  SORT_BY: "sort_by",
+  NAME: "name",
+  PRICE: "minPrice",
+  // MIN_PRICE: "minPrice",
+  // MAX_PRICE: "maxPrice",
+  ORDER_BY: "order_by",
+  ASC: "asc",
+  DESC: "desc",
 };
 
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";
@@ -46,6 +58,10 @@ export const EMAIL_LINK = `mailto:${EMAIL}`;
 export const REVIEW_ELIGIBILITY_PERIOD = 7;
 
 export const CACHE = {
+  REVALIDATE_TIME: {
+    XS: 3600,
+    SM: 3600 * 24,
+  },
   CATEGORIES: {
     ALL: {
       KEY_PARTS: ["categories"],
@@ -90,6 +106,20 @@ export const CACHE = {
     ALL: {
       KEY_PARTS: ["order"],
       TAGS: "order",
+    },
+  },
+  FILTER: {
+    ALL: {
+      KEY_PARTS: ["filter"],
+      TAGS: "filter",
+    },
+    ID: {
+      KEY_PARTS: ["filter", "id"],
+      TAGS: "filter",
+    },
+    SLUG: {
+      KEY_PARTS: ["filter", "slug"],
+      TAGS: "filter",
     },
   },
 };
@@ -207,6 +237,15 @@ export const TOAST_MESSAGES = {
     CREATE: {
       SUCCESS: "Đã gửi đánh giá thành công",
       ERROR: "Gửi đánh giá thất bại",
+    },
+  },
+  ORDER: {
+    CREATE: {
+      SUCCESS: "Đã tạo đơn hàng thành công",
+      ERROR: {
+        GENERAL: "Tạo đơn hàng thất bại",
+        UNAVAILABLE: "Sản phẩm không hợp lệ hoặc không đủ hàng",
+      },
     },
   },
 };

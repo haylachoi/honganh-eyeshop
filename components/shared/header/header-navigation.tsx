@@ -103,7 +103,7 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
           <AccordionItem
             key={mainlink.title}
             value={mainlink.title}
-            className="group overflow-hidden"
+            className="group overflow-hidden lg:inline-block"
           >
             <AccordionTrigger className="h-full py-2 flex justify-between items-center gap-2 text-xl font-bold cursor-pointer">
               {mainlink.title}

@@ -15,7 +15,7 @@ import {
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
-import { FilterQuery, ProjectionType } from "mongoose";
+import { FilterQuery, ProjectionType, QueryOptions } from "mongoose";
 
 const getAllProducts = unstable_cache(
   async () => {
@@ -45,13 +45,16 @@ const getProductByQuery = async (query: QueryFilter<QueryType>) => {
 
 const searchProductByQuery = async ({
   query,
-  limit = MAX_SEARCH_RESULT,
+  sortOptions,
+  // limit = MAX_SEARCH_RESULT,
 }: {
   query: FilterQuery<ProductType>;
-  limit?: number;
+  sortOptions?: QueryOptions;
+  // limit?: number;
 }) => {
   await connectToDatabase();
-  const products = await Product.find(query).limit(limit).lean();
+  const products = await Product.find(query).sort(sortOptions).lean();
+  console.log(products);
   const result = products.map((product) => ProductTypeSchema.parse(product));
   return result;
 };

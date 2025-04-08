@@ -32,7 +32,6 @@ export const addItemToCart = authCustomerActionClient
       variantId: parsedInput.variantId,
     });
 
-    console.log("userId", ctx.userId);
     if (existingCartItem) {
       const newQuantity = existingCartItem.quantity + parsedInput.quantity;
       if (newQuantity > countInStock) {

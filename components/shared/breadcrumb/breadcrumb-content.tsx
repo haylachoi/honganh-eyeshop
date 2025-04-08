@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 
 export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
   const pathname = usePathname();
-  console.log(pathname);
   if (!pathname?.[1]) return null;
   if (pathname.startsWith("/checkout")) return null;
 

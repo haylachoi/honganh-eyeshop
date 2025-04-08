@@ -102,6 +102,7 @@ const ProductCreateForm = ({
           attributes.map((attribute) => ({
             name: attribute.name,
             value: "",
+            valueSlug: "",
           })),
         );
       }

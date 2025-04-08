@@ -84,7 +84,6 @@ const searchBlogAndSimpleReturnByQuery = async ({
       },
     },
   ]);
-  console.log(result[0].blogs);
   const blogs: SearchBlogResultType[] = result[0].blogs.map(
     searchBlogResultSchema.parse,
   );

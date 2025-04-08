@@ -33,7 +33,6 @@ export const signIn = actionClient
   .schema(signInInputSchema)
   .action(async ({ parsedInput }) => {
     const user = await userRepository.getUserByEmail(parsedInput.email);
-    console.log("user", user);
     if (!user) {
       return false;
     }

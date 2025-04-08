@@ -87,36 +87,54 @@ const ProductUpdateForm = ({
     }
   }, [debouncedName, isManualSlug, setValue]);
 
-  useEffect(() => {
-    if (selectedCategory) {
-      const attributes = categories.find(
-        (category) => category.id === selectedCategory,
-      )?.attributes;
+  useEffect(
+    () => {
+      if (selectedCategory) {
+        const attributes = categories.find(
+          (category) => category.id === selectedCategory,
+        )?.attributes;
 
-      if (!attributes) return;
+        if (!attributes) return;
 
-      if (selectedCategory !== defaultValues.category) {
-        setValue(
-          "attributes",
-          attributes.map((attribute) => ({
-            name: attribute.name,
-            value: "",
-          })),
-        );
-      } else {
-        setValue("attributes", defaultValues.attributes);
+        if (selectedCategory !== defaultValues.category) {
+          setValue(
+            "attributes",
+            attributes.map((attribute) => ({
+              name: attribute.name,
+              value: "",
+              valueSlug: "",
+            })),
+          );
+        } else {
+          const temp = attributes
+            .filter(
+              (att) =>
+                !defaultValues.attributes.some(
+                  (defaultAtt) => defaultAtt.name === att.name,
+                ),
+            )
+            .map((att) => ({
+              name: att.name,
+              value: "",
+              valueSlug: "",
+            }));
+
+          const mergedAtts = [...defaultValues.attributes, ...temp];
+          setValue("attributes", mergedAtts);
+        }
       }
-    }
-  }, [
-    selectedCategory,
-    setValue,
-    categories,
-    defaultValues.category,
-    defaultValues.attributes,
-  ]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      selectedCategory,
+      // setValue,
+      categories,
+      defaultValues.category,
+      defaultValues.attributes,
+    ],
+  );
   const onSubmit = async (data: ProductUpdateType) => {
     // const updatedFields = getDirtyValues(dirtyFields, data);
-    console.log(data);
     execute(data);
   };
 

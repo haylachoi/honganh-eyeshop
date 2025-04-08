@@ -53,7 +53,6 @@ const getOrdersByQuery = async ({
 
 const createOrder = async (input: OrderDbInputType) => {
   await connectToDatabase();
-  console.log(input);
   const result = await Order.create(input);
   return result._id.toString();
 };

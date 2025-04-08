@@ -1,6 +1,7 @@
 "use client";
 
 import SubmitButton from "@/components/custom-ui/submit-button";
+import { TOAST_MESSAGES } from "@/constants";
 import { updateCheckoutAction } from "@/features/checkouts/checkout.actions";
 import { CheckoutType } from "@/features/checkouts/checkout.types";
 import { checkValidCouponCodeAction } from "@/features/coupons/coupon.actions";
@@ -82,8 +83,9 @@ const CheckoutView = ({
   const coupon = useCheckoutStore((state) => state.coupon);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const { execute, isPending } = useAction(createOrderAction, {
-    onSuccess: (result) => {
-      console.log(result);
+    onSuccess: () => {
+      toast.success(TOAST_MESSAGES.ORDER.CREATE.SUCCESS);
+      // todo: redrect or create summary
     },
     onError: (e) => {
       if (e.error?.serverError) {
@@ -125,7 +127,6 @@ const CheckoutView = ({
     };
     const inputResult = orderInputSchema.safeParse(input);
     if (!inputResult.success) {
-      console.log(formatZodError(inputResult.error));
       setErrors(formatZodError(inputResult.error));
       return;
     }
@@ -296,9 +297,8 @@ const CouponForm = ({ checkout }: { checkout: CheckoutType }) => {
         setCoupon(result.data.couponInfo);
       }
     },
-    onError: (e) => {
+    onError: () => {
       setCoupon(undefined);
-      console.log(e.error);
     },
   });
 

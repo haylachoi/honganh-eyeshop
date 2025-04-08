@@ -13,6 +13,7 @@ const links = [
   { name: "Blogs", href: ADMIN_ENDPOINTS.BLOGS },
   { name: "Coupons", href: ADMIN_ENDPOINTS.COUPONS },
   { name: "Order", href: ADMIN_ENDPOINTS.ORDERS },
+  { name: "Others", href: ADMIN_ENDPOINTS.OTHERS },
 ];
 
 const AdminHeader = () => {

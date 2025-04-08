@@ -145,7 +145,8 @@ const SearchBox = () => {
       <div
         ref={ref}
         className={cn(
-          "fixed z-20 left-0 right-0 top-[48px] bg-background transition-all duration-400 ease-in-out overflow-hidden",
+          "fixed z-20 left-0 right-0 top-[48px] bg-background transition-all duration-400 ease-in-out overflow-hidden hidden",
+          isOpen && "block",
         )}
       >
         <div className="w-full h-[2px] bg-foreground" />
