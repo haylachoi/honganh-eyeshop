@@ -1,4 +1,3 @@
-import { getLink } from "@/lib/utils";
 import { IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
@@ -66,19 +65,5 @@ export const blogTypeSchema = blogInputSchema
   })
   .transform(({ _id, ...res }) => ({
     ...res,
-    id: _id.toString(),
-  }));
-
-export const searchBlogResultSchema = z
-  .object({
-    _id: MongoIdSchema,
-    title: z.string(),
-    slug: blogSlugSchema,
-    image: z.string(),
-    updatedAt: dateSchema,
-  })
-  .transform(({ _id, slug, ...res }) => ({
-    ...res,
-    link: getLink.blog.home({ blogSlug: slug }),
     id: _id.toString(),
   }));

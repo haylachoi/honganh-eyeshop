@@ -49,6 +49,12 @@ export const SORTING_OPTIONS = {
   DESC: "desc",
 };
 
+export const FILTER_NAME = {
+  CATEGORY: "category",
+  PRICE: "price",
+  SEARCH: "search",
+};
+
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";
 export const PHONE = "123-456-7890";
 export const PHONE_LINK = `tel:${PHONE}`;

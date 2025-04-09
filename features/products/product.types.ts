@@ -5,7 +5,6 @@ import {
   ProductInputSchema,
   ProductTypeSchema,
   productUpdateSchema,
-  searchProductResultSchema,
 } from "./product.validator";
 export type ProductId = Id;
 // export type ProductPreview = {
@@ -33,7 +32,3 @@ export type SimpleCategoryType = {
   name: string;
   slug: string;
 };
-
-export type searchProductResultType = z.output<
-  typeof searchProductResultSchema
->;

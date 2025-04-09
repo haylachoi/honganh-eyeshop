@@ -1,7 +1,4 @@
-import {
-  ProductType,
-  searchProductResultType,
-} from "@/features/products/product.types";
+import { ProductType } from "@/features/products/product.types";
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
@@ -11,11 +8,12 @@ import {
   getProductBySlugQuerySchema,
   ProductDbInputSchema,
   ProductTypeSchema,
-  searchProductResultSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
 import { FilterQuery, ProjectionType, QueryOptions } from "mongoose";
+import { searchProductResultType } from "@/features/filter/filter.types";
+import { searchProductResultSchema } from "@/features/filter/filter.validator";
 
 const getAllProducts = unstable_cache(
   async () => {

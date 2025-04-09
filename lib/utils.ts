@@ -3,7 +3,6 @@ import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
 import { ADMIN_ENDPOINTS, ENDPOINTS, SORTING_OPTIONS } from "@/constants";
 import slugify from "slugify";
-import { SearchParams } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,24 +38,6 @@ export const slugifyVn = (text: string) => {
     lower: true,
     strict: true,
   });
-};
-
-export const normalizeSearchParams = (
-  params: SearchParams,
-): Record<string, string[]> => {
-  const result: Record<string, string[]> = {};
-
-  for (const key in params) {
-    const value = params[key];
-
-    if (typeof value === "string") {
-      result[key] = decodeURIComponent(value).split(",");
-    } else if (Array.isArray(value)) {
-      result[key] = value;
-    }
-  }
-
-  return result;
 };
 
 export const getQueryOption = ({

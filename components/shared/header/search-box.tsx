@@ -1,9 +1,11 @@
 "use client";
 
 import { MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
-import { SearchBlogResultType } from "@/features/blogs/blog.types";
-import { searchProductResultType } from "@/features/products/product.types";
-import { searchAction } from "@/features/search/search.actions";
+import { searchAction } from "@/features/filter/filter.actions";
+import {
+  SearchBlogResultType,
+  searchProductResultType,
+} from "@/features/filter/filter.types";
 import { cn, currencyFormatter, getLink } from "@/lib/utils";
 import { LoaderIcon, SearchIcon, X } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";

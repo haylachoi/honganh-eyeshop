@@ -1,8 +1,9 @@
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
+import { FILTER_NAME } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
 import { getAllFilters } from "@/features/filter/filter.queries";
-import { currencyFormatter } from "@/lib/utils";
+import { getPriceFilterOptions } from "@/features/filter/filter.utils";
 import { Suspense } from "react";
 
 const SearchPage = async () => {
@@ -27,29 +28,13 @@ const FilterProvider = async () => {
   }
   const filter = attrFilterResult.data;
   filter.push({
-    name: "category",
+    name: FILTER_NAME.CATEGORY,
     values: categoryFilterResult.data.map((c) => ({
       value: c.name,
       valueSlug: c.slug,
     })),
   });
 
-  filter.push({
-    name: "price",
-    values: [
-      {
-        value: `< ${currencyFormatter.format(100_000)}`,
-        valueSlug: "0-100000",
-      },
-      {
-        value: `${currencyFormatter.format(100_000)} - ${currencyFormatter.format(500_000)}`,
-        valueSlug: "100000-500000",
-      },
-      {
-        value: `> ${currencyFormatter.format(500_000)}`,
-        valueSlug: "500000-0",
-      },
-    ],
-  });
+  filter.push(getPriceFilterOptions());
   return <FilterView attributes={filter} />;
 };

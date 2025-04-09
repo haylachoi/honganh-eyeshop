@@ -3,9 +3,9 @@
 import { PreviewCard } from "../product-preview-card";
 import { useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-import { searchProductByQuery } from "@/features/search/search.actions";
 import React from "react";
 import SortingOptions from "../sorting-options";
+import { searchProductByQuery } from "@/features/filter/filter.actions";
 
 const ProductsView = ({
   defaultFilter,

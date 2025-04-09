@@ -1,7 +1,7 @@
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
 import { getFilterByCategorySlug } from "@/features/filter/filter.queries";
-import { currencyFormatter } from "@/lib/utils";
+import { getPriceFilterOptions } from "@/features/filter/filter.utils";
 import { Suspense } from "react";
 
 type Params = { categorySlug: string };
@@ -34,23 +34,7 @@ const FilterProvider = async ({ categorySlug }: { categorySlug: string }) => {
   }
   const filter = result.data;
 
-  filter.push({
-    name: "price",
-    values: [
-      {
-        value: `< ${currencyFormatter.format(100_000)}`,
-        valueSlug: "0-100000",
-      },
-      {
-        value: `${currencyFormatter.format(100_000)} - ${currencyFormatter.format(500_000)}`,
-        valueSlug: "100000-500000",
-      },
-      {
-        value: `> ${currencyFormatter.format(500_000)}`,
-        valueSlug: "500000-0",
-      },
-    ],
-  });
+  filter.push(getPriceFilterOptions());
 
   return <FilterView attributes={filter} />;
 };
