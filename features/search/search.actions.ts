@@ -79,6 +79,7 @@ export const searchProductByQuery = actionClient
   })
   .schema(z.record(z.string()))
   .action(async ({ parsedInput }) => {
+    await new Promise((resolve) => setTimeout(resolve, 4000));
     const andConditions: FilterQuery<ProductType>[] = [];
     const {
       category: categoryFilter,

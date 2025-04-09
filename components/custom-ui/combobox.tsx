@@ -265,6 +265,7 @@ interface ComboboxListProps {
 export const ComboboxList = ({ className, children }: ComboboxListProps) => {
   const { isOpen } = use(ComboboxContext);
   const selfRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (selfRef.current) {
       const combobox = selfRef.current.closest(
@@ -280,12 +281,13 @@ export const ComboboxList = ({ className, children }: ComboboxListProps) => {
       }
     }
   }, []);
+
   return (
     <div
       className={cn(
-        "absolute left-0 top-full z-10 shadow-2xl bg-background text-foreground invisible pointer-events-none flex flex-col gap-2 border",
+        "absolute left-0 top-full z-10 shadow-md bg-background text-foreground border transition-all duration-300 ease-out transform-gpu opacity-0 scale-y-95 origin-top pointer-events-none",
+        isOpen && "opacity-100 scale-y-100 pointer-events-auto",
         className,
-        isOpen && "visible pointer-events-auto",
       )}
       ref={selfRef}
       data-comboboxlist
