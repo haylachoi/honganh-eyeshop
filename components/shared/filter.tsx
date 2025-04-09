@@ -59,9 +59,9 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
       <input type="checkbox" className="hidden peer" id="filter-trigger" />
       <label
         htmlFor="filter-trigger"
-        className="fixed inset-0 z-0 cursor-pointer bg-foreground opacity-60 hidden peer-checked:block"
+        className="fixed inset-0 z-10 cursor-pointer bg-foreground opacity-60 hidden peer-checked:block"
       />
-      <div className="border border-muted-foreground h-[max(100dvh,200px)] max-lg:w-0 max-lg:peer-checked:w-[400px] grid grid-rows-[auto_1fr] max-lg:fixed inset-0 left-auto z-10 max-lg:bg-background transition-all">
+      <div className="border border-muted-foreground h-[max(100dvh,200px)] max-lg:w-0 max-lg:peer-checked:w-[280px] grid grid-rows-[auto_1fr] max-lg:fixed inset-0 left-auto z-20 max-lg:bg-background transition-all">
         <div className="overflow-hidden">
           <label
             className="absolute right-full top-1/2 p-2 bg-primary text-primary-foreground cursor-pointer"
