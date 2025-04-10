@@ -49,15 +49,21 @@ const SortingOptions = ({ className }: SortingOptionsProps) => {
 
   return (
     <Combobox
-      className={cn("bg-background", className)}
+      className={cn("bg-background w-[200px]", className)}
       defaultValue={getDescription(currentSort, currentOrder)}
     >
       <ComboboxTrigger className="border">
         <ComboboxSelected
-          render={(value) => (
+          defaultDisplayValue="Sắp xếp"
+          render={({ value, isOpen }) => (
             <div className="flex justify-between items-center px-2 py-1 cursor-pointer">
               <span>{value}</span>
-              <ChevronDown className="ml-1 h-4 w-4" />
+              <ChevronDown
+                className={cn(
+                  "ml-1 h-4 w-4 transition-all",
+                  isOpen && "rotate-180",
+                )}
+              />
             </div>
           )}
         />
@@ -67,7 +73,7 @@ const SortingOptions = ({ className }: SortingOptionsProps) => {
           Object.entries(orders).map(([orderKey, label]) => (
             <ComboboxItem key={`${sortKey}-${orderKey}`} value={label}>
               <div
-                className="px-2 py-1 w-full cursor-pointer"
+                className="px-2 py-1 w-full cursor-pointer hover:bg-secondary"
                 onClick={() => handleSortChange(sortKey, orderKey)}
               >
                 {label}

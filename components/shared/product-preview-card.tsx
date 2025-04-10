@@ -4,11 +4,23 @@ import { ProductPreview } from "@/features/products/product.types";
 import { cn, currencyFormatter, getLink } from "@/lib/utils";
 import Link from "next/link";
 
-export const PreviewCard = ({ product }: { product: ProductPreview }) => {
+export const PreviewCard = ({
+  product,
+  className,
+}: {
+  product: ProductPreview;
+  className?: string;
+}) => {
   const formater = currencyFormatter;
   const imageUrl = product.variants[0].images[0] ?? "/images/none-image.png";
+  const { minPrice, maxPrice } = product;
   return (
-    <div className="max-w-max border-5 border-secondary border-t-transparent border-r-transparent">
+    <div
+      className={cn(
+        "max-w-max border-5 border-secondary border-t-transparent border-r-transparent",
+        className,
+      )}
+    >
       <Link
         href={getLink.product.home({
           categorySlug: product.category.slug,
@@ -28,7 +40,9 @@ export const PreviewCard = ({ product }: { product: ProductPreview }) => {
           <p className="text-xl">{product.name}</p>
           <div className="flex gap-2">
             <span className="text-foreground font-bold">
-              {`${formater.format(product.minPrice)} - ${formater.format(product.maxPrice)}`}
+              {minPrice === maxPrice
+                ? formater.format(minPrice)
+                : `${formater.format(minPrice)} - ${formater.format(maxPrice)}`}
             </span>
             {product.variants[0].originPrice !== product.variants[0].price && (
               <span className="text-foreground/60 line-through">

@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "4mb",
     },
+    // todo: use compiler
+    // reactCompiler: true,
   },
 };
 

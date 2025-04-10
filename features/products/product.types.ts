@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Id } from "../../types";
 import {
   attributeSchema,
+  ProductDbInputSchema,
   ProductInputSchema,
   ProductTypeSchema,
   productUpdateSchema,
@@ -19,6 +20,7 @@ export type ProductId = Id;
 // };
 
 export type ProductInputType = z.infer<typeof ProductInputSchema>;
+export type ProductDbInputType = z.infer<typeof ProductDbInputSchema>;
 export type ProductUpdateType = z.infer<typeof productUpdateSchema>;
 export type ProductType = z.infer<typeof ProductTypeSchema>;
 export type AttributeType = z.infer<typeof attributeSchema>;

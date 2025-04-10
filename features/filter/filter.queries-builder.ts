@@ -8,10 +8,10 @@ export const createProductQueryFilter = ({
 }: {
   input: Record<string, string>;
 }) => {
-  const andConditions: FilterQuery<ProductType>[] = [];
+  const conditions: FilterQuery<ProductType>[] = [];
   const {
     [FILTER_NAME.CATEGORY]: categoryFilter,
-    [FILTER_NAME.PRICE]: priceFilter,
+    [FILTER_NAME.PRICE]: priceFilters,
     [FILTER_NAME.SEARCH]: searchFilter,
     ...attrFilters
   } = input;
@@ -19,7 +19,7 @@ export const createProductQueryFilter = ({
   for (const [name, values] of Object.entries(
     normalizeSearchParams(attrFilters),
   )) {
-    andConditions.push({
+    conditions.push({
       attributes: {
         $elemMatch: {
           name,
@@ -30,28 +30,50 @@ export const createProductQueryFilter = ({
   }
 
   if (categoryFilter) {
-    andConditions.push({ "category.slug": categoryFilter });
+    conditions.push({
+      "category.slug": {
+        $in: categoryFilter.split(","),
+      },
+    });
   }
 
   if (searchFilter) {
-    console.log(searchFilter);
-    andConditions.push({
+    conditions.push({
       nameNoAccent: { $regex: searchFilter, $options: "i" },
     });
   }
 
-  if (priceFilter?.[0]) {
-    const [min, rawMax] = priceFilter.split("-").map(Number);
-    const max = rawMax === 0 ? 10_000_000 : rawMax;
+  if (priceFilters) {
+    const localFilter: FilterQuery<ProductType>[] = [];
+    priceFilters.split(",").forEach((pfilter) => {
+      const [min, rawMax] = pfilter.split("-").map(Number);
+      const max = rawMax === 0 ? 10_000_000 : rawMax;
+      localFilter.push({
+        variants: {
+          $elemMatch: {
+            ...(isNaN(min) ? {} : { price: { $gte: min } }),
+            ...(isNaN(max)
+              ? {}
+              : {
+                  price: { ...(!isNaN(min) ? { $gte: min } : {}), $lte: max },
+                }),
+          },
+        },
+      });
+    });
 
-    andConditions.push({
-      $and: [{ maxPrice: { $gte: min } }, { minPrice: { $lte: max } }],
+    conditions.push({
+      $or: localFilter,
     });
   }
 
-  const query: FilterQuery<ProductType> = andConditions.length
-    ? { $and: andConditions }
+  const query: FilterQuery<ProductType> = conditions.length
+    ? { $and: conditions }
     : {};
+
+  console.log(input);
+  console.log(priceFilters);
+  console.log(JSON.stringify(query, null, 2));
 
   return query;
 };

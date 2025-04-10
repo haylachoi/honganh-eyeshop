@@ -4,15 +4,19 @@ import { FILTER_NAME } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
 import { getAllFilters } from "@/features/filter/filter.queries";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";
-import { Suspense } from "react";
+
+export async function generateStaticParams() {
+  return [];
+}
+export const dynamic = "force-static";
+
+export const revalidate = 3600;
 
 const SearchPage = async () => {
   // todo: css for mobile screen
   return (
-    <div className="container lg:grid grid-cols-[300px_1fr] gap-4">
-      <Suspense fallback={<div>Loading...</div>}>
-        <FilterProvider />
-      </Suspense>
+    <div className="container lg:grid grid-cols-[300px_1fr] gap-4 items-start">
+      <FilterProvider />
       <ProductsView />
     </div>
   );

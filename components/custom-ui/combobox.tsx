@@ -230,7 +230,7 @@ export const ComboboxTrigger = ({
 interface ComboboxSelectedProps {
   className?: string;
   defaultDisplayValue?: string;
-  render: (value: string) => ReactNode;
+  render: ({ value, isOpen }: { value: string; isOpen: boolean }) => ReactNode;
 }
 
 export const ComboboxSelected = ({
@@ -238,21 +238,25 @@ export const ComboboxSelected = ({
   defaultDisplayValue,
   render,
 }: ComboboxSelectedProps) => {
-  const { comboboxActiveValues } = use(ComboboxContext);
+  const { comboboxActiveValues, isOpen } = use(ComboboxContext);
   if (!className) {
     return (
       <>
-        {render(
-          comboboxActiveValues[0] ?? defaultDisplayValue ?? "click to select",
-        )}
+        {render({
+          value:
+            comboboxActiveValues[0] ?? defaultDisplayValue ?? "click to select",
+          isOpen,
+        })}
       </>
     );
   }
   return (
     <div className={cn("w-full", className)}>
-      {render(
-        comboboxActiveValues[0] ?? defaultDisplayValue ?? "click to select",
-      )}
+      {render({
+        value:
+          comboboxActiveValues[0] ?? defaultDisplayValue ?? "click to select",
+        isOpen,
+      })}
     </div>
   );
 };

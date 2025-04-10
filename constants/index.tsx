@@ -5,6 +5,8 @@ export const SESSION_NAME = "session";
 export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;
 export const MAX_SEARCH_RESULT = 10;
 
+export const PRODUCTS_PER_PAGE = 12;
+
 export const ENDPOINTS = {
   HOME: "/",
   PROFILE: "/profile",

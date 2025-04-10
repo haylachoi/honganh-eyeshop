@@ -3,6 +3,7 @@ import { z } from "zod";
 import { categorySlugSchema } from "../categories/category.validator";
 import { getLink } from "@/lib/utils";
 import { blogSlugSchema } from "../blogs/blog.validators";
+import { PRODUCTS_PER_PAGE } from "@/constants";
 
 const filterNameSchema = z.string();
 const filterValueSchema = z.object({
@@ -40,6 +41,12 @@ export const filterTypeSchema = filterInputSchema
     id: _id.toString(),
     categoryId: categoryId.toString(),
   }));
+
+export const searchInputSchema = z.object({
+  params: z.record(z.string()),
+  page: z.number().optional().default(0),
+  size: z.number().optional().default(PRODUCTS_PER_PAGE),
+});
 
 export const searchProductResultSchema = z
   .object({

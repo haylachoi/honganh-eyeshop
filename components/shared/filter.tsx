@@ -55,7 +55,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
   };
 
   return (
-    <div>
+    <aside className="sticky top-0 z-[5]">
       <input type="checkbox" className="hidden peer" id="filter-trigger" />
       <label
         htmlFor="filter-trigger"
@@ -64,7 +64,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
       <div className="border border-muted-foreground h-[max(100dvh,200px)] max-lg:w-0 max-lg:peer-checked:w-[280px] grid grid-rows-[auto_1fr] max-lg:fixed inset-0 left-auto z-20 max-lg:bg-background transition-all">
         <div className="overflow-hidden">
           <label
-            className="absolute right-full top-1/2 p-2 bg-primary text-primary-foreground cursor-pointer"
+            className="absolute right-full top-1/2 p-2 bg-primary text-primary-foreground cursor-pointer lg:hidden"
             htmlFor="filter-trigger"
           >
             <LucideFilter />
@@ -86,12 +86,12 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
               <li key={filterGroup.name} className="px-3">
                 <div className="-mx-3 h-px bg-muted-foreground" />
                 <Accordion defaultActiveValue={filterGroup.name}>
-                  <AccordionItem value={filterGroup.name}>
+                  <AccordionItem value={filterGroup.name} className="group">
                     <AccordionTrigger className="h-full py-2 flex justify-between items-center gap-2 text-xl font-bold cursor-pointer">
                       <h4 className="capitalize text-primary font-medium text-lg text-left">
                         {filterGroup.name}
                       </h4>
-                      <ChevronDown className="size-6 inline-block max-lg:group-data-[accordion-active='true']:rotate-180 transition-all duration-300 lg:group-hover:rotate-180" />
+                      <ChevronDown className="size-6 inline-block group-data-[accordion-active='true']:rotate-180 transition-all duration-300" />
                     </AccordionTrigger>
                     <AccordionContent>
                       <ul className="has-[li]:mb-2 flex flex-col gap-2">
@@ -129,7 +129,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
           </ul>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

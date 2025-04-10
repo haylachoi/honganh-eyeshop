@@ -1,7 +1,6 @@
 import categoriesRepository from "@/lib/db/repositories/categories";
 import productRepository from "@/lib/db/repositories/products";
 import { safeQuery } from "@/lib/query";
-import { IdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { categorySlugSchema } from "./category.validator";
 

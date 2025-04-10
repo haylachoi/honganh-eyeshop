@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Result } from "@/types";
-import { ZodSchema } from "zod";
+import { ZodType } from "zod";
 
 export type MiddlewareResult<Extra extends object> = Extra;
 
@@ -39,12 +39,12 @@ class SafeQuery<E, Extra extends object = {}> {
     return newInstance;
   }
 
-  schema<P>(schema: ZodSchema<P>) {
+  schema<P, PI>(schema: ZodType<P, any, PI>) {
     return {
       query: <T>(
         fetcher: (opt: { parsedInput: P; ctx: Extra }) => Promise<T>,
       ) => {
-        return async (clientInput: P): Promise<Result<T, E>> => {
+        return async (clientInput: PI): Promise<Result<T, E>> => {
           try {
             let ctx: MiddlewareResult<Extra> = {} as Extra;
 

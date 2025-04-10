@@ -1,7 +1,12 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import { ADMIN_ENDPOINTS, ENDPOINTS, SORTING_OPTIONS } from "@/constants";
+import {
+  ADMIN_ENDPOINTS,
+  ENDPOINTS,
+  FILTER_NAME,
+  SORTING_OPTIONS,
+} from "@/constants";
 import slugify from "slugify";
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,12 +51,12 @@ export const getQueryOption = ({
 }: {
   sortBy: string;
   orderBy: string;
-}) => {
+}): Record<string, 1 | -1> | undefined => {
   if (
     ![SORTING_OPTIONS.NAME, SORTING_OPTIONS.PRICE].includes(sortBy) ||
     ![SORTING_OPTIONS.ASC, SORTING_OPTIONS.DESC].includes(orderBy)
   ) {
-    return undefined;
+    return { [SORTING_OPTIONS.NAME]: 1 };
   }
 
   return {
@@ -237,6 +242,6 @@ export const getLink = {
     },
   },
   search({ keyword }: { keyword: string }) {
-    return `${ENDPOINTS.SEARCH}?keyword=${keyword}`;
+    return `${ENDPOINTS.SEARCH}?${FILTER_NAME.SEARCH}=${keyword}`;
   },
 };

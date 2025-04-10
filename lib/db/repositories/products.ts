@@ -1,4 +1,7 @@
-import { ProductType } from "@/features/products/product.types";
+import {
+  ProductDbInputType,
+  ProductType,
+} from "@/features/products/product.types";
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
@@ -11,7 +14,7 @@ import {
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
-import { FilterQuery, ProjectionType, QueryOptions } from "mongoose";
+import { FilterQuery, ProjectionType } from "mongoose";
 import { searchProductResultType } from "@/features/filter/filter.types";
 import { searchProductResultSchema } from "@/features/filter/filter.validator";
 
@@ -43,18 +46,36 @@ const getProductByQuery = async (query: QueryFilter<QueryType>) => {
 
 const searchProductByQuery = async ({
   query,
-  sortOptions,
-  // limit = MAX_SEARCH_RESULT,
+  sortOptions = {},
+  skip = 0,
+  limit = MAX_SEARCH_RESULT,
 }: {
   query: FilterQuery<ProductType>;
-  sortOptions?: QueryOptions;
-  // limit?: number;
+  sortOptions?: Record<string, 1 | -1>;
+  skip?: number;
+  limit?: number;
 }) => {
   await connectToDatabase();
-  const products = await Product.find(query).sort(sortOptions).lean();
-  console.log(products);
-  const result = products.map((product) => ProductTypeSchema.parse(product));
-  return result;
+  const result = await Product.aggregate([
+    { $match: query },
+    {
+      $facet: {
+        total: [{ $count: "count" }],
+        products: [{ $sort: sortOptions }, { $skip: skip }, { $limit: limit }],
+      },
+    },
+  ]);
+
+  const products: ProductType[] = result[0].products.map(
+    ProductTypeSchema.parse,
+  );
+
+  const total: number = result[0].total[0]?.count || 0;
+
+  return {
+    products,
+    total,
+  };
 };
 
 const searchProductAndSimpleReturnByQuery = async ({
@@ -167,10 +188,16 @@ const getCountInStockOfVariant = async (input: {
   return result?.variants?.[0].countInStock;
 };
 
-const createProduct = async (input: z.input<typeof ProductDbInputSchema>) => {
+const createProduct = async (input: ProductDbInputType) => {
   await connectToDatabase();
   const result = await Product.create(input);
   return result._id.toString();
+};
+
+const createProducts = async (input: ProductDbInputType[]) => {
+  await connectToDatabase();
+  const result = await Product.create(input);
+  return result.map((item) => item._id.toString());
 };
 
 const updateProduct = async (
@@ -246,6 +273,13 @@ const deleteProduct = async (ids: string | string[]) => {
   return ids;
 };
 
+const deleteFakeProducts = async () => {
+  await connectToDatabase();
+  await Product.deleteMany({
+    name: { $regex: /^test/, $options: "i" }, // "i" để không phân biệt hoa thường
+  });
+};
+
 const productRepository = {
   getAllProducts,
   getProductById,
@@ -255,9 +289,11 @@ const productRepository = {
   getProductsByQueryAndProjection,
   getCountInStockOfVariant,
   createProduct,
+  createProducts,
   updateProduct,
   updateRating,
   deleteProduct,
+  deleteFakeProducts,
   searchProductByQuery,
   searchProductAndSimpleReturnByQuery,
 };

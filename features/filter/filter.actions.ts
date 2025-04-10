@@ -10,6 +10,7 @@ import productRepository from "@/lib/db/repositories/products";
 import { z } from "zod";
 import { getQueryOption } from "@/lib/utils";
 import { createProductQueryFilter } from "./filter.queries-builder";
+import { searchInputSchema } from "./filter.validator";
 
 export const createFilterAction = authActionClient
   .metadata({
@@ -89,18 +90,28 @@ export const searchProductByQuery = actionClient
   .metadata({
     actionName: "searchProductByQuery",
   })
-  .schema(z.record(z.string()))
-  .action(async ({ parsedInput }) => {
+  .schema(searchInputSchema)
+  .action(async ({ parsedInput: { page, size, params } }) => {
     const {
       [SORTING_OPTIONS.SORT_BY]: sortBy,
       [SORTING_OPTIONS.ORDER_BY]: orderBy,
       ...restInput
-    } = parsedInput;
+    } = params;
 
     const query = createProductQueryFilter({
       input: restInput,
     });
     const sortOptions = getQueryOption({ sortBy, orderBy });
 
-    return productRepository.searchProductByQuery({ query, sortOptions });
+    const result = await productRepository.searchProductByQuery({
+      query,
+      sortOptions,
+      limit: size,
+      skip: page * size,
+    });
+
+    return {
+      ...result,
+      page,
+    };
   });

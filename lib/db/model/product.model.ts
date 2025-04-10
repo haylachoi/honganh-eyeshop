@@ -125,11 +125,13 @@ const productSchema = new Schema<ProductModel>(
   },
 );
 
+productSchema.index({ name: 1 });
 productSchema.index({ slug: 1 }, { unique: true });
 productSchema.index({ "category.slug": 1 });
 // productSchema.index({ slug: 1, "category.slug": 1 }, { unique: true });
 productSchema.index({ tags: 1 });
 productSchema.index({ nameNoAccent: "text" }, { default_language: "none" });
+// todo: index for sorting
 
 const Product =
   (models.Product as Model<ProductModel>) ||
