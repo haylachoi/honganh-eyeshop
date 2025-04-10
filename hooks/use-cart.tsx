@@ -43,13 +43,12 @@ const useCartStore = create<Cart>()((set, get) => ({
       }
 
       const result = await res.json();
-
-      if (!result?.success) {
+      if (!result.success) {
         items = getFromLocalStorage<CartItemDisplayType[]>("cart", []);
+      } else {
+        type = "server";
+        items = result.cart;
       }
-
-      type = "server";
-      items = result.cart;
     } catch (e) {
       console.error("Error fetching cart:", e);
       items = getFromLocalStorage<CartItemDisplayType[]>("cart", []);
