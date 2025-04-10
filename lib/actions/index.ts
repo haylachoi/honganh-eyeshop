@@ -69,7 +69,8 @@ export const authCustomerActionClient = actionClient.use(async ({ next }) => {
     });
 
   const userId = session.id;
-  return next({ ctx: { userId } });
+  const role = session.role;
+  return next({ ctx: { userId, role } });
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {

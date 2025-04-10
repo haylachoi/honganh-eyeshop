@@ -1,18 +1,5 @@
 import { ERROR_MESSAGES } from "@/constants";
-
-export const RESOURCE_TYPES = {
-  USER: "user",
-  BLOG: "blog",
-  PRODUCT: "product",
-  TAG: "tag",
-  CATEGORY: "category",
-  SERVER: "server",
-  UNKNOWN: "unknown",
-  CART: "cart",
-  CHECKOUT: "checkout",
-  COUPON: "coupon",
-  ORDER: "order",
-} as const;
+import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
 export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
 

@@ -12,7 +12,8 @@ const slugSchema = z
   .min(3, "Slug must be at least 3 characters");
 const brandSchema = z.string().trim().min(1, "Brand is required");
 const descriptionSchema = z.string().trim().optional();
-const isPublishedSchema = z.boolean().default(true);
+const isPublishedSchema = z.boolean();
+const isAvailableSchema = z.boolean();
 const tagSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -65,6 +66,7 @@ export const baseProductSchema = z.object({
   brand: brandSchema,
   description: descriptionSchema,
   isPublished: isPublishedSchema,
+  isAvailable: isAvailableSchema,
   tags: z.array(tagSchema),
 });
 
@@ -72,6 +74,14 @@ export const ProductInputSchema = baseProductSchema
   .extend({
     variants: z.array(baseVariantSchema),
   })
+  .refine(
+    ({ isAvailable, isPublished }) => {
+      return !isPublished && isAvailable;
+    },
+    {
+      message: "Sản phẩm đang bán thì phải công khai",
+    },
+  )
   .transform(({ attributes, ...rest }) => {
     return {
       ...rest,
@@ -88,6 +98,7 @@ export const ProductDbInputSchema = z.object({
   brand: brandSchema,
   description: descriptionSchema,
   isPublished: isPublishedSchema,
+  isAvailable: isAvailableSchema,
   tags: z.array(z.object({ _id: z.string(), name: z.string() })),
   minPrice: MoneySchema,
   maxPrice: MoneySchema,
@@ -103,6 +114,15 @@ export const productUpdateSchema = baseProductSchema
     id: IdSchema,
     variants: z.array(variantUpdateSchema),
   })
+  .refine(
+    ({ isAvailable, isPublished }) => {
+      return isPublished || !isAvailable;
+    },
+    {
+      message: "Sản phẩm đang bán thì phải công khai",
+      path: ["isAvailable"],
+    },
+  )
   .transform(({ attributes, ...rest }) => {
     return {
       ...rest,
@@ -130,6 +150,7 @@ export const productTypeWithoutTransformSchema = z.object({
   brand: brandSchema,
   description: descriptionSchema,
   isPublished: isPublishedSchema,
+  isAvailable: isAvailableSchema,
   tags: z
     .array(z.object({ _id: MongoIdSchema, name: z.string() }))
     .transform((tag) =>

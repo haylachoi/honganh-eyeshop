@@ -5,7 +5,12 @@ import {
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
 import { unstable_cache } from "next/cache";
-import { CACHE, ERROR_MESSAGES, MAX_SEARCH_RESULT } from "@/constants";
+import {
+  CACHE,
+  ERROR_MESSAGES,
+  MAX_SEARCH_RESULT,
+  PAGE_SIZE,
+} from "@/constants";
 import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
@@ -144,12 +149,54 @@ const getProductsByQueryAndProjection = async ({
   return products;
 };
 
-const getProductByTags = async (tags: string[]) => {
-  await connectToDatabase();
-  const products = await Product.find({ "tags.name": { $in: tags } }).lean();
-  const result = products.map((product) => ProductTypeSchema.parse(product));
-  return result;
-};
+const getProductByTags = unstable_cache(
+  async ({
+    tags,
+    limit = PAGE_SIZE.TRENDING.MD,
+    includePrivateProducts = false,
+    skip = 0,
+  }: {
+    tags: string[];
+    limit?: number;
+    includePrivateProducts?: boolean;
+    skip?: number;
+  }) => {
+    await connectToDatabase();
+    const match: Record<string, unknown> = {
+      "tags.name": { $in: tags },
+    };
+
+    if (!includePrivateProducts) {
+      match.isPublished = true;
+    }
+
+    const result = await Product.aggregate([
+      { $match: match },
+      {
+        $facet: {
+          total: [{ $count: "count" }],
+          products: [
+            { $sort: { updatedAt: 1 } },
+            { $skip: skip },
+            { $limit: limit },
+          ],
+        },
+      },
+    ]);
+
+    const products: ProductType[] = result[0].products.map(
+      ProductTypeSchema.parse,
+    );
+    const total: number = result[0].total[0]?.count || 0;
+
+    return { products, total };
+  },
+  CACHE.PRODUCTS_TAGS.PAGEGINATION.KEY_PARTS,
+  {
+    tags: [CACHE.PRODUCTS_TAGS.PAGEGINATION.TAGS],
+    revalidate: CACHE.PRODUCTS_TAGS.PAGEGINATION.TIME,
+  },
+);
 
 const getProductBySlug = async (
   input: z.infer<typeof getProductBySlugQuerySchema>,

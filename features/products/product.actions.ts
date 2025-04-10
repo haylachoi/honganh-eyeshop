@@ -51,6 +51,7 @@ const fakeProduct = {
   brand: "brand",
   description: "hhihi",
   isPublished: true,
+  isAvailable: true,
   tags: [
     {
       name: "trending",
@@ -236,6 +237,7 @@ export const updateProductAction = authActionClient
     // todo: delete variant in cart if change. Should move to repository
 
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE.TAGS.ALL.TAGS);
   });
 
 export const updateRatingAction = authActionClient

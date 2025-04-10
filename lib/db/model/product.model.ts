@@ -59,6 +59,10 @@ const productSchema = new Schema<ProductModel>(
       type: Boolean,
       default: true,
     },
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
     tags: {
       type: [
         {
@@ -131,6 +135,7 @@ productSchema.index({ "category.slug": 1 });
 // productSchema.index({ slug: 1, "category.slug": 1 }, { unique: true });
 productSchema.index({ tags: 1 });
 productSchema.index({ nameNoAccent: "text" }, { default_language: "none" });
+productSchema.index({ isPublished: 1, isAvailable: 1 });
 // todo: index for sorting
 
 const Product =

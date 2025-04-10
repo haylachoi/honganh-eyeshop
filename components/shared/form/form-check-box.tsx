@@ -13,12 +13,14 @@ interface FormCheckboxProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const FormCheckbox = <T extends FieldValues>({
   control,
   name,
   label,
+  disabled,
 }: FormCheckboxProps<T>) => {
   return (
     <FormField
@@ -27,9 +29,14 @@ const FormCheckbox = <T extends FieldValues>({
       render={({ field }) => (
         <FormItem className="flex items-center space-x-2">
           <FormControl>
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+            <Checkbox
+              className="cursor-pointer"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={disabled}
+            />
           </FormControl>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className="cursor-pointer">{label}</FormLabel>
           <FormMessage />
         </FormItem>
       )}

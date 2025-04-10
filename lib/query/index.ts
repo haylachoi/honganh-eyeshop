@@ -49,7 +49,8 @@ export const customerQueryClient = safeQuery.use(async ({ ctx, next }) => {
   const session = await auth();
 
   const userId = session?.id;
-  return next({ ...ctx, userId });
+  const role = session?.role;
+  return next({ ...ctx, userId, role });
 });
 
 export const authCustomerQueryClient = safeQuery.use(async ({ ctx, next }) => {
@@ -57,5 +58,6 @@ export const authCustomerQueryClient = safeQuery.use(async ({ ctx, next }) => {
   if (!session) throw new AuthenticationError({});
 
   const userId = session.id;
-  return next({ ...ctx, userId });
+  const role = session?.role;
+  return next({ ...ctx, userId, role });
 });

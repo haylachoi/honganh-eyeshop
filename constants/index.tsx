@@ -7,6 +7,27 @@ export const MAX_SEARCH_RESULT = 10;
 
 export const PRODUCTS_PER_PAGE = 12;
 
+export const PAGE_SIZE = {
+  TRENDING: {
+    SM: 8,
+    MD: 12,
+    LG: 20,
+    XL: 30,
+  },
+  NEW_ARRIVAL: {
+    SM: 8,
+    MD: 12,
+    LG: 20,
+    XL: 30,
+  },
+  PRODUCTS: {
+    SM: 8,
+    MD: 12,
+    LG: 20,
+    XL: 30,
+  },
+};
+
 export const ENDPOINTS = {
   HOME: "/",
   PROFILE: "/profile",
@@ -98,6 +119,18 @@ export const CACHE = {
     ALL: {
       KEY_PARTS: ["coupons"],
       TAGS: "coupons",
+    },
+  },
+  PRODUCTS_TAGS: {
+    ALL: {
+      KEY_PARTS: ["trending"],
+      TAGS: "tags",
+      TIME: 3600,
+    },
+    PAGEGINATION: {
+      KEY_PARTS: ["trending", "skip", "limit"],
+      TAGS: "tags",
+      TIME: 3600,
     },
   },
   CART: {

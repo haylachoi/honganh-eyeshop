@@ -3,11 +3,12 @@ import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
 import { CACHE, ERROR_MESSAGES, MAX_SEARCH_RESULT } from "@/constants";
 import { unstable_cache } from "next/cache";
-import { NotFoundError, RESOURCE_TYPES } from "@/lib/error";
+import { NotFoundError } from "@/lib/error";
 import { FilterQuery } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
+import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
 const getAllBlogs = unstable_cache(
   async () => {

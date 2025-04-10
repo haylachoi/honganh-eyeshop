@@ -123,10 +123,17 @@ export const columns: ColumnDef<ProductType>[] = [
     },
   },
   {
-    accessorKey: "isPublished",
+    accessorKey: "isAvailable",
     header: "Trạng thái",
     cell: ({ row }) => (
-      <div>{row.getValue("isPublished") ? "Đang bán" : "Chưa bán"}</div>
+      <div>{row.getValue("isAvailable") ? "Đang bán" : "Chưa bán"}</div>
+    ),
+  },
+  {
+    accessorKey: "isPublished",
+    header: "Công khai",
+    cell: ({ row }) => (
+      <div>{row.getValue("isPublished") ? "Công khai" : "Ẩn"}</div>
     ),
   },
   {

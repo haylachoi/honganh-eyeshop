@@ -79,7 +79,15 @@ const ProductUpdateForm = ({
 
   const nameValue = watch("name");
 
+  const isPublished = watch("isPublished");
+
   const [debouncedName] = useDebounce(nameValue, 200);
+
+  useEffect(() => {
+    if (!isPublished) {
+      setValue("isAvailable", false);
+    }
+  }, [isPublished, setValue]);
 
   useEffect(() => {
     if (!isManualSlug) {
@@ -226,7 +234,13 @@ const ProductUpdateForm = ({
           }}
         />
 
-        <FormCheckbox control={control} name="isPublished" label="Sẽ bán" />
+        <FormCheckbox control={control} name="isPublished" label="Công khai" />
+        <FormCheckbox
+          control={control}
+          name="isAvailable"
+          label="Được bán"
+          disabled={!isPublished}
+        />
 
         {/* Submit Button */}
         <SubmitButton
