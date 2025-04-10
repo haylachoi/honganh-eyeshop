@@ -29,6 +29,7 @@ export const CartSumary = ({
 
   const totalQuantity =
     cartList.reduce((acc, cartItem) => acc + cartItem.quantity, 0) || 0;
+
   return (
     <div className="p-4 border border-foreground flex flex-col gap-6">
       <h3 className="text-3xl font-medium text-primary">Đơn hàng</h3>

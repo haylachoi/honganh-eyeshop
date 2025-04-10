@@ -24,7 +24,7 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
         setReviewStatus(result.data);
       }
     },
-    onError: onActionError,
+    // onError: onActionError,
   });
 
   const { execute } = useAction(createReviewAction, {
@@ -35,6 +35,7 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
   });
 
   React.useEffect(() => {
+    // todo: use api
     getReviewStatus({ productId: product.id });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

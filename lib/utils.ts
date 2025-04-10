@@ -208,11 +208,18 @@ export const getLink = {
     home({
       categorySlug,
       productSlug,
+      attributes = [],
     }: {
       categorySlug: string;
       productSlug: string;
+      attributes?: {
+        name: string;
+        value: string;
+      }[];
     }) {
-      return `${ENDPOINTS.CATEGORIES}/${categorySlug}/${productSlug}`;
+      return attributes?.length > 0
+        ? `${ENDPOINTS.CATEGORIES}/${categorySlug}/${productSlug}?${attributes.map((attr) => `${attr.name}=${attr.value}`).join("&")}`
+        : `${ENDPOINTS.CATEGORIES}/${categorySlug}/${productSlug}`;
     },
   },
   blog: {
@@ -244,4 +251,28 @@ export const getLink = {
   search({ keyword }: { keyword: string }) {
     return `${ENDPOINTS.SEARCH}?${FILTER_NAME.SEARCH}=${keyword}`;
   },
+};
+
+export const getFromLocalStorage = <T>(key: string, defaultValue: T) => {
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? (JSON.parse(item) as T) : defaultValue;
+  } catch (error) {
+    console.warn("Failed to read localStorage", error);
+    return defaultValue;
+  }
+};
+
+export const saveToLocalStorage = ({
+  key,
+  value,
+}: {
+  key: string;
+  value: unknown;
+}) => {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn("Failed to write to localStorage", error);
+  }
 };

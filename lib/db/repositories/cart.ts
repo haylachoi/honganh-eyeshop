@@ -1,4 +1,4 @@
-import { CartInputType } from "@/features/cart/cart.types";
+import { CartInputType, UpdateCartItemMode } from "@/features/cart/cart.types";
 import Cart from "../model/cart.model";
 import {
   cartItemDisplaySchema,
@@ -115,11 +115,11 @@ const updateItemQuantity = async ({
   userId,
   item,
   mode,
-}: CartInputType & { mode: "increase" | "replace" }) => {
+}: CartInputType & { mode: UpdateCartItemMode }) => {
   await connectToDatabase();
 
   const updateQuery =
-    mode === "increase"
+    mode === "modify"
       ? { $inc: { "items.$.quantity": item.quantity } }
       : { $set: { "items.$.quantity": item.quantity } };
 

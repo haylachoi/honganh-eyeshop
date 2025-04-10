@@ -9,6 +9,7 @@ import { revalidateTag } from "next/cache";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
+import { UPDATE_CART_ITEM_MODES } from "./cart.constant";
 
 export const addItemToCart = authCustomerActionClient
   .metadata({
@@ -47,7 +48,7 @@ export const addItemToCart = authCustomerActionClient
           variantId: parsedInput.variantId,
           quantity: parsedInput.quantity,
         },
-        mode: "increase",
+        mode: "modify",
       });
       revalidateTag(CACHE.CART.USER.TAGS);
       return result;
@@ -71,7 +72,7 @@ export const updateItemQuantity = authCustomerActionClient
       productId: IdSchema,
       variantId: z.string().uuid(),
       quantity: z.number().min(1),
-      mode: z.enum(["increase", "replace"]),
+      mode: z.enum(UPDATE_CART_ITEM_MODES),
     }),
   )
   .action(async ({ parsedInput, ctx }) => {
@@ -79,17 +80,20 @@ export const updateItemQuantity = authCustomerActionClient
       productId: parsedInput.productId,
       variantId: parsedInput.variantId,
     });
+
     if (countInStock === undefined || countInStock === null) {
       throw new NotFoundError({
         resource: "product",
         message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
       });
     }
+
     const existingCartItem = await cartRepository.getCartItem({
       userId: ctx.userId,
       productId: parsedInput.productId,
       variantId: parsedInput.variantId,
     });
+
     if (!existingCartItem) {
       throw new NotFoundError({
         resource: "product",
@@ -97,22 +101,28 @@ export const updateItemQuantity = authCustomerActionClient
       });
     }
 
-    const newQuantity = existingCartItem.quantity + parsedInput.quantity;
+    const newQuantity =
+      parsedInput.mode === "replace"
+        ? parsedInput.quantity
+        : existingCartItem.quantity + parsedInput.quantity;
+
     if (newQuantity > countInStock) {
       throw new ValidationError({
         resource: "product",
         message: ERROR_MESSAGES.PRODUCT.NOT_ENOUGH_STOCK,
       });
     }
+
     const result = await cartRepository.updateItemQuantity({
       userId: ctx.userId,
       item: {
         productId: parsedInput.productId,
         variantId: parsedInput.variantId,
-        quantity: parsedInput.quantity,
+        quantity: newQuantity,
       },
       mode: parsedInput.mode,
     });
+
     revalidateTag(CACHE.CART.USER.TAGS);
     return result;
   });

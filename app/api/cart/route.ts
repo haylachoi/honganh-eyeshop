@@ -11,11 +11,11 @@ export async function GET() {
       return NextResponse.json({ success: true, cart });
     }
 
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    console.log(result);
+
+    return NextResponse.json({ success: false, message: result.error.message });
   } catch (error) {
+    console.log("error", error);
     if (error instanceof AppError && error.type === "AuthenticationError") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

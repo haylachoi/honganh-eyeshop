@@ -9,13 +9,14 @@ import {
 import { CartItemDisplayType } from "@/features/cart/cart.types";
 import useCartStore from "@/hooks/use-cart";
 import { onActionError } from "@/lib/actions/action.helper";
-import { currencyFormatter } from "@/lib/utils";
+import { currencyFormatter, getLink } from "@/lib/utils";
 import { Result } from "@/types";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, use } from "react";
 import { useDebounce } from "use-debounce";
 import { CartSumary } from "./cart-sumary";
+import Link from "next/link";
 
 const CartView = ({
   cartPromise,
@@ -27,14 +28,24 @@ const CartView = ({
   className?: string;
 }) => {
   const result = use(cartPromise);
-  let cartList: CartItemDisplayType[] = [];
+  const localCartList = useCartStore((state) => state.items);
+  const fetch = useCartStore((state) => state.fetch);
+
+  React.useEffect(() => {
+    fetch();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  let cartList: CartItemDisplayType[] = localCartList;
   if (result.success) {
     cartList = result.data;
   }
+  // todo: fix mobile screen
   return (
     <div className={className}>
       <h2 className="text-2xl font-bold mb-4">Giỏ hàng</h2>
-      <div className="w-full grid grid-cols-[1fr_300px] gap-12">
+      <div className="w-full grid lg:grid-cols-[1fr_300px] gap-12">
         <ul className="space-y-8">
           {cartList.map((item) => (
             <li
@@ -58,6 +69,9 @@ export default CartView;
 const CartItem = ({ item }: { item: CartItemDisplayType }) => {
   const fetch = useCartStore((state) => state.fetch);
   const addToSelectedItems = useCartStore((state) => state.addToSelectedItems);
+  const cartFrom = useCartStore((state) => state.type);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const { execute, isPending } = useAction(removeItemFromCart, {
     onSuccess: () => {
@@ -76,13 +90,27 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
 
   React.useEffect(() => {
     if (+debouncedValue === item.quantity) return;
-    updateQuantity({
-      productId: item.productId,
-      variantId: item.variant.uniqueId,
-      quantity: +debouncedValue,
-      mode: "replace",
-    });
+    if (cartFrom === "server") {
+      updateQuantity({
+        productId: item.productId,
+        variantId: item.variant.uniqueId,
+        quantity: +debouncedValue,
+        mode: "replace",
+      });
+      return;
+    }
+
+    addToCart(
+      {
+        ...item,
+        quantity: +debouncedValue,
+      },
+      "replace",
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    // addToCart,
+    // cartFrom,
     debouncedValue,
     item.quantity,
     updateQuantity,
@@ -102,12 +130,18 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
           </button>
           <button
             className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer"
-            onClick={() =>
-              execute({
-                productId: item.productId,
-                variantId: item.variant.uniqueId,
-              })
-            }
+            onClick={() => {
+              if (cartFrom === "server") {
+                execute({
+                  productId: item.productId,
+                  variantId: item.variant.uniqueId,
+                });
+
+                return;
+              }
+
+              removeFromCart(item);
+            }}
             disabled={isPending}
           >
             Xóa
@@ -115,13 +149,21 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
         </div>
       </div>
       <div className="grid grid-cols-[200px_1fr] gap-8 py-6 px-4">
-        <Image
-          src={item.variant.images[0]}
-          className="w-[200px] aspect-[16/9]"
-          width={300}
-          height={200}
-          alt={item.name}
-        />
+        <Link
+          href={getLink.product.home({
+            categorySlug: item.category.slug,
+            productSlug: item.slug,
+            attributes: item.variant.attributes,
+          })}
+        >
+          <Image
+            src={item.variant.images[0]}
+            className="w-[200px] aspect-[16/9]"
+            width={300}
+            height={200}
+            alt={item.name}
+          />
+        </Link>
         <div className="grid grid-cols-[1fr_16rem] gap-4">
           <ul className="text-foreground/70">
             {item.variant.attributes.map((attr) => (

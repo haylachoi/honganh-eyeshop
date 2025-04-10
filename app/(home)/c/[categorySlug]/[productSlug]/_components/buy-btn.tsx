@@ -10,6 +10,8 @@ import { TOAST_MESSAGES } from "@/constants";
 import QuantityInput from "@/components/shared/quantity-input/index";
 import { AdjustQuantityButton } from "@/components/shared/quantity-input/adjust-quantity-button";
 import { useAuth } from "@/hooks/use-auth";
+// import { useLocalStorage } from "@/hooks/use-local-storage";
+// import { CartItemDisplayType } from "@/features/cart/cart.types";
 
 const BuyButton = () => {
   const { currentVariant, product } = React.use(TopContext);
@@ -17,6 +19,10 @@ const BuyButton = () => {
   const [value, setValue] = React.useState("1");
   const max = currentVariant?.countInStock ?? 1;
   const { user, isLoading: isAuthLoading } = useAuth();
+  // const [localCartList, setLocalCart] = useLocalStorage<CartItemDisplayType[]>(
+  //   "cart",
+  //   [],
+  // );
 
   React.useEffect(() => {
     setValue("1");
@@ -30,21 +36,41 @@ const BuyButton = () => {
       return;
     }
     if (isAuthLoading) return;
+    const cartItem = {
+      productId: product.id,
+      name: product.name,
+      category: product.category,
+      brand: product.brand,
+      slug: product.slug,
+      tags: product.tags,
+      quantity: +value,
+      variant: currentVariant,
+    };
+
     if (!user) {
+      try {
+        addToCart(cartItem);
+        toast.success(TOAST_MESSAGES.CART.ADD.SUCCESS);
+      } catch (e) {
+        console.error(e);
+      }
       // todo: use local storage
+      // const exist = localCartList.find(
+      //   (item) =>
+      //     item.productId === product.id &&
+      //     item.variant.uniqueId === currentVariant.uniqueId,
+      // );
+      // if (exist) {
+      //   exist.quantity += +value;
+      //   setLocalCart(localCartList);
+      // } else {
+      //   setLocalCart([...localCartList, cartItem]);
+      // }
       return;
     }
+
     if (currentVariant) {
-      addToCart({
-        productId: product.id,
-        name: product.name,
-        category: product.category,
-        brand: product.brand,
-        slug: product.slug,
-        tags: product.tags,
-        quantity: +value,
-        variant: currentVariant,
-      });
+      addToCart(cartItem);
       const result = await addItemToCart({
         productId: product.id,
         variantId: currentVariant.uniqueId,
