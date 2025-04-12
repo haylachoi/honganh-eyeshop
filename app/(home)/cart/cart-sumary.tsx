@@ -1,17 +1,13 @@
 "use client";
 
-import { CartItemDisplayType } from "@/features/cart/cart.types";
 import { createCheckoutAction } from "@/features/checkouts/checkout.actions";
+import useCartStore from "@/hooks/use-cart";
 import { onActionError } from "@/lib/actions/action.helper";
 import { getLink } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 
-export const CartSumary = ({
-  cartList,
-}: {
-  cartList: CartItemDisplayType[];
-}) => {
+export const CartSumary = () => {
   const router = useRouter();
   const { execute, isPending } = useAction(createCheckoutAction, {
     onSuccess: (result) => {
@@ -21,6 +17,10 @@ export const CartSumary = ({
     },
     onError: onActionError,
   });
+  const items = useCartStore((state) => state.items);
+  const selectedItems = useCartStore((state) => state.selectedItems);
+  const cartList = selectedItems.length > 0 ? selectedItems : items;
+
   const total =
     cartList.reduce(
       (acc, cartItem) => acc + cartItem.quantity * cartItem.variant.price,

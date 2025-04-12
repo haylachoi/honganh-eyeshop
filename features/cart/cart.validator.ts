@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdSchema, MoneySchema, MongoIdSchema } from "@/lib/validator";
+import { IdSchema, MongoIdSchema } from "@/lib/validator";
 import {
   productTypeWithoutTransformSchema,
   variantTypeSchema,
@@ -35,7 +35,7 @@ export const cartItemDisplaySchema = productTypeWithoutTransformSchema
   .extend({
     variant: variantTypeSchema,
     productId: MongoIdSchema,
-    quantity: quantitySchema,
+    quantity: quantitySchema.default(1),
   })
   .transform(({ productId, ...rest }) => ({
     ...rest,

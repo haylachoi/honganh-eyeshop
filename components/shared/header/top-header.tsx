@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ENDPOINTS } from "@/constants";
-import { CartBadge } from "./cart-badge";
+import { CartButton } from "./cart-button";
 import UserButton from "../user-button";
 import SearchBox from "./search-box";
 
@@ -46,7 +46,7 @@ const Logo = () => {
 const ActionButtons = () => {
   return (
     <div className="flex items-center gap-6">
-      <CartBadge />
+      <CartButton />
       <UserButton />
       <label
         htmlFor="header-navigation-trigger"

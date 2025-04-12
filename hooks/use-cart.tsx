@@ -1,41 +1,73 @@
 import { CartItemDisplayType } from "@/features/cart/cart.types";
-import { getFromLocalStorage, saveToLocalStorage } from "@/lib/utils";
+import {
+  getCartFromLocalStorage,
+  saveCartToLocalStorage,
+} from "@/features/cart/cart.utils";
 import { create } from "zustand";
 
 interface Cart {
   items: CartItemDisplayType[];
   type: "local" | "server";
+  isSynced: boolean;
+  setIsSynced: (isSynced: boolean) => void;
   selectedItems: CartItemDisplayType[];
-  addToSelectedItems: (input: CartItemDisplayType) => void;
-  removeFromSelectedItems: (input: CartItemDisplayType) => void;
+  toggleSelectedItems: (input: CartItemDisplayType) => void;
   fetch: () => Promise<void>;
-  setItems: (items: CartItemDisplayType[]) => void;
+  setItems: ({
+    items,
+    type,
+  }: {
+    items: CartItemDisplayType[];
+    type: "local" | "server";
+  }) => void;
+  setWithLocalStorage: () => void;
   addToCart: (input: CartItemDisplayType, mode?: "replace" | "modify") => void;
   removeFromCart: (item: CartItemDisplayType) => void;
 }
 
 const useCartStore = create<Cart>()((set, get) => ({
   items: [],
-  type: "local",
-  selectedItems: [],
-  addToSelectedItems: (input) => {
+  isSynced: false,
+  setIsSynced: (isSynced) => {
     set((state) => ({
       ...state,
-      selectedItems: [...state.selectedItems, input],
+      isSynced,
     }));
   },
+  type: "local",
+  selectedItems: [],
+  toggleSelectedItems: (input) => {
+    set((state) => {
+      const isSelected = state.selectedItems.some(
+        (item) =>
+          item.productId === input.productId &&
+          item.variant.uniqueId === input.variant.uniqueId,
+      );
 
-  removeFromSelectedItems: (input) => {
+      return {
+        ...state,
+        selectedItems: isSelected
+          ? state.selectedItems.filter(
+              (item) =>
+                item.productId !== input.productId ||
+                item.variant.uniqueId !== input.variant.uniqueId,
+            )
+          : [...state.selectedItems, input],
+      };
+    });
+  },
+
+  setWithLocalStorage: () => {
     set((state) => ({
       ...state,
-      selectedItems: state.selectedItems.filter(
-        (item) => item.productId !== input.productId,
-      ),
+      type: "local",
+      items: getCartFromLocalStorage(),
     }));
   },
   fetch: async () => {
     let type: "local" | "server" = "local";
     let items: CartItemDisplayType[] = [];
+    console.log("synced local cart", type);
     try {
       const res = await fetch("/api/cart");
       if (!res.ok) {
@@ -44,14 +76,14 @@ const useCartStore = create<Cart>()((set, get) => ({
 
       const result = await res.json();
       if (!result.success) {
-        items = getFromLocalStorage<CartItemDisplayType[]>("cart", []);
+        items = getCartFromLocalStorage();
       } else {
         type = "server";
         items = result.cart;
       }
     } catch (e) {
       console.error("Error fetching cart:", e);
-      items = getFromLocalStorage<CartItemDisplayType[]>("cart", []);
+      items = getCartFromLocalStorage();
     }
 
     if (!items) return;
@@ -62,65 +94,43 @@ const useCartStore = create<Cart>()((set, get) => ({
       items,
     }));
   },
-  setItems: (items) => {
+  setItems: ({ items, type }) => {
     set((state) => ({
       ...state,
+      type,
       items,
     }));
   },
   addToCart: (input, mode = "modify") => {
-    const cart = get();
-    const item = cart.items.find(
+    const { items, type } = get();
+    const existingIndex = items.findIndex(
       (item) =>
         item.productId === input.productId &&
         item.variant.uniqueId === input.variant.uniqueId,
     );
 
-    if (item) {
-      set((state) => {
-        const newState = {
-          ...state,
-          items: state.items.map((cartItem) => {
-            if (
-              cartItem.productId === item.productId &&
-              item.variant.uniqueId === cartItem.variant.uniqueId
-            ) {
-              return {
-                ...cartItem,
-                quantity:
-                  mode === "replace"
-                    ? input.quantity
-                    : cartItem.quantity + input.quantity,
-              };
-            }
-            return cartItem;
-          }),
-        };
+    const updatedItems = [...items];
 
-        saveToLocalStorage({
-          key: "cart",
-          value: newState.items,
-        });
-
-        return newState;
-      });
+    if (existingIndex !== -1) {
+      const existingItem = updatedItems[existingIndex];
+      updatedItems[existingIndex] = {
+        ...existingItem,
+        quantity:
+          mode === "replace"
+            ? input.quantity
+            : existingItem.quantity + input.quantity,
+      };
     } else {
-      set((state) => {
-        const newState = {
-          ...state,
-          items: [...state.items, { ...input, quantity: input.quantity }],
-        };
-
-        saveToLocalStorage({
-          key: "cart",
-          value: newState.items,
-        });
-
-        return newState;
-      });
+      updatedItems.push({ ...input, quantity: input.quantity });
     }
+
+    if (type === "local") {
+      saveCartToLocalStorage(updatedItems);
+    }
+    set({ items: updatedItems });
   },
   removeFromCart: (item) => {
+    const { type } = get();
     set((state) => {
       const newState = {
         ...state,
@@ -130,10 +140,9 @@ const useCartStore = create<Cart>()((set, get) => ({
             cartItem.variant.uniqueId !== item.variant.uniqueId,
         ),
       };
-      saveToLocalStorage({
-        key: "cart",
-        value: newState.items,
-      });
+      if (type === "local") {
+        saveCartToLocalStorage(newState.items);
+      }
       return newState;
     });
   },

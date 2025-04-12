@@ -11,6 +11,7 @@ import { unstable_cache } from "next/cache";
 import { NotFoundError, ServerError } from "@/lib/error";
 import { Id } from "@/types";
 import mongoose from "mongoose";
+import Product from "../model/product.model";
 
 const getCartByUserId = unstable_cache(
   async (userId: string) => {
@@ -26,6 +27,91 @@ const getCartByUserId = unstable_cache(
     revalidate: 3600,
   },
 );
+
+const getCartItemByProductIdAndVariantId = async (
+  items: {
+    productId: string;
+    variantId: string;
+    quantity: number;
+  }[],
+) => {
+  await connectToDatabase();
+  const cartItems = await Product.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: items.map((item) => new mongoose.Types.ObjectId(item.productId)),
+        },
+        isAvailable: true,
+      },
+    },
+    {
+      $addFields: {
+        variant: {
+          $filter: {
+            input: "$variants",
+            as: "variant",
+            cond: {
+              $in: ["$$variant.uniqueId", items.map((item) => item.variantId)],
+            },
+          },
+        },
+      },
+    },
+    {
+      $unwind: "$variant",
+    },
+    {
+      $match: {
+        $expr: {
+          $in: [
+            {
+              $concat: [{ $toString: "$_id" }, "_", "$variant.uniqueId"],
+            },
+            items.map((i) => `${i.productId}_${i.variantId}`),
+          ],
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        productId: "$_id",
+        name: 1,
+        slug: 1,
+        category: 1,
+        brand: 1,
+        tags: 1,
+        variant: {
+          uniqueId: "$variant.uniqueId",
+          attributes: "$variant.attributes",
+          images: "$variant.images",
+          price: "$variant.price",
+          originPrice: "$variant.originPrice",
+          countInStock: "$variant.countInStock",
+        },
+      },
+    },
+  ]);
+
+  const result = cartItems.map((item) => {
+    const matched = items.find(
+      (i) =>
+        i.productId === item.productId.toString() &&
+        i.variantId === item.variant.uniqueId,
+    );
+
+    const quantity = matched?.quantity ?? 1;
+    const countInStock = item.variant.countInStock;
+
+    return cartItemDisplaySchema.parse({
+      ...item,
+      quantity: Math.min(quantity, countInStock),
+    });
+  });
+
+  return result;
+};
 
 const getCartWithProductDetails = async ({ userId }: { userId: string }) => {
   await connectToDatabase();
@@ -188,6 +274,7 @@ export const cartRepository = {
   getCartWithProductDetails,
   getCartByUserId,
   getCartItem,
+  getCartItemByProductIdAndVariantId,
   createCart,
   addItemToCart,
   updateItemQuantity,

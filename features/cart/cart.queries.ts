@@ -1,7 +1,8 @@
 import { ERROR_MESSAGES } from "@/constants";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import { NotFoundError } from "@/lib/error";
-import { authCustomerQueryClient } from "@/lib/query";
+import { authCustomerQueryClient, safeQuery } from "@/lib/query";
+import { z } from "zod";
 
 export const getCartByUserId = authCustomerQueryClient.query(
   async ({ ctx }) => {
@@ -27,3 +28,19 @@ export const getCartWithProductDetailBySession = authCustomerQueryClient.query(
     return result;
   },
 );
+
+export const getCartItemByIdAndVariantId = safeQuery
+  .schema(
+    z.array(
+      z.object({
+        productId: z.string(),
+        variantId: z.string(),
+        quantity: z.number(),
+      }),
+    ),
+  )
+  .query(async ({ parsedInput }) => {
+    const products =
+      await cartRepository.getCartItemByProductIdAndVariantId(parsedInput);
+    return products;
+  });

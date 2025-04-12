@@ -90,10 +90,10 @@ const fakeProduct = {
 };
 
 function shuffleArray<T>(array: T[]): T[] {
-  const result = [...array]; // tạo bản sao để không mutate mảng gốc
+  const result = [...array];
   for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1)); // index ngẫu nhiên từ 0 đến i
-    [result[i], result[j]] = [result[j], result[i]]; // hoán đổi phần tử
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
   }
   return result;
 }
@@ -103,7 +103,7 @@ export const generateFakeProducts = authActionClient
     actionName: "generateFakeProducts",
   })
   .action(async () => {
-    const test = Array.from({ length: 3000 }, () => {
+    const test = Array.from({ length: 1500 }, () => {
       const name = "test" + randomBytes(8).toString("hex");
       const number = Math.floor(Math.random() * (700000 - 20000 + 1)) + 10000;
       const attrValue = "color" + Math.floor(Math.random() * 4) + 1;

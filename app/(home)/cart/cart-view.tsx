@@ -9,7 +9,7 @@ import {
 import { CartItemDisplayType } from "@/features/cart/cart.types";
 import useCartStore from "@/hooks/use-cart";
 import { onActionError } from "@/lib/actions/action.helper";
-import { currencyFormatter, getLink } from "@/lib/utils";
+import { cn, currencyFormatter, getLink } from "@/lib/utils";
 import { Result } from "@/types";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import React, { Dispatch, SetStateAction, use } from "react";
 import { useDebounce } from "use-debounce";
 import { CartSumary } from "./cart-sumary";
 import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
 
 const CartView = ({
   cartPromise,
@@ -28,20 +29,31 @@ const CartView = ({
   className?: string;
 }) => {
   const result = use(cartPromise);
-  const localCartList = useCartStore((state) => state.items);
-  const fetch = useCartStore((state) => state.fetch);
+  const items = useCartStore((state) => state.items);
+  const setWithLocalStorage = useCartStore(
+    (state) => state.setWithLocalStorage,
+  );
+  const setItems = useCartStore((state) => state.setItems);
+  const authInfo = useAuth();
 
   React.useEffect(() => {
-    fetch();
-
+    if (!result.success) return;
+    setItems({
+      items: result.data,
+      type: "server",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [result]);
 
-  let cartList: CartItemDisplayType[] = localCartList;
-  if (result.success) {
-    cartList = result.data;
-  }
-  // todo: fix mobile screen
+  React.useEffect(() => {
+    if (authInfo.isLoading || authInfo.user) return;
+
+    setWithLocalStorage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authInfo.isLoading]);
+
+  const cartList = items;
+
   return (
     <div className={className}>
       <h2 className="text-2xl font-bold mb-4">Giỏ hàng</h2>
@@ -57,7 +69,7 @@ const CartView = ({
           ))}
         </ul>
         <div>
-          <CartSumary cartList={cartList} />
+          <CartSumary />
         </div>
       </div>
     </div>
@@ -67,28 +79,44 @@ const CartView = ({
 export default CartView;
 
 const CartItem = ({ item }: { item: CartItemDisplayType }) => {
-  const fetch = useCartStore((state) => state.fetch);
-  const addToSelectedItems = useCartStore((state) => state.addToSelectedItems);
+  const toggleSelectedItems = useCartStore(
+    (state) => state.toggleSelectedItems,
+  );
+  const selectedItems = useCartStore((state) => state.selectedItems);
   const cartFrom = useCartStore((state) => state.type);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const { execute, isPending } = useAction(removeItemFromCart, {
-    onSuccess: () => {
-      fetch();
+  const { execute: removeCartItemFromServer, isPending } = useAction(
+    removeItemFromCart,
+    {
+      onSuccess: () => {},
+      onError: onActionError,
     },
-    onError: onActionError,
-  });
+  );
   const { execute: updateQuantity } = useAction(updateItemQuantity, {
-    onSuccess: () => {
-      fetch();
-    },
+    onSuccess: () => {},
     onError: onActionError,
   });
   const [value, setValue] = React.useState(item.quantity.toString());
-  const [debouncedValue] = useDebounce(value, 800);
+  const [debouncedValue] = useDebounce(value, 500);
 
   React.useEffect(() => {
+    // this for local cart, with no delay update cart
+    if (cartFrom === "local") {
+      addToCart(
+        {
+          ...item,
+          quantity: Number(value),
+        },
+        "replace",
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  React.useEffect(() => {
+    // for server cart
     if (+debouncedValue === item.quantity) return;
     if (cartFrom === "server") {
       updateQuantity({
@@ -100,46 +128,52 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
       return;
     }
 
-    addToCart(
-      {
-        ...item,
-        quantity: +debouncedValue,
-      },
-      "replace",
-    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    // addToCart,
-    // cartFrom,
     debouncedValue,
     item.quantity,
     updateQuantity,
     item.productId,
     item.variant.uniqueId,
   ]);
+
+  const total = item.quantity * item.variant.price;
+
+  const isSelected = selectedItems.some(
+    (selectedItem) =>
+      selectedItem.productId === item.productId &&
+      selectedItem.variant.uniqueId === item.variant.uniqueId,
+  );
+
   return (
-    <>
-      <div className="bg-secondary py-2 px-4 border-b border-foreground flex justify-between items-center">
+    <div className="">
+      <div
+        className={cn(
+          "bg-secondary px-1 py-2 md:py-2 md:px-4 border-b border-foreground flex justify-between items-center",
+          isSelected && "bg-primary/50",
+        )}
+      >
         <span className="text-xl ">{item.name}</span>
         <div className="flex gap-4">
           <button
             className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer"
-            onClick={() => addToSelectedItems(item)}
+            onClick={() => toggleSelectedItems(item)}
           >
-            Chọn
+            {isSelected ? " Bỏ chọn" : "Chọn"}
           </button>
           <button
             className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer"
             onClick={() => {
               if (cartFrom === "server") {
-                execute({
+                // for server cart
+                removeCartItemFromServer({
                   productId: item.productId,
                   variantId: item.variant.uniqueId,
                 });
 
                 return;
               }
-
+              // for local cart
               removeFromCart(item);
             }}
             disabled={isPending}
@@ -148,7 +182,7 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-[200px_1fr] gap-8 py-6 px-4">
+      <div className="grid grid-cols-[auto_1fr] gap-2 md:gap-8 px-1 py-2 md:py-6 md:px-4">
         <Link
           href={getLink.product.home({
             categorySlug: item.category.slug,
@@ -158,46 +192,57 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
         >
           <Image
             src={item.variant.images[0]}
-            className="w-[200px] aspect-[16/9]"
-            width={300}
-            height={200}
+            className="w-[180px] aspect-[16/9]"
+            width={180}
+            height={120}
             alt={item.name}
           />
         </Link>
-        <div className="grid grid-cols-[1fr_16rem] gap-4">
-          <ul className="text-foreground/70">
-            {item.variant.attributes.map((attr) => (
-              <li key={attr.name} className="flex items-center gap-2">
-                <span className="font-medium capitalize">{attr.name}</span>
-                <span className="overflow-ellipsis">{attr.value}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-[6rem_1fr] gap-2 items-center">
+        <div className="grid grid-cols-[1fr_20rem] gap-4 max-md:contents">
+          <div>
+            <ul className="text-foreground/70">
+              {item.variant.attributes.map((attr) => (
+                <li key={attr.name} className="flex items-center gap-2">
+                  <span className="font-medium capitalize">{attr.name}</span>
+                  <span className="overflow-ellipsis">{attr.value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col gap-1 max-md:col-span-2 max-md:border-t border-t-foreground max-md:-mx-4 max-md:px-4 max-md:py-2">
+            <div className="grid grid-cols-[1fr_9rem] gap-2 items-center">
               <span className="font-medium capitalize">Đơn giá</span>
               <span className="text-end">
                 {currencyFormatter.format(item.variant.price)}
               </span>
             </div>
-            <div className="grid grid-cols-[6rem_1fr] gap-2 items-center">
-              <span className="font-medium capitalize">Số lượng</span>
+            <div className="grid grid-cols-[1fr_9rem] gap-2 items-center">
+              <span className="font-medium capitalize">
+                {`Số lượng${
+                  item.variant.countInStock - item.quantity < 10
+                    ? ` (Kho: ${item.variant.countInStock})`
+                    : ""
+                }`}
+              </span>
               <CartQuantityInput
                 value={value}
                 setValue={setValue}
                 max={item.variant.countInStock}
               />
             </div>
-            <div className="grid grid-cols-[6rem_1fr] gap-2 items-center">
+            <div className="grid grid-cols-[1fr_9rem] gap-2 items-center">
               <span className="font-medium capitalize">Tổng giá</span>
               <span className="text-end">
-                {currencyFormatter.format(item.quantity * item.variant.price)}
+                {+value === item.quantity
+                  ? currencyFormatter.format(total)
+                  : "Đang xử lý..."}
               </span>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -210,8 +255,19 @@ const CartQuantityInput = ({
   setValue: Dispatch<SetStateAction<string>>;
   max: number;
 }) => {
+  React.useEffect(() => {
+    if (+value > max) {
+      setValue(max.toString());
+    }
+  }, [max, value, setValue]);
+
   return (
-    <div className="focus-within:border-primary w-full grid grid-cols-[auto_1fr_auto] gap-2 border border-foreground">
+    <div
+      className={cn(
+        "focus-within:border-primary w-full grid grid-cols-[auto_1fr_auto] gap-2 border border-foreground",
+        +value > max && "border-destructive",
+      )}
+    >
       <AdjustQuantityButton
         className="border-0 px-2"
         type="decrease"
