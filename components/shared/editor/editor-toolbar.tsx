@@ -34,6 +34,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useImageSourceStore } from "@/hooks/use-image-source";
@@ -133,32 +134,35 @@ const HeadingLevelButton = ({ editor }: { editor: Editor }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
         {headings.map(({ label, value, fontSize }) => (
-          <button
-            type="button"
-            key={value}
-            className={cn(
-              "flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
-              value === 0 &&
-                editor?.isActive("heading") &&
-                editor?.isActive("heading", { level: value }) &&
-                "bg-neutral-200/80",
-            )}
-            style={{ fontSize }}
-            onClick={() => {
-              if (value === 0) {
-                editor?.chain().focus().setParagraph().run();
-              } else {
-                editor
-                  ?.chain()
-                  .focus()
-                  .toggleHeading({ level: value as Level })
-                  .run();
-                editor?.chain().focus().setFontSize(`${fontSize}`).run();
-              }
-            }}
-          >
-            <span className="">{label}</span>
-          </button>
+          <li key={value}>
+            <DropdownMenuItem asChild>
+              <button
+                type="button"
+                className={cn(
+                  "w-full cursor-pointer flex items-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+                  value === 0 &&
+                    editor?.isActive("heading") &&
+                    editor?.isActive("heading", { level: value }) &&
+                    "bg-neutral-200/80",
+                )}
+                style={{ fontSize }}
+                onClick={() => {
+                  if (value === 0) {
+                    editor?.chain().focus().setParagraph().run();
+                  } else {
+                    editor
+                      ?.chain()
+                      .focus()
+                      .toggleHeading({ level: value as Level })
+                      .run();
+                    editor?.chain().focus().setFontSize(`${fontSize}`).run();
+                  }
+                }}
+              >
+                <span className="">{label}</span>
+              </button>
+            </DropdownMenuItem>
+          </li>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -445,7 +449,7 @@ const ImageFromDiskButton = ({ editor }: { editor: Editor }) => {
       file,
     });
 
-    editor.chain().focus().setImage({ src: url }).run();
+    editor.chain().focus().setImage({ src: url, alt: file.name }).run();
   };
 
   React.useEffect(() => {
@@ -550,7 +554,7 @@ const LineHeightButton = ({ editor }: { editor: Editor }) => {
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
   const sections = getSections(editor);
   return (
-    <div className="bg-secondary px-2.5 py-0.5 min-h-[40px] flex items-center gap-x-0.5 overflow-x-auto">
+    <div className="sticky top-0 z-10 bg-secondary px-2.5 py-0.5 min-h-[40px] flex items-center gap-x-0.5 overflow-x-auto">
       {sections[0].map((item) => (
         <ToolbarButton key={item.label} {...item} />
       ))}

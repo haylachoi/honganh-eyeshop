@@ -31,6 +31,7 @@ import { TrashIcon } from "lucide-react";
 import { compressImage } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { useImageSourceStore } from "@/hooks/use-image-source";
+import { generateHtmlAndTOC } from "@/features/blogs/blog.utils";
 
 const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
   ssr: false,
@@ -46,6 +47,7 @@ const defaultValues: BlogInputType = {
   content: "",
   authorId: "",
   isPublished: true,
+  toc: [],
 };
 
 const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
@@ -87,7 +89,7 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
 
   const onSubmit = (data: BlogInputType) => {
     const tiptap = document.querySelector(".tiptap");
-    if (!tiptap) return;
+    if (!tiptap || !editor) return;
 
     const imageElements = tiptap.querySelectorAll("img");
     imageElements.forEach((img) => {
@@ -99,6 +101,10 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
           new File([], src),
       });
     });
+
+    const { html, toc } = generateHtmlAndTOC(editor.getJSON());
+    data.content = html;
+    data.toc = toc;
 
     execute(data);
   };

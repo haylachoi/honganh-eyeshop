@@ -10,6 +10,16 @@ export const imageSourceSchema = z.object({
   file: z.instanceof(File),
 });
 
+const tocSchema = z
+  .array(
+    z.object({
+      id: z.string(),
+      text: z.string(),
+      level: z.number(),
+    }),
+  )
+  .default([]);
+
 const dateSchema = z.date();
 const contentSchema = z.string();
 const isPublishedSchema = z.boolean().default(true);
@@ -31,6 +41,7 @@ export const baseBlogInputSchema = z.object({
   authorId: IdSchema,
   content: contentSchema,
   isPublished: isPublishedSchema,
+  toc: tocSchema,
 });
 
 export const blogInputSchema = baseBlogInputSchema.extend({

@@ -18,6 +18,13 @@ const blogSchema = new Schema<BlogModel>(
     wallImage: { type: String, required: false },
     images: { type: [String], required: false },
     content: { type: String, required: true },
+    toc: [
+      {
+        id: { type: String, required: true },
+        text: { type: String, required: true },
+        level: { type: Number, required: true },
+      },
+    ],
     author: {
       _id: { type: Schema.Types.ObjectId, ref: "User", required: true },
       name: { type: String, required: true },

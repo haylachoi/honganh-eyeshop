@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { blogUpdateSchema } from "@/features/blogs/blog.validators";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { useDebounce } from "use-debounce";
@@ -30,12 +30,15 @@ import Image from "next/image";
 import { TrashIcon } from "lucide-react";
 import { compressImage } from "@/lib/utils";
 import { useImageSourceStore } from "@/hooks/use-image-source";
+import { useRouter } from "next/navigation";
+import { generateHtmlAndTOC } from "@/features/blogs/blog.utils";
 
 const BlogUpdateForm = ({
   defaultValues,
 }: {
   defaultValues: BlogUpdateType;
 }) => {
+  const router = useRouter();
   const form = useForm<BlogUpdateType>({
     resolver: zodResolver(blogUpdateSchema),
     defaultValues,
@@ -43,6 +46,7 @@ const BlogUpdateForm = ({
   const { control, handleSubmit, setValue, watch } = form;
   const { execute, isPending } = useAction(updateBlogAction, {
     onSuccess: () => {
+      router.push(ADMIN_ENDPOINTS.BLOGS);
       toast.success(TOAST_MESSAGES.UPDATE.SUCCESS);
     },
     onError: onActionError,
@@ -94,6 +98,11 @@ const BlogUpdateForm = ({
       });
     });
     data.images = oldImages;
+
+    const { html, toc } = generateHtmlAndTOC(editor.getJSON());
+    data.content = html;
+    data.toc = toc;
+
     execute(data);
   };
 

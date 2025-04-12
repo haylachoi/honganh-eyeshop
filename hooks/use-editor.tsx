@@ -2,15 +2,7 @@
 
 import { useEditor } from "@tiptap/react";
 import { EditorEvents } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { FontSizeExtension } from "@/components/shared/editor/extensions/font-size-ext";
-import { LineHeightExtension } from "@/components/shared/editor/extensions/line-height-ext";
-
-import TextStyle from "@tiptap/extension-text-style";
-import TextAlign from "@tiptap/extension-text-align";
-import { Color } from "@tiptap/extension-color";
-import Link from "@tiptap/extension-link";
-import ImageResize from "tiptap-extension-resize-image";
+import { TIPTAP_EXTENSIONS } from "@/features/blogs/blog.contants";
 
 type UseTipTapEditorProps = {
   onUpdate?: ((props: EditorEvents["update"]) => void) | undefined;
@@ -25,31 +17,11 @@ export default function useTipTapEditor({
     onUpdate: onUpdate,
     editorProps: {
       attributes: {
-        class:
-          "focus:outline-none print:border-0 flex flex-col min-h-[400px] w-full py-4 cursor-text",
+        class: "blog-container",
       },
     },
     immediatelyRender: false,
-    extensions: [
-      StarterKit,
-      LineHeightExtension.configure({
-        types: ["heading", "paragraph"],
-        defaultLineHeight: "normal",
-      }),
-
-      FontSizeExtension,
-      TextStyle,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-      Color,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        defaultProtocol: "https",
-      }),
-      ImageResize,
-    ],
+    extensions: TIPTAP_EXTENSIONS,
     content,
   });
 

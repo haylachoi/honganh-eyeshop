@@ -178,7 +178,7 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
             }}
             disabled={isPending}
           >
-            Xóa
+            {isPending ? "Đang xóa..." : "Xóa"}
           </button>
         </div>
       </div>
