@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Rubik } from "next/font/google";
+import "./injectAtRoot.ts";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",

@@ -17,6 +17,7 @@ type Params = { categorySlug: string };
 const CategoryPage = async (props: { params: Promise<Params> }) => {
   const { categorySlug } = await props.params;
 
+  // todo: add title
   return (
     <div className="container lg:grid grid-cols-[300px_1fr] gap-4 items-start">
       <FilterProvider categorySlug={categorySlug} />

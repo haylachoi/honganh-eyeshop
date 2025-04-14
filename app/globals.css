@@ -10,6 +10,15 @@
   --font-rubik: var(--font-rubik);
   --color-link: oklch(60% 0.2 240);
   --default-font-family: var(--font-rubik);
+
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%) scaleX(0.4);
+    }
+    100% {
+      transform: translateX(100%) scaleX(0.4);
+    }
+  }
 }
 
 :root {

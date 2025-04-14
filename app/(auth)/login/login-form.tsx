@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { useRouter } from "next/navigation";
 
+// todo: remove default values
 const defaultValues: SignInInputType = {
   email: "hihi@gmail.com",
   password: "1234",
