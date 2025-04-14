@@ -98,10 +98,19 @@ const getBlogBySlug = async (slug: string) => {
 };
 
 const countBlogsByQuery = async (filterQuery: FilterQuery<BlogType>) => {
+  await new Promise((r) => setTimeout(r, 2000));
   await connectToDatabase();
   const result = await Blog.countDocuments(filterQuery);
   return result;
 };
+
+// const countBlogsByTags = async (tags: string[]) => {
+//   await connectToDatabase();
+//   const query = tags.length > 0 ? { tags: { $in: tags } } : {};
+//   const result = await Blog.countDocuments(query);
+//
+//   return result;
+// };
 
 const searchBlogsByQuery = async ({
   filterQuery,
@@ -124,7 +133,6 @@ const searchBlogsByQuery = async ({
   }
 
   const result = await query.lean();
-
   const items: BlogType[] = result.map((item) => blogTypeSchema.parse(item));
 
   return items;
@@ -242,6 +250,7 @@ const blogsRepository = {
   searchBlogsIncludeTotalItemsByQuery,
   searchBlogAndSimpleReturnByQuery,
   countBlogsByQuery,
+  // countBlogsByTags,
   createBlog,
   updateBlog,
   deleteBlog,

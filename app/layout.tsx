@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Rubik } from "next/font/google";
 import "./injectAtRoot.ts";
+import NextTopLoader from "nextjs-toploader";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${rubik.variable} antialiased scroll-smooth`}>
+        <NextTopLoader showSpinner={false} />
         {children}
         <Toaster />
       </body>

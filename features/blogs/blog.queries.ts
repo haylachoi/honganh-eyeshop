@@ -66,12 +66,13 @@ export const searchBlogsByQuery = safeQuery
     const filterQuery = createBlogQueryFilter({ input: params });
     const sortOptions = createBlogSortingOptions({ sortBy, orderBy });
 
-    const blogs = await next_cache.blogs.searchByQuery({
+    const input = {
       filterQuery,
       limit: size,
       sortOptions,
       skip: (page - 1) * size,
-    });
+    };
+    const blogs = await next_cache.blogs.searchByQuery(input);
 
     return blogs;
   });
@@ -84,7 +85,6 @@ export const countBlogsByQuery = safeQuery
   )
   .query(async ({ parsedInput: { params } }) => {
     const filterQuery = createBlogQueryFilter({ input: params });
-
     const count = await next_cache.blogs.countByQuery(filterQuery);
 
     return count;

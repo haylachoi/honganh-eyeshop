@@ -1,7 +1,6 @@
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import TopLoadingIndicator from "@/components/shared/loading-indicator";
 
 export default function Layout({
   children,
@@ -10,7 +9,6 @@ export default function Layout({
 }>) {
   return (
     <div className="home__layout h-dvh grid grid-rows-[auto_1fr_auto]">
-      <TopLoadingIndicator />
       <div className="space-y-2">
         <Header />
         <Breadcrumb />
