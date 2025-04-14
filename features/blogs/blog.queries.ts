@@ -7,7 +7,7 @@ import {
   createBlogQueryFilter,
   createBlogSortingOptions,
 } from "./blog.queries-builder";
-import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
+import { PAGE_SIZE } from "@/constants";
 import next_cache from "@/cache";
 
 export const getAllBlogs = safeQuery.query(async () => {
@@ -66,7 +66,7 @@ export const searchBlogsByQuery = safeQuery
     const filterQuery = createBlogQueryFilter({ input: params });
     const sortOptions = createBlogSortingOptions({ sortBy, orderBy });
 
-    const blogs = await blogsRepository.searchBlogsByQuery({
+    const blogs = await next_cache.blogs.searchByQuery({
       filterQuery,
       limit: size,
       sortOptions,
@@ -85,7 +85,7 @@ export const countBlogsByQuery = safeQuery
   .query(async ({ parsedInput: { params } }) => {
     const filterQuery = createBlogQueryFilter({ input: params });
 
-    const count = await blogsRepository.countBlogsByQuery(filterQuery);
+    const count = await next_cache.blogs.countByQuery(filterQuery);
 
     return count;
   });

@@ -31,6 +31,7 @@ const BlogsPage = async (props: { searchParams: Promise<SearchParams> }) => {
     size: Number(size),
   });
   // todo: add #tags section and recent blogs
+  // todo: add title
   return (
     <div className="container flex flex-col gap-4">
       <BlogsPagination total={total} page={Number(page)} size={Number(size)} />

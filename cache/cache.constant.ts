@@ -36,6 +36,11 @@ export const CACHE_CONFIG = {
       TAGS: ["blogs"],
       TIME: 3600,
     },
+    BY_QUERY: {
+      KEY_PARTS: ["blogs", "filter", "sorting", "skip", "limit"],
+      TAGS: ["blogs"],
+      TIME: 3600,
+    },
     COUNT_ITEMS: {
       KEY_PARTS: ["blogs", "filter"],
       TAGS: ["blogs"],
