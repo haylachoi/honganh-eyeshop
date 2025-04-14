@@ -2,11 +2,11 @@ import {
   countBlogsByQuery,
   searchBlogsByQuery,
 } from "@/features/blogs/blog.queries";
-import { BlogsContent, BlogsPagination } from "./blogs-content";
+import { BlogsContent } from "./blogs-content";
 import { SearchParams } from "@/types";
 import { normalizeSearchParamsToString } from "@/lib/utils";
 import { PAGE_SIZE } from "@/constants";
-import { Suspense } from "react";
+import { BlogsPagination } from "./blogs-pagination";
 
 const BlogsPage = async (props: { searchParams: Promise<SearchParams> }) => {
   const searchParams = await props.searchParams;
@@ -23,7 +23,7 @@ const BlogsPage = async (props: { searchParams: Promise<SearchParams> }) => {
 
   const total = blogsCount.success ? blogsCount.data : 0;
 
-  const streamingData = searchBlogsByQuery({
+  const data = await searchBlogsByQuery({
     params: {
       tags: tags ?? "",
     },
@@ -34,9 +34,7 @@ const BlogsPage = async (props: { searchParams: Promise<SearchParams> }) => {
   return (
     <div className="container flex flex-col gap-4">
       <BlogsPagination total={total} page={Number(page)} size={Number(size)} />
-      <Suspense fallback={<div>Loading...</div>}>
-        <BlogsContent streamingData={streamingData} />
-      </Suspense>
+      <BlogsContent data={data} />
     </div>
   );
 };
