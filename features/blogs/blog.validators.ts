@@ -2,6 +2,7 @@ import { IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
 const titleSchema = z.string().trim().min(3).max(200);
+const descriptionSchema = z.string().trim().max(200);
 export const blogSlugSchema = z.string().trim().min(3).max(200);
 const wallImageSchema = z.union([z.string(), z.instanceof(File)]);
 const imagesSchema = z.array(z.string()).default([]);
@@ -33,18 +34,20 @@ const authorSchema = z
     id: _id.toString(),
   }));
 
-export const baseBlogInputSchema = z.object({
+export const baseBlogSchema = z.object({
   title: titleSchema,
   slug: blogSlugSchema,
+  description: descriptionSchema,
   wallImage: wallImageSchema,
   images: imagesSchema,
   authorId: IdSchema,
   content: contentSchema,
   isPublished: isPublishedSchema,
   toc: tocSchema,
+  tags: z.array(z.string()).default([]),
 });
 
-export const blogInputSchema = baseBlogInputSchema.extend({
+export const blogInputSchema = baseBlogSchema.extend({
   imageSources: z.array(imageSourceSchema),
 });
 export const blogDbInputSchema = blogInputSchema

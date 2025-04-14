@@ -1,4 +1,4 @@
-import { getAllBlogs } from "@/features/blogs/blog.query";
+import { getAllBlogs } from "@/features/blogs/blog.queries";
 import BlogsView from "./_components/blogs-view";
 import { ADMIN_ENDPOINTS } from "@/constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";

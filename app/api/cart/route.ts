@@ -11,8 +11,6 @@ export async function GET() {
       return NextResponse.json({ success: true, cart });
     }
 
-    console.log(result);
-
     return NextResponse.json({ success: false, message: result.error.message });
   } catch (error) {
     console.log("error", error);

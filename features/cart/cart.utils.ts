@@ -73,7 +73,6 @@ export const syncLocalCart = async () => {
     if (isEqual) return;
 
     saveCartToLocalStorage(items);
-    console.log("synced local cart");
     return items;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {

@@ -8,6 +8,7 @@ import {
   SORTING_OPTIONS,
 } from "@/constants";
 import slugify from "slugify";
+import { SearchParams } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -62,6 +63,29 @@ export const getQueryOption = ({
   return {
     [sortBy]: orderBy === SORTING_OPTIONS.ASC ? 1 : -1,
   };
+};
+
+export const truncateText = ({
+  text,
+  maxLength = 40,
+  hasEllipsis = true,
+}: {
+  text: string;
+  maxLength: number;
+  hasEllipsis?: boolean;
+}) => {
+  if (text.length <= maxLength) return text;
+
+  const truncated = text.slice(0, maxLength);
+
+  const lastSpace = truncated.lastIndexOf(" ");
+
+  const postfix = hasEllipsis ? "..." : "";
+
+  const newText = truncated.slice(0, lastSpace);
+  if (newText.length <= 3) return truncated + postfix;
+
+  return newText + postfix;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -226,8 +250,11 @@ export const getLink = {
     update({ id }: { id: string }) {
       return `${ADMIN_ENDPOINTS.BLOGS}/update/${id}`;
     },
-    home({ blogSlug }: { blogSlug: string }) {
+    view({ blogSlug }: { blogSlug: string }) {
       return `${ENDPOINTS.BLOGS}/${blogSlug}`;
+    },
+    home({ searchParams }: { searchParams: string }) {
+      return `${ENDPOINTS.BLOGS}?${searchParams}`;
     },
   },
   category: {
@@ -275,4 +302,59 @@ export const saveToLocalStorage = ({
   } catch (error) {
     console.warn("Failed to write to localStorage", error);
   }
+};
+
+export function createUppercaseMap<T extends readonly string[]>(
+  values: T,
+): Record<Uppercase<T[number]>, T[number]> {
+  return values.reduce(
+    (acc, key) => {
+      acc[key.toUpperCase() as Uppercase<T[number]>] = key;
+      return acc;
+    },
+    {} as Record<Uppercase<T[number]>, T[number]>,
+  );
+}
+
+export function isValidEnumValue<T extends readonly string[]>(
+  value: string,
+  values: T,
+): value is T[number] {
+  return values.includes(value as T[number]);
+}
+
+export const normalizeSearchParams = (
+  params: SearchParams,
+): Record<string, string[]> => {
+  const result: Record<string, string[]> = {};
+
+  for (const key in params) {
+    const value = params[key];
+
+    if (typeof value === "string") {
+      result[key] = decodeURIComponent(value).split(",");
+    } else if (Array.isArray(value)) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+};
+
+export const normalizeSearchParamsToString = (
+  params: SearchParams,
+): Record<string, string | undefined> => {
+  const result: Record<string, string | undefined> = {};
+
+  for (const key in params) {
+    const value = params[key];
+
+    if (typeof value === "string") {
+      result[key] = value;
+    } else if (Array.isArray(value)) {
+      result[key] = value.map(decodeURIComponent).join(",");
+    }
+  }
+
+  return result;
 };

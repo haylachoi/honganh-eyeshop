@@ -18,7 +18,7 @@ import { blogInputSchema } from "@/features/blogs/blog.validators";
 import { useAction } from "next-safe-action/hooks";
 import { createBlogAction } from "@/features/blogs/blog.actions";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { SafeUserInfo } from "@/features/auth/auth.type";
@@ -32,6 +32,10 @@ import { compressImage } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { useImageSourceStore } from "@/hooks/use-image-source";
 import { generateHtmlAndTOC } from "@/features/blogs/blog.utils";
+import FormTextInput from "@/components/shared/form/form-text-input";
+import FormTextArea from "@/components/shared/form/form-text-area";
+import { TagInput } from "../_components/input-tags";
+import { useRouter } from "next/navigation";
 
 const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
   ssr: false,
@@ -41,6 +45,7 @@ const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
 const defaultValues: BlogInputType = {
   title: "",
   slug: "",
+  description: "",
   wallImage: "",
   images: [],
   imageSources: [],
@@ -48,6 +53,7 @@ const defaultValues: BlogInputType = {
   authorId: "",
   isPublished: true,
   toc: [],
+  tags: [],
 };
 
 const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
@@ -56,10 +62,13 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
     resolver: zodResolver(blogInputSchema),
     defaultValues,
   });
+  const router = useRouter();
+
   const { control, handleSubmit, setValue, watch } = form;
 
   const { execute, isPending } = useAction(createBlogAction, {
     onSuccess: () => {
+      router.push(ADMIN_ENDPOINTS.BLOGS);
       toast.success(TOAST_MESSAGES.CREATE.SUCCESS);
     },
     onError: onActionError,
@@ -112,20 +121,18 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
+        <FormTextInput
           control={control}
           name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tiêu đề</FormLabel>
-              <FormControl>
-                <Input placeholder="Nhập tiêu đề" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Tiêu đề"
+          placeholder="Nhập tiêu đề"
         />
-
+        <FormTextArea
+          control={control}
+          name="description"
+          label="Mô tả"
+          placeholder="Nhập mô tả"
+        />
         {/* Slug */}
         <FormField
           control={control}
@@ -155,6 +162,25 @@ const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem className="">
+              <FormLabel>Tags</FormLabel>
+              <FormControl>
+                <TagInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Thêm tag..."
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <ImageUploader control={control} />
 
         <FormField

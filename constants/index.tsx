@@ -1,3 +1,5 @@
+import { createUppercaseMap } from "@/lib/utils";
+
 export const APP_NAME = "honganh-eyeshop";
 export const BASE_URL = "http://localhost:3000";
 
@@ -21,6 +23,12 @@ export const PAGE_SIZE = {
     XL: 30,
   },
   PRODUCTS: {
+    SM: 8,
+    MD: 12,
+    LG: 20,
+    XL: 30,
+  },
+  BLOGS: {
     SM: 8,
     MD: 12,
     LG: 20,
@@ -60,6 +68,9 @@ export const ADMIN_ENDPOINTS = {
   ORDERS: "/admin/orders",
   OTHERS: "/admin/others",
 };
+
+export const SORT_BY_VALUES = ["asc", "desc"] as const;
+export const SORT_BY_OPTIONS = createUppercaseMap(SORT_BY_VALUES);
 
 export const SORTING_OPTIONS = {
   SORT_BY: "sort_by",
@@ -113,6 +124,11 @@ export const CACHE = {
     ALL: {
       KEY_PARTS: ["blogs"],
       TAGS: "blogs",
+    },
+    RECENT: {
+      KEY_PARTS: ["recent_blogs", "skip", "limit"],
+      TAGS: ["blogs"],
+      TIME: 3600,
     },
   },
   COUPONS: {

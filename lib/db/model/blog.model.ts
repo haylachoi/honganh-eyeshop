@@ -15,6 +15,7 @@ const blogSchema = new Schema<BlogModel>(
     title: { type: String, required: true },
     titleNoAccent: { type: String, required: true },
     slug: { type: String, required: true },
+    description: { type: String, required: false },
     wallImage: { type: String, required: false },
     images: { type: [String], required: false },
     content: { type: String, required: true },
@@ -30,6 +31,7 @@ const blogSchema = new Schema<BlogModel>(
       name: { type: String, required: true },
     },
     isPublished: { type: Boolean, required: true, default: true },
+    tags: [String],
   },
   {
     timestamps: true,

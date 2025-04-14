@@ -1,6 +1,5 @@
 import { FILTER_NAME } from "@/constants";
 import { currencyFormatter } from "@/lib/utils";
-import { SearchParams } from "@/types";
 
 export const getPriceFilterOptions = () => {
   return {
@@ -20,22 +19,4 @@ export const getPriceFilterOptions = () => {
       },
     ],
   };
-};
-
-export const normalizeSearchParams = (
-  params: SearchParams,
-): Record<string, string[]> => {
-  const result: Record<string, string[]> = {};
-
-  for (const key in params) {
-    const value = params[key];
-
-    if (typeof value === "string") {
-      result[key] = decodeURIComponent(value).split(",");
-    } else if (Array.isArray(value)) {
-      result[key] = value;
-    }
-  }
-
-  return result;
 };

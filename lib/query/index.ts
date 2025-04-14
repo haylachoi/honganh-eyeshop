@@ -5,11 +5,12 @@ import { auth } from "@/features/auth/auth.query";
 import mongoose from "mongoose";
 import { ZodError } from "zod";
 import { AppError, AuthenticationError } from "../error";
+import { QueryError } from "./query.type";
 
 const DEFAULT_SERVER_ERROR_MESSAGE = "Something went wrong";
 
 export const safeQuery = new SafeQuery({
-  errorHandler: (error): { message: string; type?: string } => {
+  errorHandler: (error): QueryError => {
     console.error(error);
     if (error instanceof ZodError) {
       return {

@@ -39,7 +39,6 @@ const AttributeInput = ({ index }: { index: number }) => {
   const attribute = watch(`attributes.${index}`);
 
   React.useEffect(() => {
-    console.log(slugifyVn(attribute.value));
     setValue(`attributes.${index}.valueSlug`, slugifyVn(attribute.value));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attribute.value, setValue]);

@@ -32,6 +32,8 @@ import { compressImage } from "@/lib/utils";
 import { useImageSourceStore } from "@/hooks/use-image-source";
 import { useRouter } from "next/navigation";
 import { generateHtmlAndTOC } from "@/features/blogs/blog.utils";
+import FormTextArea from "@/components/shared/form/form-text-area";
+import { TagInput } from "../../_components/input-tags";
 
 const BlogUpdateForm = ({
   defaultValues,
@@ -123,6 +125,13 @@ const BlogUpdateForm = ({
           )}
         />
 
+        <FormTextArea
+          control={control}
+          name="description"
+          label="Mô tả"
+          placeholder="Nhập mô tả"
+        />
+
         {/* Slug */}
         <FormField
           control={control}
@@ -149,6 +158,24 @@ const BlogUpdateForm = ({
                 />
                 Tạo thủ công
               </Label>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem className="">
+              <FormLabel>Tags</FormLabel>
+              <FormControl>
+                <TagInput
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Thêm tag..."
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

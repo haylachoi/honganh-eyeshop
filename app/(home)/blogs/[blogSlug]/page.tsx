@@ -1,4 +1,4 @@
-import { getBlogBySlug } from "@/features/blogs/blog.query";
+import { getBlogBySlug } from "@/features/blogs/blog.queries";
 import BlogView from "./blog-view";
 
 export async function generateStaticParams() {

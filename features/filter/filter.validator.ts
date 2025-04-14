@@ -78,6 +78,6 @@ export const searchBlogResultSchema = z
   })
   .transform(({ _id, slug, ...res }) => ({
     ...res,
-    link: getLink.blog.home({ blogSlug: slug }),
+    link: getLink.blog.view({ blogSlug: slug }),
     id: _id.toString(),
   }));

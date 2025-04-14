@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import BlogUpdateForm from "./blog-form.update";
-import { getBlogById } from "@/features/blogs/blog.query";
+import { getBlogById } from "@/features/blogs/blog.queries";
 
 type params = Promise<{ blogId: string }>;
 

@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { ProductType } from "../products/product.types";
 import { FILTER_NAME } from "@/constants";
-import { normalizeSearchParams } from "./filter.utils";
+import { normalizeSearchParams } from "@/lib/utils";
 
 export const createProductQueryFilter = ({
   input,
@@ -70,10 +70,6 @@ export const createProductQueryFilter = ({
   const query: FilterQuery<ProductType> = conditions.length
     ? { $and: conditions }
     : {};
-
-  console.log(input);
-  console.log(priceFilters);
-  console.log(JSON.stringify(query, null, 2));
 
   return query;
 };

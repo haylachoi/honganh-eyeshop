@@ -17,3 +17,15 @@ export type SearchFilter<T> = Partial<{
 }>;
 
 export type SearchParams = { [key: string]: string | string[] | undefined };
+
+export type SimplePaginationInfo<T> = {
+  total: number;
+  items: T[];
+};
+
+export type PaginationInfo<T> = {
+  total: number;
+  page: number;
+  size: number;
+  items: T[];
+};

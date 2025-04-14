@@ -67,7 +67,6 @@ const useCartStore = create<Cart>()((set, get) => ({
   fetch: async () => {
     let type: "local" | "server" = "local";
     let items: CartItemDisplayType[] = [];
-    console.log("synced local cart", type);
     try {
       const res = await fetch("/api/cart");
       if (!res.ok) {

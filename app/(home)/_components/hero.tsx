@@ -6,7 +6,7 @@ import React from "react";
 const Hero = async () => {
   const benefitInfos = await getBenefitInfos();
   return (
-    <div className="bg-secondary">
+    <div className="bg-secondary max-md:px-[2px]">
       <div className="bg-[url('/home/hero-image.jpg')] bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative">
         <div className="lg:block uppercase text-6xl text-primary font-bold absolute top-1/3 lg:top-2/3  lg:-right-1/5 xl:-right-1/3">
           Thoải mái

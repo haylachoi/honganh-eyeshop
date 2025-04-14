@@ -79,7 +79,7 @@ export const columns: ColumnDef<BlogType>[] = [
     },
     cell: ({ row }) => (
       <Link
-        href={getLink.blog.home({ blogSlug: row.original.slug })}
+        href={getLink.blog.view({ blogSlug: row.original.slug })}
         className="lowercase text-link"
       >
         {row.getValue("title")}

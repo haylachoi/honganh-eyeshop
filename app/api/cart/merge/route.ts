@@ -8,8 +8,6 @@ export async function POST(req: NextRequest) {
     quantity: number;
   }[];
 
-  console.log("input", localCart);
-
   const result = await getCartItemByIdAndVariantId(localCart);
   if (result.success) {
     return NextResponse.json({
