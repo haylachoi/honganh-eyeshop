@@ -3,7 +3,10 @@
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { TOAST_MESSAGES } from "@/constants";
 import { updateCheckoutAction } from "@/features/checkouts/checkout.actions";
-import { CheckoutType } from "@/features/checkouts/checkout.types";
+import {
+  CheckoutType,
+  ValidatedItemInfo,
+} from "@/features/checkouts/checkout.types";
 import { checkValidCouponCodeAction } from "@/features/coupons/coupon.actions";
 import { calculateDiscount } from "@/features/coupons/coupon.utils";
 import { createOrderAction } from "@/features/orders/order.actions";
@@ -82,15 +85,27 @@ const CheckoutView = ({
 }) => {
   const coupon = useCheckoutStore((state) => state.coupon);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [productErrors, setProductErrors] = React.useState<
+    ValidatedItemInfo[] | undefined
+  >(undefined);
+
   const { execute, isPending } = useAction(createOrderAction, {
     onSuccess: () => {
       toast.success(TOAST_MESSAGES.ORDER.CREATE.SUCCESS);
       // todo: redrect or create summary
     },
     onError: (e) => {
-      if (e.error?.serverError) {
-        toast.error(e.error.serverError.message);
-        return;
+      const serverError = e.error?.serverError;
+      if (serverError) {
+        toast.error(serverError.message);
+      }
+
+      if (serverError?.type === "ValidationError") {
+        const errors = serverError.detail as ValidatedItemInfo[];
+
+        if (errors) {
+          setProductErrors(errors);
+        }
       }
     },
   });
@@ -204,6 +219,15 @@ const CheckoutView = ({
                   </span>
                 </div>
               </div>
+              <span className="text-destructive text-sm">
+                {
+                  productErrors?.find(
+                    (err) =>
+                      err.product.productId === item.productId &&
+                      err.product.variantId === item.variantId,
+                  )?.message
+                }
+              </span>
             </li>
           ))}
         </ul>

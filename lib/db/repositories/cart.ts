@@ -134,6 +134,7 @@ const getCartWithProductDetails = async ({ userId }: { userId: string }) => {
     { $unwind: "$productDetails.variants" },
     {
       $match: {
+        "productDetails.isAvailable": true, // filter available product
         $expr: {
           $eq: ["$items.variantId", "$productDetails.variants.uniqueId"],
         },

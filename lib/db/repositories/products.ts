@@ -84,15 +84,24 @@ const searchProductByQuery = async ({
 };
 
 const searchProductAndSimpleReturnByQuery = async ({
-  query,
+  queries,
   limit = MAX_SEARCH_RESULT,
+  includePrivateProduct = true,
 }: {
-  query: FilterQuery<ProductType>;
+  queries: FilterQuery<ProductType>[];
+  includePrivateProduct: boolean;
   limit?: number;
 }) => {
   await connectToDatabase();
+
+  if (!includePrivateProduct) {
+    queries.push({
+      isPublished: true,
+    });
+  }
+
   const result = await Product.aggregate([
-    { $match: { ...query } },
+    ...queries.map((query) => ({ $match: query })),
     {
       $facet: {
         products: [
@@ -162,6 +171,8 @@ const getProductByTags = unstable_cache(
     skip?: number;
   }) => {
     await connectToDatabase();
+
+    // todo: use strong type instead of record
     const match: Record<string, unknown> = {
       "tags.name": { $in: tags },
     };
@@ -198,30 +209,56 @@ const getProductByTags = unstable_cache(
   },
 );
 
-const getProductBySlug = async (
-  input: z.infer<typeof getProductBySlugQuerySchema>,
-) => {
+const getProductBySlug = async ({
+  input,
+  includePrivateProduct = false,
+}: {
+  input: z.infer<typeof getProductBySlugQuerySchema>;
+  includePrivateProduct?: boolean;
+}) => {
   await connectToDatabase();
-  const result = await Product.findOne({
-    slug: input.productSlug,
-  });
+  const query: FilterQuery<ProductType> = { slug: input.productSlug };
+  if (!includePrivateProduct) {
+    query.isPublished = true;
+  }
+  const result = await Product.findOne(query);
 
   const product = result ? ProductTypeSchema.parse(result) : null;
   return product;
 };
 
-const getProductById = async (id: Id) => {
+const getProductById = async ({
+  id,
+  includePrivateProduct = false,
+}: {
+  id: Id;
+  includePrivateProduct?: boolean;
+}) => {
   await connectToDatabase();
-  const result = await Product.findById(id).lean();
-  const product = ProductTypeSchema.parse(result);
+  const query: FilterQuery<ProductType> = { _id: id };
+  if (!includePrivateProduct) {
+    query.isPublished = true;
+  }
+  const result = await Product.find(query).lean();
+  const product = ProductTypeSchema.parse(result[0]);
   return product;
 };
 
 const getCountInStockOfVariant = async (input: {
   productId: string;
   variantId: string;
+  includePrivateProduct?: boolean;
 }) => {
   await connectToDatabase();
+  const query: FilterQuery<ProductType> = {
+    _id: input.productId,
+    "variants.uniqueId": input.variantId,
+  };
+
+  if (!input.includePrivateProduct) {
+    query.isPublished = true;
+  }
+
   const result = await Product.findOne(
     {
       _id: input.productId,

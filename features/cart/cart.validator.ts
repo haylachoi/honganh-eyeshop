@@ -46,7 +46,8 @@ export const cartItemTypeSchema = z
   .object({
     productId: MongoIdSchema,
     variantId: z.string().uuid(),
-    quantity: z.coerce.number().int().min(1, "Quantity must be at least 1"),
+    quantity: z.coerce.number().int(),
+    // .min(1, "Quantity must be at least 1"),
   })
   .transform(({ productId, ...rest }) => ({
     ...rest,

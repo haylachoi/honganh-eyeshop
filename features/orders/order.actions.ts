@@ -1,10 +1,6 @@
 "use server";
 
-import {
-  authActionClient,
-  authCustomerActionClient,
-  customerActionClient,
-} from "@/lib/actions";
+import { authActionClient, customerActionClient } from "@/lib/actions";
 import { orderInputSchema } from "./order.validator";
 import ordersRepository from "@/lib/db/repositories/orders";
 import couponsRepository from "@/lib/db/repositories/coupons";

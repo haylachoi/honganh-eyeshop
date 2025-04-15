@@ -8,7 +8,7 @@ type Params = Promise<{ productId: string }>;
 const UpdateProductPage = async ({ params }: { params: Params }) => {
   const { productId } = await params;
   const [productResult, categoriesResult, tagsResult] = await Promise.all([
-    getProductById(productId),
+    getProductById({ id: productId, includePrivateProduct: true }),
     getAllCategories(),
     getAllTags(),
   ]);

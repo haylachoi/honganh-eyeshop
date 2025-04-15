@@ -1,5 +1,5 @@
 import productRepository from "@/lib/db/repositories/products";
-import { CheckoutItemType } from "./checkout.types";
+import { CheckoutItemType, ValidatedItemInfo } from "./checkout.types";
 
 export const validateItems = async ({
   items,
@@ -22,6 +22,7 @@ export const validateItems = async ({
     query: {
       _id: { $in: productIds },
       "variants.uniqueId": { $in: variantIds },
+      isAvailable: true,
     },
     projection: {
       _id: 1,
@@ -31,7 +32,7 @@ export const validateItems = async ({
     },
   });
 
-  const checkedItems = items.map((item) => {
+  const checkedItems: ValidatedItemInfo[] = items.map((item) => {
     const product = products.find((p) => p._id.toString() === item.productId);
     const info = {
       productId: item.productId,

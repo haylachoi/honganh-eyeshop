@@ -38,6 +38,7 @@ export const searchProductByQuery = safeQuery
 
     const query = createProductQueryFilter({
       input: restInput,
+      includePrivateProduct: false,
     });
     const sortOptions = getQueryOption({ sortBy, orderBy });
 

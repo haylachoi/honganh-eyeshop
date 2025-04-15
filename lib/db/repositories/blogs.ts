@@ -171,15 +171,23 @@ const searchBlogsIncludeTotalItemsByQuery = async ({
 };
 
 const searchBlogAndSimpleReturnByQuery = async ({
-  query,
+  queries,
+  includeDraft,
   limit = MAX_SEARCH_RESULT,
 }: {
-  query: FilterQuery<BlogType>;
+  queries: FilterQuery<BlogType>[];
+  includeDraft: boolean;
   limit?: number;
 }) => {
   await connectToDatabase();
+
+  if (!includeDraft) {
+    queries.push({
+      isPublished: true,
+    });
+  }
   const result = await Blog.aggregate([
-    { $match: { ...query } },
+    ...queries.map((query) => ({ $match: query })),
     {
       $facet: {
         blogs: [

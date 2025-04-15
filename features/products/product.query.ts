@@ -19,7 +19,12 @@ export const getAllProducts = safeQuery.query(async () => {
 });
 
 export const getProductById = safeQuery
-  .schema(IdSchema)
+  .schema(
+    z.object({
+      id: IdSchema,
+      includePrivateProduct: z.boolean().optional().default(false),
+    }),
+  )
   .query(async ({ parsedInput }) => {
     const products = await productRepository.getProductById(parsedInput);
     return products;
@@ -46,7 +51,9 @@ export const getPublishedProductsByTags = safeQuery
 export const getProductBySlug = safeQuery
   .schema(getProductBySlugQuerySchema)
   .query(async ({ parsedInput }) => {
-    const products = await productRepository.getProductBySlug(parsedInput);
+    const products = await productRepository.getProductBySlug({
+      input: parsedInput,
+    });
     if (!products) {
       throw new NotFoundError({
         resource: "product",

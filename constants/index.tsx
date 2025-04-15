@@ -241,6 +241,7 @@ export const ERROR_MESSAGES = {
   },
   CHECKOUT: {
     NOT_FOUND: "Thanh toán không tồn tại",
+    ITEM_NOT_AVAILABLE: "Sản phẩm không hợp lệ hoặc không đủ hàng",
   },
   ORDER: {
     CREATE: {

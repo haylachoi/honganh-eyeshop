@@ -31,12 +31,16 @@ export const searchAction = actionClient
     const [textSearchProductResults, regexSearchProductResults] =
       await Promise.all([
         productRepository.searchProductAndSimpleReturnByQuery({
-          query: { $text: { $search: keyword } },
+          queries: [{ $text: { $search: keyword } }],
+          includePrivateProduct: false,
         }),
         productRepository.searchProductAndSimpleReturnByQuery({
-          query: {
-            nameNoAccent: { $regex: keyword, $options: "i" },
-          },
+          queries: [
+            {
+              nameNoAccent: { $regex: keyword, $options: "i" },
+            },
+          ],
+          includePrivateProduct: false,
         }),
       ]);
 
@@ -49,14 +53,19 @@ export const searchAction = actionClient
       ).values(),
     ];
 
+    // todo: filter draf
     const [textSearchBlogResults, regexSearchBlogResults] = await Promise.all([
       blogsRepository.searchBlogAndSimpleReturnByQuery({
-        query: { $text: { $search: keyword } },
+        queries: [{ $text: { $search: keyword } }],
+        includeDraft: false,
       }),
       blogsRepository.searchBlogAndSimpleReturnByQuery({
-        query: {
-          titleNoAccent: { $regex: keyword, $options: "i" },
-        },
+        queries: [
+          {
+            titleNoAccent: { $regex: keyword, $options: "i" },
+          },
+        ],
+        includeDraft: false,
       }),
     ]);
 
@@ -100,6 +109,7 @@ export const searchProductByQuery = actionClient
 
     const query = createProductQueryFilter({
       input: restInput,
+      includePrivateProduct: false,
     });
     const sortOptions = getQueryOption({ sortBy, orderBy });
 

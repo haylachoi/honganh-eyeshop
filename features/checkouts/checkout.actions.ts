@@ -5,8 +5,13 @@ import { checkoutInputSchema } from "./checkout.validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
-import { AuthenticationError, NotFoundError } from "@/lib/error";
+import {
+  AuthenticationError,
+  NotFoundError,
+  ValidationError,
+} from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants";
+import { validateItems } from "./checkout.utils";
 
 export const createCheckoutAction = customerActionClient
   .metadata({
@@ -14,6 +19,15 @@ export const createCheckoutAction = customerActionClient
   })
   .schema(checkoutInputSchema)
   .action(async ({ parsedInput, ctx }) => {
+    const checkedItems = await validateItems({ items: parsedInput.items });
+    if (!checkedItems.every((item) => item.available)) {
+      throw new ValidationError({
+        resource: "checkout",
+        message: ERROR_MESSAGES.CHECKOUT.ITEM_NOT_AVAILABLE,
+        detail: checkedItems.filter((item) => !item.available),
+      });
+    }
+
     const result = await checkoutsRepository.createCheckout({
       ...parsedInput,
       userId: ctx.userId,

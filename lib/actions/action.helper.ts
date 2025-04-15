@@ -7,6 +7,19 @@ const DEFAULT_ERROR_MESSAGE = "Something went wrong";
 export const onActionError: NonNullable<
   Parameters<typeof useAction>[1]
 >["onError"] = ({ error }) => {
+  console.log(error);
+  const serverError = error.serverError;
+  if (
+    serverError &&
+    typeof serverError === "object" &&
+    "message" in serverError &&
+    typeof serverError.message === "string" &&
+    "type" in serverError &&
+    serverError.type === "ValidationError"
+  ) {
+    toast.error(serverError.message);
+    return;
+  }
   if (error.validationErrors) {
     toast.error(VALIDATION_ERROR_MESSAGE);
     return;

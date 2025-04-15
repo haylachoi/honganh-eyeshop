@@ -5,10 +5,19 @@ import { normalizeSearchParams } from "@/lib/utils";
 
 export const createProductQueryFilter = ({
   input,
+  includePrivateProduct,
 }: {
   input: Record<string, string>;
+  includePrivateProduct: boolean;
 }) => {
   const conditions: FilterQuery<ProductType>[] = [];
+
+  if (!includePrivateProduct) {
+    conditions.push({
+      isPublished: true,
+    });
+  }
+
   const {
     [FILTER_NAME.CATEGORY]: categoryFilter,
     [FILTER_NAME.PRICE]: priceFilters,

@@ -3,7 +3,7 @@ import { Result } from "@/types";
 import Image from "next/image";
 import { use } from "react";
 
-const OrdersView = ({
+const CustomerOrdersView = ({
   data,
 }: {
   data: Promise<Result<OrderType[], object>>;
@@ -22,7 +22,7 @@ const OrdersView = ({
               <div>
                 <p>{order.createdAt.toLocaleDateString()}</p>
                 <p>{order.total}</p>
-                <p>{order.paymentStatus}</p>
+                <p>{order.orderStatus}</p>
               </div>
               <div>
                 <ul>
@@ -53,4 +53,4 @@ const OrdersView = ({
   );
 };
 
-export default OrdersView;
+export default CustomerOrdersView;

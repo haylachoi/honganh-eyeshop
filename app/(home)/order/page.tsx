@@ -1,8 +1,8 @@
 import { getOrderByUserID } from "@/features/orders/order.queries";
-import OrdersView from "./orders-view";
+import OrdersView from "./customer-orders-view";
 import { Suspense } from "react";
 
-const OrderPage = async () => {
+const CustomerOrderPage = async () => {
   const ordersPromise = getOrderByUserID();
   return (
     <div className="container">
@@ -13,4 +13,4 @@ const OrderPage = async () => {
   );
 };
 
-export default OrderPage;
+export default CustomerOrderPage;
