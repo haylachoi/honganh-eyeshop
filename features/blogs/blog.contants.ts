@@ -8,7 +8,6 @@ import { Color } from "@tiptap/extension-color";
 import Link from "@tiptap/extension-link";
 import ImageResize from "tiptap-extension-resize-image";
 import { HeadingWithId } from "@/components/shared/editor/extensions/heading-with-id-ext";
-import { SORT_BY_VALUES } from "@/constants";
 import { createUppercaseMap } from "@/lib/utils";
 
 export const TIPTAP_EXTENSIONS = [
@@ -46,3 +45,5 @@ export const BLOG_ORDER_BY_VALUES = ["name", "updatedAt"] as const;
 export const BLOG_SORTING_OPTIONS = {
   ORDER_BY: createUppercaseMap(BLOG_ORDER_BY_VALUES),
 };
+
+export const MAX_BLOG_PAGES_FOR_STATIC = 10;

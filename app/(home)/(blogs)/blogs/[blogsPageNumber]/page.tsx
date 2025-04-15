@@ -7,49 +7,47 @@ import Image from "next/image";
 import { BlogsPagination } from "../_components/blogs-pagination";
 import { BlogsContent } from "../_components/blogs-content";
 import { notFound, redirect, RedirectType } from "next/navigation";
-import { getLink, getTotalPages } from "@/lib/utils";
+import { getLink, getPageNumber, getTotalPages } from "@/lib/utils";
+import { cache } from "react";
+import { MAX_BLOG_PAGES_FOR_STATIC } from "@/features/blogs/blog.contants";
+
+const size = PAGE_SIZE.BLOGS.SM;
+const countBlogs = cache(() => countBlogsByQuery(undefined));
 
 export async function generateStaticParams() {
-  return [];
-}
-export const dynamic = "force-static";
+  const result = await countBlogs();
+  const total = result.success ? result.data : 0;
+  const totalPage = getTotalPages(total, size);
+  const min = Math.min(totalPage, MAX_BLOG_PAGES_FOR_STATIC);
 
+  return Array.from({ length: min }, (_, i) => ({
+    blogsPageNumber: getPageNumber(i + 1),
+  }));
+}
+
+export const dynamic = "auto";
 export const revalidate = 3600;
 
-type Params = Promise<{ blogsPage: string }>;
-const size = PAGE_SIZE.BLOGS.SM;
+type Params = { blogsPageNumber: string };
 
-const BlogsPage = async (props: { params: Promise<Params> }) => {
-  const { blogsPage } = await props.params;
-  const pageMatch = blogsPage.match(PAGE_NUMBER_REGEX);
-  if (!blogsPage || !pageMatch) {
+const BlogsHomePage = async ({ params }: { params: Promise<Params> }) => {
+  const { blogsPageNumber } = await params;
+
+  if (!blogsPageNumber || !PAGE_NUMBER_REGEX.test(blogsPageNumber)) {
     return notFound();
   }
 
-  const page = Number(pageMatch[1]);
-
-  const tags = "";
-  const blogsCount = await countBlogsByQuery({
-    params: {
-      tags: tags ? tags : "",
-    },
-  });
-
-  const total = blogsCount.success ? blogsCount.data : 0;
+  const page = Number(blogsPageNumber.match(PAGE_NUMBER_REGEX)?.[1]);
+  const countResult = await countBlogs();
+  const total = countResult.success ? countResult.data : 0;
   const totalPage = getTotalPages(total, size);
 
   if (page > totalPage) {
     redirect(getLink.blog.home({ page: totalPage }), RedirectType.replace);
   }
 
-  const data = await searchBlogsByQuery({
-    params: {
-      tags: tags ?? "",
-    },
-    page: Number(page),
-    size: size,
-  });
-  // todo: add #tags section and recent blogs
+  const data = await searchBlogsByQuery({ page, size });
+
   return (
     <div className="container flex flex-col gap-4">
       <div className="lg:grid grid-cols-2">
@@ -69,9 +67,9 @@ const BlogsPage = async (props: { params: Promise<Params> }) => {
         </div>
       </div>
       <BlogsContent data={data} />
-      <BlogsPagination total={total} page={Number(page)} size={Number(size)} />
+      <BlogsPagination total={total} page={page} size={size} />
     </div>
   );
 };
 
-export default BlogsPage;
+export default BlogsHomePage;

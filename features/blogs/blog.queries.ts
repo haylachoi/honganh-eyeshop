@@ -55,7 +55,7 @@ export const getBlogsByTags = safeQuery
 export const searchBlogsByQuery = safeQuery
   .schema(
     z.object({
-      params: z.record(z.string()),
+      params: z.record(z.string()).optional(),
       page: z.number().min(1).default(1),
       size: z.number().min(1).max(100).default(PAGE_SIZE.BLOGS.SM),
       sortBy: z.string().optional(),
@@ -79,11 +79,14 @@ export const searchBlogsByQuery = safeQuery
 
 export const countBlogsByQuery = safeQuery
   .schema(
-    z.object({
-      params: z.record(z.string()),
-    }),
+    z
+      .object({
+        params: z.record(z.string()),
+      })
+      .optional(),
   )
-  .query(async ({ parsedInput: { params } }) => {
+  .query(async ({ parsedInput }) => {
+    const params = parsedInput?.params;
     const filterQuery = createBlogQueryFilter({ input: params });
     const count = await next_cache.blogs.countByQuery(filterQuery);
 

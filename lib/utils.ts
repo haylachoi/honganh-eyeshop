@@ -257,7 +257,7 @@ export const getLink = {
       if (!props) return `${ENDPOINTS.BLOGS.home}`;
       const { page } = props;
       if (page === 1) return `${ENDPOINTS.BLOGS.home}`;
-      return `${ENDPOINTS.BLOGS.home}/page-${page}`;
+      return `${ENDPOINTS.BLOGS.home}/${getPageNumber(page)}`;
     },
 
     // home({ searchParams }: { searchParams: string }) {
@@ -366,5 +366,6 @@ export const normalizeSearchParamsToString = (
   return result;
 };
 
+export const getPageNumber = (page: number) => `page-${page}`;
 export const getTotalPages = (total: number, size: number) =>
   Math.ceil(total / size);
