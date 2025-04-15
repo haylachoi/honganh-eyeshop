@@ -6,6 +6,7 @@ const Breadcrumb = async () => {
   const categories = categoriesResult.success ? categoriesResult.data : [];
   const dic = {
     blogs: "Tin tức",
+    b: "Tin tức",
     ...Object.fromEntries(categories.map(({ slug, name }) => [slug, name])),
   };
   return (

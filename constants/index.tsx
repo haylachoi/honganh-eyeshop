@@ -45,7 +45,10 @@ export const ENDPOINTS = {
   CHECKOUT: "/checkout",
   CATEGORIES: "/c",
   PRODUCTS: "/c",
-  BLOGS: "/blogs",
+  BLOGS: {
+    home: "/blogs",
+    view: "/b",
+  },
   ORDER: "/order",
   ON_SALE: "/on-sale",
   MOST_POPULAR: "/most-popular",
@@ -308,3 +311,5 @@ export const TOAST_MESSAGES = {
 };
 
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);
+
+export const PAGE_NUMBER_REGEX = /page-(\d+)/;

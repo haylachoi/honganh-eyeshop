@@ -9,7 +9,11 @@ export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
   if (!pathname?.[1]) return null;
   if (pathname.startsWith("/checkout")) return null;
 
-  const segments = pathname.split("/").filter(Boolean); // Loại bỏ phần tử rỗng
+  // todo: should auto replace blog
+  const segments = pathname
+    .split("/")
+    .filter(Boolean) // ignore empty
+    .map((s) => (s === "b" ? "blogs" : s));
 
   const breadcrumbs = segments
     .slice(0, -1)

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Rubik } from "next/font/google";
-import "./injectAtRoot.ts";
 import NextTopLoader from "nextjs-toploader";
 
 // const geistSans = Geist({

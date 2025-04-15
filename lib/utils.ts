@@ -251,11 +251,18 @@ export const getLink = {
       return `${ADMIN_ENDPOINTS.BLOGS}/update/${id}`;
     },
     view({ blogSlug }: { blogSlug: string }) {
-      return `${ENDPOINTS.BLOGS}/${blogSlug}`;
+      return `${ENDPOINTS.BLOGS.view}/${blogSlug}`;
     },
-    home({ searchParams }: { searchParams: string }) {
-      return `${ENDPOINTS.BLOGS}?${searchParams}`;
+    home(props?: { page: number }) {
+      if (!props) return `${ENDPOINTS.BLOGS.home}`;
+      const { page } = props;
+      if (page === 1) return `${ENDPOINTS.BLOGS.home}`;
+      return `${ENDPOINTS.BLOGS.home}/page-${page}`;
     },
+
+    // home({ searchParams }: { searchParams: string }) {
+    //   return `${ENDPOINTS.BLOGS.home}?${searchParams}`;
+    // },
   },
   category: {
     update({ id }: { id: string }) {
@@ -358,3 +365,6 @@ export const normalizeSearchParamsToString = (
 
   return result;
 };
+
+export const getTotalPages = (total: number, size: number) =>
+  Math.ceil(total / size);

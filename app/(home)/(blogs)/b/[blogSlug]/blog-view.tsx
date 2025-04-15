@@ -3,22 +3,31 @@
 import { BlogType, TOCEntry } from "@/features/blogs/blog.types";
 import { useActiveId } from "@/hooks/use-active-id";
 import { cn, dateFormatter } from "@/lib/utils";
-import { SquarePen, Timer } from "lucide-react";
 import { JSX } from "react";
 
 const BlogView = ({ blog }: { blog: BlogType }) => {
   return (
-    <div className="container flex flex-col gap-4">
-      <div>
-        <h1 className="text-4xl mb-1 font-bold">{blog.title}</h1>
-        <div className="flex items-center gap-6">
-          <p className="flex gap-2 items-center">
-            <SquarePen /> {blog.author.name}
-          </p>
-          <p className="flex gap-2 items-center">
-            <Timer />
-            {dateFormatter.format(new Date(blog.updatedAt))}
-          </p>
+    <div className="px-1 max-w-[600px] lg:max-w-[1024px] xl:max-w-[1200px] mx-auto flex flex-col justify-center gap-4">
+      <div className="flex flex-col gap-6">
+        <h1 className="text-4xl mb-1 font-bold text-primary text-center capitalize">
+          {blog.title}
+        </h1>
+        <div className="flex justify-center gap-2">
+          <span className="font-medium">Viết bởi:</span>
+          <span className="text-primary/90 capitalize font-medium">
+            {blog.author.name}
+          </span>
+        </div>
+
+        <div className="md:flex gap-4 text-muted-foreground">
+          <span>Ngày cập nhật: {dateFormatter.format(blog.updatedAt)}</span>
+          <ul className="flex gap-2">
+            {blog.tags.map((tag) => (
+              <li key={tag}>
+                <span className="text-primary/90 capitalize">#{tag}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <div className="md:grid lg:grid-cols-[1fr_400px] gap-8 items-start">
