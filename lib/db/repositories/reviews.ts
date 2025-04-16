@@ -1,4 +1,4 @@
-import { ReviewDbInputType } from "@/features/reviews/review.type";
+import { ReviewDbInputType, ReviewType } from "@/features/reviews/review.type";
 import { connectToDatabase } from "..";
 import Review from "../model/review.model";
 import {
@@ -6,7 +6,7 @@ import {
   reviewWithFullInfoSchema,
 } from "@/features/reviews/review.validator";
 import Product from "../model/product.model";
-import mongoose from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import { NotFoundError, ServerError } from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
@@ -74,12 +74,21 @@ const getAllReviewsWithFullInfo = async () => {
 
 const getReviewsWithUserNameByProductId = async ({
   productId,
+  includeDeleted = false,
 }: {
   productId: Id;
+  includeDeleted?: boolean;
 }) => {
   await connectToDatabase();
+  const query: FilterQuery<ReviewType> = {
+    productId: new mongoose.Types.ObjectId(productId),
+  };
+  if (!includeDeleted) {
+    query.isDeleted = false;
+  }
+
   const reviews = await Review.aggregate([
-    { $match: { productId: new mongoose.Types.ObjectId(productId) } },
+    { $match: query },
     {
       $lookup: {
         from: "users",

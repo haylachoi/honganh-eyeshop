@@ -13,6 +13,7 @@ const ProductView = ({
   reviewsPromise,
 }: {
   product: ProductType;
+  // todo: create strong typ
   reviewsPromise: Promise<
     Result<
       ReviewType[],
