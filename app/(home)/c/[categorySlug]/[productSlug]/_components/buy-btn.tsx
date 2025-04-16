@@ -10,8 +10,6 @@ import { TOAST_MESSAGES } from "@/constants";
 import QuantityInput from "@/components/shared/quantity-input/index";
 import { AdjustQuantityButton } from "@/components/shared/quantity-input/adjust-quantity-button";
 import { useAuth } from "@/hooks/use-auth";
-// import { useLocalStorage } from "@/hooks/use-local-storage";
-// import { CartItemDisplayType } from "@/features/cart/cart.types";
 
 const BuyButton = () => {
   const { currentVariant, product } = React.use(TopContext);
@@ -19,17 +17,16 @@ const BuyButton = () => {
   const [value, setValue] = React.useState("1");
   const max = currentVariant?.countInStock ?? 1;
   const { user, isLoading: isAuthLoading } = useAuth();
-  // const [localCartList, setLocalCart] = useLocalStorage<CartItemDisplayType[]>(
-  //   "cart",
-  //   [],
-  // );
 
   React.useEffect(() => {
     setValue("1");
   }, [currentVariant?.uniqueId]);
 
   const canBuy =
-    currentVariant && +value <= currentVariant.countInStock && +value > 0;
+    product.isAvailable &&
+    currentVariant &&
+    +value <= currentVariant.countInStock &&
+    +value > 0;
   const handleBuy = async () => {
     if (!canBuy) {
       toast.error(TOAST_MESSAGES.PRODUCT.NOT_ENOUGH_STOCK);
@@ -54,18 +51,6 @@ const BuyButton = () => {
       } catch (e) {
         console.error(e);
       }
-      // todo: use local storage
-      // const exist = localCartList.find(
-      //   (item) =>
-      //     item.productId === product.id &&
-      //     item.variant.uniqueId === currentVariant.uniqueId,
-      // );
-      // if (exist) {
-      //   exist.quantity += +value;
-      //   setLocalCart(localCartList);
-      // } else {
-      //   setLocalCart([...localCartList, cartItem]);
-      // }
       return;
     }
 
@@ -98,8 +83,8 @@ const BuyButton = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row-reverse lg:justify-end gap-5">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col md:flex-row-reverse md:justify-end gap-5">
+      <div className="flex items-center justify-center gap-2">
         <AdjustQuantityButton
           type="decrease"
           onClick={() =>
@@ -110,7 +95,7 @@ const BuyButton = () => {
           disabled={value === "1"}
         />
         <QuantityInput
-          className="max-w-16"
+          className="grow md:max-w-16"
           value={value}
           setValue={setValue}
           max={max}

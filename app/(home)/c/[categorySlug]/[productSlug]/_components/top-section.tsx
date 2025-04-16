@@ -4,6 +4,8 @@ import ImageSection from "./image-section";
 import VariantSelector from "./variant-section";
 import BuyButton from "./buy-btn";
 import { Star } from "lucide-react";
+import { ERROR_MESSAGES } from "@/constants";
+import { REVIEW } from "@/features/reviews/review.constants";
 
 type topContextProps = {
   product: ProductType;
@@ -49,19 +51,32 @@ const TopSection = ({ product }: { product: ProductType }) => {
             <h1 className="text-4xl text-primary font-bold capitalize">
               {product.name}
             </h1>
-            <div className="flex gap-2 items-center">
-              <Star className="text-yellow-300 fill-current size-4" />
-              <span>
-                {product.avgRating !== 0
-                  ? product.avgRating.toFixed(1)
-                  : "Chưa có đánh giá"}
-              </span>
+            <div className="flex gap-6">
+              <div className="flex gap-2 items-center">
+                <Star className="text-yellow-300 fill-current size-4" />
+                <span>
+                  {product.avgRating !== 0
+                    ? product.avgRating.toFixed(1)
+                    : "Chưa có đánh giá"}
+                </span>
+              </div>
+              {product.totalReviews > 0 && (
+                <a
+                  href={`#${REVIEW.CUSTOMER.PRODUCT.ID}`}
+                  className="text-primary/90 underline hover:no-underline"
+                >
+                  {product.totalReviews} Bình luận
+                </a>
+              )}
             </div>
           </div>
 
           <div className="space-y-4">
             <VariantSelector variants={product.variants} />
             <BuyButton />
+            <p className="text-destructive text-sm">
+              {product.isAvailable ? "" : ERROR_MESSAGES.PRODUCT.NOT_AVAILABLE}
+            </p>
           </div>
         </div>
       </div>

@@ -228,6 +228,7 @@ export const ERROR_MESSAGES = {
   PRODUCT: {
     NOT_FOUND: "Sản phẩm không tồn tại",
     NOT_ENOUGH_STOCK: "Hàng trong kho không đủ",
+    NOT_AVAILABLE: "Sản phẩm hiện không kinh doanh",
   },
   TAG: {
     NOT_FOUND: "Thẻ không tồn tại",

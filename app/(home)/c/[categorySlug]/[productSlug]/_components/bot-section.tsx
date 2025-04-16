@@ -6,6 +6,7 @@ import { Result } from "@/types";
 import React, { use } from "react";
 import { ReviewsView } from "./reviews-view";
 import { ReviewForm } from "./review-form";
+import { REVIEW } from "@/features/reviews/review.constants";
 
 export const BotSection = ({
   product,
@@ -20,7 +21,7 @@ export const BotSection = ({
   const reviews = reviewsResult.success ? reviewsResult.data : [];
 
   return (
-    <div className="py-4 flex flex-col gap-12">
+    <div className="py-4 flex flex-col gap-12" id={REVIEW.CUSTOMER.PRODUCT.ID}>
       <ReviewForm product={product} />
       <div className="py-8 bg-secondary fluid-container">
         <ReviewsView reviews={reviews} />

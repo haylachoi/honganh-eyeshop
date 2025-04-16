@@ -196,7 +196,7 @@ function VariantSelector({
         {currentVariant ? (
           <div className="flex gap-2 items-baseline text-xl">
             <span>Giá: </span>
-            <span className="text-destructive text-3xl">
+            <span className="text-destructive text-2xl">
               {formatter.format(currentVariant.price)}
             </span>
             {currentVariant.price !== currentVariant.originPrice && (
@@ -205,7 +205,9 @@ function VariantSelector({
               </span>
             )}
             <span className="mx-3 text-foreground/70 text-sm">
-              Còn:&nbsp; {currentVariant.countInStock} sản phẩm
+              {currentVariant.countInStock <= 100
+                ? `Còn: ${currentVariant.countInStock} sản phẩm`
+                : ""}
             </span>
           </div>
         ) : (
