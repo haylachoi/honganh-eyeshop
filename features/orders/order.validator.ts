@@ -1,8 +1,9 @@
-import { MoneySchema, MongoIdSchema } from "@/lib/validator";
+import { IdSchema, MoneySchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { dbCouponInputSchema } from "../coupons/coupon.validator";
 import {
   checkoutItemSchema,
+  // checkoutItemSchema,
   paymentMethodSchema,
 } from "../checkouts/checkout.validator";
 
@@ -15,7 +16,7 @@ export const ORDER_STATUS = [
 ] as const;
 
 // general
-export const orderIdSchema = z.string().uuid();
+export const orderIdSchema = z.string();
 const moneySchema = MoneySchema;
 const paymentStatusSchema = z.enum(["pending", "paid", "failed", "refund"]);
 const trackingNumberSchema = z.string();
@@ -50,11 +51,12 @@ export const orderCouponSchema = dbCouponInputSchema.pick({
 const baseOrderSchema = z.object({
   customer: customerSchema,
   shippingAddress: shippingAddressSchema,
-  items: z.array(checkoutItemSchema),
+  // items: z.array(checkoutItemSchema),
   paymentMethod: paymentMethodSchema,
 });
 
 export const orderInputSchema = baseOrderSchema.extend({
+  checkoutid: IdSchema,
   couponCode: z.string().min(1, "Mã không được để trống").optional(),
 });
 
@@ -62,6 +64,7 @@ export const orderDbInputSchema = baseOrderSchema.extend({
   orderId: orderIdSchema,
   userId: MongoIdSchema.optional(),
   coupon: orderCouponSchema.optional(),
+  items: z.array(checkoutItemSchema),
   discount: moneySchema,
   subTotal: moneySchema,
   total: moneySchema,

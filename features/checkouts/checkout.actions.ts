@@ -36,6 +36,7 @@ export const createCheckoutAction = customerActionClient
         0,
       ),
       shippingFee: 0,
+      isOrderd: false,
     });
     return result;
   });

@@ -8,9 +8,11 @@ import { calculateDiscount, validateCoupon } from "../coupons/coupon.utils";
 import { CACHE, ERROR_MESSAGES, SHIPPING_FEE } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { validateItems } from "../checkouts/checkout.utils";
-import { ValidationError } from "@/lib/error";
+import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
+import checkoutsRepository from "@/lib/db/repositories/checkouts";
+import { generateOrderId } from "./order.utils";
 
 export const createOrderAction = customerActionClient
   .metadata({
@@ -19,8 +21,19 @@ export const createOrderAction = customerActionClient
   .schema(orderInputSchema)
   .action(async ({ parsedInput: { couponCode, ...parsedInput }, ctx }) => {
     const userId = ctx.userId;
+    const checkout = await checkoutsRepository.getCheckoutById(
+      parsedInput.checkoutid,
+    );
+    if (!checkout) {
+      throw new NotFoundError({
+        resource: "checkout",
+        message: ERROR_MESSAGES.CHECKOUT.NOT_FOUND,
+      });
+    }
+
+    const items = checkout.items;
     // validate items
-    const checkedItems = await validateItems({ items: parsedInput.items });
+    const checkedItems = await validateItems({ items });
     if (checkedItems.some((item) => !item.available)) {
       throw new ValidationError({
         resource: "product",
@@ -29,7 +42,7 @@ export const createOrderAction = customerActionClient
       });
     }
 
-    const subTotal = parsedInput.items.reduce(
+    const subTotal = items.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0,
     );
@@ -54,24 +67,28 @@ export const createOrderAction = customerActionClient
     const total = Math.max(subTotal - discount, 0);
 
     const result = await ordersRepository.createOrder({
-      ...parsedInput,
-      orderId: crypto.randomUUID(),
-      userId,
-      discount,
-      subTotal,
-      total,
-      coupon: coupon
-        ? {
-            code: coupon.code,
-            value: coupon.value,
-            discountType: coupon.discountType,
-            maxDiscount: coupon.maxDiscount,
-            expiryDate: coupon.expiryDate,
-          }
-        : undefined,
-      paymentStatus: "pending",
-      shippingFee: SHIPPING_FEE,
-      orderStatus: "pending",
+      input: {
+        ...parsedInput,
+        orderId: generateOrderId(),
+        userId,
+        items,
+        discount,
+        subTotal,
+        total,
+        coupon: coupon
+          ? {
+              code: coupon.code,
+              value: coupon.value,
+              discountType: coupon.discountType,
+              maxDiscount: coupon.maxDiscount,
+              expiryDate: coupon.expiryDate,
+            }
+          : undefined,
+        paymentStatus: "pending",
+        shippingFee: SHIPPING_FEE,
+        orderStatus: "pending",
+      },
+      checkoutId: parsedInput.checkoutid,
     });
 
     revalidateTag(CACHE.ORDER.ALL.TAGS);

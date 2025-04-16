@@ -282,6 +282,13 @@ export const getLink = {
       return `${ENDPOINTS.CHECKOUT}/${checkoutId}`;
     },
   },
+  order: {
+    customer: {
+      view({ orderId }: { orderId: string }) {
+        return `${ENDPOINTS.ORDER}/${orderId}`;
+      },
+    },
+  },
   search({ keyword }: { keyword: string }) {
     return `${ENDPOINTS.SEARCH}?${FILTER_NAME.SEARCH}=${keyword}`;
   },

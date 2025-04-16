@@ -18,6 +18,7 @@ const getCheckoutById = async (id: Id) => {
 };
 const createCheckout = async (input: CheckoutDbInputType) => {
   await connectToDatabase();
+
   const result = await Checkout.create(input);
   return result._id.toString();
 };

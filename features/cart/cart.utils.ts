@@ -13,6 +13,32 @@ export const saveCartToLocalStorage = (cart: CartItemDisplayType[]) => {
   });
 };
 
+export const updateCartAfterOrder = (
+  input: {
+    productId: string;
+    variantId: string;
+    quantity: number;
+  }[],
+) => {
+  const localCart = getCartFromLocalStorage();
+  const inputCartMap = new Map(
+    input.map((item) => [`${item.productId}-${item.variantId}`, item.quantity]),
+  );
+
+  const result = localCart
+    .map((item) => {
+      const key = `${item.productId}-${item.variant.uniqueId}`;
+      const newQty = item.quantity - (inputCartMap.get(key) ?? 0);
+      return {
+        ...item,
+        quantity: newQty,
+      };
+    })
+    .filter((item) => item.quantity > 0);
+
+  saveCartToLocalStorage(result);
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const deepEqual = (a: any, b: any): boolean => {
   if (a === b) return true;

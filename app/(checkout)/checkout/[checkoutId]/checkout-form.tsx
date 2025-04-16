@@ -2,6 +2,7 @@
 
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { TOAST_MESSAGES } from "@/constants";
+import { updateCartAfterOrder } from "@/features/cart/cart.utils";
 import { updateCheckoutAction } from "@/features/checkouts/checkout.actions";
 import {
   CheckoutType,
@@ -36,47 +37,54 @@ const getFormFields = (checkout: CheckoutType) => [
     label: "Tên khách hàng",
     name: "customer.name",
     type: "text",
-    value: checkout?.customer?.name,
+    // value: checkout?.customer?.name,
+    value: checkout?.customer?.name || "hihi",
   },
   {
     label: "Email",
     name: "customer.email",
     type: "text",
-    value: checkout?.customer?.email,
+    // value: checkout?.customer?.email,
+    value: checkout?.customer?.email || "hihi@gmail.com",
   },
   {
     label: "Số điện thoại",
     name: "customer.phone",
     type: "tel",
-    value: checkout?.customer?.phone,
+    // value: checkout?.customer?.phone,
+    value: checkout?.customer?.phone || "123456789",
   },
   {
     label: "Địa chỉ",
     name: "shippingAddress.address",
     type: "text",
-    value: checkout?.shippingAddress?.address,
+    // value: checkout?.shippingAddress?.address,
+    value: checkout?.shippingAddress?.address || "address flsldfk",
   },
   {
     label: "Phường/xã",
     name: "shippingAddress.ward",
     type: "text",
-    value: checkout?.shippingAddress?.ward,
+    // value: checkout?.shippingAddress?.ward,
+    value: checkout?.shippingAddress?.ward || "ward flsldfk",
   },
   {
     label: "Quận/huyện",
     name: "shippingAddress.district",
     type: "text",
-    value: checkout?.shippingAddress?.district,
+    // value: checkout?.shippingAddress?.district,
+    value: checkout?.shippingAddress?.district || "district flsldfk",
   },
   {
     label: "Thành phố/tỉnh",
     name: "shippingAddress.city",
     type: "text",
-    value: checkout?.shippingAddress?.city,
+    // value: checkout?.shippingAddress?.city,
+    value: checkout?.shippingAddress?.city || "city flsldfk",
   },
 ];
 
-const CheckoutView = ({
+const CheckoutForm = ({
   checkout,
   className,
 }: {
@@ -89,10 +97,17 @@ const CheckoutView = ({
     ValidatedItemInfo[] | undefined
   >(undefined);
 
+  // const router = useRouter();
+
   const { execute, isPending } = useAction(createOrderAction, {
     onSuccess: () => {
+      // todo: remove form cart
+      if (!checkout.userId) {
+        updateCartAfterOrder(checkout.items);
+      }
       toast.success(TOAST_MESSAGES.ORDER.CREATE.SUCCESS);
       // todo: redrect or create summary
+      // router.push(ENDPOINTS.ORDER);
     },
     onError: (e) => {
       const serverError = e.error?.serverError;
@@ -137,8 +152,9 @@ const CheckoutView = ({
 
     const input = {
       ...data,
+      checkoutid: checkout.id,
       couponCode: coupon?.code,
-      items: checkout.items,
+      // items: checkout.items,
     };
     const inputResult = orderInputSchema.safeParse(input);
     if (!inputResult.success) {
@@ -148,6 +164,10 @@ const CheckoutView = ({
 
     execute(inputResult.data);
   };
+
+  if (checkout.isOrderd) {
+    return <div>Đã đặt hàng</div>;
+  }
 
   return (
     <div
@@ -259,7 +279,7 @@ const CheckoutView = ({
   );
 };
 
-export default CheckoutView;
+export default CheckoutForm;
 
 const FormInput = ({
   label,

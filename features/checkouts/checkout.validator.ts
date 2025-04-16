@@ -69,11 +69,14 @@ export const checkoutInputSchema = baseCheckoutSchema
 
 export const checkoutDbInputSchema = baseCheckoutSchema.extend({
   userId: MongoIdSchema.optional(),
+  isOrderd: z.boolean().default(false),
 });
 
 export const checkoutTypeSchema = checkoutDbInputSchema
   .extend({
     _id: MongoIdSchema,
+    isOrderd: z.boolean().default(false),
+    orderId: z.string().optional(),
   })
   .transform(({ _id, userId, ...rest }) => ({
     ...rest,

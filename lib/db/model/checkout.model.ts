@@ -94,6 +94,13 @@ const checkoutSchema = new Schema<CheckoutModel>(
         },
       ],
     },
+    isOrderd: {
+      type: Boolean,
+      default: false,
+    },
+    orderId: {
+      type: String,
+    },
     expiresAt: {
       type: Date,
       default: () => new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 giờ từ lúc tạo
