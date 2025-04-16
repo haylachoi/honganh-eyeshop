@@ -13,6 +13,7 @@ const links = [
   { name: "Blogs", href: ADMIN_ENDPOINTS.BLOGS },
   { name: "Coupons", href: ADMIN_ENDPOINTS.COUPONS },
   { name: "Order", href: ADMIN_ENDPOINTS.ORDERS },
+  { name: "Reviews", href: ADMIN_ENDPOINTS.REVIEWS },
   { name: "Others", href: ADMIN_ENDPOINTS.OTHERS },
 ];
 

@@ -12,30 +12,32 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
       {!reviews.length && (
         <p className="w-full py-2 text-center">Chưa có bình luận nào</p>
       )}
-      {reviews.map((review) => (
-        <li
-          key={review.id}
-          className="px-8 py-4 not-last:border-b border-primary"
-        >
-          <div className="">
-            <div className="flex gap-8 items-baseline">
-              <p className="text-lg font-medium max-w-10 overflow-ellipsis">
-                {review.name}
-              </p>
-              <p
-                className="text-sm text-muted-foreground"
-                suppressHydrationWarning
-              >
-                {dayjs(review.createdAt).fromNow()}
-              </p>
+      {reviews
+        .filter((review) => !!review.comment)
+        .map((review) => (
+          <li
+            key={review.id}
+            className="px-8 py-4 not-last:border-b border-primary"
+          >
+            <div className="">
+              <div className="flex gap-8 items-baseline">
+                <p className="text-lg font-medium max-w-10 overflow-ellipsis">
+                  {review.name}
+                </p>
+                <p
+                  className="text-sm text-muted-foreground"
+                  suppressHydrationWarning
+                >
+                  {dayjs(review.createdAt).fromNow()}
+                </p>
+              </div>
+              <ul className="flex gap-2">
+                <StarRatingDisplay rating={review.rating} />
+              </ul>
+              <p className="mt-4">{review.comment}</p>
             </div>
-            <ul className="flex gap-2">
-              <StarRatingDisplay rating={review.rating} />
-            </ul>
-            <p className="mt-4">{review.comment}</p>
-          </div>
-        </li>
-      ))}
+          </li>
+        ))}
     </ul>
   );
 };

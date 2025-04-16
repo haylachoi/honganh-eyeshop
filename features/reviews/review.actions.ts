@@ -61,3 +61,39 @@ export const canUserReviewAction = authCustomerActionClient
       userId: ctx.userId,
     });
   });
+
+export const hidenReviewAction = authCustomerActionClient
+  .metadata({
+    actionName: "hideReview",
+  })
+  .schema(
+    z.object({
+      reviewId: IdSchema,
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    return await reviewRepository.hideReview({
+      reviewId: parsedInput.reviewId,
+    });
+
+    // revalidate product
+    //  revalidate Review
+  });
+
+export const restoreReviewAction = authCustomerActionClient
+  .metadata({
+    actionName: "restoreReview",
+  })
+  .schema(
+    z.object({
+      reviewId: IdSchema,
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    return await reviewRepository.restoreReview({
+      reviewId: parsedInput.reviewId,
+    });
+
+    // revalidate product
+    //  revalidate Review
+  });

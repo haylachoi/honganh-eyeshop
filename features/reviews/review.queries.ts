@@ -2,6 +2,11 @@ import reviewRepository from "@/lib/db/repositories/reviews";
 import { safeQuery } from "@/lib/query";
 import { IdSchema } from "@/lib/validator";
 
+export const getAllReviewsWithFullInfo = safeQuery.query(async () => {
+  const result = await reviewRepository.getAllReviewsWithFullInfo();
+  return result;
+});
+
 export const getReviewsWithUserNameByProductId = safeQuery
   .schema(IdSchema)
   .query(async ({ parsedInput }) => {

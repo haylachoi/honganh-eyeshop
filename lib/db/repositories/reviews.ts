@@ -1,12 +1,76 @@
 import { ReviewDbInputType } from "@/features/reviews/review.type";
 import { connectToDatabase } from "..";
 import Review from "../model/review.model";
-import { ReviewTypeSchema } from "@/features/reviews/review.validator";
+import {
+  ReviewTypeSchema,
+  reviewWithFullInfoSchema,
+} from "@/features/reviews/review.validator";
 import Product from "../model/product.model";
 import mongoose from "mongoose";
-import { NotFoundError } from "@/lib/error";
+import { NotFoundError, ServerError } from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
+
+const getAllReviewsWithFullInfo = async () => {
+  await connectToDatabase();
+
+  const reviews = await Review.aggregate([
+    {
+      $lookup: {
+        from: "products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              slug: 1,
+              name: 1,
+              category: {
+                slug: 1,
+              },
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        _id: 1,
+        rating: 1,
+        isDeleted: 1,
+        comment: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        product: 1,
+        user: 1,
+      },
+    },
+  ]);
+
+  const result = reviewWithFullInfoSchema.array().parse(reviews);
+
+  return result;
+};
 
 const getReviewsWithUserNameByProductId = async ({
   productId,
@@ -72,33 +136,75 @@ const createReview = async (input: ReviewDbInputType) => {
   await connectToDatabase();
   const productId = input.productId;
   const rating = input.rating;
+  const comment = input.comment;
+  const hasComment = comment !== undefined && comment.length > 0;
 
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const productResult = await Product.updateOne(
-      { _id: productId },
-      [
-        {
-          $set: {
+    const updatePipeline = [
+      {
+        $set: {
+          [`rating.${rating}`]: { $add: [`$rating.${rating}`, 1] },
+          // Chỉ tăng totalReviews nếu có comment
+          ...(hasComment && {
             totalReviews: { $add: ["$totalReviews", 1] },
-            avgRating: {
-              $divide: [
-                {
-                  $add: [
-                    { $multiply: ["$totalReviews", "$avgRating"] },
-                    rating,
-                  ],
-                },
-                { $add: ["$totalReviews", 1] },
-              ],
+          }),
+        },
+      },
+      {
+        $set: {
+          avgRating: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $sum: [
+                      "$rating.1",
+                      "$rating.2",
+                      "$rating.3",
+                      "$rating.4",
+                      "$rating.5",
+                    ],
+                  },
+                  0,
+                ],
+              },
+              then: {
+                $divide: [
+                  {
+                    $sum: [
+                      { $multiply: ["$rating.1", 1] },
+                      { $multiply: ["$rating.2", 2] },
+                      { $multiply: ["$rating.3", 3] },
+                      { $multiply: ["$rating.4", 4] },
+                      { $multiply: ["$rating.5", 5] },
+                    ],
+                  },
+                  {
+                    $sum: [
+                      "$rating.1",
+                      "$rating.2",
+                      "$rating.3",
+                      "$rating.4",
+                      "$rating.5",
+                    ],
+                  },
+                ],
+              },
+              else: 0,
             },
           },
         },
-      ],
+      },
+    ];
 
+    const productResult = await Product.findByIdAndUpdate(
+      productId,
+      updatePipeline,
       {
+        new: true,
         session,
       },
     );
@@ -124,11 +230,239 @@ const createReview = async (input: ReviewDbInputType) => {
   }
 };
 
+const restoreReview = async ({ reviewId }: { reviewId: Id }) => {
+  await connectToDatabase();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Tìm review cần khôi phục
+    const review = await Review.findById(reviewId).session(session);
+
+    if (!review) {
+      throw new Error("Review không tồn tại");
+    }
+
+    if (!review.isDeleted) {
+      throw new Error("Review này không bị ẩn, không cần khôi phục");
+    }
+
+    const productId = review.productId;
+    const ratingValue = review.rating;
+    const hasComment = review.comment ? true : false;
+
+    // Khôi phục review
+    review.isDeleted = false;
+    await review.save({ session });
+
+    const updatePipeline = [
+      {
+        $addFields: {
+          [`rating.${ratingValue}`]: { $add: [`$rating.${ratingValue}`, 1] },
+
+          totalReviews: {
+            $cond: [
+              hasComment,
+              { $add: ["$totalReviews", 1] },
+              "$totalReviews",
+            ],
+          },
+        },
+      },
+      {
+        $addFields: {
+          avgRating: {
+            $let: {
+              vars: {
+                totalRatings: {
+                  $sum: [
+                    "$rating.1",
+                    "$rating.2",
+                    "$rating.3",
+                    "$rating.4",
+                    "$rating.5",
+                  ],
+                },
+                weightedSum: {
+                  $sum: [
+                    { $multiply: ["$rating.1", 1] },
+                    { $multiply: ["$rating.2", 2] },
+                    { $multiply: ["$rating.3", 3] },
+                    { $multiply: ["$rating.4", 4] },
+                    { $multiply: ["$rating.5", 5] },
+                  ],
+                },
+              },
+              in: {
+                $cond: [
+                  { $gt: ["$$totalRatings", 0] },
+                  { $divide: ["$$weightedSum", "$$totalRatings"] },
+                  0,
+                ],
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const updatedProduct = await Product.collection.updateOne(
+      { _id: new mongoose.Types.ObjectId(String(productId)) },
+      updatePipeline,
+      { session },
+    );
+
+    if (!updatedProduct) {
+      throw new Error("Không tìm thấy sản phẩm để cập nhật");
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Lỗi khi khôi phục review:", error);
+    throw error;
+  }
+};
+
+const hideReview = async ({ reviewId }: { reviewId: Id }) => {
+  await connectToDatabase();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const review = await Review.findById(reviewId).session(session);
+
+    if (!review) {
+      throw new Error("Review không tồn tại");
+    }
+
+    if (review.isDeleted) {
+      throw new Error("Review đã bị ẩn trước đó");
+    }
+
+    const productId = review.productId;
+    const ratingValue = review.rating;
+    const hasComment = review.comment ? true : false;
+
+    await Review.findByIdAndUpdate(reviewId, { isDeleted: true }, { session });
+
+    const updatePipeline = [
+      {
+        $addFields: {
+          "rating.1": {
+            $cond: [
+              { $eq: [ratingValue, 1] },
+              { $max: [0, { $subtract: ["$rating.1", 1] }] },
+              "$rating.1",
+            ],
+          },
+          "rating.2": {
+            $cond: [
+              { $eq: [ratingValue, 2] },
+              { $max: [0, { $subtract: ["$rating.2", 1] }] },
+              "$rating.2",
+            ],
+          },
+          "rating.3": {
+            $cond: [
+              { $eq: [ratingValue, 3] },
+              { $max: [0, { $subtract: ["$rating.3", 1] }] },
+              "$rating.3",
+            ],
+          },
+          "rating.4": {
+            $cond: [
+              { $eq: [ratingValue, 4] },
+              { $max: [0, { $subtract: ["$rating.4", 1] }] },
+              "$rating.4",
+            ],
+          },
+          "rating.5": {
+            $cond: [
+              { $eq: [ratingValue, 5] },
+              { $max: [0, { $subtract: ["$rating.5", 1] }] },
+              "$rating.5",
+            ],
+          },
+
+          totalReviews: {
+            $cond: [
+              hasComment,
+              { $max: [0, { $subtract: ["$totalReviews", 1] }] },
+              "$totalReviews",
+            ],
+          },
+        },
+      },
+      {
+        $addFields: {
+          avgRating: {
+            $let: {
+              vars: {
+                totalRatings: {
+                  $sum: [
+                    "$rating.1",
+                    "$rating.2",
+                    "$rating.3",
+                    "$rating.4",
+                    "$rating.5",
+                  ],
+                },
+                weightedSum: {
+                  $sum: [
+                    { $multiply: ["$rating.1", 1] },
+                    { $multiply: ["$rating.2", 2] },
+                    { $multiply: ["$rating.3", 3] },
+                    { $multiply: ["$rating.4", 4] },
+                    { $multiply: ["$rating.5", 5] },
+                  ],
+                },
+              },
+              in: {
+                $cond: [
+                  { $gt: ["$$totalRatings", 0] },
+                  { $divide: ["$$weightedSum", "$$totalRatings"] },
+                  0,
+                ],
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updatePipeline,
+      { new: true, session },
+    );
+
+    if (!updatedProduct) {
+      throw new Error("Không tìm thấy sản phẩm để cập nhật");
+    }
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Lỗi khi ẩn review:", error);
+    throw new ServerError({
+      resource: "review",
+    });
+  }
+};
+
 const reviewRepository = {
+  getAllReviewsWithFullInfo,
   getReviewsByProductId,
   getReviewsWithUserNameByProductId,
   getReviewByProductIdAndUserId,
   createReview,
+  hideReview,
+  restoreReview,
 };
 
 export default reviewRepository;

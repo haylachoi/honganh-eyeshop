@@ -24,11 +24,14 @@ const reviewSchema = new Schema<ReviewModel>(
     },
     comment: {
       type: String,
-      required: true,
     },
     rating: {
       type: Number,
       required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },

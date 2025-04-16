@@ -69,6 +69,7 @@ export const ADMIN_ENDPOINTS = {
   BLOGS: "/admin/blogs",
   COUPONS: "/admin/coupons",
   ORDERS: "/admin/orders",
+  REVIEWS: "/admin/reviews",
   OTHERS: "/admin/others",
 };
 
@@ -244,6 +245,9 @@ export const ERROR_MESSAGES = {
     NOT_FOUND: "Thanh toán không tồn tại",
     ITEM_NOT_AVAILABLE: "Sản phẩm không hợp lệ hoặc không đủ hàng",
   },
+  REVIEW: {
+    NOT_FOUND: "Bình luận không tồn tại",
+  },
   ORDER: {
     CREATE: {
       SUCCESS: "Đã tạo đơn hàng thành công",
@@ -299,6 +303,12 @@ export const TOAST_MESSAGES = {
     CREATE: {
       SUCCESS: "Đã gửi đánh giá thành công",
       ERROR: "Gửi đánh giá thất bại",
+    },
+    HIDE: {
+      SUCCESS: "Đã ẩn đánh giá thành công",
+    },
+    RESTORE: {
+      SUCCESS: "Đã khôi phục đánh giá thành công",
     },
   },
   ORDER: {

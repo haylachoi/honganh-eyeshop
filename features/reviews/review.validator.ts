@@ -4,7 +4,7 @@ import { userNameSchema } from "../auth/auth.validator";
 
 const baseReviewSchema = z.object({
   productId: IdSchema,
-  comment: z.string().min(1, "Comment is required").optional(),
+  comment: z.string().optional(),
   rating: z.coerce
     .number()
     .int()
@@ -26,10 +26,47 @@ export const ReviewTypeSchema = baseReviewSchema
     createdAt: z.date(),
     updatedAt: z.date(),
     name: userNameSchema.optional(),
+    isDeleted: z.boolean().optional(),
   })
   .transform(({ _id, productId, userId, ...rest }) => ({
     ...rest,
     id: _id.toString(),
     userId: userId.toString(),
     productId: productId.toString(),
+  }));
+
+export const reviewWithFullInfoSchema = z
+  .object({
+    _id: MongoIdSchema,
+    rating: z.number(),
+    comment: z.string().optional(),
+    isDeleted: z.boolean().optional(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    product: z
+      .object({
+        _id: MongoIdSchema,
+        slug: z.string(),
+        name: z.string(),
+        category: z.object({
+          slug: z.string(),
+        }),
+      })
+      .transform(({ _id, ...rest }) => ({
+        ...rest,
+        id: _id.toString(),
+      })),
+    user: z
+      .object({
+        _id: MongoIdSchema,
+        name: z.string(),
+      })
+      .transform(({ _id, ...rest }) => ({
+        ...rest,
+        id: _id.toString(),
+      })),
+  })
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
   }));

@@ -112,6 +112,7 @@ const updateCountInStockAfterOrder = async ({
   session: mongoose.ClientSession;
 }) => {
   try {
+    // update total sales
     const bulkOps = orderItems.map((item) => ({
       updateOne: {
         filter: { _id: item.productId, "variants.uniqueId": item.variantId },

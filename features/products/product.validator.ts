@@ -76,10 +76,11 @@ export const ProductInputSchema = baseProductSchema
   })
   .refine(
     ({ isAvailable, isPublished }) => {
-      return !isPublished && isAvailable;
+      return isPublished || !isAvailable;
     },
     {
       message: "Sản phẩm đang bán thì phải công khai",
+      path: ["isAvailable"],
     },
   )
   .transform(({ attributes, ...rest }) => {
@@ -163,6 +164,15 @@ export const productTypeWithoutTransformSchema = z.object({
   maxPrice: MoneySchema,
   variants: z.array(variantTypeSchema),
   avgRating: z.number().default(0),
+  rating: z
+    .object({
+      1: z.number().default(0),
+      2: z.number().default(0),
+      3: z.number().default(0),
+      4: z.number().default(0),
+      5: z.number().default(0),
+    })
+    .optional(),
   totalReviews: z.number().default(0),
   totalSales: z.number().default(0),
 });

@@ -113,6 +113,28 @@ const productSchema = new Schema<ProductModel>(
       required: true,
       default: 0,
     },
+    rating: {
+      1: {
+        type: Number,
+        default: 0,
+      },
+      2: {
+        type: Number,
+        default: 0,
+      },
+      3: {
+        type: Number,
+        default: 0,
+      },
+      4: {
+        type: Number,
+        default: 0,
+      },
+      5: {
+        type: Number,
+        default: 0,
+      },
+    },
     totalReviews: {
       type: Number,
       required: true,

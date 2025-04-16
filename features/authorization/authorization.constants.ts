@@ -10,6 +10,7 @@ export const RESOURCE_TYPES = {
   CHECKOUT: "checkout",
   COUPON: "coupon",
   ORDER: "order",
+  REVIEW: "review",
   ALL: "all",
 } as const;
 
