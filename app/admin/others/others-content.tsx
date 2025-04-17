@@ -1,5 +1,6 @@
 "use client";
 
+import { BACKUUP_TYPE } from "@/features/backup/backup.constants";
 import { createFilterAction } from "@/features/filter/filter.actions";
 import {
   deleteFakeProducts,
@@ -7,6 +8,7 @@ import {
 } from "@/features/products/product.actions";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
+import React from "react";
 
 export const OthersContent = () => {
   const { execute: executeCreateFilter } = useAction(createFilterAction, {
@@ -39,6 +41,31 @@ export const OthersContent = () => {
         onClick={() => executeDeleteFakeProducts()}
       >
         delete fake products
+      </button>
+
+      <button
+        onClick={() => {
+          window.location.href = `/api/backup?file=${BACKUUP_TYPE.STATIC}`;
+        }}
+        className="px-2 py-1 cursor-pointer border border-foreground"
+      >
+        Download Backup images
+      </button>
+      <button
+        onClick={() => {
+          window.location.href = `/api/backup?file=${BACKUUP_TYPE.DB}`;
+        }}
+        className="px-2 py-1 cursor-pointer border border-foreground"
+      >
+        Download Backup database
+      </button>
+      <button
+        onClick={() => {
+          window.location.href = `/api/backup?file=${BACKUUP_TYPE.FULL}`;
+        }}
+        className="px-2 py-1 cursor-pointer border border-foreground"
+      >
+        Download all backup
       </button>
     </div>
   );
