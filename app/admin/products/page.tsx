@@ -11,7 +11,6 @@ const ProductPage = async () => {
   }
 
   const products = result.data;
-
   return (
     <div>
       <AdminMainTopSection

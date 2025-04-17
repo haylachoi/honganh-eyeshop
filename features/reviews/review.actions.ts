@@ -6,6 +6,8 @@ import reviewRepository from "@/lib/db/repositories/reviews";
 import { IdSchema } from "@/lib/validator";
 import { z } from "zod";
 import ordersRepository from "@/lib/db/repositories/orders";
+import { revalidateTag } from "next/cache";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 export const createReviewAction = authCustomerActionClient
   .metadata({
@@ -72,12 +74,12 @@ export const hidenReviewAction = authCustomerActionClient
     }),
   )
   .action(async ({ parsedInput }) => {
-    return await reviewRepository.hideReview({
+    await reviewRepository.hideReview({
       reviewId: parsedInput.reviewId,
     });
 
-    // revalidate product
-    //  revalidate Review
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
   });
 
 export const restoreReviewAction = authCustomerActionClient
@@ -90,10 +92,11 @@ export const restoreReviewAction = authCustomerActionClient
     }),
   )
   .action(async ({ parsedInput }) => {
-    return await reviewRepository.restoreReview({
+    await reviewRepository.restoreReview({
       reviewId: parsedInput.reviewId,
     });
 
-    // revalidate product
-    //  revalidate Review
+    // consider don't use revalidateTag
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
   });

@@ -21,6 +21,7 @@ import { NotFoundError } from "@/lib/error";
 //   return result;
 // };
 
+// todo: do not cache user with sensitive info when use CDN, because user can be leaked
 const getAllUsers = unstable_cache(
   async () => {
     await connectToDatabase();

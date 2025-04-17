@@ -95,4 +95,11 @@ export const CACHE_CONFIG = {
       TAGS: "filter",
     },
   },
+  REVIEWS: {
+    ALL: {
+      KEY_PARTS: ["review"],
+      TAGS: ["review"],
+      TIME: 3600,
+    },
+  },
 };

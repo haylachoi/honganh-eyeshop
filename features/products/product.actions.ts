@@ -85,6 +85,13 @@ const fakeProduct = {
     },
   ],
   avgRating: 0,
+  rating: {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  },
   totalReviews: 0,
   totalSales: 0,
 };
@@ -103,7 +110,7 @@ export const generateFakeProducts = authActionClient
     actionName: "generateFakeProducts",
   })
   .action(async () => {
-    const test = Array.from({ length: 1500 }, () => {
+    const test = Array.from({ length: 3500 }, () => {
       const name = "test" + randomBytes(8).toString("hex");
       const number = Math.floor(Math.random() * (700000 - 20000 + 1)) + 10000;
       const attrValue = "color" + Math.floor(Math.random() * 4) + 1;
