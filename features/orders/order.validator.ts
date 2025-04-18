@@ -6,19 +6,12 @@ import {
   // checkoutItemSchema,
   paymentMethodSchema,
 } from "../checkouts/checkout.validator";
-
-export const ORDER_STATUS = [
-  "pending",
-  "confirmed",
-  "completed",
-  "canceled",
-  "returned",
-] as const;
+import { ORDER_STATUS, PAYMENT_STATUS } from "./order.constants";
 
 // general
 export const orderIdSchema = z.string();
 const moneySchema = MoneySchema;
-const paymentStatusSchema = z.enum(["pending", "paid", "failed", "refund"]);
+const paymentStatusSchema = z.enum(PAYMENT_STATUS);
 const trackingNumberSchema = z.string();
 const orderStatusSchema = z.enum(ORDER_STATUS);
 const cancelReasonSchema = z.string();

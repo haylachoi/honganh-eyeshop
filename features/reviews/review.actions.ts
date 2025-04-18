@@ -5,7 +5,6 @@ import { ReviewInputSchema } from "./review.validator";
 import reviewRepository from "@/lib/db/repositories/reviews";
 import { IdSchema } from "@/lib/validator";
 import { z } from "zod";
-import ordersRepository from "@/lib/db/repositories/orders";
 import { revalidateTag } from "next/cache";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 
@@ -37,7 +36,7 @@ export const getUserReviewStatusAction = authCustomerActionClient
       userId: ctx.userId,
     });
 
-    const canReview = await ordersRepository.canUserReview({
+    const canReview = await reviewRepository.canUserReview({
       productId: parsedInput.productId,
       userId: ctx.userId,
     });
@@ -58,7 +57,7 @@ export const canUserReviewAction = authCustomerActionClient
     }),
   )
   .action(async ({ parsedInput, ctx }) => {
-    return await ordersRepository.canUserReview({
+    return await reviewRepository.canUserReview({
       productId: parsedInput.productId,
       userId: ctx.userId,
     });

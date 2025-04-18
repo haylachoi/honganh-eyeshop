@@ -1,7 +1,8 @@
 import {
   ORDER_STATUS,
-  orderTypeSchema,
-} from "@/features/orders/order.validator";
+  PAYMENT_STATUS,
+} from "@/features/orders/order.constants";
+import { orderTypeSchema } from "@/features/orders/order.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
 
@@ -116,7 +117,7 @@ const orderSchema = new Schema<OrderModel>(
     paymentStatus: {
       type: String,
       required: true,
-      enum: ["pending", "paid", "failed", "refund"],
+      enum: PAYMENT_STATUS,
     },
     completedAt: {
       type: Date,

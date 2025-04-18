@@ -33,10 +33,38 @@ import {
 } from "@/components/ui/table";
 import { OrderType } from "@/features/orders/order.types";
 import { Input } from "@/components/ui/input";
-import { currencyFormatter } from "@/lib/utils";
+import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { ActionButton } from "./action-button";
+import { TooltipWrapper } from "@/components/shared/tooltip";
+import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
+import { Checkbox } from "@/components/ui/checkbox";
+import { HeaderButton } from "./header-action-button";
 
 export const columns: ColumnDef<OrderType>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        className="cursor-pointer"
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        className="cursor-pointer"
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     id: "orderId",
     accessorKey: "orderId",
@@ -51,7 +79,13 @@ export const columns: ColumnDef<OrderType>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.original.orderId}</div>,
+    cell: ({ row }) => (
+      <TooltipWrapper render={row.original.orderId}>
+        <div className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis">
+          {row.original.orderId}
+        </div>
+      </TooltipWrapper>
+    ),
   },
   {
     id: "customer.email",
@@ -68,7 +102,11 @@ export const columns: ColumnDef<OrderType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.original.customer.email}</div>
+      <TooltipWrapper render={row.original.customer.email}>
+        <div className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis">
+          {row.original.customer.email}
+        </div>
+      </TooltipWrapper>
     ),
   },
   {
@@ -86,7 +124,11 @@ export const columns: ColumnDef<OrderType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.original.customer.name}</div>
+      <TooltipWrapper render={row.original.customer.name}>
+        <div className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis">
+          {row.original.customer.name}
+        </div>
+      </TooltipWrapper>
     ),
   },
   {
@@ -126,21 +168,43 @@ export const columns: ColumnDef<OrderType>[] = [
     ),
   },
   {
-    id: "paymentStatus",
+    id: "completedAt",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Thanh toán
+          Thời điểm
           <ArrowUpDown />
         </Button>
       );
     },
-    accessorKey: "total",
-    cell: ({ row }) => <div className="">{row.original.paymentStatus}</div>,
+    accessorKey: "completedAt",
+    cell: ({ row }) => (
+      <div className="">
+        {row.original.completedAt
+          ? dateFormatter.format(new Date(row.original.completedAt))
+          : ""}
+      </div>
+    ),
   },
+  // {
+  //   id: "paymentStatus",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Thanh toán
+  //         <ArrowUpDown />
+  //       </Button>
+  //     );
+  //   },
+  //   accessorKey: "total",
+  //   cell: ({ row }) => <div className="">{row.original.paymentStatus}</div>,
+  // },
   {
     id: "orderStatus",
     header: ({ column }) => {
@@ -155,10 +219,20 @@ export const columns: ColumnDef<OrderType>[] = [
       );
     },
     accessorKey: "total",
-    cell: ({ row }) => <div className="">{row.original.orderStatus}</div>,
+    cell: ({ row }) => {
+      if (row.original.cancelReason) {
+        return (
+          <TooltipWrapper render={row.original.cancelReason}>
+            <div>{ORDER_STATUS_DISPLAY_MAPS[row.original.orderStatus]}</div>
+          </TooltipWrapper>
+        );
+      }
+      return <div>{ORDER_STATUS_DISPLAY_MAPS[row.original.orderStatus]}</div>;
+    },
   },
   {
-    header: "Actions",
+    id: "actions",
+    header: ({ table }) => <HeaderButton table={table} />,
     cell: ({ row }) => <ActionButton order={row.original} />,
   },
 ];

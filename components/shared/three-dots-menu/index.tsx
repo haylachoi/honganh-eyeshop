@@ -10,12 +10,13 @@ import { MoreHorizontal } from "lucide-react";
 export const ThreeDotsMenuForHeader = ({
   canOpen,
   children,
+  ...props
 }: {
   canOpen: boolean;
   children: React.ReactNode;
-}) => {
+} & React.ComponentProps<typeof DropdownMenu>) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu {...props}>
       <DropdownMenuTrigger asChild disabled={canOpen}>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
@@ -30,10 +31,17 @@ export const ThreeDotsMenuForHeader = ({
   );
 };
 
-export const ThreeDotsMenu = ({ children }: { children: React.ReactNode }) => {
+export const ThreeDotsMenu = ({
+  children,
+  canOpen,
+  ...props
+}: {
+  children: React.ReactNode;
+  canOpen?: boolean;
+} & React.ComponentProps<typeof DropdownMenu>) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <DropdownMenu {...props}>
+      <DropdownMenuTrigger asChild disabled={canOpen}>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
           <MoreHorizontal />

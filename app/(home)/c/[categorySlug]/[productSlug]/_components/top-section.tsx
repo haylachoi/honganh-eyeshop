@@ -5,7 +5,7 @@ import VariantSelector from "./variant-section";
 import BuyButton from "./buy-btn";
 import { Star } from "lucide-react";
 import { ERROR_MESSAGES } from "@/constants";
-import { REVIEW } from "@/features/reviews/review.constants";
+import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";
 
 type topContextProps = {
   product: ProductType;
@@ -62,7 +62,7 @@ const TopSection = ({ product }: { product: ProductType }) => {
               </div>
               {product.totalReviews > 0 && (
                 <a
-                  href={`#${REVIEW.CUSTOMER.PRODUCT.ID}`}
+                  href={`#${REVIEW_CONSTANT.CUSTOMER.PRODUCT.ID}`}
                   className="text-primary/90 underline hover:no-underline"
                 >
                   {product.totalReviews} Bình luận

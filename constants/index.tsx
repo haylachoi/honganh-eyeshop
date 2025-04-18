@@ -99,8 +99,6 @@ export const PHONE_LINK = `tel:${PHONE}`;
 export const EMAIL = "nv@nv.com.vn";
 export const EMAIL_LINK = `mailto:${EMAIL}`;
 
-export const REVIEW_ELIGIBILITY_PERIOD = 7;
-
 export const CACHE = {
   REVALIDATE_TIME: {
     XS: 3600,

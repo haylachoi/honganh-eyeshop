@@ -13,6 +13,7 @@ import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { generateOrderId } from "./order.utils";
+import { ORDER_STATUS_MAPS } from "./order.constants";
 
 export const createOrderAction = customerActionClient
   .metadata({
@@ -95,18 +96,59 @@ export const createOrderAction = customerActionClient
     return result;
   });
 
-export const setOrderCompletedAt = authActionClient
+export const completeOrder = authActionClient
   .metadata({
     actionName: "setOrderPaidAt",
   })
   .schema(
     z.object({
-      id: IdSchema,
-      completedAt: z.date(),
+      id: z.union([IdSchema, z.array(IdSchema)]),
+      date: z.date(),
     }),
   )
   .action(async ({ parsedInput }) => {
-    // todo: check order status
-    await ordersRepository.setOrderCompletedAt(parsedInput);
+    await ordersRepository.updateStatusOrder({
+      ...parsedInput,
+      status: ORDER_STATUS_MAPS.COMPLETED,
+      reason: "",
+    });
+    revalidateTag(CACHE.ORDER.ALL.TAGS);
+  });
+
+export const confirmOrderAction = authActionClient
+  .metadata({
+    actionName: "confirmOrder",
+  })
+  .schema(
+    z.object({
+      id: IdSchema,
+      date: z.date(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    await ordersRepository.updateStatusOrder({
+      ...parsedInput,
+      status: ORDER_STATUS_MAPS.CONFIRMED,
+      reason: "",
+    });
+    revalidateTag(CACHE.ORDER.ALL.TAGS);
+  });
+
+export const rejectOrderAction = authActionClient
+  .metadata({
+    actionName: "rejectOrder",
+  })
+  .schema(
+    z.object({
+      id: z.union([IdSchema, z.array(IdSchema)]),
+      date: z.date(),
+      reason: z.string().optional(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    await ordersRepository.updateStatusOrder({
+      ...parsedInput,
+      status: ORDER_STATUS_MAPS.REJECTED,
+    });
     revalidateTag(CACHE.ORDER.ALL.TAGS);
   });

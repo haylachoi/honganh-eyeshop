@@ -1,15 +1,19 @@
-import { OrderDbInputType, OrderType } from "@/features/orders/order.types";
+import {
+  OrderDbInputType,
+  OrderStatus,
+  OrderType,
+} from "@/features/orders/order.types";
 import Order from "../model/order.model";
 import { connectToDatabase } from "..";
 import { unstable_cache } from "next/cache";
-import { CACHE, ERROR_MESSAGES, REVIEW_ELIGIBILITY_PERIOD } from "@/constants";
+import { CACHE, ERROR_MESSAGES } from "@/constants";
 import { orderTypeSchema } from "@/features/orders/order.validator";
 import { NotFoundError } from "@/lib/error";
-import mongoose, { FilterQuery, ProjectionType } from "mongoose";
-import { Id } from "@/types";
+import mongoose, { FilterQuery, ProjectionType, UpdateQuery } from "mongoose";
 import Cart from "../model/cart.model";
 import Checkout from "../model/checkout.model";
 import Product from "../model/product.model";
+import { PAYMENT_STATUS_MAPS } from "@/features/orders/order.constants";
 
 const getAllOrders = unstable_cache(
   async () => {
@@ -176,57 +180,64 @@ const createOrder = async ({
   }
 };
 
-const setOrderCompletedAt = async ({
+const updateStatusOrder = async ({
   id,
-  completedAt,
+  status,
+  reason,
+  date,
 }: {
-  id: string;
-  completedAt: Date;
+  id: string | string[];
+  reason?: string;
+  status: OrderStatus;
+  date?: Date;
 }) => {
   await connectToDatabase();
 
-  const result = await Order.findOneAndUpdate(
-    {
-      _id: id,
-      // orderStatus: "pending"
-    },
-    {
+  const ids = Array.isArray(id) ? id : [id];
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const updateQuery: UpdateQuery<OrderType> = {
       $set: {
-        orderStatus: "completed",
-        completedAt: completedAt,
+        orderStatus: status,
+        paymentStatus: PAYMENT_STATUS_MAPS.PENDING,
       },
-    },
-    { new: true },
-  );
+    };
 
-  if (!result) {
-    throw new NotFoundError({
-      resource: "order",
-      message: ERROR_MESSAGES.ORDER.NOT_FOUND,
+    if (reason === "") {
+      if (!updateQuery.$unset) {
+        updateQuery.$unset = {};
+      }
+      updateQuery.$unset.cancelReason = "";
+    }
+    if (reason && updateQuery.$set) {
+      updateQuery.$set.cancelReason = reason;
+    }
+    if (date && updateQuery.$set) {
+      updateQuery.$set.completedAt = date;
+    }
+
+    const result = await Order.updateMany({ _id: { $in: ids } }, updateQuery, {
+      session,
     });
+
+    if (result.matchedCount !== ids.length) {
+      throw new NotFoundError({
+        resource: "order",
+        message: ERROR_MESSAGES.ORDER.NOT_FOUND,
+      });
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("failed:", error);
+    throw error;
   }
-
-  return result._id.toString();
-};
-
-const canUserReview = async ({
-  userId,
-  productId,
-}: {
-  userId: Id;
-  productId: Id;
-}) => {
-  await connectToDatabase();
-  const pivotDate = new Date();
-  pivotDate.setDate(pivotDate.getDate() - REVIEW_ELIGIBILITY_PERIOD);
-  pivotDate.setHours(0, 0, 0, 0);
-  const result = await Order.exists({
-    userId,
-    "items.productId": productId,
-    completedAt: { $gte: pivotDate },
-  });
-
-  return !!result;
 };
 
 const ordersRepository = {
@@ -234,9 +245,8 @@ const ordersRepository = {
   getOrdersByUserId,
   getAllOrders,
   getOrdersByQuery,
-  canUserReview,
   createOrder,
-  setOrderCompletedAt,
+  updateStatusOrder,
 };
 
 export default ordersRepository;

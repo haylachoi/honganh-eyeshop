@@ -1,0 +1,54 @@
+import React from "react";
+
+import { Table } from "@tanstack/react-table";
+
+import { ThreeDotsMenuForHeader } from "@/components/shared/three-dots-menu/index";
+import { TOAST_MESSAGES } from "@/constants";
+import { OrderType } from "@/features/orders/order.types";
+import {
+  rejectOrderAction,
+  completeOrder,
+  confirmOrderAction,
+} from "@/features/orders/order.actions";
+import { ItemButton } from "./item-button";
+
+export const HeaderButton = ({ table }: { table: Table<OrderType> }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const onClose = () => setIsOpen(false);
+
+  const selectedOrders = table
+    .getSelectedRowModel()
+    .rows.map((row) => row.original);
+  const selectedIds = selectedOrders.map((order) => order.id);
+
+  return (
+    <ThreeDotsMenuForHeader
+      canOpen={!selectedOrders.length}
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
+      <ItemButton
+        id={selectedIds}
+        label="Xác nhận"
+        onClose={onClose}
+        action={confirmOrderAction}
+        successMessage={TOAST_MESSAGES.UPDATE.SUCCESS}
+      />
+      <ItemButton
+        id={selectedIds}
+        label="Hoàn tất"
+        onClose={onClose}
+        action={completeOrder}
+        successMessage={TOAST_MESSAGES.UPDATE.SUCCESS}
+      />
+      <ItemButton
+        id={selectedIds}
+        label="Từ chối"
+        onClose={onClose}
+        action={rejectOrderAction}
+        successMessage={TOAST_MESSAGES.UPDATE.SUCCESS}
+        withReason
+      />
+    </ThreeDotsMenuForHeader>
+  );
+};

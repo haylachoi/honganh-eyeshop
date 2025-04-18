@@ -10,6 +10,8 @@ import mongoose, { FilterQuery } from "mongoose";
 import { NotFoundError, ServerError } from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
+import Order from "../model/order.model";
+import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";
 
 const getAllReviewsWithFullInfo = async () => {
   await connectToDatabase();
@@ -464,6 +466,26 @@ const hideReview = async ({ reviewId }: { reviewId: Id }) => {
   }
 };
 
+const canUserReview = async ({
+  userId,
+  productId,
+}: {
+  userId: Id;
+  productId: Id;
+}) => {
+  await connectToDatabase();
+  const pivotDate = new Date();
+  pivotDate.setDate(pivotDate.getDate() - REVIEW_CONSTANT.ELIGIBILITY_PERIOD);
+  pivotDate.setHours(0, 0, 0, 0);
+  const result = await Order.exists({
+    userId,
+    "items.productId": productId,
+    completedAt: { $gte: pivotDate },
+  });
+
+  return !!result;
+};
+
 const reviewRepository = {
   getAllReviewsWithFullInfo,
   getReviewsByProductId,
@@ -472,6 +494,7 @@ const reviewRepository = {
   createReview,
   hideReview,
   restoreReview,
+  canUserReview,
 };
 
 export default reviewRepository;
