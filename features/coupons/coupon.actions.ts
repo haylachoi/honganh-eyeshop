@@ -1,6 +1,10 @@
 "use server";
 
-import { authActionClient, customerActionClient } from "@/lib/actions";
+import {
+  authActionClient,
+  customerActionClient,
+  getAuthActionClient,
+} from "@/lib/actions";
 import { couponInputSchema, couponUpdateSchema } from "./coupon.validator";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import { z } from "zod";
@@ -9,6 +13,17 @@ import { CACHE, ERROR_MESSAGES } from "@/constants";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { AuthenticationError, NotFoundError } from "@/lib/error";
 import { validateCoupon } from "./coupon.utils";
+
+const resource = "coupon";
+const modifyCouponActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const deleteCouponActionClient = getAuthActionClient({
+  resource,
+  action: "delete",
+});
 
 export const checkValidCouponCodeAction = customerActionClient
   .metadata({
@@ -40,7 +55,7 @@ export const checkValidCouponCodeAction = customerActionClient
     return validCoupon;
   });
 
-export const createCouponAction = authActionClient
+export const createCouponAction = modifyCouponActionClient
   .metadata({
     actionName: "createCouponAction",
   })
@@ -52,7 +67,7 @@ export const createCouponAction = authActionClient
     return result;
   });
 
-export const updateCouponAction = authActionClient
+export const updateCouponAction = modifyCouponActionClient
   .metadata({
     actionName: "updateCouponAction",
   })
@@ -64,7 +79,7 @@ export const updateCouponAction = authActionClient
     return result;
   });
 
-export const deleteCouponActions = authActionClient
+export const deleteCouponActions = deleteCouponActionClient
   .metadata({
     actionName: "deleteCouponActions",
   })

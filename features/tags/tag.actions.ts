@@ -1,22 +1,29 @@
 "use server";
 
-import { authActionClient } from "@/lib/actions";
+import { getAuthActionClient } from "@/lib/actions";
 import tagsRepository from "@/lib/db/repositories/tags";
 import { tagInputSchema, tagUpdateSchema } from "./tag.validator";
 import { revalidateTag } from "next/cache";
 import { CACHE } from "@/constants";
 import { z } from "zod";
 
-// export const getAllTagsAction = actionClient
-//   .metadata({
-//     actionName: "getAllTags",
-//   })
-//   .action(async () => {
-//     const tags = await tagsRepository.getAllTags();
-//     return tags;
-//   });
+const resource = "tag";
+const createTagActionClient = getAuthActionClient({
+  resource,
+  action: "create",
+});
 
-export const createTagAction = authActionClient
+const modifyTagActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const deleteTagActionClient = getAuthActionClient({
+  resource,
+  action: "delete",
+});
+
+export const createTagAction = createTagActionClient
   .metadata({
     actionName: "createTag",
   })
@@ -27,7 +34,7 @@ export const createTagAction = authActionClient
     return result;
   });
 
-export const updateTagAction = authActionClient
+export const updateTagAction = modifyTagActionClient
   .metadata({
     actionName: "updateTag",
   })
@@ -39,7 +46,7 @@ export const updateTagAction = authActionClient
     return result;
   });
 
-export const deleteTagAction = authActionClient
+export const deleteTagAction = deleteTagActionClient
   .metadata({
     actionName: "deleteTag",
   })

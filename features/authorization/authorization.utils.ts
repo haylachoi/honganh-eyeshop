@@ -4,33 +4,18 @@ import {
   Action,
   Scope,
   PERMISSIONS,
-  ROLES,
 } from "./authorization.constants";
 
 export const getScope = ({
-  resources,
+  resource,
   role,
   action,
 }: {
-  resources: Resource;
+  resource: Resource;
   role: Role;
   action: Action;
-}): Scope | undefined => {
-  return PERMISSIONS[role]?.[resources]?.[action];
-};
+}): Scope[] | undefined => {
+  if (role === "admin") return ["all"];
 
-export const canAccess = ({
-  resources,
-  role,
-  action,
-  scope,
-}: {
-  resources: Resource;
-  role: Role;
-  action: Action;
-  scope: Scope;
-}) => {
-  if (role === ROLES.ADMIN) return true;
-
-  return PERMISSIONS[role]?.[resources]?.[action] === scope;
+  return PERMISSIONS[role]?.[resource]?.[action];
 };

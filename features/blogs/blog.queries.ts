@@ -1,5 +1,5 @@
 import blogsRepository from "@/lib/db/repositories/blogs";
-import { safeQuery } from "@/lib/query";
+import { getAuthQueryClient, safeQuery } from "@/lib/query";
 import { blogSlugSchema } from "./blog.validators";
 import { IdSchema } from "@/lib/validator";
 import { z } from "zod";
@@ -10,12 +10,18 @@ import {
 import { PAGE_SIZE } from "@/constants";
 import next_cache from "@/cache";
 
-export const getAllBlogs = safeQuery.query(async () => {
+const resource = "blog";
+const blogQueryClient = getAuthQueryClient({
+  resource,
+});
+
+export const getAllBlogs = blogQueryClient.query(async () => {
+  // todo: use cache
   const blogs = await blogsRepository.getAllBlogs();
   return blogs;
 });
 
-export const getBlogById = safeQuery
+export const getBlogById = blogQueryClient
   .schema(IdSchema)
   .query(async ({ parsedInput }) => {
     const blog = await blogsRepository.getBlogById(parsedInput);

@@ -8,10 +8,18 @@ import { auth } from "@/features/auth/auth.query";
 import {
   AppError,
   AuthenticationError,
+  AuthorizationError,
   ERROR_TYPES,
   ValidationError,
 } from "../error";
 import { ERROR_MESSAGES } from "@/constants";
+import {
+  Action,
+  Resource,
+  Scope,
+} from "@/features/authorization/authorization.constants";
+import { roleSchema } from "@/features/authorization/authorization.validator";
+import { getScope } from "@/features/authorization/authorization.utils";
 
 export const actionClient = createSafeActionClient({
   handleServerError: (e) => {
@@ -74,6 +82,53 @@ export const authCustomerActionClient = actionClient.use(async ({ next }) => {
 });
 
 export const authActionClient = actionClient.use(async ({ next }) => {
-  // todo: check session
-  return next();
+  const session = await auth();
+  if (!session)
+    throw new AuthenticationError({
+      message: ERROR_MESSAGES.AUTH.UNAUTHENTICATED,
+    });
+
+  const userId = session.id;
+  const role = session.role;
+  return next({ ctx: { userId, role } });
 });
+
+export const getAuthActionClient = ({
+  resource,
+  action,
+  scope,
+}: {
+  resource: Resource;
+  action: Action;
+  scope?: Scope;
+}) => {
+  return authActionClient.use(async ({ ctx, next }) => {
+    const role = roleSchema.parse(ctx.role);
+    const scopes = getScope({
+      role,
+      resource,
+      action,
+    });
+
+    if (!scopes) {
+      throw new AuthorizationError({
+        resource,
+      });
+    }
+
+    if (scope && !scopes.includes(scope)) {
+      throw new AuthorizationError({
+        resource,
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        resource,
+        action,
+        scopes,
+      },
+    });
+  });
+};

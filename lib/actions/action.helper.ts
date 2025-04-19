@@ -14,8 +14,7 @@ export const onActionError: NonNullable<
     typeof serverError === "object" &&
     "message" in serverError &&
     typeof serverError.message === "string" &&
-    "type" in serverError &&
-    serverError.type === "ValidationError"
+    "type" in serverError
   ) {
     toast.error(serverError.message);
     return;

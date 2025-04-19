@@ -1,6 +1,6 @@
 "use server";
 
-import { authActionClient } from "@/lib/actions";
+import { authActionClient, getAuthActionClient } from "@/lib/actions";
 import { ProductInputSchema, productUpdateSchema } from "./product.validator";
 import productRepository from "@/lib/db/repositories/products";
 import { CACHE } from "@/constants";
@@ -152,7 +152,23 @@ export const deleteFakeProducts = authActionClient
     await productRepository.deleteFakeProducts();
   });
 
-export const createProductAction = authActionClient
+const resource = "product";
+const createProductActionClient = getAuthActionClient({
+  resource,
+  action: "create",
+});
+
+const modifyProductActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const deleteProductActionClient = getAuthActionClient({
+  resource,
+  action: "delete",
+});
+
+export const createProductAction = createProductActionClient
   .metadata({
     actionName: "createProduct",
   })
@@ -199,7 +215,7 @@ export const createProductAction = authActionClient
   });
 
 // todo: update only changed value
-export const updateProductAction = authActionClient
+export const updateProductAction = modifyProductActionClient
   .metadata({
     actionName: "updateProduct",
   })
@@ -247,7 +263,7 @@ export const updateProductAction = authActionClient
     revalidateTag(CACHE.TAGS.ALL.TAGS);
   });
 
-export const updateRatingAction = authActionClient
+export const updateRatingAction = modifyProductActionClient
   .metadata({
     actionName: "updateRating",
   })
@@ -257,7 +273,7 @@ export const updateRatingAction = authActionClient
     revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
   });
 
-export const deleteProductAction = authActionClient
+export const deleteProductAction = deleteProductActionClient
   .metadata({
     actionName: "deleteProduct",
   })

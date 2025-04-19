@@ -29,6 +29,7 @@ const TagFormUpdate = ({
   const { execute, isPending } = useAction(updateTagAction, {
     onSuccess: () => {
       toast.success(TOAST_MESSAGES.UPDATE.SUCCESS);
+      setIsEditing(false);
     },
     onError: onActionError,
   });
@@ -43,7 +44,6 @@ const TagFormUpdate = ({
         className="grid grid-cols-[1fr_auto] gap-4"
         onSubmit={form.handleSubmit((data) => {
           execute(data);
-          setIsEditing(false);
         })}
       >
         <FormField

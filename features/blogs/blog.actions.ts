@@ -1,6 +1,6 @@
 "use server";
 
-import { authActionClient } from "@/lib/actions";
+import { getAuthActionClient } from "@/lib/actions";
 import { blogInputSchema, blogUpdateSchema } from "./blog.validators";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import userRepository from "@/lib/db/repositories/user";
@@ -11,7 +11,24 @@ import { writeFileToDisk, writeMultipleFilesToDisk } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
 import { removeDiacritics } from "@/lib/utils";
 
-export const createBlogAction = authActionClient
+const resource = "blog";
+
+const createBlogActionClient = getAuthActionClient({
+  resource,
+  action: "create",
+});
+
+const modifyBlogActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const deleteBlogActionClient = getAuthActionClient({
+  resource,
+  action: "delete",
+});
+
+export const createBlogAction = createBlogActionClient
   .metadata({
     actionName: "createBlog",
   })
@@ -67,7 +84,7 @@ export const createBlogAction = authActionClient
     return result;
   });
 
-export const updateBlogAction = authActionClient
+export const updateBlogAction = modifyBlogActionClient
   .metadata({
     actionName: "updateBlog",
   })
@@ -124,7 +141,7 @@ export const updateBlogAction = authActionClient
     return result;
   });
 
-export const deleteBlogAction = authActionClient
+export const deleteBlogAction = deleteBlogActionClient
   .metadata({
     actionName: "deleteBlog",
   })

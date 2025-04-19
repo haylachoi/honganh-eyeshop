@@ -7,10 +7,26 @@ import {
 import { revalidateTag } from "next/cache";
 import { CACHE } from "@/constants";
 import categoriesRepository from "@/lib/db/repositories/categories";
-import { authActionClient } from "@/lib/actions";
+import { getAuthActionClient } from "@/lib/actions";
 import { z } from "zod";
 
-export const createCategoryAction = authActionClient
+const resource = "category";
+const createCategoryActionClient = getAuthActionClient({
+  resource,
+  action: "create",
+});
+
+const modifyCategoryActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const deleteCategoryActionClient = getAuthActionClient({
+  resource,
+  action: "delete",
+});
+
+export const createCategoryAction = createCategoryActionClient
   .metadata({
     actionName: "createCategoryAction",
   })
@@ -20,7 +36,7 @@ export const createCategoryAction = authActionClient
     revalidateTag(CACHE.CATEGORIES.ALL.TAGS);
   });
 
-export const updateCategoryAction = authActionClient
+export const updateCategoryAction = modifyCategoryActionClient
   .metadata({
     actionName: "updateCategoryAction",
   })
@@ -32,7 +48,7 @@ export const updateCategoryAction = authActionClient
     return parsedInput.id;
   });
 
-export const deleteCategoryAction = authActionClient
+export const deleteCategoryAction = deleteCategoryActionClient
   .metadata({
     actionName: "deleteCategoryAction",
   })

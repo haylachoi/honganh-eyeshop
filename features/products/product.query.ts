@@ -1,5 +1,5 @@
 import productRepository from "@/lib/db/repositories/products";
-import { safeQuery } from "@/lib/query";
+import { authQueryClient, safeQuery } from "@/lib/query";
 import { z } from "zod";
 import { getProductBySlugQuerySchema } from "./product.validator";
 import { IdSchema } from "@/lib/validator";
@@ -13,7 +13,8 @@ import { NotFoundError } from "@/lib/error";
 //   SCOPES,
 // } from "../authorization/authorization.constants";
 
-export const getAllProducts = safeQuery.query(async () => {
+export const getAllProducts = authQueryClient.query(async () => {
+  // todo: use cache
   const products = await productRepository.getAllProducts();
   return products;
 });

@@ -1,6 +1,10 @@
 "use server";
 
-import { authActionClient, customerActionClient } from "@/lib/actions";
+import {
+  authActionClient,
+  customerActionClient,
+  getAuthActionClient,
+} from "@/lib/actions";
 import { orderInputSchema } from "./order.validator";
 import ordersRepository from "@/lib/db/repositories/orders";
 import couponsRepository from "@/lib/db/repositories/coupons";
@@ -14,6 +18,13 @@ import { IdSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { generateOrderId } from "./order.utils";
 import { ORDER_STATUS_MAPS } from "./order.constants";
+
+const resource = "order";
+
+const modifyOrderActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
 
 export const createOrderAction = customerActionClient
   .metadata({
@@ -96,7 +107,7 @@ export const createOrderAction = customerActionClient
     return result;
   });
 
-export const completeOrder = authActionClient
+export const completeOrder = modifyOrderActionClient
   .metadata({
     actionName: "setOrderPaidAt",
   })
@@ -115,7 +126,7 @@ export const completeOrder = authActionClient
     revalidateTag(CACHE.ORDER.ALL.TAGS);
   });
 
-export const confirmOrderAction = authActionClient
+export const confirmOrderAction = modifyOrderActionClient
   .metadata({
     actionName: "confirmOrder",
   })
@@ -134,7 +145,7 @@ export const confirmOrderAction = authActionClient
     revalidateTag(CACHE.ORDER.ALL.TAGS);
   });
 
-export const rejectOrderAction = authActionClient
+export const rejectOrderAction = modifyOrderActionClient
   .metadata({
     actionName: "rejectOrder",
   })

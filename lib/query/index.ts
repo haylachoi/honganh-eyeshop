@@ -1,11 +1,17 @@
 import "server-only";
 
-import SafeQuery from "../safe-query";
 import { auth } from "@/features/auth/auth.query";
 import mongoose from "mongoose";
 import { ZodError } from "zod";
-import { AppError, AuthenticationError } from "../error";
+import { AppError, AuthenticationError, AuthorizationError } from "../error";
 import { QueryError } from "./query.type";
+import { getScope } from "@/features/authorization/authorization.utils";
+import SafeQuery from "../safe-query";
+import {
+  Resource,
+  Scope,
+} from "@/features/authorization/authorization.constants";
+import { roleSchema } from "@/features/authorization/authorization.validator";
 
 const DEFAULT_SERVER_ERROR_MESSAGE = "Something went wrong";
 
@@ -41,9 +47,14 @@ export const safeQuery = new SafeQuery({
   },
 });
 
-export const authQueryClient = safeQuery.use(async ({ next }) => {
+export const authQueryClient = safeQuery.use(async ({ next, ctx }) => {
   // toto: check permission
-  return next({});
+  const session = await auth();
+
+  if (!session) throw new AuthenticationError({});
+  const userId = session?.id;
+  const role = session?.role;
+  return next({ ...ctx, userId, role });
 });
 
 export const customerQueryClient = safeQuery.use(async ({ ctx, next }) => {
@@ -59,6 +70,37 @@ export const authCustomerQueryClient = safeQuery.use(async ({ ctx, next }) => {
   if (!session) throw new AuthenticationError({});
 
   const userId = session.id;
-  const role = session?.role;
+  const role = roleSchema.parse(session.role);
   return next({ ...ctx, userId, role });
 });
+
+export const getAuthQueryClient = ({
+  resource,
+  scope,
+}: {
+  resource: Resource;
+  scope?: Scope;
+}) => {
+  return authQueryClient.use(async ({ ctx, next }) => {
+    const role = roleSchema.parse(ctx.role);
+    const scopes = getScope({
+      role,
+      resource,
+      action: "view",
+    });
+
+    if (!scopes) {
+      throw new AuthorizationError({
+        resource,
+      });
+    }
+
+    if (scope && !scopes.includes(scope)) {
+      throw new AuthorizationError({
+        resource,
+      });
+    }
+
+    return next({ ...ctx, resource, scopes });
+  });
+};

@@ -1,6 +1,6 @@
 "use server";
 
-import { authCustomerActionClient } from "@/lib/actions";
+import { authCustomerActionClient, getAuthActionClient } from "@/lib/actions";
 import { ReviewInputSchema } from "./review.validator";
 import reviewRepository from "@/lib/db/repositories/reviews";
 import { IdSchema } from "@/lib/validator";
@@ -8,7 +8,18 @@ import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 
-export const createReviewAction = authCustomerActionClient
+const resource = "review";
+const modifyReviewActionClient = getAuthActionClient({
+  resource,
+  action: "modify",
+});
+
+const createReviewActionClient = getAuthActionClient({
+  resource,
+  action: "create",
+});
+
+export const createReviewAction = createReviewActionClient
   .metadata({
     actionName: "createReview",
   })
@@ -21,6 +32,7 @@ export const createReviewAction = authCustomerActionClient
     });
   });
 
+// todo: use route api instead of action
 export const getUserReviewStatusAction = authCustomerActionClient
   .metadata({
     actionName: "getUserReviewStatus",
@@ -63,7 +75,7 @@ export const canUserReviewAction = authCustomerActionClient
     });
   });
 
-export const hidenReviewAction = authCustomerActionClient
+export const hidenReviewAction = modifyReviewActionClient
   .metadata({
     actionName: "hideReview",
   })
@@ -81,7 +93,7 @@ export const hidenReviewAction = authCustomerActionClient
     revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
   });
 
-export const restoreReviewAction = authCustomerActionClient
+export const restoreReviewAction = modifyReviewActionClient
   .metadata({
     actionName: "restoreReview",
   })

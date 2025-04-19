@@ -12,6 +12,7 @@ export const getTagById = safeQuery
   });
 
 export const getAllTags = safeQuery.query(async () => {
+  // todo: use cache
   const tags = await tagsRepository.getAllTags();
   return tags;
 });

@@ -14,50 +14,64 @@ export const RESOURCE_TYPES = {
   ALL: "all",
 } as const;
 
-export const ACTIONS = {
-  MODIFY: "modify",
-  DELETE: "delete",
-  VIEW: "view",
-  ALL: "all",
-} as const;
+export const ACTION = ["create", "modify", "delete", "view", "all"] as const;
+export const SCOPE = ["all", "own", "public"] as const;
+export const ROLES = ["customer", "seller", "admin", "guest"] as const;
 
-export const SCOPES = {
-  ALL: "all",
-  OWN: "own",
-  PUBLIC: "public",
-} as const;
-
-export const ROLES = {
-  CUSTOMER: "customer",
-  ADMIN: "admin",
-  GUEST: "guest",
-};
-
-export type Role = (typeof ROLES)[keyof typeof ROLES];
+export type Role = (typeof ROLES)[number];
 export type Resource = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
-export type Action = (typeof ACTIONS)[keyof typeof ACTIONS];
-export type Scope = (typeof SCOPES)[keyof typeof SCOPES];
+export type Action = (typeof ACTION)[number];
+export type Scope = (typeof SCOPE)[number];
 
 export const PERMISSIONS: {
   [key in Role]?: {
     [resource in Resource]?: {
-      [action in Action]?: Scope;
+      [action in Action]?: Scope[];
     };
   };
 } = {
+  guest: {
+    product: {
+      view: ["public"],
+    },
+    review: {
+      view: ["public"],
+    },
+  },
   customer: {
+    review: {
+      create: ["all"],
+      view: ["public"],
+    },
+  },
+  seller: {
+    order: {
+      view: ["all"],
+      modify: ["all"],
+    },
+    coupon: {
+      view: ["all"],
+    },
     product: {
-      view: "public",
+      view: ["all"],
+    },
+    category: {
+      view: ["all"],
+    },
+    blog: {
+      view: ["all"],
+      modify: ["all"],
+    },
+    tag: {
+      view: ["all"],
+    },
+    review: {
+      view: ["all"],
     },
   },
-  guess: {
-    product: {
-      view: "public",
-    },
-  },
-  admin: {
-    all: {
-      all: "all",
-    },
-  },
+  // guess: {
+  //   product: {
+  //     view: "public",
+  //   },
+  // },
 };
