@@ -15,6 +15,7 @@ import { canAccess } from "@/features/auth/auth.utils";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
   const { execute: logout } = useAction(logoutAction, {
@@ -25,10 +26,19 @@ const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
     },
     onError: onActionError,
   });
+  const pathname = usePathname();
+  const isAdminPage = pathname.includes(ADMIN_ENDPOINTS.HOME);
+  const initials = getInitials(user.name);
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="cursor-pointer focus-visible:outline-none underline">
-        {user.name}
+      <DropdownMenuTrigger className="cursor-pointer focus-visible:outline-none">
+        <div className="flex items-center justify-center gap-2">
+          <div className="size-6 rounded-full bg-background text-primary border border-foreground flex items-center justify-center font-bold text-sm">
+            {initials}
+          </div>
+          <span>{user.name}</span>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {canAccess({
@@ -36,19 +46,25 @@ const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
           resource: "admin",
         }) && (
           <>
-            <DropdownMenuItem asChild>
-              <Link href={ADMIN_ENDPOINTS.OVERVIEW}>Admin</Link>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              {isAdminPage ? (
+                <Link href={ENDPOINTS.HOME}>Trang chủ</Link>
+              ) : (
+                <Link href={ADMIN_ENDPOINTS.OVERVIEW}>Trang Admin</Link>
+              )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
         )}
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem asChild className="cursor-pointer">
           <Link href={ENDPOINTS.PROFILE}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href={ENDPOINTS.ORDER}>Đơn hàng</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
+        {!isAdminPage && (
+          <DropdownMenuItem asChild>
+            <Link href={ENDPOINTS.ORDER}>Đơn hàng</Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem asChild className="cursor-pointer">
           <button className="size-full" onClick={() => logout()}>
             Đăng xuất
           </button>
@@ -59,3 +75,10 @@ const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
 };
 
 export default UserButtonContent;
+
+function getInitials(name: string) {
+  if (!name) return "";
+  const words = name.trim().split(" ");
+  if (words.length === 1) return words[0][0].toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}

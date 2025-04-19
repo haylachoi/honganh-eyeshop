@@ -13,7 +13,7 @@ import { ERROR_MESSAGES } from "@/constants";
 const getCheckoutById = async (id: Id) => {
   await connectToDatabase();
   const result = await Checkout.findById(id).lean();
-  const checkout = checkoutTypeSchema.parse(result);
+  const checkout = result ? checkoutTypeSchema.parse(result) : null;
   return checkout;
 };
 const createCheckout = async (input: CheckoutDbInputType) => {

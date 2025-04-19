@@ -7,7 +7,8 @@ const CheckoutPage = async ({ params }: { params: Params }) => {
   const { checkoutId } = await params;
   const checkoutResult = await getCheckoutById(checkoutId);
   if (!checkoutResult.success) {
-    return <div>Error</div>;
+    // todo: handle error
+    return <div>Check out không tồn tại</div>;
   }
 
   const checkout = checkoutResult.data;

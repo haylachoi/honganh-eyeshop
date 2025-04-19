@@ -5,7 +5,9 @@ import { DialogProvider } from "@/components/shared/alert-dialog-provider";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="container">
-      <AdminHeader />
+      <div className="border-b border-input py-2 mb-2">
+        <AdminHeader />
+      </div>
       <DialogProvider>
         <div>{children}</div>
       </DialogProvider>

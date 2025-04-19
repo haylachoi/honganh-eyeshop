@@ -1,5 +1,6 @@
 "use client";
 
+import UserButton from "@/components/shared/user-button";
 import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -20,7 +21,7 @@ const links = [
 const AdminHeader = () => {
   const pathname = usePathname();
   return (
-    <div className="flex items-center gap-6 container">
+    <div className="flex items-center justify-between gap-6 container">
       <div>
         <Link href={ENDPOINTS.HOME} className="text-2xl font-bold">
           Logo
@@ -31,9 +32,8 @@ const AdminHeader = () => {
           <li key={link.name}>
             <Link
               className={cn(
-                "px-6 py-3 flex items-center",
-                pathname === link.href &&
-                  "bg-primary/80 text-primary-foreground",
+                "px-6 py-2 flex items-center",
+                pathname === link.href && "text-primary font-bold",
               )}
               href={link.href}
             >
@@ -42,6 +42,7 @@ const AdminHeader = () => {
           </li>
         ))}
       </ul>
+      <UserButton />
     </div>
   );
 };
