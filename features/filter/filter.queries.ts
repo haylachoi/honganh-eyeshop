@@ -1,4 +1,3 @@
-import filtersRepository from "@/lib/db/repositories/filters";
 import { customerQueryClient, safeQuery } from "@/lib/query";
 import { IdSchema } from "@/lib/validator";
 import { categorySlugSchema } from "../categories/category.validator";
@@ -7,23 +6,24 @@ import { createProductQueryFilter } from "./filter.queries-builder";
 import { getQueryOption } from "@/lib/utils";
 import productRepository from "@/lib/db/repositories/products";
 import { searchInputSchema } from "./filter.validator";
+import next_cache from "@/cache";
 
 export const getFilterByCategoryId = customerQueryClient
   .schema(IdSchema)
   .query(async ({ parsedInput }) => {
-    const result = await filtersRepository.getFilterByCategoryId(parsedInput);
+    const result = await next_cache.filters.getByCategoryId(parsedInput);
     return result;
   });
 
 export const getFilterByCategorySlug = customerQueryClient
   .schema(categorySlugSchema)
   .query(async ({ parsedInput }) => {
-    const result = await filtersRepository.getFilterByCategorySlug(parsedInput);
+    const result = await next_cache.filters.getByCategorySlug(parsedInput);
     return result;
   });
 
 export const getAllFilters = customerQueryClient.query(async () => {
-  const result = await filtersRepository.getAllFilters();
+  const result = await next_cache.filters.getAll();
   return result;
 });
 

@@ -3,6 +3,7 @@ import "server-only";
 import tagsRepository from "@/lib/db/repositories/tags";
 import { safeQuery } from "@/lib/query";
 import { z } from "zod";
+import next_cache from "@/cache";
 
 export const getTagById = safeQuery
   .schema(z.string().min(3))
@@ -12,7 +13,6 @@ export const getTagById = safeQuery
   });
 
 export const getAllTags = safeQuery.query(async () => {
-  // todo: use cache
-  const tags = await tagsRepository.getAllTags();
+  const tags = await next_cache.tags.getAll();
   return tags;
 });

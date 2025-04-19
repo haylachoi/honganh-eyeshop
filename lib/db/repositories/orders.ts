@@ -5,8 +5,7 @@ import {
 } from "@/features/orders/order.types";
 import Order from "../model/order.model";
 import { connectToDatabase } from "..";
-import { unstable_cache } from "next/cache";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { orderTypeSchema } from "@/features/orders/order.validator";
 import { NotFoundError } from "@/lib/error";
 import mongoose, { FilterQuery, ProjectionType, UpdateQuery } from "mongoose";
@@ -15,20 +14,12 @@ import Checkout from "../model/checkout.model";
 import Product from "../model/product.model";
 import { PAYMENT_STATUS_MAPS } from "@/features/orders/order.constants";
 
-const getAllOrders = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const orders = await Order.find({});
-    const result = orders.map((order) => orderTypeSchema.parse(order));
-    return result;
-  },
-
-  CACHE.ORDER.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.ORDER.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+const getAllOrders = async () => {
+  await connectToDatabase();
+  const orders = await Order.find({});
+  const result = orders.map((order) => orderTypeSchema.parse(order));
+  return result;
+};
 
 const getOrdersByUserId = async (userId: string) => {
   await connectToDatabase();

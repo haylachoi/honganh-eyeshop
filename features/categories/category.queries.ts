@@ -3,6 +3,7 @@ import productRepository from "@/lib/db/repositories/products";
 import { safeQuery } from "@/lib/query";
 import { z } from "zod";
 import { categorySlugSchema } from "./category.validator";
+import next_cache from "@/cache";
 
 export const getCategoryById = safeQuery
   .schema(z.string().min(3))
@@ -12,7 +13,7 @@ export const getCategoryById = safeQuery
   });
 
 export const getAllCategories = safeQuery.query(async () => {
-  const categories = await categoriesRepository.getAllCategories();
+  const categories = await next_cache.categories.getAll();
   return categories;
 });
 

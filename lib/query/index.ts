@@ -1,6 +1,6 @@
 import "server-only";
 
-import { auth } from "@/features/auth/auth.query";
+import { auth } from "@/features/auth/auth.queries";
 import mongoose from "mongoose";
 import { ZodError } from "zod";
 import { AppError, AuthenticationError, AuthorizationError } from "../error";

@@ -1,6 +1,6 @@
 "use server";
 
-import { CACHE, SORTING_OPTIONS } from "@/constants";
+import { SORTING_OPTIONS } from "@/constants";
 import { authActionClient } from "@/lib/actions";
 import filtersRepository from "@/lib/db/repositories/filters";
 import { revalidateTag } from "next/cache";
@@ -11,6 +11,9 @@ import { z } from "zod";
 import { getQueryOption } from "@/lib/utils";
 import { createProductQueryFilter } from "./filter.queries-builder";
 import { searchInputSchema } from "./filter.validator";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+
+const filterCacheTag = CACHE_CONFIG.FILTER.ALL.TAGS[0];
 
 export const createFilterAction = authActionClient
   .metadata({
@@ -18,7 +21,7 @@ export const createFilterAction = authActionClient
   })
   .action(async () => {
     const result = await filtersRepository.createFilter();
-    revalidateTag(CACHE.FILTER.ALL.TAGS);
+    revalidateTag(filterCacheTag);
     return result;
   });
 

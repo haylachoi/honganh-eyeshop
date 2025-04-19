@@ -3,7 +3,6 @@
 import { authActionClient, getAuthActionClient } from "@/lib/actions";
 import { ProductInputSchema, productUpdateSchema } from "./product.validator";
 import productRepository from "@/lib/db/repositories/products";
-import { CACHE } from "@/constants";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { getCategoryInfoById } from "../categories/category.utils";
@@ -13,6 +12,7 @@ import {
 } from "./product.utils";
 import { removeDiacritics } from "@/lib/utils";
 import { randomBytes } from "crypto";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 const fakeCategories = [
   {
@@ -211,7 +211,7 @@ export const createProductAction = createProductActionClient
     await productRepository.createProduct(input);
     // todo: delete image if error
 
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
   });
 
 // todo: update only changed value
@@ -259,8 +259,8 @@ export const updateProductAction = modifyProductActionClient
     //todo: delete images
     // todo: delete variant in cart if change. Should move to repository
 
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
-    revalidateTag(CACHE.TAGS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
+    revalidateTag(CACHE_CONFIG.TAGS.ALL.TAGS[0]);
   });
 
 export const updateRatingAction = modifyProductActionClient
@@ -270,7 +270,7 @@ export const updateRatingAction = modifyProductActionClient
   .schema(z.object({ productId: z.string(), rating: z.number() }))
   .action(async ({ parsedInput }) => {
     await productRepository.updateRating(parsedInput);
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
   });
 
 export const deleteProductAction = deleteProductActionClient
@@ -284,5 +284,5 @@ export const deleteProductAction = deleteProductActionClient
 
     // delete item from cart
 
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
   });

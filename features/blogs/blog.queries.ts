@@ -16,8 +16,7 @@ const blogQueryClient = getAuthQueryClient({
 });
 
 export const getAllBlogs = blogQueryClient.query(async () => {
-  // todo: use cache
-  const blogs = await blogsRepository.getAllBlogs();
+  const blogs = await next_cache.blogs.all();
   return blogs;
 });
 
@@ -36,7 +35,7 @@ export const getBlogBySlug = safeQuery
   });
 
 export const getRecentBlogs = safeQuery.query(async () => {
-  const blogs = await blogsRepository.getRecentBlogs();
+  const blogs = await next_cache.blogs.recent();
   return blogs;
 });
 

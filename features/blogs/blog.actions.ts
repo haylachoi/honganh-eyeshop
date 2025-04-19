@@ -4,14 +4,16 @@ import { getAuthActionClient } from "@/lib/actions";
 import { blogInputSchema, blogUpdateSchema } from "./blog.validators";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import userRepository from "@/lib/db/repositories/user";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { writeFileToDisk, writeMultipleFilesToDisk } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
 import { removeDiacritics } from "@/lib/utils";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 const resource = "blog";
+const blogCacheTags = CACHE_CONFIG.BLOGS.ALL.TAGS[0];
 
 const createBlogActionClient = getAuthActionClient({
   resource,
@@ -79,7 +81,7 @@ export const createBlogAction = createBlogActionClient
       images,
     });
 
-    revalidateTag(CACHE.BLOGS.ALL.TAGS);
+    revalidateTag(blogCacheTags);
 
     return result;
   });
@@ -137,7 +139,7 @@ export const updateBlogAction = modifyBlogActionClient
       images,
     });
 
-    revalidateTag(CACHE.BLOGS.ALL.TAGS);
+    revalidateTag(blogCacheTags);
     return result;
   });
 
@@ -148,6 +150,6 @@ export const deleteBlogAction = deleteBlogActionClient
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
     const result = await blogsRepository.deleteBlog(parsedInput);
-    revalidateTag(CACHE.BLOGS.ALL.TAGS);
+    revalidateTag(blogCacheTags);
     return result;
   });

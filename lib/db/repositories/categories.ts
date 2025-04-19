@@ -1,9 +1,8 @@
 "server only";
 
-import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "..";
 import Category from "@/lib/db/model/category.model";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
 import {
   CategoryType,
@@ -27,24 +26,17 @@ import { NotFoundError } from "@/lib/error";
 //   return result;
 // };
 
-const getAllCategories = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const categories = await Category.find().lean();
+const getAllCategories = async () => {
+  await connectToDatabase();
+  const categories = await Category.find().lean();
 
-    const result = categories.map(({ _id, ...category }) => ({
-      ...category,
-      id: _id.toString(),
-    })) as CategoryType[];
+  const result = categories.map(({ _id, ...category }) => ({
+    ...category,
+    id: _id.toString(),
+  })) as CategoryType[];
 
-    return result;
-  },
-  CACHE.CATEGORIES.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.CATEGORIES.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+  return result;
+};
 
 const getCategoryById = async (id: Id) => {
   await connectToDatabase();

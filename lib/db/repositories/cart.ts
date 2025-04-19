@@ -5,28 +5,20 @@ import {
   cartItemTypeSchema,
   cartTypeSchema,
 } from "@/features/cart/cart.validator";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { connectToDatabase } from "..";
-import { unstable_cache } from "next/cache";
 import { NotFoundError, ServerError } from "@/lib/error";
 import { Id } from "@/types";
 import mongoose from "mongoose";
 import Product from "../model/product.model";
 
-const getCartByUserId = unstable_cache(
-  async (userId: string) => {
-    await connectToDatabase();
-    const result = await Cart.findOne({ userId }).lean();
-    if (!result) return;
-    const cart = cartTypeSchema.parse(result);
-    return cart;
-  },
-  CACHE.CART.USER.KEY_PARTS,
-  {
-    tags: [CACHE.CART.USER.TAGS],
-    revalidate: 3600,
-  },
-);
+const getCartByUserId = async (userId: string) => {
+  await connectToDatabase();
+  const result = await Cart.findOne({ userId }).lean();
+  if (!result) return;
+  const cart = cartTypeSchema.parse(result);
+  return cart;
+};
 
 const getCartItemByProductIdAndVariantId = async (
   items: {

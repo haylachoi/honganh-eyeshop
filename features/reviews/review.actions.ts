@@ -89,7 +89,7 @@ export const hidenReviewAction = modifyReviewActionClient
       reviewId: parsedInput.reviewId,
     });
 
-    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
   });
 
@@ -108,6 +108,6 @@ export const restoreReviewAction = modifyReviewActionClient
     });
 
     // consider don't use revalidateTag
-    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
   });

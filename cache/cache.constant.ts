@@ -3,28 +3,46 @@ export const CACHE_CONFIG = {
     XS: 3600,
     SM: 3600 * 24,
   },
+  USERS: {
+    ALL: {
+      KEY_PARTS: ["users"],
+      TAGS: ["users"],
+      TIME: 3600,
+    },
+  },
   CATEGORIES: {
     ALL: {
       KEY_PARTS: ["categories"],
-      TAGS: "categories",
+      TAGS: ["categories"],
+      TIME: 3600,
     },
   },
   TAGS: {
     ALL: {
       KEY_PARTS: ["tags"],
-      TAGS: "tags",
+      TAGS: ["tags"],
+      TIME: 3600,
     },
   },
   PRODUCTS: {
     ALL: {
       KEY_PARTS: ["products"],
-      TAGS: "products",
+      TAGS: ["products"],
+      TIME: 3600,
+    },
+    PRODUCTS_TAGS: {
+      PAGEGINATION: {
+        KEY_PARTS: ["products", "tags", "skip", "limit", "private"],
+        TAGS: ["products"],
+        TIME: 3600,
+      },
     },
   },
   BLOGS: {
     ALL: {
       KEY_PARTS: ["blogs"],
-      TAGS: "blogs",
+      TAGS: ["blogs"],
+      TIME: 3600,
     },
     RECENT: {
       KEY_PARTS: ["recent_blogs", "skip", "limit"],
@@ -50,49 +68,43 @@ export const CACHE_CONFIG = {
   COUPONS: {
     ALL: {
       KEY_PARTS: ["coupons"],
-      TAGS: "coupons",
-    },
-  },
-  PRODUCTS_TAGS: {
-    ALL: {
-      KEY_PARTS: ["trending"],
-      TAGS: "tags",
-      TIME: 3600,
-    },
-    PAGEGINATION: {
-      KEY_PARTS: ["trending", "skip", "limit"],
-      TAGS: "tags",
+      TAGS: ["coupons"],
       TIME: 3600,
     },
   },
   CART: {
-    ALL: {
-      KEY_PARTS: ["cart"],
-      TAGS: "cart",
-    },
+    // ALL: {
+    //   KEY_PARTS: ["cart"],
+    //   TAGS: "cart",
+    // },
     USER: {
       KEY_PARTS: ["cart", "user"],
-      TAGS: "user_cart",
+      TAGS: ["user_cart"],
+      TIME: 3600,
     },
   },
   ORDER: {
     ALL: {
       KEY_PARTS: ["order"],
-      TAGS: "order",
+      TAGS: ["order"],
+      TIME: 3600,
     },
   },
   FILTER: {
     ALL: {
       KEY_PARTS: ["filter"],
-      TAGS: "filter",
+      TAGS: ["filter"],
+      TIME: 3600,
     },
     ID: {
       KEY_PARTS: ["filter", "id"],
-      TAGS: "filter",
+      TAGS: ["filter"],
+      TIME: 3600,
     },
     SLUG: {
       KEY_PARTS: ["filter", "slug"],
-      TAGS: "filter",
+      TAGS: ["filter"],
+      TIME: 3600,
     },
   },
   REVIEWS: {

@@ -1,3 +1,4 @@
+import next_cache from "@/cache";
 import { ERROR_MESSAGES } from "@/constants";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import { NotFoundError } from "@/lib/error";
@@ -6,7 +7,7 @@ import { z } from "zod";
 
 export const getCartByUserId = authCustomerQueryClient.query(
   async ({ ctx }) => {
-    const result = await cartRepository.getCartByUserId(ctx.userId);
+    const result = await next_cache.cart.getByUserId(ctx.userId);
 
     if (!result) {
       throw new NotFoundError({

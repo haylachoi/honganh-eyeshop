@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import BlogCreateForm from "./blog-form.create";
-import { auth } from "@/features/auth/auth.query";
+import { auth } from "@/features/auth/auth.queries";
 
 const BlogCreatePage = async () => {
   const user = await auth();

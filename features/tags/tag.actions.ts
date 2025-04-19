@@ -4,8 +4,8 @@ import { getAuthActionClient } from "@/lib/actions";
 import tagsRepository from "@/lib/db/repositories/tags";
 import { tagInputSchema, tagUpdateSchema } from "./tag.validator";
 import { revalidateTag } from "next/cache";
-import { CACHE } from "@/constants";
 import { z } from "zod";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 const resource = "tag";
 const createTagActionClient = getAuthActionClient({
@@ -30,7 +30,7 @@ export const createTagAction = createTagActionClient
   .schema(tagInputSchema)
   .action(async ({ parsedInput: { name } }) => {
     const result = await tagsRepository.createTag({ name });
-    revalidateTag(CACHE.TAGS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.TAGS.ALL.TAGS[0]);
     return result;
   });
 
@@ -41,8 +41,8 @@ export const updateTagAction = modifyTagActionClient
   .schema(tagUpdateSchema)
   .action(async ({ parsedInput }) => {
     const result = await tagsRepository.updateTag(parsedInput);
-    revalidateTag(CACHE.TAGS.ALL.TAGS);
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.TAGS.ALL.TAGS[0]);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     return result;
   });
 
@@ -53,7 +53,7 @@ export const deleteTagAction = deleteTagActionClient
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
     const result = await tagsRepository.deleteTag(parsedInput);
-    revalidateTag(CACHE.TAGS.ALL.TAGS);
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(CACHE_CONFIG.TAGS.ALL.TAGS[0]);
+    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     return result;
   });

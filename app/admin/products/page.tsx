@@ -1,7 +1,7 @@
 import ProductsView from "@/app/admin/products/_components/products-view";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 import { ADMIN_ENDPOINTS } from "@/constants";
-import { getAllProducts } from "@/features/products/product.query";
+import { getAllProducts } from "@/features/products/product.queries";
 
 const ProductPage = async () => {
   const result = await getAllProducts();

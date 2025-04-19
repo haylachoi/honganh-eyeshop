@@ -1,46 +1,26 @@
 "server only";
 
-import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "..";
 import User from "@/lib/db/model/user.model";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
 import { SignUpType, UserType } from "@/features/auth/auth.type";
 import { userSchema } from "@/features/auth/auth.validator";
 import { NotFoundError } from "@/lib/error";
 
-// const getUsers = async () => {
-//   await connectToDatabase();
-//   const user = await User.find().sort({ name: -1 }).lean();
-//
-//   const result = user.map((user) => ({
-//     ...user,
-//     _id: user._id.toString(),
-//   })) as UserType[];
-//
-//   return result;
-// };
-
 // todo: do not cache user with sensitive info when use CDN, because user can be leaked
-const getAllUsers = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const user = await User.find().sort().lean();
+const getAllUsers = async () => {
+  await connectToDatabase();
+  const user = await User.find().sort().lean();
 
-    // todo: use schema
-    const result = user.map(({ _id, ...user }) => ({
-      ...user,
-      id: _id.toString(),
-    })) as UserType[];
+  // todo: use schema
+  const result = user.map(({ _id, ...user }) => ({
+    ...user,
+    id: _id.toString(),
+  })) as UserType[];
 
-    return result;
-  },
-  CACHE.CATEGORIES.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.CATEGORIES.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+  return result;
+};
 
 const getUserById = async (id: Id) => {
   await connectToDatabase();

@@ -1,4 +1,4 @@
-import { auth } from "@/features/auth/auth.query";
+import { auth } from "@/features/auth/auth.queries";
 
 const ProfilePage = async () => {
   const user = await auth();

@@ -4,7 +4,7 @@ import {
 } from "next-safe-action";
 import { z, ZodError } from "zod";
 import mongoose from "mongoose";
-import { auth } from "@/features/auth/auth.query";
+import { auth } from "@/features/auth/auth.queries";
 import {
   AppError,
   AuthenticationError,

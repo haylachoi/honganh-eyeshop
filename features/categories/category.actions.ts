@@ -5,10 +5,13 @@ import {
   CategoryUpdateSchema,
 } from "./category.validator";
 import { revalidateTag } from "next/cache";
-import { CACHE } from "@/constants";
 import categoriesRepository from "@/lib/db/repositories/categories";
 import { getAuthActionClient } from "@/lib/actions";
 import { z } from "zod";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+
+const categoriesCacheTag = CACHE_CONFIG.CATEGORIES.ALL.TAGS[0];
+const productCacheTag = CACHE_CONFIG.PRODUCTS.ALL.TAGS[0];
 
 const resource = "category";
 const createCategoryActionClient = getAuthActionClient({
@@ -33,7 +36,7 @@ export const createCategoryAction = createCategoryActionClient
   .schema(CategoryInputSchema)
   .action(async ({ parsedInput }) => {
     await categoriesRepository.createCategory(parsedInput);
-    revalidateTag(CACHE.CATEGORIES.ALL.TAGS);
+    revalidateTag(categoriesCacheTag);
   });
 
 export const updateCategoryAction = modifyCategoryActionClient
@@ -43,8 +46,8 @@ export const updateCategoryAction = modifyCategoryActionClient
   .schema(CategoryUpdateSchema)
   .action(async ({ parsedInput }) => {
     await categoriesRepository.updateCategory(parsedInput);
-    revalidateTag(CACHE.CATEGORIES.ALL.TAGS);
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(categoriesCacheTag);
+    revalidateTag(productCacheTag);
     return parsedInput.id;
   });
 
@@ -55,8 +58,8 @@ export const deleteCategoryAction = deleteCategoryActionClient
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
     await categoriesRepository.deleteCategory(parsedInput);
-    revalidateTag(CACHE.CATEGORIES.ALL.TAGS);
-    revalidateTag(CACHE.PRODUCTS.ALL.TAGS);
+    revalidateTag(categoriesCacheTag);
+    revalidateTag(productCacheTag);
 
     return parsedInput;
   });

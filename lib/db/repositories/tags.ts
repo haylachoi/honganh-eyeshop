@@ -1,5 +1,4 @@
-import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { unstable_cache } from "next/cache";
+import { ERROR_MESSAGES } from "@/constants";
 import { connectToDatabase } from "..";
 import Tags from "../model/tag.model";
 import { TagInputType, TagType, TagUpdateType } from "@/features/tags/tag.type";
@@ -16,20 +15,13 @@ const getTagById = async (id: Id) => {
   return tag;
 };
 
-const getAllTags = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const result = await Tags.find().lean();
-    const tags = result.map((tag) => tagTypeSchema.parse(tag)) as TagType[];
+const getAllTags = async () => {
+  await connectToDatabase();
+  const result = await Tags.find().lean();
+  const tags = result.map((tag) => tagTypeSchema.parse(tag)) as TagType[];
 
-    return tags;
-  },
-  CACHE.TAGS.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.TAGS.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+  return tags;
+};
 
 const createTag = async (tag: TagInputType) => {
   await connectToDatabase();

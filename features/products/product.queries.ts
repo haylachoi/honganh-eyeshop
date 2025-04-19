@@ -5,17 +5,10 @@ import { getProductBySlugQuerySchema } from "./product.validator";
 import { IdSchema } from "@/lib/validator";
 import { ERROR_MESSAGES, PAGE_SIZE } from "@/constants";
 import { NotFoundError } from "@/lib/error";
-// import { canAccess } from "../authorization/authorization.utils";
-// import {
-//   ACTIONS,
-//   RESOURCE_TYPES,
-//   ROLES,
-//   SCOPES,
-// } from "../authorization/authorization.constants";
+import next_cache from "@/cache";
 
 export const getAllProducts = authQueryClient.query(async () => {
-  // todo: use cache
-  const products = await productRepository.getAllProducts();
+  const products = await next_cache.products.getAll();
   return products;
 });
 
@@ -40,7 +33,7 @@ export const getPublishedProductsByTags = safeQuery
     }),
   )
   .query(async ({ parsedInput: { tags, page, size } }) => {
-    const result = await productRepository.getProductByTags({
+    const result = await next_cache.products.getByTags({
       tags,
       limit: size,
       skip: size * page,

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Heading } from "../heading";
 import TrendingContent from "./trending.content";
-import { getPublishedProductsByTags } from "@/features/products/product.query";
+import { getPublishedProductsByTags } from "@/features/products/product.queries";
 import { PAGE_SIZE } from "@/constants";
 
 const Trending = async () => {

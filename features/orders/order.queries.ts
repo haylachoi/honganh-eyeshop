@@ -7,13 +7,15 @@ import {
 import { orderIdSchema } from "./order.validator";
 import { NotFoundError } from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants";
+import next_cache from "@/cache";
 
 const resource = "order";
 
+// todo : not cache all order
 export const getAllOrders = getAuthQueryClient({
   resource,
 }).query(async () => {
-  return await ordersRepository.getAllOrders();
+  return await next_cache.orders.all();
 });
 
 export const getOrderByUserID = authCustomerQueryClient.query(

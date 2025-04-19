@@ -1,13 +1,7 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import {
-  CACHE,
-  ERROR_MESSAGES,
-  MAX_SEARCH_RESULT,
-  PAGE_SIZE,
-} from "@/constants";
-import { unstable_cache } from "next/cache";
+import { ERROR_MESSAGES, MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
 import { NotFoundError } from "@/lib/error";
 import { FilterQuery, QueryOptions } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
@@ -15,21 +9,14 @@ import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
 import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
-const getAllBlogs = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const blogs = await Blog.find().lean();
+const getAllBlogs = async () => {
+  await connectToDatabase();
+  const blogs = await Blog.find().lean();
 
-    const result = blogs.map((blog) => blogTypeSchema.parse(blog));
+  const result = blogs.map((blog) => blogTypeSchema.parse(blog));
 
-    return result;
-  },
-  CACHE.BLOGS.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.BLOGS.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+  return result;
+};
 
 const getBlogsByTags = async ({
   tags,
@@ -62,25 +49,21 @@ const getBlogsByTags = async ({
   return { items, total };
 };
 
-const getRecentBlogs = unstable_cache(
-  async ({ limit = PAGE_SIZE.BLOGS.SM, skip = 0 } = {}) => {
-    await connectToDatabase();
-    const blogs = await Blog.find()
-      .sort({ updatedAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean();
+const getRecentBlogs = async ({
+  limit = PAGE_SIZE.BLOGS.SM,
+  skip = 0,
+} = {}) => {
+  await connectToDatabase();
+  const blogs = await Blog.find()
+    .sort({ updatedAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
 
-    const result = blogs.map((blog) => blogTypeSchema.parse(blog));
+  const result = blogs.map((blog) => blogTypeSchema.parse(blog));
 
-    return result;
-  },
-  CACHE.BLOGS.RECENT.KEY_PARTS,
-  {
-    tags: CACHE.BLOGS.RECENT.TAGS,
-    revalidate: CACHE.BLOGS.RECENT.TIME,
-  },
-);
+  return result;
+};
 
 const getBlogById = async (id: string) => {
   await connectToDatabase();

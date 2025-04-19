@@ -4,12 +4,15 @@ import { authCustomerActionClient } from "@/lib/actions";
 import { cartItemInputSchema } from "./cart.validator";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import productRepository from "@/lib/db/repositories/products";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
 import { UPDATE_CART_ITEM_MODES } from "./cart.constant";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+
+const cartCacheTag = CACHE_CONFIG.CART.USER.TAGS[0];
 
 export const addItemToCart = authCustomerActionClient
   .metadata({
@@ -50,7 +53,7 @@ export const addItemToCart = authCustomerActionClient
         },
         mode: "modify",
       });
-      revalidateTag(CACHE.CART.USER.TAGS);
+      revalidateTag(cartCacheTag);
       return result;
     }
 
@@ -59,7 +62,7 @@ export const addItemToCart = authCustomerActionClient
       item: parsedInput,
     });
 
-    revalidateTag(CACHE.CART.USER.TAGS);
+    revalidateTag(cartCacheTag);
     return result;
   });
 
@@ -123,7 +126,7 @@ export const updateItemQuantity = authCustomerActionClient
       mode: parsedInput.mode,
     });
 
-    revalidateTag(CACHE.CART.USER.TAGS);
+    revalidateTag(cartCacheTag);
     return result;
   });
 
@@ -143,5 +146,5 @@ export const removeItemFromCart = authCustomerActionClient
       userId: ctx.userId,
     });
 
-    revalidateTag(CACHE.CART.USER.TAGS);
+    revalidateTag(cartCacheTag);
   });

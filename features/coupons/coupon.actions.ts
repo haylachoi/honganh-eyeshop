@@ -1,18 +1,17 @@
 "use server";
 
-import {
-  authActionClient,
-  customerActionClient,
-  getAuthActionClient,
-} from "@/lib/actions";
+import { customerActionClient, getAuthActionClient } from "@/lib/actions";
 import { couponInputSchema, couponUpdateSchema } from "./coupon.validator";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
-import { CACHE, ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { AuthenticationError, NotFoundError } from "@/lib/error";
 import { validateCoupon } from "./coupon.utils";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+
+const couponCacheTag = CACHE_CONFIG.COUPONS.ALL.TAGS[0];
 
 const resource = "coupon";
 const modifyCouponActionClient = getAuthActionClient({
@@ -63,7 +62,7 @@ export const createCouponAction = modifyCouponActionClient
   .action(async ({ parsedInput }) => {
     const result = await couponsRepository.createCoupon(parsedInput);
 
-    revalidateTag(CACHE.COUPONS.ALL.TAGS);
+    revalidateTag(couponCacheTag);
     return result;
   });
 
@@ -75,7 +74,7 @@ export const updateCouponAction = modifyCouponActionClient
   .action(async ({ parsedInput }) => {
     const result = await couponsRepository.updateCoupon(parsedInput);
 
-    revalidateTag(CACHE.COUPONS.ALL.TAGS);
+    revalidateTag(couponCacheTag);
     return result;
   });
 
@@ -86,6 +85,6 @@ export const deleteCouponActions = deleteCouponActionClient
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
     const result = await couponsRepository.deleteCoupon(parsedInput);
-    revalidateTag(CACHE.COUPONS.ALL.TAGS);
+    revalidateTag(couponCacheTag);
     return result;
   });

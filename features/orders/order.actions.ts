@@ -1,15 +1,11 @@
 "use server";
 
-import {
-  authActionClient,
-  customerActionClient,
-  getAuthActionClient,
-} from "@/lib/actions";
+import { customerActionClient, getAuthActionClient } from "@/lib/actions";
 import { orderInputSchema } from "./order.validator";
 import ordersRepository from "@/lib/db/repositories/orders";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import { calculateDiscount, validateCoupon } from "../coupons/coupon.utils";
-import { CACHE, ERROR_MESSAGES, SHIPPING_FEE } from "@/constants";
+import { ERROR_MESSAGES, SHIPPING_FEE } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { validateItems } from "../checkouts/checkout.utils";
 import { NotFoundError, ValidationError } from "@/lib/error";
@@ -18,6 +14,9 @@ import { IdSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { generateOrderId } from "./order.utils";
 import { ORDER_STATUS_MAPS } from "./order.constants";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+
+const orderCacheTag = CACHE_CONFIG.ORDER.ALL.TAGS[0];
 
 const resource = "order";
 
@@ -103,7 +102,7 @@ export const createOrderAction = customerActionClient
       checkoutId: parsedInput.checkoutid,
     });
 
-    revalidateTag(CACHE.ORDER.ALL.TAGS);
+    revalidateTag(orderCacheTag);
     return result;
   });
 
@@ -123,7 +122,7 @@ export const completeOrder = modifyOrderActionClient
       status: ORDER_STATUS_MAPS.COMPLETED,
       reason: "",
     });
-    revalidateTag(CACHE.ORDER.ALL.TAGS);
+    revalidateTag(orderCacheTag);
   });
 
 export const confirmOrderAction = modifyOrderActionClient
@@ -142,7 +141,7 @@ export const confirmOrderAction = modifyOrderActionClient
       status: ORDER_STATUS_MAPS.CONFIRMED,
       reason: "",
     });
-    revalidateTag(CACHE.ORDER.ALL.TAGS);
+    revalidateTag(orderCacheTag);
   });
 
 export const rejectOrderAction = modifyOrderActionClient
@@ -161,5 +160,5 @@ export const rejectOrderAction = modifyOrderActionClient
       ...parsedInput,
       status: ORDER_STATUS_MAPS.REJECTED,
     });
-    revalidateTag(CACHE.ORDER.ALL.TAGS);
+    revalidateTag(orderCacheTag);
   });

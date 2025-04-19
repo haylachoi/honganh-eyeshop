@@ -1,6 +1,6 @@
 import React from "react";
 import TagsView from "@/app/admin/tags/tags-view";
-import { getAllTags } from "@/features/tags/tag.query";
+import { getAllTags } from "@/features/tags/tag.queries";
 import MainPageHeading from "@/components/shared/admin/main-page-heading";
 
 const Tags = async () => {

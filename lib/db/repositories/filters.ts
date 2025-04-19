@@ -2,65 +2,42 @@ import { connectToDatabase } from "..";
 import Filter from "../model/filter.model";
 import Product from "../model/product.model";
 import Category from "../model/category.model";
-import { unstable_cache } from "next/cache";
-import { CACHE } from "@/constants";
 
-const getAllFilters = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const filter = await Filter.find().lean();
+const getAllFilters = async () => {
+  await connectToDatabase();
+  const filter = await Filter.find().lean();
 
-    const result = filter.map((filter) => ({
-      name: filter.name,
-      values: filter.values,
-    }));
+  const result = filter.map((filter) => ({
+    name: filter.name,
+    values: filter.values,
+  }));
 
-    return result;
-  },
-  CACHE.FILTER.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.FILTER.ALL.TAGS],
-    revalidate: CACHE.REVALIDATE_TIME.SM,
-  },
-);
+  return result;
+};
 
-const getFilterByCategoryId = unstable_cache(
-  async (categoryId: string) => {
-    await connectToDatabase();
-    const filter = await Filter.find({ categoryId }).lean();
+const getFilterByCategoryId = async (categoryId: string) => {
+  await connectToDatabase();
+  const filter = await Filter.find({ categoryId }).lean();
 
-    const result = filter.map((filter) => ({
-      name: filter.name,
-      values: filter.values,
-    }));
+  const result = filter.map((filter) => ({
+    name: filter.name,
+    values: filter.values,
+  }));
 
-    return result;
-  },
-  CACHE.FILTER.ID.KEY_PARTS,
-  {
-    tags: [CACHE.FILTER.ID.TAGS],
-    revalidate: CACHE.REVALIDATE_TIME.SM,
-  },
-);
+  return result;
+};
 
-const getFilterByCategorySlug = unstable_cache(
-  async (categorySlug: string) => {
-    await connectToDatabase();
-    const filter = await Filter.find({ categorySlug }).lean();
+const getFilterByCategorySlug = async (categorySlug: string) => {
+  await connectToDatabase();
+  const filter = await Filter.find({ categorySlug }).lean();
 
-    const result = filter.map((filter) => ({
-      name: filter.name,
-      values: filter.values,
-    }));
+  const result = filter.map((filter) => ({
+    name: filter.name,
+    values: filter.values,
+  }));
 
-    return result;
-  },
-  CACHE.FILTER.SLUG.KEY_PARTS,
-  {
-    tags: [CACHE.FILTER.SLUG.TAGS],
-    revalidate: CACHE.REVALIDATE_TIME.SM,
-  },
-);
+  return result;
+};
 
 export const createFilter = async () => {
   await connectToDatabase();

@@ -1,5 +1,4 @@
-import { CACHE, ERROR_MESSAGES } from "@/constants";
-import { unstable_cache } from "next/cache";
+import { ERROR_MESSAGES } from "@/constants";
 import { connectToDatabase } from "..";
 import { Id } from "@/types";
 import { NotFoundError } from "@/lib/error";
@@ -26,20 +25,13 @@ const getCouponByCode = async (code: string) => {
   return tag;
 };
 
-const getAllCoupons = unstable_cache(
-  async () => {
-    await connectToDatabase();
-    const result = await Coupon.find().lean();
-    const coupons = result.map((coupon) => couponTypeSchema.parse(coupon));
+const getAllCoupons = async () => {
+  await connectToDatabase();
+  const result = await Coupon.find().lean();
+  const coupons = result.map((coupon) => couponTypeSchema.parse(coupon));
 
-    return coupons;
-  },
-  CACHE.COUPONS.ALL.KEY_PARTS,
-  {
-    tags: [CACHE.COUPONS.ALL.TAGS],
-    revalidate: 3600,
-  },
-);
+  return coupons;
+};
 
 const createCoupon = async (tag: CouponInputType) => {
   await connectToDatabase();

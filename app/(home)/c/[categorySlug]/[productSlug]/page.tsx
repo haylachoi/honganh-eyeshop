@@ -1,5 +1,5 @@
 import ProductView from "@/app/(home)/c/[categorySlug]/[productSlug]/_components/product-view";
-import { getProductBySlug } from "@/features/products/product.query";
+import { getProductBySlug } from "@/features/products/product.queries";
 import { getReviewsWithUserNameByProductId } from "@/features/reviews/review.queries";
 
 // todo: generate metadata
