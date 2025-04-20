@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import TagFormCreate from "./tag-form.create";
 import TagFormUpdate from "./tag-form.update";
+import { cn } from "@/lib/utils";
 
 const TagsView = ({ tags }: { tags: TagType[] }) => {
   return (
@@ -47,10 +48,13 @@ const TagItem = ({ tag }: { tag: TagType }) => {
     return <TagFormUpdate defaultValues={tag} setIsEditing={setIsEditing} />;
   }
 
+  const isTrendingOrNewArrival =
+    tag.name === "trending" || tag.name === "new-arrival";
+
   return (
     <div className="grid grid-cols-[1fr_auto] gap-4 border-b border-input">
       <span>{tag.name}</span>
-      <div className="">
+      <div className={cn("", isTrendingOrNewArrival && "invisible")}>
         <Button
           type="button"
           variant="ghost"

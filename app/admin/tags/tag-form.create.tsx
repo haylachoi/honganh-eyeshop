@@ -32,6 +32,7 @@ const TagFormCreate = () => {
       name: "",
     },
   });
+  // todo: validate name with no space and unicode
   return (
     <Form {...form}>
       <form

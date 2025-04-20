@@ -5,7 +5,12 @@ import { z } from "zod";
 //   name: z.string().min(1, "Tag name must be at least 1 character"),
 // });
 
-const nameSchema = z.string().min(1, "Tag name must be at least 1 character");
+const nameSchema = z
+  .string()
+  .min(1, "Tag name must be at least 1 character")
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message: "Slug không hợp lệ. Chỉ chứa chữ thường, số và dấu gạch ngang.",
+  });
 
 export const tagInputSchema = z.object({
   name: nameSchema,
