@@ -4,6 +4,7 @@ import { FILTER_NAME } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
 import { getAllFilters } from "@/features/filter/filter.queries";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";
+import { getAllTags } from "@/features/tags/tag.queries";
 
 export async function generateStaticParams() {
   return [];
@@ -25,20 +26,38 @@ const SearchPage = async () => {
 export default SearchPage;
 
 const FilterProvider = async () => {
-  const attrFilterResult = await getAllFilters();
-  const categoryFilterResult = await getAllCategories();
-  if (!attrFilterResult.success || !categoryFilterResult.success) {
+  const [attrRes, categoryRes, tagRes] = await Promise.all([
+    getAllFilters(),
+    getAllCategories(),
+    getAllTags(),
+  ]);
+
+  if (!attrRes.success || !categoryRes.success || !tagRes.success) {
     return <div>Error</div>;
   }
-  const filter = attrFilterResult.data;
-  filter.push({
+
+  const categoryFilter = {
     name: FILTER_NAME.CATEGORY,
-    values: categoryFilterResult.data.map((c) => ({
+    values: categoryRes.data.map((c) => ({
       value: c.name,
       valueSlug: c.slug,
     })),
-  });
+  };
 
-  filter.push(getPriceFilterOptions());
-  return <FilterView attributes={filter} />;
+  const tagFilter = {
+    name: FILTER_NAME.TAG,
+    values: tagRes.data.map((t) => ({
+      value: t.name,
+      valueSlug: t.name,
+    })),
+  };
+
+  const attributes = [
+    ...attrRes.data,
+    categoryFilter,
+    tagFilter,
+    getPriceFilterOptions(),
+  ];
+
+  return <FilterView attributes={attributes} />;
 };

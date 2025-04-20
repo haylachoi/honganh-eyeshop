@@ -91,6 +91,7 @@ export const FILTER_NAME = {
   CATEGORY: "category",
   PRICE: "price",
   SEARCH: "search",
+  TAG: "tag",
 };
 
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";

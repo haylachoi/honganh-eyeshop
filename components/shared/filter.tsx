@@ -62,7 +62,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
         className="fixed inset-0 z-10 cursor-pointer bg-foreground opacity-60 hidden peer-checked:block"
       />
       <div className="border border-muted-foreground h-[max(100dvh,200px)] max-lg:w-0 max-lg:peer-checked:w-[280px] grid grid-rows-[auto_1fr] max-lg:fixed inset-0 left-auto z-20 max-lg:bg-background transition-all">
-        <div className="overflow-hidden">
+        <div className="overflow-hidden flex flex-col">
           <label
             className="absolute right-full top-1/2 p-2 bg-primary text-primary-foreground cursor-pointer lg:hidden"
             htmlFor="filter-trigger"
@@ -81,7 +81,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
               Xóa bộ lọc
             </button>
           </div>
-          <ul className="overflow-y-auto">
+          <ul className="overflow-y-auto grow">
             {attributes.map((filterGroup) => (
               <li key={filterGroup.name} className="px-3">
                 <div className="-mx-3 h-px bg-muted-foreground" />

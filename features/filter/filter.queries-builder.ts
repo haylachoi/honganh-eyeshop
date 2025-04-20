@@ -22,6 +22,7 @@ export const createProductQueryFilter = ({
     [FILTER_NAME.CATEGORY]: categoryFilter,
     [FILTER_NAME.PRICE]: priceFilters,
     [FILTER_NAME.SEARCH]: searchFilter,
+    [FILTER_NAME.TAG]: tagFilter,
     ...attrFilters
   } = input;
 
@@ -49,6 +50,12 @@ export const createProductQueryFilter = ({
   if (searchFilter) {
     conditions.push({
       nameNoAccent: { $regex: searchFilter, $options: "i" },
+    });
+  }
+
+  if (tagFilter) {
+    conditions.push({
+      "tags.name": { $in: tagFilter.split(",") },
     });
   }
 
