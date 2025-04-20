@@ -49,6 +49,14 @@ const next_cache = {
         revalidate: CACHE_CONFIG.PRODUCTS.PRODUCTS_TAGS.PAGEGINATION.TIME,
       },
     ),
+    getPublishedProductsForEachCategory: unstable_cache(
+      productRepository.getPublishedProductsForEachCategory,
+      CACHE_CONFIG.PRODUCTS.PRODUCTS_EACH_CATEGORY.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.PRODUCTS.PRODUCTS_EACH_CATEGORY.TAGS,
+        revalidate: CACHE_CONFIG.PRODUCTS.PRODUCTS_EACH_CATEGORY.TIME,
+      },
+    ),
   },
   tags: {
     getAll: unstable_cache(

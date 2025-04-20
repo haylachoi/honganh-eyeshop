@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import useCarousel from "@/hooks/use-carousel";
 import {
@@ -36,9 +35,9 @@ export const CarouselProducts = ({
     <Carousel
       opts={{ align: "start" }}
       setApi={setEmblaApi}
-      className={cn("max-md:contents", className)}
+      className={cn("", className)}
     >
-      <CarouselContent className="-ml-2 max-md:grid grid-cols-2">
+      <CarouselContent className="-ml-2">
         {products.map((product) => (
           <CarouselItem
             key={product.id}

@@ -17,7 +17,7 @@ export const PreviewCard = ({
   return (
     <div
       className={cn(
-        "max-w-max border-5 border-secondary border-t-transparent border-r-transparent",
+        "w-full border-5 border-secondary border-t-transparent border-r-transparent",
         className,
       )}
     >
@@ -26,18 +26,18 @@ export const PreviewCard = ({
           categorySlug: product.category.slug,
           productSlug: product.slug,
         })}
-        className="p-1 relative inline-block cursor-pointer hover:border-transparent hover:outline-2 outline-foreground"
+        className="p-1 w-full relative inline-block cursor-pointer hover:border-transparent hover:outline-2 outline-foreground"
       >
         <ProductBadge product={product} className="absolute top-2 right-2" />
         <Image
-          className="w-full"
+          className="w-full aspect-[18/9]"
           src={imageUrl}
           alt={product.name}
-          width={300}
-          height={200}
+          width={200}
+          height={100}
         />
         <div className="p-4">
-          <p className="text-xl">{product.name}</p>
+          <p className="text-xl truncate">{product.name}</p>
           <div className="flex gap-2">
             <span className="text-foreground font-bold">
               {minPrice === maxPrice

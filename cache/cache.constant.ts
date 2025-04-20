@@ -37,6 +37,11 @@ export const CACHE_CONFIG = {
         TIME: 3600,
       },
     },
+    PRODUCTS_EACH_CATEGORY: {
+      KEY_PARTS: ["products_EACH_CATEGORY"],
+      TAGS: ["products"],
+      TIME: 3600,
+    },
   },
   BLOGS: {
     ALL: {

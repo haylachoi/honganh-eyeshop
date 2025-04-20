@@ -12,6 +12,12 @@ export const getAllProducts = authQueryClient.query(async () => {
   return products;
 });
 
+export const getPublishedProductsForEachCategory = safeQuery.query(async () => {
+  const products =
+    await next_cache.products.getPublishedProductsForEachCategory();
+  return products;
+});
+
 export const getProductById = safeQuery
   .schema(
     z.object({

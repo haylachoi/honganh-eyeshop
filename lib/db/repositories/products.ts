@@ -36,6 +36,40 @@ const getProductByQuery = async (query: QueryFilter<QueryType>) => {
   return result;
 };
 
+const getPublishedProductsForEachCategory = async () => {
+  await connectToDatabase();
+  const categoryWithProducts = await Product.aggregate([
+    {
+      $match: { isPublished: true, isAvailable: true },
+    },
+    {
+      $group: {
+        _id: "$category._id",
+        category: { $first: "$category" },
+        products: { $push: "$$ROOT" },
+      },
+    },
+    {
+      $project: {
+        category: 1,
+        products: { $slice: ["$products", 6] },
+      },
+    },
+  ]);
+
+  const result = categoryWithProducts.map((categoryWithProduct) => ({
+    id: categoryWithProduct._id.toString(),
+    category: {
+      id: categoryWithProduct.category._id.toString(),
+      name: categoryWithProduct.category.name,
+      slug: categoryWithProduct.category.slug,
+    },
+    products: ProductTypeSchema.array().parse(categoryWithProduct.products),
+  }));
+
+  return result;
+};
+
 const searchProductByQuery = async ({
   query,
   sortOptions = {},
@@ -346,6 +380,7 @@ const deleteFakeProducts = async () => {
 
 const productRepository = {
   getAllProducts,
+  getPublishedProductsForEachCategory,
   getProductById,
   getProductByTags,
   getProductBySlug,

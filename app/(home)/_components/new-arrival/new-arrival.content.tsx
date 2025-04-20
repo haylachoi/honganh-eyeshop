@@ -2,8 +2,7 @@
 
 import React from "react";
 import { ProductPreview } from "@/features/products/product.types";
-import { CarouselProducts } from "@/components/shared/carousel-products";
-import { PreviewCard } from "@/components/shared/product-preview-card";
+import { ProductsContainer } from "../products-container";
 
 export const ArrivalContent = ({
   className,
@@ -12,11 +11,5 @@ export const ArrivalContent = ({
   className?: string;
   products: ProductPreview[];
 }) => {
-  return (
-    <CarouselProducts
-      products={products}
-      className={className}
-      render={(product) => <PreviewCard product={product} />}
-    />
-  );
+  return <ProductsContainer products={products} className={className} />;
 };

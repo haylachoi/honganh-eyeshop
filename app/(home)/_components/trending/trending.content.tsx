@@ -2,8 +2,7 @@
 
 import React from "react";
 import { ProductPreview } from "@/features/products/product.types";
-import { CarouselProducts } from "@/components/shared/carousel-products";
-import { PreviewCard } from "@/components/shared/product-preview-card";
+import { ProductsContainer } from "../products-container";
 
 const TrendingContent = ({
   className,
@@ -12,14 +11,7 @@ const TrendingContent = ({
   className?: string;
   products: ProductPreview[];
 }) => {
-  return (
-    // toto: fix mobile screen with no carousel
-    <CarouselProducts
-      products={products}
-      className={className}
-      render={(product) => <PreviewCard product={product} />}
-    />
-  );
+  return <ProductsContainer products={products} className={className} />;
 };
 
 export default TrendingContent;
