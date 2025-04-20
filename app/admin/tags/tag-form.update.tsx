@@ -58,7 +58,7 @@ const TagFormUpdate = ({
             </FormItem>
           )}
         />
-        <div>
+        <div className="flex gap-2">
           <SubmitButton
             isLoading={isPending}
             label="Lưu"
