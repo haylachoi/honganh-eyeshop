@@ -20,6 +20,7 @@ export const searchResultSchema = z.object({
 });
 
 export const filterGroupSchema = z.object({
+  displayName: filterNameSchema,
   name: filterNameSchema,
   values: z.array(filterValueSchema),
 });
@@ -28,6 +29,7 @@ export const filterInputSchema = z.object({
   categoryId: IdSchema,
   categorySlug: categorySlugSchema,
   name: filterNameSchema,
+  displayName: filterNameSchema,
   values: z.array(filterValueSchema),
 });
 

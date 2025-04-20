@@ -45,6 +45,7 @@ const fakeProduct = {
     {
       name: "color",
       value: "dfgdfgdfg",
+      displayName: "màu",
       valueSlug: "dfgdfgdfg",
     },
   ],
@@ -118,6 +119,7 @@ export const generateFakeProducts = authActionClient
         {
           name: "color",
           value: attrValue,
+          displayName: "màu",
           valueSlug: attrValue,
         },
       ];

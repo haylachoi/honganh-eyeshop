@@ -38,6 +38,10 @@ const productSchema = new Schema<ProductModel>(
           type: String,
           required: true,
         },
+        displayName: {
+          type: String,
+          required: true,
+        },
         value: {
           type: String,
           required: true,

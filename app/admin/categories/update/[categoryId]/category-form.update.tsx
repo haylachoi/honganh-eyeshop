@@ -168,6 +168,19 @@ const CategoryUpdateForm = ({ category }: { category: CategoryType }) => {
                 )}
               />
 
+              <FormField
+                control={control}
+                name={`attributes.${index}.defaultValue`}
+                render={({ field }) => (
+                  <FormItem className="grow-1">
+                    <FormControl>
+                      <Input placeholder="Giá trị mặc định" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Remove Button */}
               <Button
                 type="button"

@@ -3,6 +3,7 @@ import ProductsView from "@/components/shared/view/products-view";
 import { FILTER_NAME } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
 import { getAllFilters } from "@/features/filter/filter.queries";
+import { FilterGroupType } from "@/features/filter/filter.types";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";
 import { getAllTags } from "@/features/tags/tag.queries";
 
@@ -36,21 +37,25 @@ const FilterProvider = async () => {
     return <div>Error</div>;
   }
 
-  const categoryFilter = {
+  const categoryFilter: FilterGroupType = {
     name: FILTER_NAME.CATEGORY,
+    displayName: "Danh mục",
     values: categoryRes.data.map((c) => ({
       value: c.name,
       valueSlug: c.slug,
     })),
   };
 
-  const tagFilter = {
+  const tagFilter: FilterGroupType = {
     name: FILTER_NAME.TAG,
+    displayName: FILTER_NAME.TAG,
     values: tagRes.data.map((t) => ({
       value: t.name,
       valueSlug: t.name,
     })),
   };
+
+  console.log(categoryFilter);
 
   const attributes = [
     ...attrRes.data,

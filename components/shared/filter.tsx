@@ -14,7 +14,7 @@ import React from "react";
 const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  console.log(attributes);
   const setSearchParam = ({ name, value }: { name: string; value: string }) => {
     const params = new URLSearchParams(searchParams);
     const existingValue = params.get(name);
@@ -89,7 +89,7 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
                   <AccordionItem value={filterGroup.name} className="group">
                     <AccordionTrigger className="h-full py-2 flex justify-between items-center gap-2 text-xl font-bold cursor-pointer">
                       <h4 className="capitalize text-primary font-medium text-lg text-left">
-                        {filterGroup.name}
+                        {filterGroup.displayName}
                       </h4>
                       <ChevronDown className="size-6 inline-block group-data-[accordion-active='true']:rotate-180 transition-all duration-300" />
                     </AccordionTrigger>

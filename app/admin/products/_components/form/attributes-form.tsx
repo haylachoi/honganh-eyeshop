@@ -12,6 +12,7 @@ export const AttributesForm = () => {
   const { watch } = useFormContext<ProductInputType | ProductUpdateType>();
 
   const attributes = watch("attributes");
+  console.log(attributes);
 
   return (
     <>
@@ -20,7 +21,7 @@ export const AttributesForm = () => {
           <FormLabel>Thuộc tính</FormLabel>
           <ul className="flex flex-col gap-2 border border-input p-3 rounded-md shadow-sm">
             {attributes.map((attribute, index) => (
-              <li key={attribute.name}>
+              <li key={`${attribute.name}-${index}-${attribute.value}`}>
                 <AttributeInput index={index} />
               </li>
             ))}
@@ -48,7 +49,7 @@ const AttributeInput = ({ index }: { index: number }) => {
       <FormTextInput
         control={control}
         name={`attributes.${index}.value`}
-        label={attribute.name}
+        label={attribute.displayName}
         placeholder={attribute.name}
       />
     </>

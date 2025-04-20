@@ -109,8 +109,9 @@ const ProductUpdateForm = ({
             "attributes",
             attributes.map((attribute) => ({
               name: attribute.name,
-              value: "",
-              valueSlug: "",
+              displayName: attribute.display,
+              value: attribute?.defaultValue || "",
+              valueSlug: slugifyVn(attribute.defaultValue || ""),
             })),
           );
         } else {
@@ -123,8 +124,9 @@ const ProductUpdateForm = ({
             )
             .map((att) => ({
               name: att.name,
-              value: "",
-              valueSlug: "",
+              displayName: att.display,
+              value: att?.defaultValue || "",
+              valueSlug: slugifyVn(att?.defaultValue || ""),
             }));
 
           const mergedAtts = [...defaultValues.attributes, ...temp];
@@ -143,6 +145,10 @@ const ProductUpdateForm = ({
   );
   const onSubmit = async (data: ProductUpdateType) => {
     // const updatedFields = getDirtyValues(dirtyFields, data);
+    // data.attributes = data.attributes.map((attribute) => ({
+    //   ...attribute,
+    //   name: slugifyVn(attribute.displayName),
+    // }));
     execute(data);
   };
 

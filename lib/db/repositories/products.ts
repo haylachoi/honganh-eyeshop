@@ -287,6 +287,7 @@ const getCountInStockOfVariant = async (input: {
 };
 
 const createProduct = async (input: ProductDbInputType) => {
+  console.log(input);
   await connectToDatabase();
   const result = await Product.create(input);
   return result._id.toString();

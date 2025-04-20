@@ -109,8 +109,9 @@ const ProductCreateForm = ({
           "attributes",
           attributes.map((attribute) => ({
             name: attribute.name,
-            value: "",
-            valueSlug: "",
+            displayName: attribute.display,
+            value: attribute?.defaultValue || "",
+            valueSlug: slugifyVn(attribute.defaultValue || ""),
           })),
         );
       }

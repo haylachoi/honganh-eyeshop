@@ -25,6 +25,10 @@ const filterSchema = new Schema<FilterModel>(
       type: String,
       required: true,
     },
+    displayName: {
+      type: String,
+      required: true,
+    },
     values: [
       {
         value: String,

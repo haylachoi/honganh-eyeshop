@@ -4,6 +4,7 @@ import { currencyFormatter } from "@/lib/utils";
 export const getPriceFilterOptions = () => {
   return {
     name: FILTER_NAME.PRICE,
+    displayName: "Giá",
     values: [
       {
         value: `< ${currencyFormatter.format(100_000)}`,

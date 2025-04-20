@@ -2,16 +2,13 @@ import { connectToDatabase } from "..";
 import Filter from "../model/filter.model";
 import Product from "../model/product.model";
 import Category from "../model/category.model";
+import { filterGroupSchema } from "@/features/filter/filter.validator";
 
 const getAllFilters = async () => {
   await connectToDatabase();
   const filter = await Filter.find().lean();
 
-  const result = filter.map((filter) => ({
-    name: filter.name,
-    values: filter.values,
-  }));
-
+  const result = filterGroupSchema.array().parse(filter);
   return result;
 };
 
@@ -19,10 +16,7 @@ const getFilterByCategoryId = async (categoryId: string) => {
   await connectToDatabase();
   const filter = await Filter.find({ categoryId }).lean();
 
-  const result = filter.map((filter) => ({
-    name: filter.name,
-    values: filter.values,
-  }));
+  const result = filterGroupSchema.array().parse(filter);
 
   return result;
 };
@@ -31,10 +25,7 @@ const getFilterByCategorySlug = async (categorySlug: string) => {
   await connectToDatabase();
   const filter = await Filter.find({ categorySlug }).lean();
 
-  const result = filter.map((filter) => ({
-    name: filter.name,
-    values: filter.values,
-  }));
+  const result = filterGroupSchema.array().parse(filter);
 
   return result;
 };
@@ -56,6 +47,7 @@ export const createFilter = async () => {
           $group: {
             _id: {
               name: "$attributes.name",
+              displayName: "$attributes.displayName",
               categoryId: "$category._id",
               categorySlug: "$category.slug",
             },
@@ -73,6 +65,7 @@ export const createFilter = async () => {
             categoryId: "$_id.categoryId",
             categorySlug: "$_id.categorySlug",
             name: "$_id.name",
+            displayName: "$_id.displayName",
             values: 1,
           },
         },

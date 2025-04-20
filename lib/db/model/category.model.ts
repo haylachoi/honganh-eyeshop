@@ -10,6 +10,7 @@ const attributeSchema = new Schema(
   {
     name: { type: String, required: true },
     display: { type: String, required: true },
+    defaultValue: { type: String, default: "" },
   },
   { _id: false },
 );

@@ -1,5 +1,9 @@
 import { MoneySchema, IdSchema, MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
+import {
+  attributeDisplayNameSchema,
+  attributeNameSchema,
+} from "../categories/category.validator";
 
 // general
 const nameSchema = z
@@ -28,7 +32,8 @@ export const variantAttributeSchema = z.object({
 });
 
 export const attributeSchema = z.object({
-  name: z.string().min(1).trim(),
+  name: attributeNameSchema,
+  displayName: attributeDisplayNameSchema,
   value: z.string().trim().optional().default(""),
   valueSlug: z.string().trim().optional().default(""),
 });
