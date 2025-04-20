@@ -23,7 +23,7 @@ const customerSchema = z.object({
   phone: z.string().min(1, "Số điện thoại không được để trống"),
 });
 
-const shippingAddressSchema = z.object({
+export const shippingAddressSchema = z.object({
   address: z.string().min(1, "Địa chỉ không được để trống"),
   ward: z.string().min(1, "Phường/xã không được để trống"),
   district: z.string().min(1, "Quận/huyện không được để trống"),

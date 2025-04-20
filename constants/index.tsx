@@ -34,6 +34,14 @@ export const PAGE_SIZE = {
     LG: 20,
     XL: 30,
   },
+  ORDER: {
+    HISTORY: {
+      SM: 8,
+      MD: 12,
+      LG: 20,
+      XL: 30,
+    },
+  },
 };
 
 export const ENDPOINTS = {

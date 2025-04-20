@@ -1,4 +1,6 @@
+import { shippingAddressSchema } from "@/features/orders/order.validator";
 import { Path, PathValue } from "react-hook-form";
+import { z } from "zod";
 
 export type Result<T, E> =
   | { success: true; data: T }
@@ -29,3 +31,5 @@ export type PaginationInfo<T> = {
   size: number;
   items: T[];
 };
+
+export type AddressType = z.infer<typeof shippingAddressSchema>;

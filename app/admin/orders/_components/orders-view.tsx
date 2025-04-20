@@ -81,6 +81,7 @@ export const columns: ColumnDef<OrderType>[] = [
     },
     cell: ({ row }) => (
       <TooltipWrapper render={row.original.orderId}>
+        {/* to do: create copy order Id */}
         <div className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.original.orderId}
         </div>

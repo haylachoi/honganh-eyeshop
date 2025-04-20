@@ -1,11 +1,15 @@
 "use server";
 
-import { customerActionClient, getAuthActionClient } from "@/lib/actions";
+import {
+  authCustomerActionClient,
+  customerActionClient,
+  getAuthActionClient,
+} from "@/lib/actions";
 import { orderInputSchema } from "./order.validator";
 import ordersRepository from "@/lib/db/repositories/orders";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import { calculateDiscount, validateCoupon } from "../coupons/coupon.utils";
-import { ERROR_MESSAGES, SHIPPING_FEE } from "@/constants";
+import { ERROR_MESSAGES, PAGE_SIZE, SHIPPING_FEE } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { validateItems } from "../checkouts/checkout.utils";
 import { NotFoundError, ValidationError } from "@/lib/error";
@@ -161,4 +165,38 @@ export const rejectOrderAction = modifyOrderActionClient
       status: ORDER_STATUS_MAPS.REJECTED,
     });
     revalidateTag(orderCacheTag);
+  });
+
+export const trackOrderAction = customerActionClient
+  .metadata({
+    actionName: "trackOrder",
+  })
+  .schema(z.object({ orderId: z.string() }))
+  .action(async ({ parsedInput: { orderId } }) => {
+    const order = await ordersRepository.getOrderByOrderId(orderId);
+    if (!order) {
+      throw new NotFoundError({
+        resource: "order",
+        message: ERROR_MESSAGES.ORDER.NOT_FOUND,
+      });
+    }
+  });
+
+export const getOrderHistoryAction = authCustomerActionClient
+  .metadata({
+    actionName: "getOrderHistory",
+  })
+  .schema(
+    z.object({
+      page: z.number(),
+      size: z.number(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput: { page, size } }) => {
+    const orders = await ordersRepository.getOrdersByUserId({
+      userId: ctx.userId,
+      offset: page * size,
+      limit: size,
+    });
+    return orders;
   });

@@ -129,6 +129,16 @@ const next_cache = {
         revalidate: CACHE_CONFIG.ORDER.ALL.TIME,
       },
     ),
+    history: {
+      countByUserId: unstable_cache(
+        ordersRepository.countOrdersByUserId,
+        CACHE_CONFIG.ORDER.HISTORY.COUNT.KEY_PARTS,
+        {
+          tags: CACHE_CONFIG.ORDER.HISTORY.COUNT.TAGS,
+          revalidate: CACHE_CONFIG.ORDER.HISTORY.COUNT.TIME,
+        },
+      ),
+    },
   },
   cart: {
     getByUserId: unstable_cache(

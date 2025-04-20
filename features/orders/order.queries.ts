@@ -6,8 +6,9 @@ import {
 } from "@/lib/query";
 import { orderIdSchema } from "./order.validator";
 import { NotFoundError } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES, PAGE_SIZE } from "@/constants";
 import next_cache from "@/cache";
+import { z } from "zod";
 
 const resource = "order";
 
@@ -18,9 +19,19 @@ export const getAllOrders = getAuthQueryClient({
   return await next_cache.orders.all();
 });
 
-export const getOrderByUserID = authCustomerQueryClient.query(
-  async ({ ctx }) => {
-    const order = await ordersRepository.getOrdersByUserId(ctx.userId);
+export const getOrderByUserId = authCustomerQueryClient
+  .schema(
+    z.object({
+      page: z.number().optional().default(0),
+      size: z.number().optional().default(PAGE_SIZE.ORDER.HISTORY.SM),
+    }),
+  )
+  .query(async ({ ctx, parsedInput }) => {
+    const order = await ordersRepository.getOrdersByUserId({
+      userId: ctx.userId,
+      offset: parsedInput.page * parsedInput.size,
+      limit: parsedInput.size,
+    });
 
     if (!order) {
       throw new NotFoundError({
@@ -29,6 +40,14 @@ export const getOrderByUserID = authCustomerQueryClient.query(
       });
     }
     return order;
+  });
+
+export const countOrdersByUserId = authCustomerQueryClient.query(
+  async ({ ctx }) => {
+    const count = await next_cache.orders.history.countByUserId({
+      userId: ctx.userId,
+    });
+    return count;
   },
 );
 
@@ -43,4 +62,6 @@ export const getOrderByOrderId = customerQueryClient
         message: ERROR_MESSAGES.ORDER.NOT_FOUND,
       });
     }
+
+    return order;
   });

@@ -5,7 +5,7 @@ import {
 } from "@/features/orders/order.types";
 import Order from "../model/order.model";
 import { connectToDatabase } from "..";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES, PAGE_SIZE } from "@/constants";
 import { orderTypeSchema } from "@/features/orders/order.validator";
 import { NotFoundError } from "@/lib/error";
 import mongoose, { FilterQuery, ProjectionType, UpdateQuery } from "mongoose";
@@ -13,6 +13,7 @@ import Cart from "../model/cart.model";
 import Checkout from "../model/checkout.model";
 import Product from "../model/product.model";
 import { PAYMENT_STATUS_MAPS } from "@/features/orders/order.constants";
+import { Id } from "@/types";
 
 const getAllOrders = async () => {
   await connectToDatabase();
@@ -21,11 +22,32 @@ const getAllOrders = async () => {
   return result;
 };
 
-const getOrdersByUserId = async (userId: string) => {
+const getOrdersByUserId = async ({
+  userId,
+  offset = 0,
+  limit = PAGE_SIZE.ORDER.HISTORY.SM,
+}: {
+  userId: Id;
+  offset?: number;
+  limit?: number;
+}) => {
   await connectToDatabase();
-  const orders = await Order.find({ userId }).lean();
-  const result = orders.map((order) => orderTypeSchema.parse(order));
-  return result;
+
+  const orders = await Order.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(offset)
+    .limit(limit)
+    .lean();
+
+  const parsedOrders = orders.map((order) => orderTypeSchema.parse(order));
+
+  return parsedOrders;
+};
+
+const countOrdersByUserId = async ({ userId }: { userId: Id }) => {
+  await connectToDatabase();
+  const count = await Order.countDocuments({ userId });
+  return count;
 };
 
 const getOrderByOrderId = async (orderId: string) => {
@@ -238,6 +260,7 @@ const ordersRepository = {
   getOrdersByQuery,
   createOrder,
   updateStatusOrder,
+  countOrdersByUserId,
 };
 
 export default ordersRepository;

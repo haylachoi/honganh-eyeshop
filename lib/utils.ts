@@ -8,7 +8,7 @@ import {
   SORTING_OPTIONS,
 } from "@/constants";
 import slugify from "slugify";
-import { SearchParams } from "@/types";
+import { AddressType, SearchParams } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -287,6 +287,9 @@ export const getLink = {
       view({ orderId }: { orderId: string }) {
         return `${ENDPOINTS.ORDER}/${orderId}`;
       },
+      home() {
+        return `${ENDPOINTS.ORDER}`;
+      },
     },
   },
   tag: {
@@ -379,6 +382,24 @@ export const normalizeSearchParamsToString = (
   }
 
   return result;
+};
+
+export const maskEmail = (email?: string) => {
+  if (!email) return "";
+
+  const [local, domain] = email.split("@");
+  const preview = local.length <= 3 ? local : local.slice(0, 3);
+  return `${preview}***@${domain}`;
+};
+
+export const maskPhone = (phone?: string) => {
+  if (!phone) return "";
+  return "****" + phone.slice(-4);
+};
+
+export const getFullAdress = (addressInfo: AddressType) => {
+  const { address, ward, district, city } = addressInfo;
+  return [address, ward, district, city].filter(Boolean).join(", ");
 };
 
 export const getPageNumber = (page: number) => `page-${page}`;

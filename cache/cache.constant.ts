@@ -94,6 +94,18 @@ export const CACHE_CONFIG = {
       TAGS: ["order"],
       TIME: 3600,
     },
+    HISTORY: {
+      ITEMS: {
+        KEY_PARTS: ["order_history", "userId", "skip", "limit"],
+        TAGS: ["order"],
+        TIME: 3600,
+      },
+      COUNT: {
+        KEY_PARTS: ["order_history", "userId"],
+        TAGS: ["order"],
+        TIME: 3600,
+      },
+    },
   },
   FILTER: {
     ALL: {
