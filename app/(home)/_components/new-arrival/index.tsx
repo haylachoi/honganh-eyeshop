@@ -3,6 +3,8 @@ import { ArrivalContent } from "./new-arrival.content";
 import { Heading } from "../heading";
 import { getPublishedProductsByTags } from "@/features/products/product.queries";
 import { PAGE_SIZE } from "@/constants";
+import Link from "next/link";
+import { getLink } from "@/lib/utils";
 
 const NewArrival = async () => {
   const result = await getPublishedProductsByTags({
@@ -13,7 +15,9 @@ const NewArrival = async () => {
   const newArrivalProducts = result.success ? result.data.products : [];
   return (
     <div className="container">
-      <Heading title="Hàng sắp về" />
+      <Link href={getLink.tag.newArrival()}>
+        <Heading title="Hàng sắp về" />
+      </Link>
       <ArrivalContent products={newArrivalProducts} />
     </div>
   );

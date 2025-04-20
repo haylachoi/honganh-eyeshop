@@ -4,6 +4,8 @@ import { Heading } from "../heading";
 import TrendingContent from "./trending.content";
 import { getPublishedProductsByTags } from "@/features/products/product.queries";
 import { PAGE_SIZE } from "@/constants";
+import Link from "next/link";
+import { getLink } from "@/lib/utils";
 
 const Trending = async () => {
   const result = await getPublishedProductsByTags({
@@ -14,7 +16,9 @@ const Trending = async () => {
   const trendingProducts = result.success ? result.data.products : [];
   return (
     <div className="container">
-      <Heading title="Trending Now" />
+      <Link href={getLink.tag.trending()}>
+        <Heading title="Trending Now" />
+      </Link>
       <TrendingContent products={trendingProducts} />
     </div>
   );

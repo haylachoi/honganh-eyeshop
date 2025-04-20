@@ -289,6 +289,14 @@ export const getLink = {
       },
     },
   },
+  tag: {
+    trending() {
+      return `${ENDPOINTS.SEARCH}?${FILTER_NAME.TAG}=trending`;
+    },
+    newArrival() {
+      return `${ENDPOINTS.SEARCH}?${FILTER_NAME.TAG}=new-arrival`;
+    },
+  },
   search({ keyword }: { keyword: string }) {
     return `${ENDPOINTS.SEARCH}?${FILTER_NAME.SEARCH}=${keyword}`;
   },

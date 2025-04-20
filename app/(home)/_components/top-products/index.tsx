@@ -34,7 +34,9 @@ const TopProducts = async ({ className }: { className?: string }) => {
       </div>
       {categories.map((category) => (
         <TabPanel key={category.category.id} value={category.category.id}>
-          <ProductsContainer products={category.products} />
+          <div>
+            <ProductsContainer products={category.products} />
+          </div>
         </TabPanel>
       ))}
     </Tabs>
