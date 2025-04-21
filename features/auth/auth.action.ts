@@ -5,20 +5,22 @@ import { signUpInputSchema, signInInputSchema } from "./auth.validator";
 import userRepository from "@/lib/db/repositories/user";
 import { comparePasswords, generateSalt, hashPassword } from "@/lib/utils";
 import { createSession, deleteSession } from "../session/session.core";
+import { Role } from "../authorization/authorization.constants";
 
-export const signUp = actionClient
+export const signUpAction = actionClient
   .metadata({
     actionName: "signUp",
   })
   .schema(signUpInputSchema)
   .action(async ({ parsedInput }) => {
     const salt = generateSalt();
+    const role: Role = "customer";
     const input = {
       name: parsedInput.name,
       email: parsedInput.email,
       phone: parsedInput.phone,
       salt,
-      role: "admin",
+      role,
       password: await hashPassword(parsedInput.password, salt),
     };
 
