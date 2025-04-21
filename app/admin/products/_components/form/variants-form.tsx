@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormLabel } from "@/components/ui/form";
 import React from "react";
 import {
   ArrayPath,
@@ -26,9 +20,10 @@ import {
   TabTrigger,
   TabPanel,
 } from "@/components/custom-ui/tabs";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { compressImage } from "@/lib/utils";
+import {
+  VariantImageUploader,
+  VariantMultiImageUploader,
+} from "./image-uploader";
 
 export const VariantsForm = <T extends ProductUpdateType | ProductInputType>({
   name,
@@ -59,7 +54,7 @@ export const VariantsForm = <T extends ProductUpdateType | ProductInputType>({
                   className="cursor-pointer py-2 px-6 rounded-md border border-secondary"
                   activeClassName="border-primary border"
                 >
-                  Variant {index + 1}
+                  Tùy chọn {index + 1}
                 </TabTrigger>
                 <button
                   tabIndex={-1}
@@ -119,7 +114,6 @@ const VariantForm = ({ index }: { index: number }) => {
         label="Số lượng trong kho"
         placeholder="Nhập số lượng trong kho"
       />
-      {/* <VariantImageUploader index={index} /> */}
       {id && id !== "" ? (
         <VariantMultiImageUploader index={index} />
       ) : (
@@ -182,203 +176,5 @@ const VariantAttributeForm = ({ VariantIndex }: { VariantIndex: number }) => {
         + Thêm thuộc tính
       </Button>
     </div>
-  );
-};
-
-interface VariantImageUploaderProps {
-  index: number;
-}
-
-const VariantImageUploader: React.FC<VariantImageUploaderProps> = ({
-  index,
-}) => {
-  const { control } = useFormContext<ProductInputType>();
-  const [previews, setPreviews] = React.useState<string[]>([]);
-  const [files, setFiles] = React.useState<File[]>([]);
-
-  React.useEffect(() => {
-    return () => previews.forEach((url) => URL.revokeObjectURL(url));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <FormField
-      control={control}
-      name={`variants.${index}.images`}
-      render={({ field: { ref, name, onBlur, onChange } }) => (
-        <FormItem className="mt-4">
-          <FormLabel>Ảnh</FormLabel>
-          <ul className="flex gap-2 overflow-x-auto">
-            {previews.map((url, i) => (
-              <li key={i} className="relative shrink-0">
-                <Image
-                  src={url}
-                  width={150}
-                  height={150}
-                  alt="preview"
-                  className="size-[150px] object-cover"
-                />
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 z-10 cursor-pointer size-8 grid place-content-center text-sm bg-destructive text-destructive-foreground opacity-90 rounded-sm"
-                  onClick={() => {
-                    URL.revokeObjectURL(previews[i]);
-                    setPreviews((prev) => prev.filter((_, j) => j !== i));
-                    setFiles((prev) => prev.filter((_, j) => j !== i));
-                    onChange(files.filter((_, j) => j !== i));
-                  }}
-                >
-                  x
-                </button>
-              </li>
-            ))}
-          </ul>
-          <FormControl>
-            <label className="inline-block w-max px-4 py-2 bg-secondary rounded-md cursor-pointer shadow-sm">
-              Up ảnh
-              <Input
-                className="hidden"
-                type="file"
-                name={name}
-                ref={ref}
-                onBlur={onBlur}
-                onChange={async (e) => {
-                  if (!e.target.files) return;
-
-                  const newFiles = Array.from(e.target.files);
-                  const compressedFiles = await Promise.all(
-                    newFiles.map((file) => compressImage(file, 0.7, 800)),
-                  );
-
-                  const objectUrls = newFiles.map((file) =>
-                    URL.createObjectURL(file),
-                  );
-
-                  setPreviews((prev) => [...prev, ...objectUrls]);
-                  setFiles((prev) => [...prev, ...compressedFiles]);
-                  onChange([...files, ...compressedFiles]);
-                  e.target.value = "";
-                }}
-                multiple
-              />
-            </label>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
-
-interface VariantMultiImageUploaderProps {
-  index: number;
-}
-const VariantMultiImageUploader: React.FC<VariantMultiImageUploaderProps> = ({
-  index,
-}) => {
-  const [previews, setPreviews] = React.useState<string[]>([]);
-  const [files, setFiles] = React.useState<File[]>([]);
-  const { control, watch, setValue } = useFormContext<ProductUpdateType>();
-
-  const oldImages = watch(`variants.${index}.oldImages`);
-  const deletedImages = watch(`variants.${index}.deletedImages`);
-  React.useEffect(() => {
-    return () => previews.forEach((url) => URL.revokeObjectURL(url));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleRemoveOldImage = (image: string) => {
-    setValue(
-      `variants.${index}.oldImages`,
-      oldImages.filter((url) => url !== image),
-    );
-    setValue(`variants.${index}.deletedImages`, [...deletedImages, image]);
-  };
-
-  return (
-    <FormField
-      control={control}
-      name={`variants.${index}.images`}
-      render={({ field: { ref, name, onBlur, onChange } }) => (
-        <FormItem className="mt-4">
-          <FormLabel>Ảnh</FormLabel>
-          <div className="flex gap-2 overflow-x-auto">
-            {oldImages.map((url, i) => (
-              <div key={i} className="relative">
-                <Image
-                  src={url}
-                  width={150}
-                  height={150}
-                  alt="preview"
-                  className="size-[150px] object-cover"
-                />
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 z-10 cursor-pointer size-8 grid place-content-center text-sm bg-destructive text-destructive-foreground opacity-90 rounded-sm"
-                  onClick={() => handleRemoveOldImage(url)}
-                >
-                  x
-                </button>
-              </div>
-            ))}
-
-            {previews.map((url, i) => (
-              <div key={i} className="relative">
-                <Image
-                  src={url}
-                  width={150}
-                  height={150}
-                  alt="preview"
-                  className="size-[150px] object-cover"
-                />
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 z-10 cursor-pointer size-8 grid place-content-center text-sm bg-destructive text-destructive-foreground opacity-90 rounded-sm"
-                  onClick={() => {
-                    URL.revokeObjectURL(previews[i]);
-                    setPreviews((prev) => prev.filter((_, j) => j !== i));
-                    setFiles((prev) => prev.filter((_, j) => j !== i));
-                    onChange(files.filter((_, j) => j !== i));
-                  }}
-                >
-                  x
-                </button>
-              </div>
-            ))}
-          </div>
-          <FormControl>
-            <label className="inline-block w-max px-4 py-2 bg-secondary rounded-md cursor-pointer shadow-sm">
-              Up ảnh
-              <Input
-                className="hidden"
-                type="file"
-                name={name}
-                ref={ref}
-                onBlur={onBlur}
-                onChange={async (e) => {
-                  if (!e.target.files) return;
-
-                  const newFiles = Array.from(e.target.files);
-                  const compressedFiles = await Promise.all(
-                    newFiles.map((file) => compressImage(file, 0.7, 800)),
-                  );
-
-                  const objectUrls = newFiles.map((file) =>
-                    URL.createObjectURL(file),
-                  );
-
-                  setPreviews((prev) => [...prev, ...objectUrls]);
-                  setFiles((prev) => [...prev, ...compressedFiles]);
-                  onChange([...files, ...compressedFiles]);
-                  e.target.value = "";
-                }}
-                multiple
-              />
-            </label>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
   );
 };

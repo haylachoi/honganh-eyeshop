@@ -83,6 +83,7 @@ const ProductCreateForm = ({
 
   const nameValue = watch("name");
   const isPublished = watch("isPublished");
+  const firstVariant = watch("variants.0");
 
   const [debouncedName] = useDebounce(nameValue, 200);
 
@@ -199,11 +200,15 @@ const ProductCreateForm = ({
         <VariantsForm<ProductInputType>
           name="variants"
           defaultValue={{
-            attributes: [],
+            attributes:
+              firstVariant?.attributes?.map((att) => ({
+                name: att.name,
+                value: "",
+              })) || [],
             images: [],
-            originPrice: 0,
-            price: 0,
-            countInStock: 0,
+            originPrice: firstVariant?.originPrice || 0,
+            price: firstVariant?.price || 0,
+            countInStock: firstVariant?.countInStock || 0,
             uniqueId: crypto.randomUUID(),
           }}
         />
