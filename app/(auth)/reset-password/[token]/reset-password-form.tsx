@@ -11,7 +11,7 @@ import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { toast } from "sonner";
-import { PASSORD_ERROR_MESSAGE, PASSWORD_REGEX } from "@/constants/regex";
+import { PASSWORD_ERROR_MESSAGE, PASSWORD_REGEX } from "@/constants/regex";
 import { ResetPasswordSuccess } from "@/components/shared/verified-token-result";
 
 export const ResetPasswordForm = ({ token }: { token: string }) => {
@@ -83,7 +83,7 @@ export const ResetPasswordForm = ({ token }: { token: string }) => {
               ) : (
                 <div className="w-max flex gap-2 items-center">
                   <FaTimesCircle className="text-red-500 text-xl" />
-                  {PASSORD_ERROR_MESSAGE}
+                  {PASSWORD_ERROR_MESSAGE}
                 </div>
               )}
             </div>

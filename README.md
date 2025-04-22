@@ -38,3 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Todo
 
 - don't delete token
+- delte unactive account after x days
