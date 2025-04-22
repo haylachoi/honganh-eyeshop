@@ -1,7 +1,8 @@
 import { createUppercaseMap } from "@/lib/utils";
 
+// todo: validate env
 export const APP_NAME = "honganh-eyeshop";
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 export const SESSION_NAME = "session";
 export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;
@@ -46,9 +47,15 @@ export const PAGE_SIZE = {
 
 export const ENDPOINTS = {
   HOME: "/",
+  AUTH: {
+    VERIFY_TOKEN: "/verify",
+    ACTIVE_ACCOUNT: "/active-account",
+    RESET_PASSWORD: "/reset-password",
+    FORGOT_PASSWORD: "/forgot-password",
+    LOGIN: "/login",
+    SIGN_UP: "/signup",
+  },
   PROFILE: "/profile",
-  LOGIN: "/login",
-  SIGN_UP: "/signup",
   CART: "/cart",
   CHECKOUT: "/checkout",
   CATEGORIES: "/c",
@@ -139,9 +146,16 @@ export const ERROR_MESSAGES = {
   AUTH: {
     UNAUTHENTICATED: "Bạn chưa đăng nhập",
     UNAUTHORIZED: "Bạn không có quyền truy cập",
+    PASSWORD_MISMATCH: "Mật khẩu không khớp",
+  },
+  VERYFY_TOKEN: {
+    NOT_FOUND: "Token không hợp lệ hoặc đã hết hạn",
+    NOT_FOUND_OR_EXPIRED: "Token không hợp lệ hoặc đã hết hạn",
+    EXPIRED: "Token đã hết hạn",
   },
   USER: {
     NOT_FOUND: "Người dùng không tồn tại",
+    NOT_VERIFIED: "Tài khoản chưa được xác minh",
   },
   BLOG: {
     NOT_FOUND: "Blog không tồn tại",

@@ -225,6 +225,14 @@ export async function compressImage(
 }
 
 export const getLink = {
+  user: {
+    verify({ token }: { token: string }) {
+      return `${ENDPOINTS.AUTH.VERIFY_TOKEN}/${token}`;
+    },
+    resetPassword({ token }: { token: string }) {
+      return `${ENDPOINTS.AUTH.RESET_PASSWORD}/${token}`;
+    },
+  },
   product: {
     update({ id }: { id: string }) {
       return `${ADMIN_ENDPOINTS.PRODUCTS}/update/${id}`;

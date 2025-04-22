@@ -1,7 +1,7 @@
 "use client";
 
 import { EMAIL_REGEX } from "@/constants/regex";
-import { sendVerificationEmailAction } from "@/features/auth/auth.action";
+import { sendPasswordResetEmailAction } from "@/features/auth/auth.action";
 import { SEND_EMAIL_COOLDOWN_MS } from "@/features/auth/auth.constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
@@ -12,14 +12,16 @@ export default function SendEmailPage() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const { execute, isPending } = useAction(sendVerificationEmailAction, {
+  const { execute, isPending } = useAction(sendPasswordResetEmailAction, {
     onSuccess: (data) => {
       const result = data.data;
       if (!result) return;
       if (result.success) {
         // setTimeLeft(-1000);
         setEmail("");
-        toast.success("Chúng tôi đã gửi email xác minh tài khoản cho bạn");
+        toast.success(
+          "Chúng tôi đã gửi email cho bạn. Vui lòng theo liên kết để đặt lại mật khẩu.",
+        );
       } else {
         if (result.timeLeft) {
           setTimeLeft(result.timeLeft);
@@ -45,9 +47,7 @@ export default function SendEmailPage() {
 
   return (
     <div className="max-w-sm mx-auto mt-20 p-6 border border-foreground">
-      <h1 className="text-xl font-semibold mb-4">
-        Xác minh tài khoản qua email
-      </h1>
+      <h1 className="text-xl font-semibold mb-4">Đặt lại mật khẩu</h1>
       <div className="space-y-4">
         <div>
           <input

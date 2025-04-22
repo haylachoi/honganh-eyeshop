@@ -16,7 +16,6 @@ export const signInInputSchema = z.object({
 
 export const userSchema = z
   .object({
-    // _id: IdSchema,
     _id: MongoIdSchema,
     name: userNameSchema,
     email: userEmailSchema,
@@ -25,6 +24,7 @@ export const userSchema = z
     phone: userPhoneSchema,
     password: passwordSchema,
     salt: saltSchema,
+    isVerified: z.boolean().optional(),
   })
   .strip()
   .transform(({ _id, ...rest }) => ({
@@ -82,3 +82,29 @@ export const safeUserInfoSchema = z.object({
   role: roleSchema,
   avatar: avatarSchema,
 });
+
+export const emailVerificationTypeSchema = z
+  .object({
+    _id: MongoIdSchema,
+    email: userEmailSchema,
+    token: z.string(),
+    sentAt: z.date(),
+    expiresAt: z.date(),
+  })
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+  }));
+
+export const passwordResetTokenTypeSchema = z
+  .object({
+    _id: MongoIdSchema,
+    email: userEmailSchema,
+    token: z.string(),
+    sentAt: z.date(),
+    expiresAt: z.date(),
+  })
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+  }));

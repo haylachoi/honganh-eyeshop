@@ -14,6 +14,7 @@ const userSchema = new Schema<UserModel>(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     salt: { type: String, required: true },
+    isVerified: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

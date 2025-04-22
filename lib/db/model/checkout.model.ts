@@ -104,13 +104,14 @@ const checkoutSchema = new Schema<CheckoutModel>(
     expiresAt: {
       type: Date,
       default: () => new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 giờ từ lúc tạo
-      expires: 86400, // TTL Index (24 giờ)
     },
   },
   {
     timestamps: true,
   },
 );
+
+checkoutSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 10 });
 
 const Checkout =
   (models.Checkout as Model<CheckoutModel>) ||

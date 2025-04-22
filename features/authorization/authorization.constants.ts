@@ -11,6 +11,7 @@ export const RESOURCE_TYPES = {
   COUPON: "coupon",
   ORDER: "order",
   REVIEW: "review",
+  VERIFY_TOKEN: "verifyToken",
   ALL: "all",
 } as const;
 
@@ -69,9 +70,4 @@ export const PERMISSIONS: {
       view: ["all"],
     },
   },
-  // guess: {
-  //   product: {
-  //     view: "public",
-  //   },
-  // },
 };

@@ -9,7 +9,7 @@ import { orderInputSchema } from "./order.validator";
 import ordersRepository from "@/lib/db/repositories/orders";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import { calculateDiscount, validateCoupon } from "../coupons/coupon.utils";
-import { ERROR_MESSAGES, PAGE_SIZE, SHIPPING_FEE } from "@/constants";
+import { ERROR_MESSAGES, SHIPPING_FEE } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { validateItems } from "../checkouts/checkout.utils";
 import { NotFoundError, ValidationError } from "@/lib/error";

@@ -16,7 +16,7 @@ const UserButton = () => {
 
   if (!user) {
     return (
-      <Link href={ENDPOINTS.LOGIN} className="cursor-pointer">
+      <Link href={ENDPOINTS.AUTH.LOGIN} className="cursor-pointer">
         <CircleUserRound className="size-6" />
       </Link>
     );

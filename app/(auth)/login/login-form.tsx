@@ -19,10 +19,11 @@ import { signIn } from "../../../features/auth/auth.action";
 import { Input } from "@/components/ui/input";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants";
 import { useRouter } from "next/navigation";
 import { LucideMail, LucideLock } from "lucide-react";
 import { ENDPOINTS } from "@/constants";
+import Link from "next/link";
 
 const defaultValues: SignInInputType = {
   email: "",
@@ -33,10 +34,16 @@ export default function LoginForm() {
   const router = useRouter();
   const { execute, isPending } = useAction(signIn, {
     onSuccess: (data) => {
-      if (data.data === false)
-        toast.success(TOAST_MESSAGES.AUTH.LOGIN.NOT_MATCH);
+      const result = data.data;
+      if (result?.success === false) {
+        if (result.needVerify) {
+          router.push(ENDPOINTS.AUTH.ACTIVE_ACCOUNT);
+        }
+        toast.error(data.data?.message);
+        return;
+      }
 
-      if (data.data === true) {
+      if (result?.success === true) {
         router.push(ADMIN_ENDPOINTS.HOME);
       }
     },
@@ -105,6 +112,15 @@ export default function LoginForm() {
               )}
             />
 
+            <p className="text-right text-sm">
+              <Link
+                href={ENDPOINTS.AUTH.FORGOT_PASSWORD}
+                className="text-primary hover:underline"
+              >
+                Quên mật khẩu?
+              </Link>
+            </p>
+
             <Button
               className="w-full bg-primary hover:bg-primary/90 text-white text-base tracking-wide rounded-none"
               type="submit"
@@ -118,7 +134,10 @@ export default function LoginForm() {
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Chưa có tài khoản?{" "}
-          <a href={ENDPOINTS.SIGN_UP} className="text-primary hover:underline">
+          <a
+            href={ENDPOINTS.AUTH.SIGN_UP}
+            className="text-primary hover:underline"
+          >
             Đăng ký ngay
           </a>
         </p>

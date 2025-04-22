@@ -1,0 +1,2 @@
+export const VERIFYTOKEN_DURATION_IN_MILISECOND = 2 * 60 * 60 * 1000;
+export const SEND_EMAIL_COOLDOWN_MS = 1 * 60 * 1000;
