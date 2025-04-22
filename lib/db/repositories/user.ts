@@ -5,11 +5,15 @@ import User from "@/lib/db/model/user.model";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
 import { SignUpType, UserType } from "@/features/auth/auth.type";
-import { safeUserInfoSchema, userSchema } from "@/features/auth/auth.validator";
+import { userSchema } from "@/features/auth/auth.validator";
 import { NotFoundError } from "@/lib/error";
-import mongoose, { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery, UpdateQuery } from "mongoose";
 import EmailVerificationToken from "../model/email-verification.model";
 import PasswordResetToken from "../model/password-reset-token.model";
+import {
+  safeUserInfoFromSessionSchema,
+  safeUserInfoSchema,
+} from "@/features/users/user.validator";
 
 // todo: do not cache user with sensitive info when use CDN, because user can be leaked
 const getAllUsers = async () => {
@@ -29,6 +33,13 @@ const getUserById = async (id: Id) => {
   await connectToDatabase();
   const result = await User.findById(id).lean();
   return result ? userSchema.parse(result) : null;
+};
+
+const getSafeUserById = async ({ id }: { id: Id }) => {
+  await connectToDatabase();
+  const result = await User.findById(id).lean();
+
+  return result ? safeUserInfoSchema.parse(result) : null;
 };
 
 const getUserByEmail = async ({
@@ -52,6 +63,27 @@ const createUser = async (input: SignUpType) => {
   const result = await User.create(input);
   const user = userSchema.parse(result);
   return user;
+};
+
+export const updateUserInfo = async ({
+  query,
+  updateQuery,
+}: {
+  query: FilterQuery<UserType>;
+  updateQuery: UpdateQuery<UserType>;
+}) => {
+  await connectToDatabase();
+  const result = await User.findOneAndUpdate(query, updateQuery, {
+    new: true,
+  });
+  if (!result) {
+    throw new NotFoundError({
+      resource: "user",
+      message: ERROR_MESSAGES.USER.NOT_FOUND,
+    });
+  }
+
+  return { success: true };
 };
 
 const changePassword = async ({
@@ -110,7 +142,7 @@ const verifyUserByToken = async ({ token }: { token: string }) => {
     }
 
     await session.commitTransaction();
-    const user = safeUserInfoSchema.parse(result);
+    const user = safeUserInfoFromSessionSchema.parse(result);
     return {
       success: true,
       data: user,
@@ -174,7 +206,9 @@ const userRepository = {
   getAllUsers,
   getUserByEmail,
   getUserById,
+  getSafeUserById,
   createUser,
+  updateUserInfo,
   changePassword,
   verifyUserByToken,
   validateResetPasswordToken,

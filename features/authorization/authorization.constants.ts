@@ -44,6 +44,9 @@ export const PERMISSIONS: {
       create: ["all"],
       view: ["public"],
     },
+    user: {
+      modify: ["own"],
+    },
   },
   seller: {
     order: {

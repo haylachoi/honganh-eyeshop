@@ -27,3 +27,5 @@ export const MoneySchema = z.coerce
   .min(0, "Price must be at least 0");
 
 export const imageUrlSchema = z.string();
+
+export const phoneSchema = z.string().min(5).trim();

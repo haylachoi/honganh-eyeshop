@@ -357,6 +357,7 @@ export const signIn = actionClient
       id: user.id,
       name: user.name,
       role: user.role,
+      avatar: user.avatar,
     });
 
     return {

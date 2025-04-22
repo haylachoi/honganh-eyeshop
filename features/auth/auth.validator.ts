@@ -1,4 +1,4 @@
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
 export const userNameSchema = z.string().min(2).trim();
@@ -66,21 +66,6 @@ export const signUpSchema = z.object({
   phone: userPhoneSchema,
   password: passwordSchema,
   salt: saltSchema,
-});
-
-export const profileUpdateSchema = z.object({
-  id: IdSchema,
-  name: userNameSchema,
-  email: userEmailSchema,
-  role: roleSchema,
-  phone: userPhoneSchema,
-});
-
-export const safeUserInfoSchema = z.object({
-  id: IdSchema,
-  name: userNameSchema,
-  role: roleSchema,
-  avatar: avatarSchema,
 });
 
 export const emailVerificationTypeSchema = z

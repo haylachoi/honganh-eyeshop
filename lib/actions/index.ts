@@ -4,7 +4,7 @@ import {
 } from "next-safe-action";
 import { z, ZodError } from "zod";
 import mongoose from "mongoose";
-import { auth } from "@/features/auth/auth.queries";
+import { auth } from "@/features/auth/auth.auth";
 import {
   AppError,
   AuthenticationError,
@@ -110,18 +110,12 @@ export const getAuthActionClient = ({
       action,
     });
 
-    if (!scopes) {
-      throw new AuthorizationError({
-        resource,
-      });
-    }
+    const isAuthorized =
+      scopes?.includes("all") || (scope ? scopes?.includes(scope) : true);
 
-    if (scope && !scopes.includes(scope)) {
-      throw new AuthorizationError({
-        resource,
-      });
+    if (!isAuthorized) {
+      throw new AuthorizationError({ resource });
     }
-
     return next({
       ctx: {
         ...ctx,

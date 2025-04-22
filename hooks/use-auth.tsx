@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { SafeUserInfo } from "@/features/auth/auth.type";
+import { SafeUserInfoFromSession } from "@/features/users/user.types";
 import { useEffect } from "react";
 
 type AuthState = {
-  user: SafeUserInfo | null;
+  user: SafeUserInfoFromSession | null;
   isLoading: boolean;
   fetchUser: () => Promise<void>;
 };

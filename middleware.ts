@@ -20,6 +20,7 @@ async function middlewareAuth(request: NextRequest) {
     if (result.data.role !== "admin" && result.data.role !== "seller") {
       return NextResponse.redirect(new URL("/", request.url));
     }
+    // todo: redirect when in profile page
   }
 }
 

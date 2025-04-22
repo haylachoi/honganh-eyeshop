@@ -1,4 +1,4 @@
-import { createUppercaseMap } from "@/lib/utils";
+import { createUppercaseMap } from "../lib/utils";
 
 // todo: validate env
 export const APP_NAME = "honganh-eyeshop";
@@ -9,6 +9,8 @@ export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;
 export const MAX_SEARCH_RESULT = 10;
 
 export const PRODUCTS_PER_PAGE = 12;
+
+export const IMAGES_FORDERS = ["users", "products", "blogs"] as const;
 
 export const PAGE_SIZE = {
   TRENDING: {
@@ -55,7 +57,7 @@ export const ENDPOINTS = {
     LOGIN: "/login",
     SIGN_UP: "/signup",
   },
-  PROFILE: "/profile",
+  PROFILE: "/user-info",
   CART: "/cart",
   CHECKOUT: "/checkout",
   CATEGORIES: "/c",

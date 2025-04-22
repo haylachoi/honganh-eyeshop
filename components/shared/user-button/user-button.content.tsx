@@ -10,14 +10,15 @@ import {
 import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
 import { logoutAction } from "@/features/auth/auth.action";
 
-import { SafeUserInfo } from "@/features/auth/auth.type";
+import { SafeUserInfoFromSession } from "@/features/users/user.types";
 import { canAccess } from "@/features/auth/auth.utils";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
-const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
+const UserButtonContent = ({ user }: { user: SafeUserInfoFromSession }) => {
   const { execute: logout } = useAction(logoutAction, {
     onSuccess: (result) => {
       if (result.data) {
@@ -35,7 +36,11 @@ const UserButtonContent = ({ user }: { user: SafeUserInfo }) => {
       <DropdownMenuTrigger className="cursor-pointer focus-visible:outline-none">
         <div className="flex items-center justify-center gap-2">
           <div className="size-6 rounded-full bg-background text-primary border border-foreground flex items-center justify-center font-bold text-sm">
-            {initials}
+            {user.avatar ? (
+              <Image src={user.avatar} alt="avatar" width={20} height={20} />
+            ) : (
+              initials
+            )}
           </div>
           <span>{user.name}</span>
         </div>

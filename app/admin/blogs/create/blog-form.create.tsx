@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import SubmitButton from "@/components/custom-ui/submit-button";
-import { SafeUserInfo } from "@/features/auth/auth.type";
 import { useDebounce } from "use-debounce";
 import slugify from "slugify";
 import { Label } from "@/components/ui/label";
@@ -36,6 +35,7 @@ import FormTextInput from "@/components/shared/form/form-text-input";
 import FormTextArea from "@/components/shared/form/form-text-area";
 import { TagInput } from "../_components/input-tags";
 import { useRouter } from "next/navigation";
+import { SafeUserInfoFromSession } from "@/features/users/user.types";
 
 const TipTapEditor = dynamic(() => import("@/components/shared/editor"), {
   ssr: false,
@@ -56,7 +56,7 @@ const defaultValues: BlogInputType = {
   tags: [],
 };
 
-const BlogCreateForm = ({ user }: { user: SafeUserInfo }) => {
+const BlogCreateForm = ({ user }: { user: SafeUserInfoFromSession }) => {
   defaultValues.authorId = user.id;
   const form = useForm<BlogInputType>({
     resolver: zodResolver(blogInputSchema),

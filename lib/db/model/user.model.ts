@@ -12,6 +12,7 @@ const userSchema = new Schema<UserModel>(
     email: { type: String, required: true },
     role: { type: String, required: true },
     phone: { type: String, required: true },
+    avatar: { type: String },
     password: { type: String, required: true },
     salt: { type: String, required: true },
     isVerified: { type: Boolean, default: false },

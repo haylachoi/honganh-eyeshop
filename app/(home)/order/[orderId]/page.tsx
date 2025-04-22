@@ -1,4 +1,4 @@
-import { auth } from "@/features/auth/auth.queries";
+import { auth } from "@/features/auth/auth.auth";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { getOrderByOrderId } from "@/features/orders/order.queries";
 import { OrderType } from "@/features/orders/order.types";
