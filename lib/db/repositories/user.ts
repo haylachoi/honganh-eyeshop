@@ -4,8 +4,8 @@ import { connectToDatabase } from "..";
 import User from "@/lib/db/model/user.model";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
-import { SignUpType, UserType } from "@/features/auth/auth.type";
-import { userSchema } from "@/features/auth/auth.validator";
+import { SignUpType } from "@/features/auth/auth.type";
+import { userSchema } from "@/features/users/user.validator";
 import { NotFoundError } from "@/lib/error";
 import mongoose, { FilterQuery, UpdateQuery } from "mongoose";
 import EmailVerificationToken from "../model/email-verification.model";
@@ -14,6 +14,7 @@ import {
   safeUserInfoFromSessionSchema,
   safeUserInfoSchema,
 } from "@/features/users/user.validator";
+import { UserType } from "@/features/users/user.types";
 
 // todo: do not cache user with sensitive info when use CDN, because user can be leaked
 const getAllUsers = async () => {
@@ -88,25 +89,39 @@ export const updateUserInfo = async ({
 
 const changePassword = async ({
   email,
+  id,
   password,
   salt,
 }: {
-  email: string;
+  email?: string;
+  id?: string;
   password: string;
   salt: string;
 }) => {
   await connectToDatabase();
+
+  if (!email && !id) {
+    // todo: use other Error
+    throw new Error("Email hoặc id phải được cung cấp");
+  }
+  const filter = email ? { email } : { _id: id };
+
   const user = await User.findOneAndUpdate(
-    { email },
+    filter,
     { password, salt },
     { new: true },
   );
+
   if (!user) {
     throw new NotFoundError({
       resource: "user",
       message: ERROR_MESSAGES.USER.NOT_FOUND,
     });
   }
+
+  return {
+    success: true,
+  };
 };
 
 // todo: this is validate token, should move to utils or service

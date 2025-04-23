@@ -12,6 +12,7 @@ export const PRODUCTS_PER_PAGE = 12;
 
 export const IMAGES_FORDERS = ["users", "products", "blogs"] as const;
 
+export const MAX_IMAGE_SIZE = 1024 * 100; // 100 KB
 export const PAGE_SIZE = {
   TRENDING: {
     SM: 8,
@@ -57,7 +58,11 @@ export const ENDPOINTS = {
     LOGIN: "/login",
     SIGN_UP: "/signup",
   },
-  PROFILE: "/user-info",
+  PROFILE: {
+    USER_INFO: "/user-info",
+    USER_PASSWORD: "/user-password",
+    USER_ADDRESS: "/user-address",
+  },
   CART: "/cart",
   CHECKOUT: "/checkout",
   CATEGORIES: "/c",

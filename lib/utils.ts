@@ -131,6 +131,7 @@ export function getDirtyValues<
   return dirtyValues;
 }
 
+// todo: use 1 paramas instead of 2
 export function hashPassword(password: string, salt: string): Promise<string> {
   return new Promise((resolve, reject) => {
     crypto.scrypt(password.normalize(), salt, 64, (error, hash) => {
@@ -162,11 +163,11 @@ export function generateSalt() {
   return crypto.randomBytes(16).toString("hex").normalize();
 }
 
-export async function compressImage(
+export const compressImage = async (
   file: File,
   quality: number = 0.7,
   maxWidth: number = 800,
-): Promise<File> {
+): Promise<File> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -179,6 +180,26 @@ export async function compressImage(
       const img = new Image();
       img.src = event.target.result as string;
       img.onload = () => {
+        const originalWidth = img.width;
+        const originalHeight = img.height;
+
+        const isWebP = file.type === "image/webp";
+        const needsResize = originalWidth > maxWidth;
+
+        // Nếu ảnh đã là .webp và không cần resize → giữ nguyên
+        if (isWebP && !needsResize) {
+          resolve(file);
+          return;
+        }
+
+        // Resize nếu cần
+        let width = originalWidth;
+        let height = originalHeight;
+        if (needsResize) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         if (!ctx) {
@@ -186,19 +207,10 @@ export async function compressImage(
           return;
         }
 
-        // Resize ảnh nếu lớn hơn maxWidth
-        let width = img.width;
-        let height = img.height;
-        if (width > maxWidth) {
-          height *= maxWidth / width;
-          width = maxWidth;
-        }
-
         canvas.width = width;
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Chuyển sang WebP (tốt hơn JPEG)
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -222,7 +234,7 @@ export async function compressImage(
     reader.onerror = () => reject(new Error("FileReader error"));
     reader.readAsDataURL(file);
   });
-}
+};
 
 export const getLink = {
   user: {
@@ -413,3 +425,9 @@ export const getFullAdress = (addressInfo: AddressType) => {
 export const getPageNumber = (page: number) => `page-${page}`;
 export const getTotalPages = (total: number, size: number) =>
   Math.ceil(total / size);
+
+export const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`;
+  else if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+  else return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+};

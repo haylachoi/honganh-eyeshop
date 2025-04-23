@@ -5,14 +5,19 @@ import { IMAGES_FORDERS } from "@/constants";
 export const uploadFile = async ({
   file,
   to,
+  fileName,
 }: {
   file: File;
+  fileName?: string;
   to: (typeof IMAGES_FORDERS)[number];
 }) => {
   const data = await file.arrayBuffer();
   const buffer = Buffer.from(data);
-  const fileName = `${crypto.randomUUID()}${path.extname(file.name)}`;
-  const basePath = path.join("images", to, fileName);
+  if (!fileName) {
+    fileName = crypto.randomUUID();
+  }
+  const fileNameWithExt = `${fileName}${path.extname(file.name)}`;
+  const basePath = path.join("images", to, fileNameWithExt);
   const fileLink = path.join("/", basePath);
   const filePath = path.join(process.cwd(), "public", basePath);
   await writeFile(filePath, buffer);

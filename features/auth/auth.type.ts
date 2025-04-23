@@ -5,7 +5,6 @@ import {
   signInInputSchema,
   signUpInputSchema,
   signUpSchema,
-  userSchema,
   userWithoutPasswordSchema,
 } from "./auth.validator";
 
@@ -14,7 +13,6 @@ export type SignUpType = z.output<typeof signUpSchema>;
 
 export type SignInInputType = z.infer<typeof signInInputSchema>;
 
-export type UserType = z.infer<typeof userSchema>;
 export type UserWithoutPasswordType = z.infer<typeof userWithoutPasswordSchema>;
 
 export type EmailVerificationType = z.infer<typeof emailVerificationTypeSchema>;

@@ -1,3 +1,4 @@
+import { PASSWORD_ERROR_MESSAGE, PASSWORD_REGEX } from "@/constants/regex";
 import mongoose from "mongoose";
 import { z } from "zod";
 
@@ -29,3 +30,8 @@ export const MoneySchema = z.coerce
 export const imageUrlSchema = z.string();
 
 export const phoneSchema = z.string().min(5).trim();
+
+export const passwordSchema = z
+  .string()
+  .trim()
+  .regex(PASSWORD_REGEX, PASSWORD_ERROR_MESSAGE);

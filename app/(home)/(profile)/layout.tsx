@@ -1,16 +1,6 @@
-import Link from "next/link";
 import { CustomerAvatarProvider } from "./customer-avatar-provider";
+import { ProfileSidebar } from "./profile-sidebar";
 
-const info = [
-  {
-    title: "Thông tin cá nhân",
-    href: "/user-info",
-  },
-  {
-    title: "Địa chỉ",
-    href: "/user-address",
-  },
-];
 export default function ProfileLayout({
   children,
 }: {
@@ -18,17 +8,13 @@ export default function ProfileLayout({
 }) {
   return (
     <div className="flex flex-col lg:flex-row gap-4 container">
-      <div className="lg:w-[300px] border border-foreground p-4">
-        <CustomerAvatarProvider />
-        <ul>
-          {info.map((item) => (
-            <li key={item.title}>
-              <Link href={item.href}>{item.title}</Link>
-            </li>
-          ))}
-        </ul>
+      <div className="lg:w-[400px] xl:w-[500px] border border-foreground p-2 space-y-4">
+        <div className="border-b border-input pb-2">
+          <CustomerAvatarProvider />
+        </div>
+        <ProfileSidebar className="flex gap-y-4 md:flex-col" />
       </div>
-      <div className="border border-foreground grow">{children}</div>
+      <div className="px-2 border border-foreground grow">{children}</div>
     </div>
   );
 }

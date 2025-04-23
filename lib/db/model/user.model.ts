@@ -1,4 +1,4 @@
-import { UserType } from "@/features/auth/auth.type";
+import { UserType } from "@/features/users/user.types";
 import { Model, model, models, Schema, Document } from "mongoose";
 
 export interface UserModel extends Document, Omit<UserType, "id"> {
@@ -16,6 +16,14 @@ const userSchema = new Schema<UserModel>(
     password: { type: String, required: true },
     salt: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
+    shippingAddress: {
+      type: {
+        address: { type: String },
+        ward: { type: String },
+        district: { type: String },
+        city: { type: String },
+      },
+    },
   },
   { timestamps: true },
 );

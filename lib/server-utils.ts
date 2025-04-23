@@ -1,7 +1,9 @@
 import path from "path";
 import { writeFile } from "fs/promises";
 import { ImageSourceType } from "@/features/blogs/blog.types";
+import fs from "fs/promises";
 
+// todo: move others server utils to here
 export const writeFileToDisk = async ({
   file,
   to,
@@ -46,4 +48,32 @@ export const writeMultipleFilesToDisk = async ({
   }
 
   return savedFiles;
+};
+export const deleteFile = async (
+  fileLinks: string | string[],
+): Promise<void> => {
+  const links = Array.isArray(fileLinks) ? fileLinks : [fileLinks];
+
+  if (links.length === 0) {
+    console.warn("Không có file nào để xóa.");
+    return;
+  }
+
+  const deletePromises = links.map(async (fileLink) => {
+    const filePath = path.join(process.cwd(), "public", fileLink);
+
+    return fs
+      .access(filePath)
+      .then(() => fs.unlink(filePath))
+      .then(() => console.log(`Đã xóa: ${filePath}`))
+      .catch((err) => {
+        if (err.code === "ENOENT") {
+          console.warn(`Không tìm thấy: ${fileLink}`);
+        } else {
+          console.error(`Lỗi khi xóa ${fileLink}:`, err);
+        }
+      });
+  });
+
+  await Promise.all(deletePromises);
 };

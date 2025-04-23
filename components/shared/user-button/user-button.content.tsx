@@ -62,7 +62,7 @@ const UserButtonContent = ({ user }: { user: SafeUserInfoFromSession }) => {
           </>
         )}
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href={ENDPOINTS.PROFILE}>Profile</Link>
+          <Link href={ENDPOINTS.PROFILE.USER_INFO}>Profile</Link>
         </DropdownMenuItem>
         {!isAdminPage && (
           <DropdownMenuItem asChild>

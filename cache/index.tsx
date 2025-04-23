@@ -21,6 +21,14 @@ const next_cache = {
         revalidate: CACHE_CONFIG.USERS.ALL.TIME,
       },
     ),
+    getSafeUserInfo: unstable_cache(
+      userRepository.getSafeUserById,
+      CACHE_CONFIG.USERS.BY_ID.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.USERS.BY_ID.TAGS,
+        revalidate: CACHE_CONFIG.USERS.BY_ID.TIME,
+      },
+    ),
   },
   categories: {
     getAll: unstable_cache(

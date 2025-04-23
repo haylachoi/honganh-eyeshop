@@ -51,7 +51,7 @@ export const UserInfoForm = ({
   };
 
   return (
-    <div className="max-w-xl mx-auto py-10 px-4">
+    <div className="max-w-xl mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Thông tin cá nhân</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

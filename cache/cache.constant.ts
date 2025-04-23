@@ -9,6 +9,11 @@ export const CACHE_CONFIG = {
       TAGS: ["users"],
       TIME: 3600,
     },
+    BY_ID: {
+      KEY_PARTS: ["users", "id"],
+      TAGS: ["users"],
+      TIME: 3600,
+    },
   },
   CATEGORIES: {
     ALL: {

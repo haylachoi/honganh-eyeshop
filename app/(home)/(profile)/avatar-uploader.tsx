@@ -9,6 +9,8 @@ import { updateCustomerAvatarAction } from "@/features/users/user.actions";
 import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { Camera, Check, X } from "lucide-react";
 import { Id } from "@/types";
+import { compressImage, formatFileSize } from "@/lib/utils";
+import { MAX_IMAGE_SIZE } from "@/constants";
 
 export default function AvatarUpload({
   defaultUrl,
@@ -29,13 +31,21 @@ export default function AvatarUpload({
     onError: onActionError,
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      e.target.value = "";
+    if (!file) return;
+
+    const newFile = await compressImage(file);
+    if (newFile.size > MAX_IMAGE_SIZE) {
+      toast.error(
+        `Ảnh sau khi nén là ${formatFileSize(newFile.size)} vượt qua giới hạn ${formatFileSize(
+          MAX_IMAGE_SIZE,
+        )} `,
+      );
     }
+    setSelectedFile(newFile);
+    setPreviewUrl(URL.createObjectURL(newFile));
+    e.target.value = "";
   };
 
   const handleCancel = () => {

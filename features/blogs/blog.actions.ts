@@ -38,6 +38,7 @@ export const createBlogAction = createBlogActionClient
   .action(async ({ parsedInput }) => {
     const { authorId, wallImage, content, images, imageSources, ...rest } =
       parsedInput;
+    // todo: use cache
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
