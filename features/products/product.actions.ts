@@ -270,7 +270,6 @@ export const updateProductAction = modifyProductActionClient
     if (deletedImages.length > 0) {
       await deleteFile(deletedImages);
     }
-    // todo: delete variant in cart if change. Should move to repository
 
     revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     revalidateTag(CACHE_CONFIG.TAGS.ALL.TAGS[0]);

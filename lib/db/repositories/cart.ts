@@ -263,6 +263,71 @@ const removeCartItem = async ({
   return cartTypeSchema.parse(updatedCart);
 };
 
+const cleanupInvalidCartItems = async () => {
+  // 1. Lấy toàn bộ productId + variantId tồn tại (chỉ 2 props)
+  const allProducts = await Product.find(
+    {},
+    { _id: 1, "variants.uniqueId": 1 },
+  ).lean();
+
+  // 2. Tạo Map dạng "productId_variantId" => true
+  const validMap = new Map<string, true>();
+  allProducts.forEach((product) => {
+    product.variants.forEach((variant) => {
+      validMap.set(`${product._id}_${variant.uniqueId}`, true);
+    });
+  });
+
+  // 3. Duyệt qua từng cart và lọc item không hợp lệ
+  const cursor = Cart.find({}).cursor(); // Không load hết vào RAM
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bulkOps: any[] = []; // Mảng chứa các thao tác bulk
+
+  for await (const cart of cursor) {
+    const originalCount = cart.items.length;
+
+    // Lọc lại các items hợp lệ
+    const filteredItems = cart.items.filter((item) =>
+      validMap.has(`${item.productId}_${item.variantId}`),
+    );
+
+    // Nếu có sự thay đổi về items, thì thêm vào bulkOps
+    if (filteredItems.length !== originalCount) {
+      bulkOps.push({
+        updateOne: {
+          filter: { _id: cart._id },
+          update: { $set: { items: filteredItems } },
+        },
+      });
+
+      // Giới hạn số lượng thao tác trong một batch (MongoDB thường hỗ trợ 1000 thao tác cùng lúc)
+      if (bulkOps.length >= 1000) {
+        try {
+          // Thực thi batch update
+          await Cart.bulkWrite(bulkOps);
+          console.log(`✅ Processed ${bulkOps.length} carts`);
+        } catch (error) {
+          console.error("❌ Bulk write failed:", error);
+        }
+        bulkOps.length = 0; // Clear mảng để bắt đầu batch mới
+      }
+    }
+  }
+
+  // Nếu còn thao tác chưa được thực thi, thì thực hiện lần cuối
+  if (bulkOps.length) {
+    try {
+      await Cart.bulkWrite(bulkOps);
+      console.log(`✅ Processed ${bulkOps.length} carts in final batch`);
+    } catch (error) {
+      console.error("❌ Final bulk write failed:", error);
+    }
+  }
+
+  console.log("✅ Done cleaning invalid cart items");
+};
+
 export const cartRepository = {
   getCartWithProductDetails,
   getCartByUserId,
@@ -272,4 +337,5 @@ export const cartRepository = {
   addItemToCart,
   updateItemQuantity,
   removeCartItem,
+  cleanupInvalidCartItems,
 };

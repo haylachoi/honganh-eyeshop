@@ -1,6 +1,8 @@
 "use client";
 
+import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { BACKUUP_TYPE } from "@/features/backup/backup.constants";
+import { cleanupInvalidCartItems } from "@/features/cart/cart.actions";
 import { createFilterAction } from "@/features/filter/filter.actions";
 import {
   deleteFakeProducts,
@@ -9,6 +11,7 @@ import {
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
 import React from "react";
+import { toast } from "sonner";
 
 export const OthersContent = () => {
   const { execute: executeCreateFilter } = useAction(createFilterAction, {
@@ -67,6 +70,27 @@ export const OthersContent = () => {
       >
         Download all backup
       </button>
+      <CleanupInvalidCartItemsButton />
     </div>
+  );
+};
+
+export const CleanupInvalidCartItemsButton = () => {
+  const { execute, isPending } = useAction(cleanupInvalidCartItems, {
+    onSuccess: () => {
+      toast.success("Đã xóa các sản phẩm không hợp lệ trong giỏ hàng");
+    },
+    onError: onActionError,
+  });
+
+  return (
+    <button
+      className="px-2 py-1 cursor-pointer border border-foreground"
+      onClick={() => execute()}
+      disabled={isPending}
+    >
+      {isPending && <AnimateLoadingIcon />}
+      Cleanup Invalid Cart Items
+    </button>
   );
 };

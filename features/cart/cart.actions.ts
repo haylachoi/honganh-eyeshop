@@ -1,6 +1,6 @@
 "use server";
 
-import { authCustomerActionClient } from "@/lib/actions";
+import { authCustomerActionClient, getAuthActionClient } from "@/lib/actions";
 import { cartItemInputSchema } from "./cart.validator";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import productRepository from "@/lib/db/repositories/products";
@@ -146,5 +146,18 @@ export const removeItemFromCart = authCustomerActionClient
       userId: ctx.userId,
     });
 
+    revalidateTag(cartCacheTag);
+  });
+
+export const cleanupInvalidCartItems = getAuthActionClient({
+  resource: "cart",
+  action: "delete",
+  scope: "all",
+})
+  .metadata({
+    actionName: "cleanupInvalidCartItems",
+  })
+  .action(async () => {
+    await cartRepository.cleanupInvalidCartItems();
     revalidateTag(cartCacheTag);
   });
