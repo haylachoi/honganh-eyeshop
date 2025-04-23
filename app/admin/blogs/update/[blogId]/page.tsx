@@ -21,6 +21,7 @@ const BlogUpdatePage = async ({ params }: { params: params }) => {
           ...rest,
           authorId: author.id,
           imageSources: [],
+          deletedImages: [],
         }}
       />
     </Suspense>

@@ -13,6 +13,9 @@ import {
 import { removeDiacritics } from "@/lib/utils";
 import { randomBytes } from "crypto";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
+import { deleteFile } from "@/lib/server-utils";
+import { NotFoundError } from "@/lib/error";
+import { ERROR_MESSAGES } from "@/constants";
 
 const fakeCategories = [
   {
@@ -210,10 +213,13 @@ export const createProductAction = createProductActionClient
       tags: newTags,
     };
 
-    await productRepository.createProduct(input);
-    // todo: delete image if error
-
-    revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
+    try {
+      await productRepository.createProduct(input);
+      revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
+    } catch (error) {
+      deleteFile(newVariants.flatMap((variant) => variant.images));
+      throw error;
+    }
   });
 
 // todo: update only changed value
@@ -258,7 +264,12 @@ export const updateProductAction = modifyProductActionClient
     };
 
     await productRepository.updateProduct(input);
-    //todo: delete images
+    const deletedImages = parsedInput.variants.flatMap(
+      (variant) => variant.deletedImages,
+    );
+    if (deletedImages.length > 0) {
+      await deleteFile(deletedImages);
+    }
     // todo: delete variant in cart if change. Should move to repository
 
     revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
@@ -281,8 +292,21 @@ export const deleteProductAction = deleteProductActionClient
   })
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
+    const ids = Array.isArray(parsedInput) ? parsedInput : [parsedInput];
+    const products = await productRepository.getProductByIds({ ids });
+    if (products.length !== ids.length) {
+      throw new NotFoundError({
+        resource: "product",
+        message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
+      });
+    }
     await productRepository.deleteProduct(parsedInput);
-    //todo: delete images
+
+    await deleteFile(
+      products.flatMap((product) =>
+        product.variants.flatMap((variant) => variant.images),
+      ),
+    );
 
     // delete item from cart
 

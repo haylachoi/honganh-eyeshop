@@ -4,16 +4,20 @@ import { ImageSourceType } from "@/features/blogs/blog.types";
 import fs from "fs/promises";
 
 // todo: move others server utils to here
+
+// warning: identity is slug is not recommend, because it can be changed
 export const writeFileToDisk = async ({
   file,
   to,
+  identity,
 }: {
   file: File;
   to: "products" | "blogs";
+  identity?: string;
 }) => {
   const data = await file.arrayBuffer();
   const buffer = Buffer.from(data);
-  const fileName = `${crypto.randomUUID()}${path.extname(file.name)}`;
+  const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
   const basePath = path.join("images", to, fileName);
   const fileLink = path.join("/", basePath);
   const filePath = path.join(process.cwd(), "public", basePath);
@@ -22,12 +26,14 @@ export const writeFileToDisk = async ({
   return fileLink;
 };
 
-export const writeMultipleFilesToDisk = async ({
+export const writeImageSourcesToDisk = async ({
   imageSources,
   to,
+  identity,
 }: {
   imageSources: ImageSourceType[];
   to: "products" | "blogs";
+  identity?: string;
 }) => {
   const savedFiles: {
     fileLink: string;
@@ -37,7 +43,7 @@ export const writeMultipleFilesToDisk = async ({
   for (const { file, fakeUrl } of imageSources) {
     const data = await file.arrayBuffer();
     const buffer = Buffer.from(data);
-    const fileName = `${crypto.randomUUID()}${path.extname(file.name)}`;
+    const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
     const basePath = path.join("images", to, fileName);
     const fileLink = path.join("/", basePath);
     const filePath = path.join(process.cwd(), "public", basePath);
@@ -49,6 +55,7 @@ export const writeMultipleFilesToDisk = async ({
 
   return savedFiles;
 };
+
 export const deleteFile = async (
   fileLinks: string | string[],
 ): Promise<void> => {

@@ -62,6 +62,7 @@ export const blogDbInputSchema = blogInputSchema
 
 export const blogUpdateSchema = blogInputSchema.extend({
   id: IdSchema,
+  deletedImages: imagesSchema,
 });
 
 export const blogTypeSchema = blogInputSchema

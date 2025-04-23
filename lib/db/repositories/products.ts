@@ -70,6 +70,13 @@ const getPublishedProductsForEachCategory = async () => {
   return result;
 };
 
+const getProductByIds = async ({ ids }: { ids: string[] }) => {
+  await connectToDatabase();
+  const products = await Product.find({ _id: { $in: ids } }).lean();
+  const result = ProductTypeSchema.array().parse(products);
+  return result;
+};
+
 const searchProductByQuery = async ({
   query,
   sortOptions = {},
@@ -381,6 +388,7 @@ const deleteFakeProducts = async () => {
 
 const productRepository = {
   getAllProducts,
+  getProductByIds,
   getPublishedProductsForEachCategory,
   getProductById,
   getProductByTags,

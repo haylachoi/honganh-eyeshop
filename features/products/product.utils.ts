@@ -3,6 +3,30 @@ import { ProductInputType, ProductUpdateType } from "./product.types";
 import path from "path";
 import crypto from "crypto";
 
+const MAX_FILENAME_LENGTH = 200;
+
+export const generateFileName = ({
+  identity,
+  uniqueId,
+  ext,
+}: {
+  identity: string;
+  uniqueId: string;
+  ext: string;
+}) => {
+  const uuid = crypto.randomUUID(); // 36 ký tự
+  const fixedPartsLength = uniqueId.length + uuid.length + 2 + ext.length;
+
+  const maxIdentityLength = MAX_FILENAME_LENGTH - fixedPartsLength;
+
+  const safeIdentity =
+    identity.length > maxIdentityLength
+      ? identity.slice(0, maxIdentityLength)
+      : identity;
+
+  return `${safeIdentity}_${uniqueId}_${uuid}${ext}`;
+};
+
 export const transformCreateInputVariantToDbVariant = async ({
   identity,
   variants,
@@ -17,7 +41,11 @@ export const transformCreateInputVariantToDbVariant = async ({
     const localProgress = images.map(async (file) => {
       const data = await file.arrayBuffer();
       const buffer = Buffer.from(data);
-      const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
+      const fileName = generateFileName({
+        identity,
+        uniqueId: rest.uniqueId,
+        ext: path.extname(file.name),
+      });
       const basePath = path.join("images", "products", fileName);
       const fileLink = path.join("/", basePath);
       const filePath = path.join(process.cwd(), "public", basePath);
@@ -52,7 +80,11 @@ export const transformUpdateInputVariantToDbVariant = async ({
       const localProgress = images.map(async (file) => {
         const data = await file.arrayBuffer();
         const buffer = Buffer.from(data);
-        const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
+        const fileName = generateFileName({
+          identity,
+          uniqueId: rest.uniqueId,
+          ext: path.extname(file.name),
+        });
         const basePath = path.join("images", "products", fileName);
         const fileLink = path.join("/", basePath);
         const filePath = path.join(process.cwd(), "public", basePath);

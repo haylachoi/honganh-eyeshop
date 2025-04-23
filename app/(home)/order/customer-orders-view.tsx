@@ -1,5 +1,6 @@
 "use client";
 
+import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { getOrderHistoryAction } from "@/features/orders/order.actions";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { OrderType } from "@/features/orders/order.types";
@@ -55,6 +56,7 @@ const CustomerOrdersView = ({
         }
       >
         {`Xem tiếp theo (${page + 1}/${totalPages})`}
+        {isPending && <AnimateLoadingIcon />}
       </button>
     </div>
   );

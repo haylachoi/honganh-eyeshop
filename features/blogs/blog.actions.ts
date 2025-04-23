@@ -7,7 +7,11 @@ import userRepository from "@/lib/db/repositories/user";
 import { ERROR_MESSAGES } from "@/constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
-import { writeFileToDisk, writeMultipleFilesToDisk } from "@/lib/server-utils";
+import {
+  deleteFile,
+  writeFileToDisk,
+  writeImageSourcesToDisk,
+} from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
 import { removeDiacritics } from "@/lib/utils";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
@@ -58,12 +62,14 @@ export const createBlogAction = createBlogActionClient
         ? await writeFileToDisk({
             file: wallImage,
             to: "blogs",
+            identity: rest.slug,
           })
         : wallImage;
 
-    const imageSourcesMapping = await writeMultipleFilesToDisk({
+    const imageSourcesMapping = await writeImageSourcesToDisk({
       imageSources: imageSources,
       to: "blogs",
+      identity: rest.slug,
     });
 
     let newContent = content;
@@ -93,8 +99,15 @@ export const updateBlogAction = modifyBlogActionClient
   })
   .schema(blogUpdateSchema)
   .action(async ({ parsedInput }) => {
-    const { authorId, wallImage, content, images, imageSources, ...rest } =
-      parsedInput;
+    const {
+      authorId,
+      wallImage,
+      content,
+      images,
+      imageSources,
+      deletedImages,
+      ...rest
+    } = parsedInput;
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
@@ -104,19 +117,19 @@ export const updateBlogAction = modifyBlogActionClient
       });
     }
 
-    // todo: delete old image
     const wallImageUrl =
       wallImage instanceof File
         ? await writeFileToDisk({
             file: wallImage,
             to: "blogs",
+            identity: rest.slug,
           })
         : wallImage;
 
-    // todo: delete unused image
-    const imageSourcesMapping = await writeMultipleFilesToDisk({
+    const imageSourcesMapping = await writeImageSourcesToDisk({
       imageSources: imageSources,
       to: "blogs",
+      identity: rest.slug,
     });
 
     let newContent = content;
@@ -140,6 +153,8 @@ export const updateBlogAction = modifyBlogActionClient
       images,
     });
 
+    await deleteFile(deletedImages);
+
     revalidateTag(blogCacheTags);
     return result;
   });
@@ -150,7 +165,19 @@ export const deleteBlogAction = deleteBlogActionClient
   })
   .schema(z.union([z.string(), z.array(z.string())]))
   .action(async ({ parsedInput }) => {
+    const ids = Array.isArray(parsedInput) ? parsedInput : [parsedInput];
+    const blogs = await blogsRepository.getBlogsByIds(ids);
+    if (blogs.length !== ids.length) {
+      throw new NotFoundError({
+        resource: "blog",
+        message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+      });
+    }
     const result = await blogsRepository.deleteBlog(parsedInput);
+    const deletedImages = blogs.flatMap((blog) => blog.images);
+    deletedImages.push(...blogs.map((blog) => blog.wallImage));
+
+    deleteFile(deletedImages);
     revalidateTag(blogCacheTags);
     return result;
   });

@@ -1,13 +1,11 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { ERROR_MESSAGES, MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
-import { NotFoundError } from "@/lib/error";
+import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
 import { FilterQuery, QueryOptions } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
-import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
 const getAllBlogs = async () => {
   await connectToDatabase();
@@ -71,6 +69,13 @@ const getBlogById = async (id: string) => {
 
   const blog = result ? blogTypeSchema.parse(result) : null;
   return blog;
+};
+
+export const getBlogsByIds = async (ids: string[]) => {
+  await connectToDatabase();
+  const result = await Blog.find({ _id: { $in: ids } }).lean();
+  const blogs = result.map((blog) => blogTypeSchema.parse(blog));
+  return blogs;
 };
 
 const getBlogBySlug = async (slug: string) => {
@@ -217,14 +222,14 @@ const deleteBlog = async (ids: string | string[]) => {
   await connectToDatabase();
   const idsArray = Array.isArray(ids) ? ids : [ids];
 
-  const count = await Blog.countDocuments({ _id: { $in: idsArray } });
+  // const count = await Blog.countDocuments({ _id: { $in: idsArray } });
 
-  if (count !== idsArray.length) {
-    throw new NotFoundError({
-      resource: RESOURCE_TYPES.BLOG,
-      message: ERROR_MESSAGES.BLOG.NOT_FOUND,
-    });
-  }
+  // if (count !== idsArray.length) {
+  //   throw new NotFoundError({
+  //     resource: RESOURCE_TYPES.BLOG,
+  //     message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+  //   });
+  // }
 
   await Blog.deleteMany({ _id: { $in: idsArray } });
 
@@ -234,6 +239,7 @@ const deleteBlog = async (ids: string | string[]) => {
 const blogsRepository = {
   getAllBlogs,
   getBlogById,
+  getBlogsByIds,
   getBlogBySlug,
   getRecentBlogs,
   getBlogsByTags,

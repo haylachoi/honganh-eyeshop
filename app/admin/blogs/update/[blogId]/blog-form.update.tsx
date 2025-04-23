@@ -100,6 +100,16 @@ const BlogUpdateForm = ({
       });
     });
     data.images = oldImages;
+    data.deletedImages = defaultValues.images.filter(
+      (image) => !oldImages.includes(image),
+    );
+
+    if (
+      data.wallImage instanceof File &&
+      typeof defaultValues.wallImage === "string"
+    ) {
+      data.deletedImages.push(defaultValues.wallImage);
+    }
 
     const { html, toc } = generateHtmlAndTOC(editor.getJSON());
     data.content = html;
