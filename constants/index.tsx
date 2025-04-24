@@ -254,6 +254,9 @@ export const TOAST_MESSAGES = {
     RESTORE: {
       SUCCESS: "Đã khôi phục đánh giá thành công",
     },
+    DELETE: {
+      SUCCESS: "Đã xóa đánh giá thành công",
+    },
   },
   ORDER: {
     CREATE: {

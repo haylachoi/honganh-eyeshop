@@ -307,26 +307,26 @@ const createProducts = async (input: ProductDbInputType[]) => {
 };
 
 const updateProduct = async (
-  input: z.input<typeof ProductDbInputSchema> & { id: string },
+  input: z.infer<typeof ProductDbInputSchema> & { id: string },
 ) => {
+  const { id, ...updateData } = input;
+
   await connectToDatabase();
-  // todo: check product exist
-  const result = await Product.findOneAndUpdate(
-    { _id: input.id },
-    {
-      $set: input,
-    },
-    {
-      new: true,
-    },
+
+  const updated = await Product.findByIdAndUpdate(
+    id,
+    { $set: updateData },
+    { new: true },
   );
-  if (!result) {
-    // todo: this error is not true, check if product exist before update
+
+  if (!updated) {
     throw new NotFoundError({
       resource: "product",
       message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
     });
   }
+
+  return updated;
 };
 
 const updateRating = async ({

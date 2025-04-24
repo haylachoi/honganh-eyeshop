@@ -7,6 +7,7 @@ import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider"
 import { onActionError } from "@/lib/actions/action.helper";
 import { ReviewWithFullInfoType } from "@/features/reviews/review.type";
 import {
+  deleteReviewAction,
   hidenReviewAction,
   restoreReviewAction,
 } from "@/features/reviews/review.actions";
@@ -30,6 +31,16 @@ export const ActionButton = ({
     {
       onSuccess: () => {
         toast.success(TOAST_MESSAGES.REVIEW.RESTORE.SUCCESS);
+      },
+      onError: onActionError,
+    },
+  );
+
+  const { execute: deleteReview, isPending: deleteReviewPending } = useAction(
+    deleteReviewAction,
+    {
+      onSuccess: () => {
+        toast.success(TOAST_MESSAGES.REVIEW.DELETE.SUCCESS);
       },
       onError: onActionError,
     },
@@ -64,6 +75,17 @@ export const ActionButton = ({
           Ẩn
         </ThreeDotsMenuButtonItem>
       )}
+      <ThreeDotsMenuButtonItem
+        action={() =>
+          showDialog({
+            description: "Bạn có chắc chắn muốn xóa đánh giá này không?",
+            onConfirm: () => deleteReview({ reviewId: review.id }),
+          })
+        }
+        isPending={deleteReviewPending}
+      >
+        Xóa
+      </ThreeDotsMenuButtonItem>
     </ThreeDotsMenu>
   );
 };

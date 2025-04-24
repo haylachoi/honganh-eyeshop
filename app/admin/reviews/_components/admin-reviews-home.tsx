@@ -81,7 +81,7 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
     ),
   },
   {
-    accessorFn: (row) => row.product.name,
+    accessorFn: (row) => row.product?.name,
     id: "product.name",
     header: ({ column }) => {
       return (
@@ -95,7 +95,7 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.original.product.name}</div>
+      <div className="lowercase">{row.original.product?.name}</div>
     ),
   },
   {

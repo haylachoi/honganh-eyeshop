@@ -81,18 +81,6 @@ const getSections = (editor: Editor) => {
       // },
     ],
     [
-      // {
-      //   label: "Comment",
-      //   icon: MessageSquareIcon,
-      //   isActive: editor?.isActive("liveblocksCommentMark"),
-      //   onClick: () => editor?.chain().focus().addPendingComment().run(),
-      // },
-      // {
-      //   label: "List Todo",
-      //   icon: ListTodoIcon,
-      //   isActive: editor?.isActive("taskList"),
-      //   onClick: () => editor?.chain().focus().toggleTaskList().run(),
-      // },
       {
         label: "Remove Formatting",
         icon: RemoveFormattingIcon,

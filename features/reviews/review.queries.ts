@@ -5,6 +5,7 @@ import { IdSchema } from "@/lib/validator";
 
 export const getAllReviewsWithFullInfo = safeQuery.query(async () => {
   const result = await next_cache.reviews.admin.getAllWithFullInfo();
+  console.log(result);
   return result;
 });
 

@@ -1,9 +1,6 @@
 import { TOAST_MESSAGES } from "@/constants";
 import { ProductType } from "@/features/products/product.types";
-import {
-  createReviewAction,
-  getUserReviewStatusAction,
-} from "@/features/reviews/review.actions";
+import { createReviewAction } from "@/features/reviews/review.actions";
 import { ReviewType } from "@/features/reviews/review.type";
 import { ReviewInputSchema } from "@/features/reviews/review.validator";
 import { onActionError } from "@/lib/actions/action.helper";
@@ -18,25 +15,35 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
     review: ReviewType | null;
     canReview: boolean;
   }>();
-  const { execute: getReviewStatus } = useAction(getUserReviewStatusAction, {
-    onSuccess: (result) => {
-      if (result.data) {
-        setReviewStatus(result.data);
-      }
-    },
-    // onError: onActionError,
-  });
 
   const { execute } = useAction(createReviewAction, {
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      if (data?.success) {
+        setReviewStatus({
+          review: data.data,
+          canReview: false,
+        });
+      }
       toast.success(TOAST_MESSAGES.REVIEW.CREATE.SUCCESS);
     },
     onError: onActionError,
   });
 
   React.useEffect(() => {
-    // todo: use api
-    getReviewStatus({ productId: product.id });
+    fetch(`/api/review/own`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: product.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setReviewStatus(data);
+      });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

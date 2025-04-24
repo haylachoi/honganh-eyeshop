@@ -43,6 +43,7 @@ export const reviewWithFullInfoSchema = z
     isDeleted: z.boolean().optional(),
     createdAt: z.date(),
     updatedAt: z.date(),
+    productId: MongoIdSchema,
     product: z
       .object({
         _id: MongoIdSchema,
@@ -55,7 +56,8 @@ export const reviewWithFullInfoSchema = z
       .transform(({ _id, ...rest }) => ({
         ...rest,
         id: _id.toString(),
-      })),
+      }))
+      .optional(),
     user: z
       .object({
         _id: MongoIdSchema,
@@ -66,7 +68,8 @@ export const reviewWithFullInfoSchema = z
         id: _id.toString(),
       })),
   })
-  .transform(({ _id, ...rest }) => ({
+  .transform(({ _id, productId, ...rest }) => ({
     ...rest,
     id: _id.toString(),
+    productId: productId.toString(),
   }));

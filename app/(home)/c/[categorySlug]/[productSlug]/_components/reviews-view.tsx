@@ -21,7 +21,7 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
           >
             <div className="">
               <div className="flex gap-8 items-baseline">
-                <p className="text-lg font-medium max-w-10 overflow-ellipsis">
+                <p className="text-lg font-medium w-40 overflow-hidden whitespace-nowrap text-ellipsis">
                   {review.name}
                 </p>
                 <p
