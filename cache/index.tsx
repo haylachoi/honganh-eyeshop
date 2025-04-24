@@ -13,12 +13,12 @@ import userRepository from "@/lib/db/repositories/user";
 
 const blogsMapCache = unstable_cache(
   async () => {
-    const blogs = await blogsRepository.getAllBlogs();
+    const all = await blogsRepository.getAllBlogs();
 
-    const byId = Object.fromEntries(blogs.map((blog) => [blog.id, blog]));
-    const bySlug = Object.fromEntries(blogs.map((blog) => [blog.slug, blog]));
+    const byId = Object.fromEntries(all.map((blog) => [blog.id, blog]));
+    const bySlug = Object.fromEntries(all.map((blog) => [blog.slug, blog]));
 
-    return { byId, bySlug };
+    return { all, byId, bySlug };
   },
   CACHE_CONFIG.BLOGS.ALL.KEY_PARTS,
   {
@@ -104,8 +104,8 @@ const next_cache = {
   },
   blogs: {
     all: async () => {
-      const { byId } = await blogsMapCache();
-      return Object.values(byId);
+      const { all } = await blogsMapCache();
+      return all;
     },
     byId: async (id: string) => {
       const { byId } = await blogsMapCache();

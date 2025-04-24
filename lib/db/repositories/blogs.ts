@@ -11,7 +11,6 @@ import { Id } from "@/types";
 const getAllBlogs = async () => {
   await connectToDatabase();
   const blogs = await Blog.find().lean();
-
   const result = blogs.map((blog) => blogTypeSchema.parse(blog));
 
   return result;

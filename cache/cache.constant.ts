@@ -50,7 +50,7 @@ export const CACHE_CONFIG = {
   },
   BLOGS: {
     ALL: {
-      KEY_PARTS: ["blogs"],
+      KEY_PARTS: ["blogs_all"],
       TAGS: ["blogs"],
       TIME: 3600,
     },
