@@ -1,21 +1,40 @@
-import categoriesRepository from "@/lib/db/repositories/categories";
 import productRepository from "@/lib/db/repositories/products";
 import { safeQuery } from "@/lib/query";
 import { z } from "zod";
 import { categorySlugSchema } from "./category.validator";
 import next_cache from "@/cache";
+import { NotFoundError } from "@/lib/error";
+import { ERROR_MESSAGES } from "@/constants";
 
 export const getCategoryById = safeQuery
   .schema(z.string().min(3))
   .query(async ({ parsedInput: id }) => {
-    const category = await categoriesRepository.getCategoryById(id);
+    const categories = await next_cache.categories.getAll();
+    const category = categories.find((category) => category.id === id);
+
+    if (!category) {
+      throw new NotFoundError({
+        resource: "category",
+        message: ERROR_MESSAGES.CATEGORY.NOT_FOUND,
+      });
+    }
+
     return category;
   });
 
 export const getCategoryBySlug = safeQuery
   .schema(z.string().min(3))
   .query(async ({ parsedInput: slug }) => {
-    const category = await categoriesRepository.getCategoryBySlug(slug);
+    const categories = await next_cache.categories.getAll();
+    const category = categories.find((category) => category.slug === slug);
+
+    if (!category) {
+      throw new NotFoundError({
+        resource: "category",
+        message: ERROR_MESSAGES.CATEGORY.NOT_FOUND,
+      });
+    }
+
     return category;
   });
 
