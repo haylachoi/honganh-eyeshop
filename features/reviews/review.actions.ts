@@ -32,7 +32,6 @@ export const createReviewAction = createReviewActionClient
     }): Promise<
       { success: true; data: ReviewType } | { success: false; message: string }
     > => {
-      // todo: check order of user
       const canReview = await reviewRepository.canUserReview({
         productId: parsedInput.productId,
         userId: userId,
@@ -57,33 +56,6 @@ export const createReviewAction = createReviewActionClient
       };
     },
   );
-
-// todo: use route api instead of action
-export const getUserReviewStatusAction = authCustomerActionClient
-  .metadata({
-    actionName: "getUserReviewStatus",
-  })
-  .schema(
-    z.object({
-      productId: IdSchema,
-    }),
-  )
-  .action(async ({ parsedInput, ctx }) => {
-    const review = await reviewRepository.getReviewByProductIdAndUserId({
-      productId: parsedInput.productId,
-      userId: ctx.userId,
-    });
-
-    const canReview = await reviewRepository.canUserReview({
-      productId: parsedInput.productId,
-      userId: ctx.userId,
-    });
-
-    return {
-      review,
-      canReview,
-    };
-  });
 
 export const canUserReviewAction = authCustomerActionClient
   .metadata({
