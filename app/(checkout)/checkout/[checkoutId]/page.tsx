@@ -10,7 +10,6 @@ const CheckoutPage = async ({ params }: { params: Params }) => {
   const { checkoutId } = await params;
   const checkoutResult = await getCheckoutById(checkoutId);
   if (!checkoutResult.success) {
-    // todo: handle error
     return <CheckoutNotFound />;
   }
 

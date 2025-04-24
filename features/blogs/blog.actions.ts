@@ -15,6 +15,7 @@ import {
 import { NotFoundError } from "@/lib/error";
 import { removeDiacritics } from "@/lib/utils";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
+import next_cache from "@/cache";
 
 const resource = "blog";
 const blogCacheTags = CACHE_CONFIG.BLOGS.ALL.TAGS[0];
@@ -42,8 +43,7 @@ export const createBlogAction = createBlogActionClient
   .action(async ({ parsedInput }) => {
     const { authorId, wallImage, content, images, imageSources, ...rest } =
       parsedInput;
-    // todo: use cache
-    const user = await userRepository.getUserById(authorId);
+    const user = await next_cache.users.getSafeUserInfo({ id: authorId });
 
     if (!user) {
       throw new NotFoundError({
