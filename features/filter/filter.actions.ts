@@ -56,7 +56,6 @@ export const searchAction = actionClient
       ).values(),
     ];
 
-    // todo: filter draf
     const [textSearchBlogResults, regexSearchBlogResults] = await Promise.all([
       blogsRepository.searchBlogAndSimpleReturnByQuery({
         queries: [{ $text: { $search: keyword } }],

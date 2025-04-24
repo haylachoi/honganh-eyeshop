@@ -11,6 +11,22 @@ import couponsRepository from "@/lib/db/repositories/coupons";
 import filtersRepository from "@/lib/db/repositories/filters";
 import userRepository from "@/lib/db/repositories/user";
 
+const blogsMapCache = unstable_cache(
+  async () => {
+    const blogs = await blogsRepository.getAllBlogs();
+
+    const byId = Object.fromEntries(blogs.map((blog) => [blog.id, blog]));
+    const bySlug = Object.fromEntries(blogs.map((blog) => [blog.slug, blog]));
+
+    return { byId, bySlug };
+  },
+  CACHE_CONFIG.BLOGS.ALL.KEY_PARTS,
+  {
+    tags: CACHE_CONFIG.BLOGS.ALL.TAGS,
+    revalidate: CACHE_CONFIG.BLOGS.ALL.TIME,
+  },
+);
+
 const next_cache = {
   users: {
     getAll: unstable_cache(
@@ -87,22 +103,18 @@ const next_cache = {
     ),
   },
   blogs: {
-    all: unstable_cache(
-      blogsRepository.getAllBlogs,
-      CACHE_CONFIG.BLOGS.ALL.KEY_PARTS,
-      {
-        tags: CACHE_CONFIG.BLOGS.ALL.TAGS,
-        revalidate: CACHE_CONFIG.BLOGS.ALL.TIME,
-      },
-    ),
-    searchByTags: unstable_cache(
-      blogsRepository.getBlogsByTags,
-      CACHE_CONFIG.BLOGS.BY_TAG.KEY_PARTS,
-      {
-        tags: CACHE_CONFIG.BLOGS.BY_TAG.TAGS,
-        revalidate: CACHE_CONFIG.BLOGS.BY_TAG.TIME,
-      },
-    ),
+    all: async () => {
+      const { byId } = await blogsMapCache();
+      return Object.values(byId);
+    },
+    byId: async (id: string) => {
+      const { byId } = await blogsMapCache();
+      return byId[id];
+    },
+    bySlug: async (slug: string) => {
+      const { bySlug } = await blogsMapCache();
+      return bySlug[slug];
+    },
     searchByQuery: unstable_cache(
       blogsRepository.searchBlogsByQuery,
       CACHE_CONFIG.BLOGS.BY_QUERY.KEY_PARTS,

@@ -20,7 +20,9 @@ const BlogView = ({ blog }: { blog: BlogType }) => {
         </div>
 
         <div className="md:flex gap-4 text-muted-foreground">
-          <span>Ngày cập nhật: {dateFormatter.format(blog.updatedAt)}</span>
+          <span>
+            Ngày cập nhật: {dateFormatter.format(new Date(blog.updatedAt))}
+          </span>
           <ul className="flex gap-2">
             {blog.tags.map((tag) => (
               <li key={tag}>

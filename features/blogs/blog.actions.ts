@@ -93,6 +93,31 @@ export const createBlogAction = createBlogActionClient
     return result;
   });
 
+export const setPublishedBlogStatusAction = modifyBlogActionClient
+  .metadata({
+    actionName: "setPublishedBlog",
+  })
+  .schema(
+    z.object({
+      ids: z.union([z.string(), z.array(z.string())]),
+      isPublished: z.boolean(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const ids = Array.isArray(parsedInput) ? parsedInput : [parsedInput];
+
+    if (ids.some((id) => !next_cache.blogs.byId(id))) {
+      throw new NotFoundError({
+        resource: "blog",
+        message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+      });
+    }
+    const result = await blogsRepository.setPublishedStatus(parsedInput);
+
+    revalidateTag(blogCacheTags);
+    return result;
+  });
+
 export const updateBlogAction = modifyBlogActionClient
   .metadata({
     actionName: "updateBlog",

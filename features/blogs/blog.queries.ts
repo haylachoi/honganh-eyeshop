@@ -1,4 +1,3 @@
-import blogsRepository from "@/lib/db/repositories/blogs";
 import { getAuthQueryClient, safeQuery } from "@/lib/query";
 import { blogSlugSchema } from "./blog.validators";
 import { IdSchema } from "@/lib/validator";
@@ -23,39 +22,21 @@ export const getAllBlogs = blogQueryClient.query(async () => {
 export const getBlogById = blogQueryClient
   .schema(IdSchema)
   .query(async ({ parsedInput }) => {
-    const blog = await blogsRepository.getBlogById(parsedInput);
+    const blog = await next_cache.blogs.byId(parsedInput);
     return blog;
   });
 
 export const getBlogBySlug = safeQuery
   .schema(blogSlugSchema)
   .query(async ({ parsedInput }) => {
-    const blog = await blogsRepository.getBlogBySlug(parsedInput);
+    const blog = await next_cache.blogs.bySlug(parsedInput);
     return blog;
   });
 
-export const getRecentBlogs = safeQuery.query(async () => {
+export const getRecentPublishedBlogs = safeQuery.query(async () => {
   const blogs = await next_cache.blogs.recent();
   return blogs;
 });
-
-export const getBlogsByTags = safeQuery
-  .schema(
-    z.object({
-      tags: z.array(z.string()).optional(),
-      page: z.number().default(0),
-      size: z.number().default(PAGE_SIZE.BLOGS.SM),
-    }),
-  )
-  .query(async ({ parsedInput }) => {
-    const blogs = await next_cache.blogs.searchByTags({
-      tags: parsedInput.tags,
-      limit: parsedInput.size,
-      skip: parsedInput.page * parsedInput.size,
-    });
-
-    return blogs;
-  });
 
 export const searchBlogsByQuery = safeQuery
   .schema(

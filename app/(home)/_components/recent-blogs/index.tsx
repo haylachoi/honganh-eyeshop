@@ -1,12 +1,12 @@
 import React from "react";
 import { Heading } from "../heading";
-import { getRecentBlogs } from "@/features/blogs/blog.queries";
+import { getRecentPublishedBlogs } from "@/features/blogs/blog.queries";
 import { RecentBlogsContent } from "./recent-blogs-content";
 import Link from "next/link";
 import { getLink } from "@/lib/utils";
 
 const RecentBlog = async () => {
-  const result = await getRecentBlogs();
+  const result = await getRecentPublishedBlogs();
   const recentBlogs = result.success ? result.data : [];
   return (
     <div className="container">

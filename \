@@ -14,7 +14,7 @@ type params = Promise<{ blogSlug: string }>;
 const BlogPage = async ({ params }: { params: params }) => {
   const { blogSlug } = await params;
   const result = await getBlogBySlug(blogSlug);
-  if (!result.success || !result.data || !result.data.isPublished) {
+  if (!result.success || !result.data) {
     return notFound();
   }
   const blog = result.data;

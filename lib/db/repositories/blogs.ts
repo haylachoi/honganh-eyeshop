@@ -6,6 +6,7 @@ import { FilterQuery, QueryOptions } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
+import { Id } from "@/types";
 
 const getAllBlogs = async () => {
   await connectToDatabase();
@@ -50,9 +51,14 @@ const getBlogsByTags = async ({
 const getRecentBlogs = async ({
   limit = PAGE_SIZE.BLOGS.SM,
   skip = 0,
+  isPublished = true,
 } = {}) => {
   await connectToDatabase();
-  const blogs = await Blog.find()
+  const query: FilterQuery<BlogType> = {};
+  if (isPublished) {
+    query.isPublished = true;
+  }
+  const blogs = await Blog.find(query)
     .sort({ updatedAt: -1 })
     .skip(skip)
     .limit(limit)
@@ -209,6 +215,7 @@ const createBlog = async (input: BlogDbInputType) => {
   return blog;
 };
 
+// todo: use query
 const updateBlog = async (input: BlogDbInputType & { id: string }) => {
   await connectToDatabase();
   const result = await Blog.findOneAndUpdate({ _id: input.id }, input, {
@@ -216,6 +223,28 @@ const updateBlog = async (input: BlogDbInputType & { id: string }) => {
   });
   const blog = blogTypeSchema.parse(result);
   return blog;
+};
+
+// warning: use this if check ids exist before
+const setPublishedStatus = async ({
+  ids,
+  isPublished,
+}: {
+  ids: Id | Id[];
+  isPublished: boolean;
+}) => {
+  await connectToDatabase();
+  const idsArray = Array.isArray(ids) ? ids : [ids];
+  await Blog.updateMany(
+    { _id: { $in: idsArray } },
+    {
+      $set: {
+        isPublished,
+      },
+    },
+  ).lean();
+
+  return ids;
 };
 
 const deleteBlog = async (ids: string | string[]) => {
@@ -250,6 +279,7 @@ const blogsRepository = {
   // countBlogsByTags,
   createBlog,
   updateBlog,
+  setPublishedStatus,
   deleteBlog,
 };
 
