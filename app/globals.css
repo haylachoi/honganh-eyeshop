@@ -284,6 +284,12 @@ body:has(:is(#header-navigation-trigger, #search-box-trigger):checked) {
   }
 }
 
+.clip-left {
+  @media (min-width: 40rem) {
+    clip-path: polygon(0 0, 70% 0, 50% 100%, 0% 100%);
+  }
+}
+
 .blog-container {
   @apply focus:outline-none print:border-0 flex flex-col min-h-[200px] md:max-w-[720px]  cursor-text;
 }

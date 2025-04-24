@@ -1,10 +1,12 @@
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
+import { getCategoryBySlug } from "@/features/categories/category.queries";
 import {
   getFilterByCategorySlug,
   searchProductByQuery,
 } from "@/features/filter/filter.queries";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   return [];
@@ -16,12 +18,40 @@ type Params = { categorySlug: string };
 
 const CategoryPage = async (props: { params: Promise<Params> }) => {
   const { categorySlug } = await props.params;
+  const categoryResult = await getCategoryBySlug(categorySlug);
+  if (!categoryResult.success) {
+    return notFound();
+  }
+  const category = categoryResult.data;
 
-  // todo: add title
   return (
-    <div className="container lg:grid grid-cols-[300px_1fr] gap-4 items-start">
-      <FilterProvider categorySlug={categorySlug} />
-      <ProductProvider categorySlug={categorySlug} />
+    <div className="space-y-12">
+      <div className="w-full relative isolate overflow-hidden py-12">
+        {/* Background split */}
+        <div
+          className="absolute inset-0 -z-10 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/category-wallpaper.webp')",
+          }}
+        >
+          {/* Overlay chỉ bên trái */}
+          <div className="w-full h-full bg-black/70 clip-left" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="container flex items-center justify-center sm:items-start flex-col h-[300px] text-white">
+          <h1 className="text-4xl font-semibold uppercase tracking-tight">
+            {category.name}
+          </h1>
+          <div className="mt-4 h-1 w-16 bg-primary rounded-full" />
+          <p className="mt-2 max-w-sm text-muted">{category.description}</p>
+        </div>
+      </div>
+
+      <div className="container lg:grid grid-cols-[300px_1fr] gap-4 items-start">
+        <FilterProvider categorySlug={categorySlug} />
+        <ProductProvider categorySlug={categorySlug} />
+      </div>
     </div>
   );
 };

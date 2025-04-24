@@ -12,6 +12,13 @@ export const getCategoryById = safeQuery
     return category;
   });
 
+export const getCategoryBySlug = safeQuery
+  .schema(z.string().min(3))
+  .query(async ({ parsedInput: slug }) => {
+    const category = await categoriesRepository.getCategoryBySlug(slug);
+    return category;
+  });
+
 export const getAllCategories = safeQuery.query(async () => {
   const categories = await next_cache.categories.getAll();
   return categories;
