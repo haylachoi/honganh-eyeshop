@@ -97,17 +97,12 @@ const CheckoutForm = ({
     ValidatedItemInfo[] | undefined
   >(undefined);
 
-  // const router = useRouter();
-
   const { execute, isPending } = useAction(createOrderAction, {
     onSuccess: () => {
-      // todo: remove form cart
       if (!checkout.userId) {
         updateCartAfterOrder(checkout.items);
       }
       toast.success(TOAST_MESSAGES.ORDER.CREATE.SUCCESS);
-      // todo: redrect or create summary
-      // router.push(ENDPOINTS.ORDER);
     },
     onError: (e) => {
       const serverError = e.error?.serverError;
@@ -154,7 +149,6 @@ const CheckoutForm = ({
       ...data,
       checkoutid: checkout.id,
       couponCode: coupon?.code,
-      // items: checkout.items,
     };
     const inputResult = orderInputSchema.safeParse(input);
     if (!inputResult.success) {
@@ -164,10 +158,6 @@ const CheckoutForm = ({
 
     execute(inputResult.data);
   };
-
-  if (checkout.isOrderd) {
-    return <div>Đã đặt hàng</div>;
-  }
 
   return (
     <div
