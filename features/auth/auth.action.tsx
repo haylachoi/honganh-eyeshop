@@ -35,7 +35,10 @@ export const signUpAction = actionClient
       phone: parsedInput.phone,
       salt,
       role,
-      password: await hashPassword(parsedInput.password, salt),
+      password: await hashPassword({
+        password: parsedInput.password,
+        salt,
+      }),
       isverified: false,
     };
     const user = await userRepository.createUser(input);
@@ -308,7 +311,10 @@ export const resetPasswordAction = actionClient
     await userRepository.changePassword({
       email,
       salt,
-      password: await hashPassword(newPassword, salt),
+      password: await hashPassword({
+        password: newPassword,
+        salt,
+      }),
     });
 
     await passwordResetTokenRepository.deletePasswordResetTokenById(id);

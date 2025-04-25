@@ -132,7 +132,13 @@ export function getDirtyValues<
 }
 
 // todo: use 1 paramas instead of 2
-export function hashPassword(password: string, salt: string): Promise<string> {
+export function hashPassword({
+  password,
+  salt,
+}: {
+  password: string;
+  salt: string;
+}): Promise<string> {
   return new Promise((resolve, reject) => {
     crypto.scrypt(password.normalize(), salt, 64, (error, hash) => {
       if (error) reject(error);
@@ -151,7 +157,7 @@ export async function comparePasswords({
   salt: string;
   hashedPassword: string;
 }) {
-  const inputHashedPassword = await hashPassword(password, salt);
+  const inputHashedPassword = await hashPassword({ password, salt });
 
   return crypto.timingSafeEqual(
     Buffer.from(inputHashedPassword, "hex"),

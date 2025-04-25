@@ -153,8 +153,12 @@ export const changeCustomerPasswordAction = getAuthActionClient({
         });
       }
 
-      const hashedPw = await hashPassword(currentPassword, user.salt);
-      if (hashedPw !== user.password) {
+      const userHashedPw = await hashPassword({
+        password: currentPassword,
+        salt: user.salt,
+      });
+
+      if (userHashedPw !== user.password) {
         return {
           success: false,
           message: "Mật khẩu hiện tại không khớp",
@@ -165,7 +169,10 @@ export const changeCustomerPasswordAction = getAuthActionClient({
 
       const result = await userRepository.changePassword({
         id: id,
-        password: await hashPassword(newPassword, salt),
+        password: await hashPassword({
+          password: newPassword,
+          salt,
+        }),
         salt,
       });
 
