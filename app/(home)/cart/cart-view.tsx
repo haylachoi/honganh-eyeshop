@@ -153,7 +153,16 @@ const CartItem = ({ item }: { item: CartItemDisplayType }) => {
           isSelected && "bg-primary/50",
         )}
       >
-        <span className="text-xl ">{item.name}</span>
+        <Link
+          href={getLink.product.home({
+            categorySlug: item.category.slug,
+            productSlug: item.slug,
+            attributes: item.variant.attributes,
+          })}
+          className="text-xl hover:underline"
+        >
+          {item.name}
+        </Link>
         <div className="flex gap-4">
           <button
             className="py-1 px-4 text-sm bg-background border border-foreground cursor-pointer"
