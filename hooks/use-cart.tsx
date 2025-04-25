@@ -12,6 +12,7 @@ interface Cart {
   setIsSynced: (isSynced: boolean) => void;
   selectedItems: CartItemDisplayType[];
   toggleSelectedItems: (input: CartItemDisplayType) => void;
+  clearSelectedItems: () => void;
   fetch: () => Promise<void>;
   setItems: ({
     items,
@@ -36,6 +37,12 @@ const useCartStore = create<Cart>()((set, get) => ({
   },
   type: "local",
   selectedItems: [],
+  clearSelectedItems: () => {
+    set((state) => ({
+      ...state,
+      selectedItems: [],
+    }));
+  },
   toggleSelectedItems: (input) => {
     set((state) => {
       const isSelected = state.selectedItems.some(

@@ -3,14 +3,17 @@
 import { createCheckoutAction } from "@/features/checkouts/checkout.actions";
 import useCartStore from "@/hooks/use-cart";
 import { onActionError } from "@/lib/actions/action.helper";
-import { getLink } from "@/lib/utils";
+import { cn, getLink } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 
 export const CartSumary = () => {
   const router = useRouter();
+  const selectedItems = useCartStore((state) => state.selectedItems);
+  const clearSelectedItems = useCartStore((state) => state.clearSelectedItems);
   const { execute, isPending } = useAction(createCheckoutAction, {
     onSuccess: (result) => {
+      clearSelectedItems();
       if (result.data) {
         router.push(getLink.checkout.home({ checkoutId: result.data }));
       }
@@ -18,7 +21,6 @@ export const CartSumary = () => {
     onError: onActionError,
   });
   const items = useCartStore((state) => state.items);
-  const selectedItems = useCartStore((state) => state.selectedItems);
   const cartList = selectedItems.length > 0 ? selectedItems : items;
 
   const total =
@@ -38,7 +40,10 @@ export const CartSumary = () => {
         <SummaryRow label="Tổng tiền" value={total} />
       </div>
       <button
-        className="cursor-pointer bg-primary text-white px-4 py-2"
+        className={cn(
+          "cursor-pointer bg-primary text-white px-4 py-2",
+          cartList.length === 0 && "opacity-50",
+        )}
         onClick={() => {
           execute({
             items: cartList.map((item) => ({
@@ -57,7 +62,7 @@ export const CartSumary = () => {
             paymentMethod: "cod",
           });
         }}
-        disabled={isPending}
+        disabled={isPending || cartList.length === 0}
       >
         Thanh toán
       </button>
