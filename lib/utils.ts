@@ -131,7 +131,6 @@ export function getDirtyValues<
   return dirtyValues;
 }
 
-// todo: use 1 paramas instead of 2
 export function hashPassword({
   password,
   salt,

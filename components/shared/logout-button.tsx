@@ -21,7 +21,7 @@ export const LogoutButton = ({
     },
     onError: onActionError,
   });
-  // todo: show dialog
+
   return (
     <button
       className={cn("cursor-pointer", className)}

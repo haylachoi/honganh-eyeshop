@@ -1,6 +1,17 @@
 import productRepository from "@/lib/db/repositories/products";
 import { CheckoutItemType, ValidatedItemInfo } from "./checkout.types";
 
+const isSameAttributes = (
+  a: { name: string; value: string }[],
+  b: { name: string; value: string }[],
+) => {
+  if (a.length !== b.length) return false;
+
+  return a.every((attrA) =>
+    b.some((attrB) => attrA.name === attrB.name && attrA.value === attrB.value),
+  );
+};
+
 export const validateItems = async ({
   items,
 }: {
@@ -52,11 +63,23 @@ export const validateItems = async ({
       return {
         product: info,
         available: false,
-        message: "Biến thể không tồn tại",
+        message: "Lựa chọn không tồn tại hoặc đã bị xóa. Hãy đặt hàng lại",
       };
     }
 
-    // todo: compare attributes
+    const attributesMatch = isSameAttributes(
+      variant.attributes,
+      item.attributes,
+    );
+
+    if (!attributesMatch) {
+      return {
+        product: info,
+        available: false,
+        message: "Thông tin về sản phẩm đã thay đổi. Hãy đặt hàng lại",
+        attributes: variant.attributes,
+      };
+    }
 
     if (variant.countInStock >= item.quantity) {
       return { product: info, available: true, message: "Đủ hàng" };

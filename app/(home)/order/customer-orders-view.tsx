@@ -40,7 +40,6 @@ const CustomerOrdersView = ({
     return <div>Không có đơn hàng nào</div>;
   }
 
-  // todo: add loading to button
   return (
     <div className="">
       <h1 className="text-2xl font-bold mb-6">Lịch sử đơn hàng</h1>
