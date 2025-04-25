@@ -8,7 +8,7 @@ const TipTapEditor = ({ editor }: { editor: Editor }) => {
   if (!editor) return null;
 
   return (
-    <div>
+    <div className="space-y-4">
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

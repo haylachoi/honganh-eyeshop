@@ -27,6 +27,7 @@ export const writeFileToDisk = async ({
   return fileLink;
 };
 
+// identity is slug is not recommend, because it can be changed
 export const writeImageSourcesToDisk = async ({
   imageSources,
   to,

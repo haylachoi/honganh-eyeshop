@@ -1,12 +1,13 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
-import { FilterQuery, QueryOptions } from "mongoose";
+import { ERROR_MESSAGES, MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
 import { Id } from "@/types";
+import { NotFoundError } from "@/lib/error";
 
 const getAllBlogs = async () => {
   await connectToDatabase();
@@ -214,14 +215,21 @@ const createBlog = async (input: BlogDbInputType) => {
   return blog;
 };
 
-// todo: use query
-const updateBlog = async (input: BlogDbInputType & { id: string }) => {
+const updateBlog = async ({
+  filterQuery,
+  updateQuery,
+}: {
+  filterQuery: FilterQuery<BlogType>;
+  updateQuery: UpdateQuery<BlogType>;
+}) => {
   await connectToDatabase();
-  const result = await Blog.findOneAndUpdate({ _id: input.id }, input, {
-    new: true,
-  });
-  const blog = blogTypeSchema.parse(result);
-  return blog;
+  const result = await Blog.findOneAndUpdate(filterQuery, updateQuery);
+  if (!result) {
+    throw new NotFoundError({
+      resource: "blog",
+      message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+    });
+  }
 };
 
 // warning: use this if check ids exist before

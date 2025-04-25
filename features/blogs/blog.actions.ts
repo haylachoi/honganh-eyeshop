@@ -79,7 +79,7 @@ export const createBlogAction = createBlogActionClient
       images.push(fileLink);
     });
 
-    const result = await blogsRepository.createBlog({
+    await blogsRepository.createBlog({
       ...rest,
       titleNoAccent: removeDiacritics(rest.title),
       wallImage: wallImageUrl,
@@ -89,8 +89,6 @@ export const createBlogAction = createBlogActionClient
     });
 
     revalidateTag(blogCacheTags);
-
-    return result;
   });
 
 export const setPublishedBlogStatusAction = modifyBlogActionClient
@@ -170,12 +168,17 @@ export const updateBlogAction = modifyBlogActionClient
     };
 
     const result = await blogsRepository.updateBlog({
-      ...rest,
-      titleNoAccent: removeDiacritics(rest.title),
-      author: newUserInput,
-      wallImage: wallImageUrl,
-      content: newContent,
-      images,
+      filterQuery: { _id: rest.id },
+      updateQuery: {
+        $set: {
+          ...rest,
+          titleNoAccent: removeDiacritics(rest.title),
+          author: newUserInput,
+          wallImage: wallImageUrl,
+          content: newContent,
+          images,
+        },
+      },
     });
 
     await deleteFile(deletedImages);

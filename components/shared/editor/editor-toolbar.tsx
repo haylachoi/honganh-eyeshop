@@ -542,7 +542,7 @@ const LineHeightButton = ({ editor }: { editor: Editor }) => {
 const EditorToolbar = ({ editor }: { editor: Editor }) => {
   const sections = getSections(editor);
   return (
-    <div className="sticky top-0 z-10 bg-secondary px-2.5 py-0.5 min-h-[40px] flex items-center gap-x-0.5 overflow-x-auto">
+    <div className="sticky top-1 z-10 bg-secondary px-2.5 py-0.5 min-h-[40px] flex items-center gap-x-0.5 overflow-x-auto">
       {sections[0].map((item) => (
         <ToolbarButton key={item.label} {...item} />
       ))}
