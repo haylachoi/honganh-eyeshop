@@ -53,7 +53,6 @@ export const CompletedCheckoutView = ({
             >
               Tiếp tục mua sắm
             </Link>
-            {/* todo : redirect to order page */}
             <Link
               href={getLink.order.customer.view({
                 orderId: checkout.orderId as string,

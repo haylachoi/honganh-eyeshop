@@ -10,7 +10,8 @@ export const MAX_SEARCH_RESULT = 10;
 
 export const PRODUCTS_PER_PAGE = 12;
 
-export const IMAGES_FORDERS = ["users", "products", "blogs"] as const;
+export const BASE_IMAGES_FOLDER = "images";
+export const IMAGES_FOlDERS = ["users", "products", "blogs", "orders"] as const;
 
 export const MAX_IMAGE_SIZE = 1024 * 100; // 100 KB
 export const PAGE_SIZE = {

@@ -16,7 +16,7 @@ import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
-import { generateOrderId } from "./order.utils";
+import { createOrderImages, generateOrderId } from "./order.utils";
 import { ORDER_STATUS_MAPS } from "./order.constants";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 
@@ -80,13 +80,18 @@ export const createOrderAction = customerActionClient
       : 0;
 
     const total = Math.max(subTotal - discount, 0);
+    const orderId = generateOrderId();
+
+    const newItems = await createOrderImages({
+      items,
+    });
 
     const result = await ordersRepository.createOrder({
       input: {
         ...parsedInput,
-        orderId: generateOrderId(),
+        orderId,
         userId,
-        items,
+        items: newItems,
         discount,
         subTotal,
         total,

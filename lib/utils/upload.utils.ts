@@ -1,6 +1,6 @@
 import path from "path";
 import { writeFile } from "fs/promises";
-import { IMAGES_FORDERS } from "@/constants";
+import { IMAGES_FOlDERS } from "@/constants";
 
 export const uploadFile = async ({
   file,
@@ -9,7 +9,7 @@ export const uploadFile = async ({
 }: {
   file: File;
   fileName?: string;
-  to: (typeof IMAGES_FORDERS)[number];
+  to: (typeof IMAGES_FOlDERS)[number];
 }) => {
   const data = await file.arrayBuffer();
   const buffer = Buffer.from(data);

@@ -2,6 +2,7 @@ import path from "path";
 import { writeFile } from "fs/promises";
 import { ImageSourceType } from "@/features/blogs/blog.types";
 import fs from "fs/promises";
+import { BASE_IMAGES_FOLDER } from "@/constants";
 
 // todo: move others server utils to here
 
@@ -18,7 +19,7 @@ export const writeFileToDisk = async ({
   const data = await file.arrayBuffer();
   const buffer = Buffer.from(data);
   const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
-  const basePath = path.join("images", to, fileName);
+  const basePath = path.join(BASE_IMAGES_FOLDER, to, fileName);
   const fileLink = path.join("/", basePath);
   const filePath = path.join(process.cwd(), "public", basePath);
   // warning : can't use await
