@@ -35,7 +35,7 @@ const CategoryPage = async (props: { params: Promise<Params> }) => {
           }}
         >
           {/* Overlay chỉ bên trái */}
-          <div className="w-full h-full bg-black/70 clip-left" />
+          <div className="w-full h-full bg-primary/95 clip-left" />
         </div>
 
         {/* Hero Content */}
