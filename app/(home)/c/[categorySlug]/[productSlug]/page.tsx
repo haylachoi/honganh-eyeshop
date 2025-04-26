@@ -1,15 +1,10 @@
 import ProductView from "@/app/(home)/c/[categorySlug]/[productSlug]/_components/product-view";
 import { getProductBySlug } from "@/features/products/product.queries";
 import { getReviewsWithUserNameByProductId } from "@/features/reviews/review.queries";
-
-// todo: generate metadata
-
-export async function generateStaticParams() {
-  return [];
-}
-export const dynamic = "force-static";
-
-export const revalidate = 3600;
+import { Id } from "@/types";
+import { ReviewsView } from "./_components/reviews-view";
+import { Suspense } from "react";
+import { ReviewForm } from "./_components/review-form";
 
 type Params = Promise<{ categorySlug: string; productSlug: string }>;
 const ProductPage = async ({ params }: { params: Params }) => {
@@ -21,13 +16,29 @@ const ProductPage = async ({ params }: { params: Params }) => {
   }
 
   const product = result.data;
-  const reviewsPromise = getReviewsWithUserNameByProductId(product.id);
 
   return (
     <div className="container">
-      <ProductView product={product} reviewsPromise={reviewsPromise} />
+      <ProductView product={product} />
+      <ReviewForm productId={product.id} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ReviewsProvider productId={product.id} />
+      </Suspense>
     </div>
   );
 };
 
 export default ProductPage;
+
+const ReviewsProvider = async ({ productId }: { productId: Id }) => {
+  const reviewsResult = await getReviewsWithUserNameByProductId(productId);
+  if (!reviewsResult.success) {
+    return null;
+  }
+  const reviews = reviewsResult.data;
+  return (
+    <div className="py-8 bg-secondary fluid-container">
+      <ReviewsView reviews={reviews} />
+    </div>
+  );
+};

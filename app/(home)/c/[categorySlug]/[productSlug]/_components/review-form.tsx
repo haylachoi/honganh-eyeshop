@@ -1,15 +1,17 @@
+"use client";
 import { TOAST_MESSAGES } from "@/constants";
-import { ProductType } from "@/features/products/product.types";
 import { createReviewAction } from "@/features/reviews/review.actions";
 import { ReviewType } from "@/features/reviews/review.type";
 import { ReviewInputSchema } from "@/features/reviews/review.validator";
 import { onActionError } from "@/lib/actions/action.helper";
+import { Id } from "@/types";
 import { Star } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import React from "react";
+import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";
 import { toast } from "sonner";
 
-export const ReviewForm = ({ product }: { product: ProductType }) => {
+export const ReviewForm = ({ productId }: { productId: Id }) => {
   const [value, setValue] = React.useState(5);
   const [reviewStatus, setReviewStatus] = React.useState<{
     review: ReviewType | null;
@@ -36,7 +38,7 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        productId: product.id,
+        productId: productId,
       }),
     })
       .then((res) => res.json())
@@ -51,13 +53,16 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
 
   const onSubmit = (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
-    data.productId = product.id;
+    data.productId = productId;
     const parsedData = ReviewInputSchema.parse(data);
     execute(parsedData);
   };
 
   return (
-    <>
+    <div
+      className="py-4 flex flex-col gap-12"
+      id={REVIEW_CONSTANT.CUSTOMER.PRODUCT.ID}
+    >
       {canReview && !review && (
         <form className="flex flex-col gap-4" action={onSubmit}>
           <h4>Hãy để để lại đánh giá và bình luận về sản phẩm này</h4>
@@ -71,6 +76,7 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
                     name="rating"
                     value={rating}
                     onClick={() => setValue(rating)}
+                    defaultChecked={rating === value}
                   />
                   <Star
                     className={
@@ -99,6 +105,6 @@ export const ReviewForm = ({ product }: { product: ProductType }) => {
           </button>
         </form>
       )}
-    </>
+    </div>
   );
 };

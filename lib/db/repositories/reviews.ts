@@ -452,7 +452,10 @@ const hideReview = async ({ reviewId }: { reviewId: Id }) => {
     );
 
     if (!updatedProduct) {
-      throw new Error("Không tìm thấy sản phẩm để cập nhật");
+      throw new NotFoundError({
+        resource: "product",
+        message: ERROR_MESSAGES.PRODUCT.NOT_FOUND,
+      });
     }
     await session.commitTransaction();
     session.endSession();
@@ -460,7 +463,9 @@ const hideReview = async ({ reviewId }: { reviewId: Id }) => {
     await session.abortTransaction();
     session.endSession();
 
-    console.error("Lỗi khi ẩn review:", error);
+    if (error instanceof NotFoundError) {
+      throw error;
+    }
     throw new ServerError({
       resource: "review",
     });

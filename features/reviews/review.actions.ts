@@ -49,7 +49,9 @@ export const createReviewAction = createReviewActionClient
         userId,
       });
 
+      // consider don't use revalidateTag
       revalidateTag(CACHE_CONFIG.REVIEWS.ALL.TAGS[0]);
+
       return {
         success: true,
         data: result,
