@@ -33,6 +33,19 @@ export const getBlogBySlug = safeQuery
     return blog;
   });
 
+export const getPublishedBlogsByTag = safeQuery
+  .schema(
+    z.object({
+      tag: z.string(),
+    }),
+  )
+  .query(async ({ parsedInput: { tag } }) => {
+    const blogs = await next_cache.blogs.publishedBlogByTag({
+      tag,
+    });
+    return blogs;
+  });
+
 export const getRecentPublishedBlogs = safeQuery.query(async () => {
   const blogs = await next_cache.blogs.recent();
   return blogs;

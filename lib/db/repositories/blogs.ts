@@ -11,7 +11,7 @@ import { NotFoundError } from "@/lib/error";
 
 const getAllBlogs = async () => {
   await connectToDatabase();
-  const blogs = await Blog.find().lean();
+  const blogs = await Blog.find().sort({ updatedAt: -1 }).lean();
   const result = blogs.map((blog) => blogTypeSchema.parse(blog));
 
   return result;

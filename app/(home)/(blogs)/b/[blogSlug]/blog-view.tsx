@@ -7,7 +7,7 @@ import { JSX } from "react";
 
 const BlogView = ({ blog }: { blog: BlogType }) => {
   return (
-    <div className="px-1 max-w-[600px] lg:max-w-[1024px] xl:max-w-[1200px] mx-auto flex flex-col justify-center gap-4">
+    <div className="">
       <div className="flex flex-col gap-6">
         <h1 className="text-4xl mb-1 font-bold text-primary text-center capitalize">
           {blog.title}

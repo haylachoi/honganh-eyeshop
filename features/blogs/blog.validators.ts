@@ -4,7 +4,10 @@ import { z } from "zod";
 const titleSchema = z.string().trim().min(3).max(200);
 const descriptionSchema = z.string().trim().max(200);
 export const blogSlugSchema = z.string().trim().min(3).max(200);
-const wallImageSchema = z.union([z.string(), z.instanceof(File)]);
+const wallImageSchema = z.union([
+  z.string().min(1, "Phải có ảnh"),
+  z.instanceof(File),
+]);
 const imagesSchema = z.array(z.string()).default([]);
 export const imageSourceSchema = z.object({
   fakeUrl: z.string(),

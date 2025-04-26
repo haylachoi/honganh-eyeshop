@@ -10,15 +10,32 @@ import categoriesRepository from "@/lib/db/repositories/categories";
 import couponsRepository from "@/lib/db/repositories/coupons";
 import filtersRepository from "@/lib/db/repositories/filters";
 import userRepository from "@/lib/db/repositories/user";
+import { BlogType } from "@/features/blogs/blog.types";
+import { PAGE_SIZE } from "@/constants";
 
 const blogsMapCache = unstable_cache(
   async () => {
     const all = await blogsRepository.getAllBlogs();
 
-    const byId = Object.fromEntries(all.map((blog) => [blog.id, blog]));
-    const bySlug = Object.fromEntries(all.map((blog) => [blog.slug, blog]));
+    const byId: Record<string, BlogType> = {};
+    const bySlug: Record<string, BlogType> = {};
+    const publishedBlogByTag: Record<string, BlogType[]> = {};
 
-    return { all, byId, bySlug };
+    for (const blog of all) {
+      byId[blog.id] = blog;
+      bySlug[blog.slug] = blog;
+
+      for (const tag of blog.tags || []) {
+        if (!publishedBlogByTag[tag]) {
+          publishedBlogByTag[tag] = [];
+        }
+        if (blog.isPublished) {
+          publishedBlogByTag[tag].push(blog);
+        }
+      }
+    }
+
+    return { all, byId, bySlug, publishedBlogByTag };
   },
   CACHE_CONFIG.BLOGS.ALL.KEY_PARTS,
   {
@@ -114,6 +131,20 @@ const next_cache = {
     bySlug: async (slug: string) => {
       const { bySlug } = await blogsMapCache();
       return bySlug[slug];
+    },
+    publishedBlogByTag: async ({
+      tag,
+      size = PAGE_SIZE.BLOGS.SM,
+      page = 0,
+    }: {
+      tag: string;
+      size?: number;
+      page?: number;
+    }) => {
+      const { publishedBlogByTag } = await blogsMapCache();
+      const blogs = publishedBlogByTag[tag];
+      const result = blogs.slice(size * page, size * page + size);
+      return { items: result, total: blogs.length };
     },
     searchByQuery: unstable_cache(
       blogsRepository.searchBlogsByQuery,

@@ -7,7 +7,7 @@ import Link from "next/link";
 export const Blogcard = ({ blog }: { blog: BlogType }) => {
   return (
     <>
-      <div className="">
+      <div className="relative">
         <Link
           href={getLink.blog.view({ blogSlug: blog.slug })}
           className="block"
@@ -20,27 +20,18 @@ export const Blogcard = ({ blog }: { blog: BlogType }) => {
             height={100}
           />
         </Link>
+        <span className="absolute top-1 right-1 p-1 flex gap-2 items-center text-sm bg-background text-muted-foreground">
+          <CalendarDays className="size-4" />
+          {dateFormatter.format(new Date(blog.updatedAt))}
+        </span>
       </div>
-      <div className="p-2">
+      <div className="p-2 mt-3">
         <Link
           href={getLink.blog.view({ blogSlug: blog.slug })}
           className="hover:underline"
         >
           <h2 className="text-2xl text-primary">{blog.title}</h2>
         </Link>
-      </div>
-      <div className="p-2">
-        <span className="flex gap-2 items-center text-sm bg-background text-muted-foreground">
-          <CalendarDays className="size-4" />
-          {dateFormatter.format(new Date(blog.updatedAt))}
-        </span>
-        {/* <ul className="flex gap-2"> */}
-        {/*   {blog.tags.map((tag) => ( */}
-        {/*     <li key={tag}> */}
-        {/*       <span className="">#{tag}</span> */}
-        {/*     </li> */}
-        {/*   ))} */}
-        {/* </ul> */}
       </div>
     </>
   );
