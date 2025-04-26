@@ -95,8 +95,8 @@ const SearchBox = () => {
           setIsOpen(false);
         }
         if (e.key === "Enter") {
-          router.push(getLink.search({ keyword: search }));
           setIsOpen(false);
+          router.push(getLink.search({ keyword: search }));
         }
       }}
     >
@@ -117,29 +117,34 @@ const SearchBox = () => {
       <button
         className="cursor-pointer"
         onClick={() => {
-          if (!isPending && search) {
+          const width = window.innerWidth;
+          // if mobile screen, text input not show, so we don't need to delete search text, other button will delete text
+          if (!isPending && search && width > 768) {
             setSearch("");
-          } else if (!isPending) {
+            return;
+          }
+
+          if (!isPending) {
             setIsOpen((prev) => !prev);
           }
         }}
       >
         <SearchIcon
           className={cn(
-            "size-5 text-foreground/60 hidden",
-            !isPending && !search && "block",
+            "size-5 text-foreground/60 md:hidden",
+            !isPending && !search && "md:block",
           )}
         />
         <X
           className={cn(
             "size-5 text-foreground/60 hidden",
-            !isPending && search && "block",
+            !isPending && search && "md:block",
           )}
         />
         <LoaderIcon
           className={cn(
             "size-5 text-foreground/60 hidden",
-            isPending && "block",
+            isPending && "md:block",
           )}
         />
       </button>
@@ -155,7 +160,7 @@ const SearchBox = () => {
         <div className="overflow-hidden container py-2 flex flex-col gap-6">
           <div
             className={cn(
-              "w-full bg-secondary hidden md:hidden outline-1 focus-within:outline-primary",
+              "w-full bg-secondary hidden outline-1 focus-within:outline-primary",
               isOpen && "max-md:grid grid-cols-[1fr_auto]",
             )}
           >
