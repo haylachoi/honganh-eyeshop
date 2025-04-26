@@ -100,24 +100,9 @@ const PaginationLink = ({
     );
   }
 
-  const handleDispatch = () => {
-    const receiver = document.querySelector("#nav-indicator");
-    if (receiver) {
-      receiver.dispatchEvent(
-        new CustomEvent("nav-indicator-event", {
-          detail: {
-            href: getPageLink(page),
-          },
-          bubbles: true, // Optional
-        }),
-      );
-    }
-  };
-
   return (
     <Link
       href={getPageLink(page)}
-      onClick={handleDispatch}
       className={`px-3 py-1 border border-foreground text-sm ${
         isActive
           ? "bg-primary text-white border-primary"
