@@ -27,7 +27,7 @@ const BlogsPage = async () => {
     page: Number(page),
     size: size,
   });
-  // todo: add #tags section and recent blogs
+
   return (
     <div className="container flex flex-col gap-4">
       <div className="lg:grid grid-cols-2">

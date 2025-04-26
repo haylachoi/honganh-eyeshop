@@ -6,7 +6,7 @@ import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
 import { SignUpType } from "@/features/auth/auth.type";
 import { userSchema } from "@/features/users/user.validator";
-import { NotFoundError } from "@/lib/error";
+import { NotFoundError, ValidationError } from "@/lib/error";
 import mongoose, { FilterQuery, UpdateQuery } from "mongoose";
 import EmailVerificationToken from "../model/email-verification.model";
 import PasswordResetToken from "../model/password-reset-token.model";
@@ -16,16 +16,12 @@ import {
 } from "@/features/users/user.validator";
 import { UserType } from "@/features/users/user.types";
 
-// todo: do not cache user with sensitive info when use CDN, because user can be leaked
+// danger: cache user when use CDN can leak sensitive data
 const getAllUsers = async () => {
   await connectToDatabase();
   const user = await User.find().sort().lean();
 
-  // todo: use schema
-  const result = user.map(({ _id, ...user }) => ({
-    ...user,
-    id: _id.toString(),
-  })) as UserType[];
+  const result = userSchema.array().parse(user);
 
   return result;
 };
@@ -101,8 +97,10 @@ const changePassword = async ({
   await connectToDatabase();
 
   if (!email && !id) {
-    // todo: use other Error
-    throw new Error("Email hoặc id phải được cung cấp");
+    throw new ValidationError({
+      resource: "user",
+      message: "Email hoặc id phải được cung cấp",
+    });
   }
   const filter = email ? { email } : { _id: id };
 

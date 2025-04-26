@@ -199,8 +199,7 @@ const getProductByTags = async ({
 }) => {
   await connectToDatabase();
 
-  // todo: use strong type instead of record
-  const match: Record<string, unknown> = {
+  const match: FilterQuery<ProductType> = {
     "tags.name": { $in: tags },
   };
 

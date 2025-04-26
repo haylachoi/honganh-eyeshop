@@ -22,13 +22,13 @@ export const removeDiacritics = (str: string) =>
     .replace(/[đĐ]/g, "d")
     .replace(/([^0-9a-z-\s])/g, "");
 
-// todo: use env
+// use env
 export const currencyFormatter = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
 });
 
-// todo: use env
+// use env
 export const dateFormatter = new Intl.DateTimeFormat("vi-VN", {
   day: "2-digit",
   month: "2-digit",
