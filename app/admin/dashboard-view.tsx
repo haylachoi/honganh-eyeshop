@@ -124,7 +124,7 @@ export const DashboardView = ({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Đơn hàng trong 1 tuần gần nhất</CardTitle>
+            <CardTitle>Đơn hàng 7 ngày gần nhất</CardTitle>
           </CardHeader>
           <CardContent className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
