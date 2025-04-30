@@ -11,6 +11,8 @@
   --color-link: oklch(60% 0.2 240);
   --default-font-family: var(--font-rubik);
 
+  --container-sidebar: 30px;
+
   @keyframes indeterminate {
     0% {
       transform: translateX(-100%) scaleX(0.4);

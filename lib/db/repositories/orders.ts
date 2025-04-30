@@ -17,7 +17,7 @@ import { Id } from "@/types";
 
 const getAllOrders = async () => {
   await connectToDatabase();
-  const orders = await Order.find({});
+  const orders = await Order.find({}).sort({ createdAt: -1 });
   const result = orders.map((order) => orderTypeSchema.parse(order));
   return result;
 };

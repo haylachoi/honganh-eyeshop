@@ -13,7 +13,6 @@ import { z } from "zod";
 const resource = "order";
 
 // todo : not cache all order
-// todo: sort by desc
 export const getAllOrders = getAuthQueryClient({
   resource,
 }).query(async () => {

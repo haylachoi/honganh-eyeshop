@@ -31,6 +31,7 @@ import {
 } from "@/features/dashboard/dashboard.queries-builder";
 import { TOP_PRODUCT_COUNT } from "@/features/dashboard/dashboard.constants";
 
+// warning: date save as UTC time, not local time
 const getDashboardDefaultValues = ({
   date,
   month,
