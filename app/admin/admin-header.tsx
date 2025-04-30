@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  // { name: "Overview", href: ADMIN_ENDPOINTS.OVERVIEW },
+  { name: "Overview", href: ADMIN_ENDPOINTS.OVERVIEW },
   { name: "Categories", href: ADMIN_ENDPOINTS.CATEGORIES },
   { name: "Products", href: ADMIN_ENDPOINTS.PRODUCTS },
   { name: "Tags", href: ADMIN_ENDPOINTS.TAGS },

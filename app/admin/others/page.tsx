@@ -1,6 +1,6 @@
 import { OthersContent } from "./others-content";
 
-const OthersPage = () => {
+const OthersPage = async () => {
   return (
     <div className="container">
       <OthersContent />

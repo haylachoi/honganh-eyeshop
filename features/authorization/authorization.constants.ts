@@ -12,6 +12,7 @@ export const RESOURCE_TYPES = {
   ORDER: "order",
   REVIEW: "review",
   VERIFY_TOKEN: "verifyToken",
+  DASHBOARD: "dashboard",
   ALL: "all",
 } as const;
 
@@ -70,6 +71,9 @@ export const PERMISSIONS: {
       view: ["all"],
     },
     review: {
+      view: ["all"],
+    },
+    dashboard: {
       view: ["all"],
     },
   },

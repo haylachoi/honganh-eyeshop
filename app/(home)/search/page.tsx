@@ -15,7 +15,6 @@ export const dynamic = "force-static";
 export const revalidate = 3600;
 
 const SearchPage = async () => {
-  // todo: css for mobile screen
   return (
     <div className="container lg:grid grid-cols-[300px_1fr] gap-4 items-start">
       <FilterProvider />

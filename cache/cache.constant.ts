@@ -136,4 +136,21 @@ export const CACHE_CONFIG = {
       TIME: 3600,
     },
   },
+  DASHBOARD: {
+    DAILY: {
+      KEY_PARTS: ["dashboard", "daily"],
+      TAGS: ["dashboard"],
+      TIME: 120,
+    },
+    MONTHLY_BY_DAILY: {
+      KEY_PARTS: ["dashboard_by_daily", "monthly"],
+      TAGS: ["dashboard"],
+      TIME: 120,
+    },
+    LAST_7_DAYS: {
+      KEY_PARTS: ["dashboard", "last_7_days"],
+      TAGS: ["dashboard"],
+      TIME: 120,
+    },
+  },
 };

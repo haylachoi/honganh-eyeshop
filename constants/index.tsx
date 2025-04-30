@@ -14,6 +14,7 @@ export const BASE_IMAGES_FOLDER = "images";
 export const IMAGES_FOlDERS = ["users", "products", "blogs", "orders"] as const;
 
 export const MAX_IMAGE_SIZE = 1024 * 100; // 100 KB
+
 export const PAGE_SIZE = {
   TRENDING: {
     SM: 8,
@@ -96,6 +97,10 @@ export const ADMIN_ENDPOINTS = {
   OTHERS: "/admin/others",
 };
 
+export const API_ENDPOINTS = {
+  VIEW_COUNT: "/api/viewCount",
+};
+
 export const SORT_BY_VALUES = ["asc", "desc"] as const;
 export const SORT_BY_OPTIONS = createUppercaseMap(SORT_BY_VALUES);
 
@@ -115,6 +120,12 @@ export const FILTER_NAME = {
   PRICE: "price",
   SEARCH: "search",
   TAG: "tag",
+};
+
+export const VIEWS_COUNT_CONFIG = {
+  DELAY_THRESHOLD: 5000,
+  MAX_VIEW_ACCUMULATION: 10,
+  DB_FLUSH_THRESHOLD: 60 * 1000 * 2,
 };
 
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";

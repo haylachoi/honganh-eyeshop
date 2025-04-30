@@ -5,6 +5,7 @@ import { Id } from "@/types";
 import { ReviewsView } from "./_components/reviews-view";
 import { Suspense } from "react";
 import { ReviewForm } from "./_components/review-form";
+import { ViewCount } from "./_components/view-count";
 
 type Params = Promise<{ categorySlug: string; productSlug: string }>;
 const ProductPage = async ({ params }: { params: Params }) => {
@@ -19,6 +20,7 @@ const ProductPage = async ({ params }: { params: Params }) => {
 
   return (
     <div className="container">
+      <ViewCount />
       <ProductView product={product} />
       <ReviewForm productId={product.id} />
       <Suspense fallback={<div>Loading...</div>}>

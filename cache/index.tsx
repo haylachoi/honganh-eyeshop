@@ -12,6 +12,7 @@ import filtersRepository from "@/lib/db/repositories/filters";
 import userRepository from "@/lib/db/repositories/user";
 import { BlogType } from "@/features/blogs/blog.types";
 import { PAGE_SIZE } from "@/constants";
+import dashboardRepository from "@/lib/db/repositories/dashboard";
 
 const blogsMapCache = unstable_cache(
   async () => {
@@ -212,6 +213,25 @@ const next_cache = {
         },
       ),
     },
+  },
+
+  dashboard: {
+    daily: unstable_cache(
+      dashboardRepository.createOrGetDailyDashboard,
+      CACHE_CONFIG.DASHBOARD.DAILY.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.DASHBOARD.DAILY.TAGS,
+        revalidate: CACHE_CONFIG.DASHBOARD.DAILY.TIME,
+      },
+    ),
+    last7Days: unstable_cache(
+      dashboardRepository.getLast7DaysDashboardStats,
+      CACHE_CONFIG.DASHBOARD.LAST_7_DAYS.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.DASHBOARD.LAST_7_DAYS.TAGS,
+        revalidate: CACHE_CONFIG.DASHBOARD.LAST_7_DAYS.TIME,
+      },
+    ),
   },
 
   filters: {
