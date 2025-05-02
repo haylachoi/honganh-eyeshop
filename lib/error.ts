@@ -1,6 +1,7 @@
 import { ERROR_MESSAGES } from "@/constants";
 import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
+export const DEFAULT_SERVER_ERROR_MESSAGE = "Có lỗi xảy ra";
 export type ResourceType = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];
 
 export const ERROR_TYPES = {
