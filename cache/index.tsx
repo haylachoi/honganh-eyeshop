@@ -181,6 +181,14 @@ const next_cache = {
         revalidate: CACHE_CONFIG.ORDER.ALL.TIME,
       },
     ),
+    last30Days: unstable_cache(
+      ordersRepository.getLast30DaysOrders,
+      CACHE_CONFIG.ORDER.LAST_30_DAYS.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.ORDER.LAST_30_DAYS.TAGS,
+        revalidate: CACHE_CONFIG.ORDER.LAST_30_DAYS.TIME,
+      },
+    ),
     history: {
       countByUserId: unstable_cache(
         ordersRepository.countOrdersByUserId,

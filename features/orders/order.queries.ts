@@ -12,11 +12,16 @@ import { z } from "zod";
 
 const resource = "order";
 
-// todo : not cache all order
 export const getAllOrders = getAuthQueryClient({
   resource,
 }).query(async () => {
-  return await next_cache.orders.all();
+  return await ordersRepository.getAllOrders();
+});
+
+export const getLast30DaysOrders = getAuthQueryClient({
+  resource,
+}).query(async () => {
+  return await next_cache.orders.last30Days();
 });
 
 export const getOrderByUserId = authCustomerQueryClient

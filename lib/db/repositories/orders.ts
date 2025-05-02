@@ -22,6 +22,24 @@ const getAllOrders = async () => {
   return result;
 };
 
+const getLast30DaysOrders = async () => {
+  await connectToDatabase();
+
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - 30);
+  start.setHours(0, 0, 0, 0);
+
+  const orders = await Order.find({
+    createdAt: {
+      $gte: start,
+    },
+  }).sort({ createdAt: -1 });
+
+  const result = orders.map((order) => orderTypeSchema.parse(order));
+  return result;
+};
+
 const getOrdersByUserId = async ({
   userId,
   offset = 0,
@@ -254,6 +272,7 @@ const updateStatusOrder = async ({
 };
 
 const ordersRepository = {
+  getLast30DaysOrders,
   getOrderByOrderId,
   getOrdersByUserId,
   getAllOrders,

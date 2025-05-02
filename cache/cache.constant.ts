@@ -99,6 +99,11 @@ export const CACHE_CONFIG = {
       TAGS: ["order"],
       TIME: 3600,
     },
+    LAST_30_DAYS: {
+      KEY_PARTS: ["order_last_30_days"],
+      TAGS: ["order"],
+      TIME: 3600,
+    },
     HISTORY: {
       ITEMS: {
         KEY_PARTS: ["order_history", "userId", "skip", "limit"],

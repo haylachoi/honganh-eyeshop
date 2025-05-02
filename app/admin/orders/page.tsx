@@ -1,8 +1,8 @@
-import { getAllOrders } from "@/features/orders/order.queries";
+import { getLast30DaysOrders } from "@/features/orders/order.queries";
 import OrdersView from "./_components/orders-view";
 
 const OrdersPage = async () => {
-  const result = await getAllOrders();
+  const result = await getLast30DaysOrders();
   if (!result.success) return <div>Error</div>;
 
   const orders = result.data;

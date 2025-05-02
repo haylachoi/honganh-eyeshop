@@ -39,6 +39,7 @@ import { TooltipWrapper } from "@/components/shared/tooltip";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { Checkbox } from "@/components/ui/checkbox";
 import { HeaderButton } from "./header-action-button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const columns: ColumnDef<OrderType>[] = [
   {
@@ -169,6 +170,26 @@ export const columns: ColumnDef<OrderType>[] = [
     ),
   },
   {
+    id: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Ngày tạo
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    accessorKey: "createdAt",
+    cell: ({ row }) => (
+      <div className="">
+        {dateFormatter.format(new Date(row.original.createdAt))}
+      </div>
+    ),
+  },
+  {
     id: "completedAt",
     header: ({ column }) => {
       return (
@@ -246,6 +267,16 @@ const OrdersView = ({ orders }: { orders: OrderType[] }) => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const page = parseInt(searchParams.get("page") ?? "1");
+  const size = parseInt(searchParams.get("size") ?? "10");
+
+  const goToPage = (newPage: number) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`);
+  };
 
   const table = useReactTable({
     data: orders,
@@ -263,6 +294,10 @@ const OrdersView = ({ orders }: { orders: OrderType[] }) => {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: {
+        pageIndex: page - 1,
+        pageSize: size,
+      },
     },
   });
 
@@ -365,7 +400,8 @@ const OrdersView = ({ orders }: { orders: OrderType[] }) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
+            // onClick={() => table.previousPage()}
+            onClick={() => goToPage(page - 1)}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
@@ -373,7 +409,8 @@ const OrdersView = ({ orders }: { orders: OrderType[] }) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
+            // onClick={() => table.nextPage()}
+            onClick={() => goToPage(page + 1)}
             disabled={!table.getCanNextPage()}
           >
             Next
