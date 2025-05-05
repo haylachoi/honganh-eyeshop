@@ -8,7 +8,7 @@ import { SESSION_NAME } from "@/constants";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
-const sessionExp = Number(process.env.SESSION_EXP) || 60 * 60 * 24 * 7 * 1000;
+const sessionExp = Number(process.env.SESSION_EXP) || 60 * 60 * 24 * 1 * 1000;
 
 export async function encrypt(payload: UserSessionPayload) {
   return new SignJWT(payload)
@@ -79,7 +79,7 @@ export async function updateSession() {
     return;
   }
 
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const expires = new Date(Date.now() + sessionExp);
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_NAME, session, {
