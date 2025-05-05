@@ -80,6 +80,7 @@ export const blogTypeSchema = blogInputSchema
     titleNoAccent: titleSchema,
     wallImage: z.string(),
     updatedAt: dateSchema,
+    createdAt: dateSchema,
   })
   .transform(({ _id, ...res }) => ({
     ...res,

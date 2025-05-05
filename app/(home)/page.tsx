@@ -7,6 +7,14 @@ import RecentBlog from "./_components/recent-blogs";
 
 const sections = [Hero, Trending, TopProducts, NewArrival, RecentBlog];
 
+export const metadata = {
+  description:
+    "Hồng Anh – Cửa hàng kính mắt uy tín, chuyên cung cấp kính thời trang, kính cận, kính râm và gọng kính chất lượng cao. Miễn phí đo mắt, giao hàng toàn quốc.",
+  openGraph: {
+    type: "website",
+  },
+};
+
 const HomePage = () => {
   return (
     <div className="space-y-12">

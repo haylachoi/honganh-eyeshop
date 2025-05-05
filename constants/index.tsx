@@ -1,7 +1,7 @@
 import { createUppercaseMap } from "../lib/utils";
 
 // todo: validate env
-export const APP_NAME = "honganh-eyeshop";
+export const APP_NAME = "Kính mắt Hồng Anh";
 export const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 export const SESSION_NAME = "session";
@@ -14,6 +14,8 @@ export const BASE_IMAGES_FOLDER = "images";
 export const IMAGES_FOlDERS = ["users", "products", "blogs", "orders"] as const;
 
 export const MAX_IMAGE_SIZE = 1024 * 100; // 100 KB
+
+export const PRICE_CURRENCY = "VND";
 
 export const PAGE_SIZE = {
   TRENDING: {

@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
 import {
   ADMIN_ENDPOINTS,
+  BASE_URL,
   ENDPOINTS,
   FILTER_NAME,
   SORTING_OPTIONS,
@@ -284,10 +285,6 @@ export const getLink = {
       if (page === 1) return `${ENDPOINTS.BLOGS.home}`;
       return `${ENDPOINTS.BLOGS.home}/${getPageNumber(page)}`;
     },
-
-    // home({ searchParams }: { searchParams: string }) {
-    //   return `${ENDPOINTS.BLOGS.home}?${searchParams}`;
-    // },
   },
   category: {
     update({ id }: { id: string }) {
@@ -339,6 +336,8 @@ export const getFromLocalStorage = <T>(key: string, defaultValue: T) => {
     return defaultValue;
   }
 };
+
+export const getFullLink = (url: string) => `${BASE_URL}${url}`;
 
 export const saveToLocalStorage = ({
   key,
