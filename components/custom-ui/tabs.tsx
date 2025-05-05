@@ -2,9 +2,8 @@
 import { cn } from "@/lib/utils";
 import React, {
   createContext,
-  Dispatch,
   MouseEventHandler,
-  SetStateAction,
+  startTransition,
   use,
   useEffect,
   useRef,
@@ -14,19 +13,26 @@ import React, {
 type TabsContextProps = {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  tabs: string[];
-  setTabs: Dispatch<SetStateAction<string[]>>;
-  indexActiveTab: number;
-  setIndexActiveTab: Dispatch<SetStateAction<number>>;
+  tabs: {
+    current: string[];
+    prev: string[];
+  };
+  setTabs: React.Dispatch<
+    React.SetStateAction<{
+      current: string[];
+      prev: string[];
+    }>
+  >;
 };
 
 const TabContext = createContext<TabsContextProps>({
   activeTab: "",
   setActiveTab: () => {},
-  tabs: [],
+  tabs: {
+    current: [],
+    prev: [],
+  },
   setTabs: () => {},
-  indexActiveTab: 0,
-  setIndexActiveTab: () => {},
 });
 
 interface TabsProps {
@@ -37,8 +43,42 @@ interface TabsProps {
 
 export const Tabs = ({ className, children, defaultValue }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue ?? "");
-  const [tabs, setTabs] = useState<string[]>([]);
-  const [indexActiveTab, setIndexActiveTab] = useState(0);
+  const [tabs, setTabs] = useState<{
+    current: string[];
+    prev: string[];
+  }>({
+    current: [],
+    prev: [],
+  });
+
+  useEffect(() => {
+    setTabs((tabs) => ({
+      current: tabs.current,
+      prev: tabs.prev.length === tabs.current.length ? tabs.prev : tabs.current,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabs.current]);
+
+  useEffect(() => {
+    if (
+      tabs.current.length < tabs.prev.length &&
+      activeTab &&
+      !tabs.current.includes(activeTab)
+    ) {
+      const prevTabIndex = tabs.prev.findIndex((tab) => tab === activeTab);
+      const newActiveTab =
+        tabs.current[prevTabIndex] ||
+        tabs.current[prevTabIndex - 1] ||
+        tabs.current[tabs.current.length - 1] ||
+        tabs.current[0];
+
+      if (newActiveTab) {
+        startTransition(() => {
+          setActiveTab(newActiveTab);
+        });
+      }
+    }
+  }, [tabs.current.length, tabs.prev.length, activeTab, tabs]);
 
   return (
     <div className={cn("", className)}>
@@ -48,8 +88,6 @@ export const Tabs = ({ className, children, defaultValue }: TabsProps) => {
           setActiveTab,
           tabs,
           setTabs,
-          indexActiveTab,
-          setIndexActiveTab,
         }}
       >
         {children}
@@ -64,10 +102,21 @@ interface TabListProps {
   children: React.ReactNode;
 }
 
-export const TabList = ({ className, ref, children }: TabListProps) => {
+export const TabList = ({ className, children }: TabListProps) => {
+  const tabs = React.Children.toArray(children);
+  const originalChildrenRef = useRef<React.ReactNode[]>([]);
+
+  useEffect(() => {
+    if (originalChildrenRef.current.length === 0) {
+      originalChildrenRef.current = React.Children.toArray(children);
+    }
+  }, [children]);
+
   return (
-    <div className={cn("flex gap-2", className)} ref={ref}>
-      {children}
+    <div className={cn("flex gap-2", className)}>
+      {tabs.map((child, index) => {
+        return <div key={index}>{child}</div>;
+      })}
     </div>
   );
 };
@@ -83,21 +132,11 @@ export const TabTrigger = ({
   value: string;
   children: React.ReactNode;
 }) => {
-  const {
-    activeTab,
-    setActiveTab,
-    // tabs,
-    // setTabs,
-    // indexActiveTab,
-    // setIndexActiveTab,
-  } = use(TabContext);
-  // const [isPending, startTransition] = useTransition();
+  const { activeTab, setActiveTab, setTabs } = use(TabContext);
   const ref = useRef<HTMLDivElement>(null);
   const isActive = activeTab === value;
+
   useEffect(() => {
-    // if (!tabs.includes(value)) {
-    //   setTabs((prev) => [...prev, value]);
-    // }
     if (
       ref.current &&
       ref.current.parentNode?.firstChild === ref.current &&
@@ -106,19 +145,29 @@ export const TabTrigger = ({
       setActiveTab(value);
     }
 
-    // return () => {
-    //   setTabs((prev) => prev.filter((tab) => tab !== value));
-    // };
+    setTabs((tabs) => {
+      if (!tabs.current.includes(value)) {
+        return {
+          ...tabs,
+          current: [...tabs.current, value],
+        };
+      }
+      return tabs;
+    });
+
+    return () => {
+      setTabs((tabs) => ({
+        ...tabs,
+        current: tabs.current.filter((tab) => tab !== value),
+      }));
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleTrigger: MouseEventHandler<HTMLDivElement> | undefined = () => {
-    // if (isActive) return;
+  const handleTrigger: MouseEventHandler<HTMLDivElement> = () => {
     setActiveTab(value);
-    // setIndexActiveTab(tabs.indexOf(value));
   };
-
-  // if (isPending) return <></>;
 
   return (
     <div

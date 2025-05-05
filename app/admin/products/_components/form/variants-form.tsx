@@ -43,14 +43,14 @@ export const VariantsForm = <T extends ProductUpdateType | ProductInputType>({
     <>
       <Tabs
         className="border border-input p-2 rounded-md shadow-sm"
-        defaultValue="0"
+        defaultValue={fields?.[0]?.id}
       >
         <div className="flex items-center gap-2 mb-4">
           <TabList>
             {fields.map((field, index) => (
               <div key={field.id} className="relative flex items-center gap-2">
                 <TabTrigger
-                  value={index.toString()}
+                  value={field.id}
                   className="cursor-pointer py-2 px-6 rounded-md border border-secondary"
                   activeClassName="border-primary border"
                 >
@@ -79,7 +79,7 @@ export const VariantsForm = <T extends ProductUpdateType | ProductInputType>({
         </div>
 
         {fields.map((field, index) => (
-          <TabPanel isHidden={true} value={index.toString()} key={field.id}>
+          <TabPanel isHidden={true} value={field.id} key={field.id}>
             <VariantForm index={index} />
           </TabPanel>
         ))}
