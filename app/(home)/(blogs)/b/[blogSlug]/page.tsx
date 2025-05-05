@@ -39,7 +39,9 @@ const BlogPage = async ({ params }: { params: params }) => {
           </p>
         </div>
       </div>
-      <RelatedBlogsProvider tag={blog.tags[0]} exludeBlogId={blog.id} />
+      {blog.tags.length > 0 && (
+        <RelatedBlogsProvider tag={blog.tags[0]} exludeBlogId={blog.id} />
+      )}
     </div>
   );
 };
