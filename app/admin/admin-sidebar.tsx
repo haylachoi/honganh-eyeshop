@@ -10,7 +10,7 @@ import { SidebarToggle } from "./sidebar-toggle";
 export const AdminSidebar = async () => {
   const user = await auth();
   return (
-    <div className="@container border-r border-input h-dvh grid grid-rows-[auto_1fr_auto] px-4 gap-4">
+    <div className="@container sticky top-0 border-r border-input h-dvh grid grid-rows-[auto_1fr_auto] px-4 gap-4">
       <div className="border-b border-input py-4">
         <div className="flex items-center justify-between h-[60px]">
           <Link
