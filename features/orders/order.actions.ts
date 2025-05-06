@@ -115,6 +115,7 @@ export const createOrderAction = customerActionClient
     return result;
   });
 
+// todo: change name with suffix action and metadata name
 export const completeOrder = modifyOrderActionClient
   .metadata({
     actionName: "setOrderPaidAt",
@@ -134,6 +135,7 @@ export const completeOrder = modifyOrderActionClient
     revalidateTag(orderCacheTag);
   });
 
+// todo: change schema to union
 export const confirmOrderAction = modifyOrderActionClient
   .metadata({
     actionName: "confirmOrder",

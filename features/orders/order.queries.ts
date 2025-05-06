@@ -14,9 +14,34 @@ const resource = "order";
 
 export const getAllOrders = getAuthQueryClient({
   resource,
-}).query(async () => {
-  return await ordersRepository.getAllOrders();
-});
+})
+  .schema(
+    z.object({
+      page: z.number().optional().default(1),
+      size: z.number().optional().default(PAGE_SIZE.ORDER.HISTORY.SM),
+      sortBy: z.string().optional().default("createdAt"),
+      orderBy: z
+        .union([z.literal(1), z.literal(-1)])
+        .optional()
+        .default(-1),
+    }),
+  )
+  .query(async ({ parsedInput }) => {
+    const [orders, total] = await Promise.all([
+      ordersRepository.getAllOrders({
+        skip: (parsedInput.page - 1) * parsedInput.size,
+        limit: parsedInput.size,
+        sortBy: parsedInput.sortBy,
+        orderBy: parsedInput.orderBy,
+      }),
+      next_cache.orders.countAll(),
+    ]);
+
+    return {
+      total,
+      items: orders,
+    };
+  });
 
 export const getLast30DaysOrders = getAuthQueryClient({
   resource,

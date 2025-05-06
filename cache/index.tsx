@@ -173,8 +173,8 @@ const next_cache = {
     ),
   },
   orders: {
-    all: unstable_cache(
-      ordersRepository.getAllOrders,
+    countAll: unstable_cache(
+      ordersRepository.countOrders,
       CACHE_CONFIG.ORDER.ALL.KEY_PARTS,
       {
         tags: CACHE_CONFIG.ORDER.ALL.TAGS,

@@ -43,6 +43,12 @@ export const PAGE_SIZE = {
     XL: 30,
   },
   ORDER: {
+    ALL: {
+      SM: 8,
+      MD: 10,
+      LG: 20,
+      XL: 30,
+    },
     HISTORY: {
       SM: 8,
       MD: 12,
@@ -94,7 +100,10 @@ export const ADMIN_ENDPOINTS = {
   TAGS: "/admin/tags",
   BLOGS: "/admin/blogs",
   COUPONS: "/admin/coupons",
-  ORDERS: "/admin/orders",
+  ORDERS: {
+    LAST_30_DAYS: "/admin/orders/last30days",
+    ALL: "/admin/orders/all",
+  },
   REVIEWS: "/admin/reviews",
   OTHERS: "/admin/others",
 };

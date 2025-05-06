@@ -15,9 +15,22 @@ import Product from "../model/product.model";
 import { PAYMENT_STATUS_MAPS } from "@/features/orders/order.constants";
 import { Id } from "@/types";
 
-const getAllOrders = async () => {
+const getAllOrders = async ({
+  skip = 0,
+  limit = PAGE_SIZE.ORDER.HISTORY.SM,
+  sortBy = "createdAt",
+  orderBy = -1,
+}: {
+  skip?: number;
+  limit?: number;
+  sortBy?: string;
+  orderBy?: 1 | -1;
+}) => {
   await connectToDatabase();
-  const orders = await Order.find({}).sort({ createdAt: -1 });
+  const orders = await Order.find()
+    .sort({ [sortBy]: orderBy })
+    .skip(skip)
+    .limit(limit);
   const result = orders.map((order) => orderTypeSchema.parse(order));
   return result;
 };
@@ -60,6 +73,12 @@ const getOrdersByUserId = async ({
   const parsedOrders = orders.map((order) => orderTypeSchema.parse(order));
 
   return parsedOrders;
+};
+
+const countOrders = async () => {
+  await connectToDatabase();
+  const count = await Order.countDocuments();
+  return count;
 };
 
 const countOrdersByUserId = async ({ userId }: { userId: Id }) => {
@@ -280,6 +299,7 @@ const ordersRepository = {
   createOrder,
   updateStatusOrder,
   countOrdersByUserId,
+  countOrders,
 };
 
 export default ordersRepository;

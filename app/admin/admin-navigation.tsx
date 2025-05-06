@@ -23,7 +23,11 @@ const links = [
   { name: "Tags", href: ADMIN_ENDPOINTS.TAGS, icon: Tags },
   { name: "Bài viết", href: ADMIN_ENDPOINTS.BLOGS, icon: Newspaper },
   { name: "Mã giảm giá", href: ADMIN_ENDPOINTS.COUPONS, icon: Percent },
-  { name: "Đơn hàng", href: ADMIN_ENDPOINTS.ORDERS, icon: ShoppingCart },
+  {
+    name: "Đơn hàng",
+    href: ADMIN_ENDPOINTS.ORDERS.LAST_30_DAYS,
+    icon: ShoppingCart,
+  },
   { name: "Đánh giá", href: ADMIN_ENDPOINTS.REVIEWS, icon: Star },
   { name: "Khác", href: ADMIN_ENDPOINTS.OTHERS, icon: MoreHorizontal },
 ];
