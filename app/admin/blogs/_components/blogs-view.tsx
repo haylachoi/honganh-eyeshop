@@ -38,6 +38,7 @@ import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
 import { dateFormatter, getLink } from "@/lib/utils";
 import Link from "next/link";
+import { TooltipWrapper } from "@/components/shared/tooltip";
 
 export const columns: ColumnDef<BlogType>[] = [
   {
@@ -78,18 +79,26 @@ export const columns: ColumnDef<BlogType>[] = [
       );
     },
     cell: ({ row }) => (
-      <Link
-        href={getLink.blog.view({ blogSlug: row.original.slug })}
-        className="lowercase text-link"
-      >
-        {row.getValue("title")}
-      </Link>
+      <TooltipWrapper render={row.getValue("title")}>
+        <Link
+          href={getLink.blog.view({ blogSlug: row.original.slug })}
+          className="lowercase text-link max-w-60 truncate inline-block"
+        >
+          {row.getValue("title")}
+        </Link>
+      </TooltipWrapper>
     ),
   },
   {
     accessorKey: "slug",
     header: "Slug",
-    cell: ({ row }) => <div className="">{row.getValue("slug")}</div>,
+    cell: ({ row }) => (
+      <TooltipWrapper render={row.getValue("slug")}>
+        <div className="lowercase max-w-40 truncate inline-block">
+          {row.getValue("slug")}
+        </div>
+      </TooltipWrapper>
+    ),
   },
   {
     accessorKey: "author",
