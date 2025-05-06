@@ -3,7 +3,7 @@ import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
 import {
   confirmOrderAction,
   rejectOrderAction,
-  completeOrder,
+  completeOrderAction,
 } from "@/features/orders/order.actions";
 import React from "react";
 import { OrderType } from "@/features/orders/order.types";
@@ -68,7 +68,7 @@ export const ActionButton = ({ order }: { order: OrderType }) => {
         <ItemButton
           id={order.id}
           label="Hoàn tất"
-          action={completeOrder}
+          action={completeOrderAction}
           successMessage={TOAST_MESSAGES.UPDATE.SUCCESS}
           onsuccess={onSuccess}
           onClose={onClose}

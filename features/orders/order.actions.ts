@@ -115,10 +115,9 @@ export const createOrderAction = customerActionClient
     return result;
   });
 
-// todo: change name with suffix action and metadata name
-export const completeOrder = modifyOrderActionClient
+export const completeOrderAction = modifyOrderActionClient
   .metadata({
-    actionName: "setOrderPaidAt",
+    actionName: "completeOrder",
   })
   .schema(
     z.object({
@@ -135,14 +134,13 @@ export const completeOrder = modifyOrderActionClient
     revalidateTag(orderCacheTag);
   });
 
-// todo: change schema to union
 export const confirmOrderAction = modifyOrderActionClient
   .metadata({
     actionName: "confirmOrder",
   })
   .schema(
     z.object({
-      id: IdSchema,
+      id: z.union([IdSchema, z.array(IdSchema)]),
       date: z.date(),
     }),
   )

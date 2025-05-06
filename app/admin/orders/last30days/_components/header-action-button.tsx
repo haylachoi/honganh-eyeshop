@@ -7,7 +7,7 @@ import { TOAST_MESSAGES } from "@/constants";
 import { OrderType } from "@/features/orders/order.types";
 import {
   rejectOrderAction,
-  completeOrder,
+  completeOrderAction,
   confirmOrderAction,
 } from "@/features/orders/order.actions";
 import { ItemButton } from "./item-button";
@@ -38,7 +38,7 @@ export const HeaderButton = ({ table }: { table: Table<OrderType> }) => {
         id={selectedIds}
         label="Hoàn tất"
         onClose={onClose}
-        action={completeOrder}
+        action={completeOrderAction}
         successMessage={TOAST_MESSAGES.UPDATE.SUCCESS}
       />
       <ItemButton
