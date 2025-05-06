@@ -4,6 +4,8 @@ import {
 } from "@/features/dashboard/dashboard.queries";
 import { DashboardView } from "./dashboard-view";
 
+export const revalidate = 60;
+
 const DashboardPage = async () => {
   const [last7DaysDashboardStatsResult, dashboardDailyResult] =
     await Promise.all([getLast7DaysDashboardStats(), getDashboardDailyStats()]);
