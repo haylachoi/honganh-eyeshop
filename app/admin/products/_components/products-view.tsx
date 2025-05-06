@@ -35,6 +35,10 @@ import {
 import { ProductType } from "../../../../features/products/product.types";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
+import { TooltipWrapper } from "@/components/shared/tooltip";
+import Link from "next/link";
+import { currencyFormatter, getLink } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<ProductType>[] = [
   {
@@ -74,12 +78,30 @@ export const columns: ColumnDef<ProductType>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <TooltipWrapper render={row.getValue("name")}>
+        <Link
+          href={getLink.product.home({
+            categorySlug: row.original.category.slug,
+            productSlug: row.original.slug,
+          })}
+          className="lowercase text-link max-w-60 truncate inline-block"
+        >
+          {row.getValue("name")}
+        </Link>
+      </TooltipWrapper>
+    ),
   },
   {
     accessorKey: "slug",
     header: "Slug",
-    cell: ({ row }) => <div className="">{row.getValue("slug")}</div>,
+    cell: ({ row }) => (
+      <TooltipWrapper render={row.getValue("slug")}>
+        <div className="lowercase max-w-40 truncate inline-block">
+          {row.getValue("slug")}
+        </div>
+      </TooltipWrapper>
+    ),
   },
   {
     accessorKey: "category",
@@ -94,32 +116,93 @@ export const columns: ColumnDef<ProductType>[] = [
   {
     accessorKey: "avgRating",
     header: "Đánh giá",
-    cell: ({ row }) => <div className="">{row.getValue("avgRating")}</div>,
+    cell: ({ row }) => (
+      <div className="">{row.original.avgRating.toFixed(1)}</div>
+    ),
   },
+  // todo: format variants
   {
     accessorKey: "variants",
     header: "Variants",
-    cell: ({ row }) => (
-      <ul className="">
-        {row.original.variants.map((variant, index) => (
-          <li key={index}>
-            <span>
-              {variant.originPrice}-{variant.price}:
-            </span>
+    cell: ({ row }) => {
+      const variants = row.original.variants;
 
-            {variant.attributes
-              .map((attr) => `${attr.name} - ${attr.value}`)
-              .join(", ")}
-          </li>
-        ))}
-      </ul>
-    ),
+      const visibleVariants = variants.slice(0, 2);
+      const hiddenCount = variants.length - visibleVariants.length;
+
+      const formatVariant = (variant: (typeof variants)[0]) => {
+        const attrText = variant.attributes
+          .map((attr) => `${attr.name}: ${attr.value}`)
+          .join(" | ");
+        return `${currencyFormatter.format(variant.originPrice)} → ${currencyFormatter.format(
+          variant.price,
+        )} (${attrText})`;
+      };
+
+      return (
+        <TooltipWrapper
+          render={
+            <ul className="text-sm space-y-1 max-w-sm">
+              {variants.map((variant, idx) => (
+                <li key={idx} className="break-words leading-snug">
+                  {formatVariant(variant)}
+                </li>
+              ))}
+            </ul>
+          }
+        >
+          <ul className="text-sm space-y-1 max-w-[250px] truncate">
+            {visibleVariants.map((variant, idx) => (
+              <li key={idx} className="truncate">
+                {formatVariant(variant)}
+              </li>
+            ))}
+            {hiddenCount > 0 && (
+              <li className="text-xs text-muted-foreground italic">
+                +{hiddenCount} biến thể khác
+              </li>
+            )}
+          </ul>
+        </TooltipWrapper>
+      );
+    },
   },
+
   {
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row }) => {
-      return <div>{row.original.tags.map((tag) => tag.name).join(", ")}</div>;
+      const tags = row.original.tags as { name: string }[];
+      const previewTags = tags.slice(0, 3);
+
+      return (
+        <TooltipWrapper
+          render={
+            <ul>
+              {tags.map((tag) => (
+                <li key={tag.name}>{tag.name}</li>
+              ))}
+            </ul>
+          }
+        >
+          <div className="flex flex-wrap gap-1 max-w-60 truncate">
+            {previewTags.map((tag, idx) => (
+              <Badge
+                key={idx}
+                variant="outline"
+                className="text-xs truncate max-w-30"
+              >
+                {tag.name}
+              </Badge>
+            ))}
+            {tags.length > 3 && (
+              <Badge variant="secondary" className="text-sm">
+                +{tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        </TooltipWrapper>
+      );
     },
   },
   {
