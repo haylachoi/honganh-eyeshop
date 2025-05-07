@@ -6,7 +6,7 @@ import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { signUpAction } from "../../../features/auth/auth.action";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import {
   LucideUser,
   LucideMail,
@@ -19,10 +19,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { PASSWORD_ERROR_MESSAGE, PASSWORD_REGEX } from "@/constants/regex";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
+  const router = useRouter();
   const { execute, isPending } = useAction(signUpAction, {
     onSuccess: () => {
+      router.push(ENDPOINTS.AUTH.LOGIN);
       toast.success(TOAST_MESSAGES.AUTH.SIGN_UP.SUCCESS);
     },
     onError: onActionError,
@@ -108,7 +111,7 @@ export default function SignUpForm() {
             </div>
           </div>
           <div>
-            <label className="block mb-1 font-medium">Mật khẩu mới</label>
+            <label className="block mb-1 font-medium">Mật khẩu</label>
             <div className="relative">
               <LucideLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 size-5" />
               <input
@@ -124,6 +127,7 @@ export default function SignUpForm() {
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
+                tabIndex={-1}
               >
                 {showPassword ? (
                   <LucideEyeOff className="size-5" />
@@ -167,6 +171,7 @@ export default function SignUpForm() {
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground cursor-pointer"
+                tabIndex={-1}
               >
                 {showConfirmPassword ? (
                   <LucideEye className="size-5" />

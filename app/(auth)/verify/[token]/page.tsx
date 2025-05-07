@@ -2,7 +2,7 @@ import {
   VerifyFailed,
   VerifySuccess,
 } from "@/components/shared/verified-token-result";
-import userRepository from "@/lib/db/repositories/user";
+import { verifyUserByToken } from "@/features/auth/auth.verify-utils";
 
 type Params = {
   token: string;
@@ -10,7 +10,7 @@ type Params = {
 
 const VerifyPage = async ({ params }: { params: Promise<Params> }) => {
   const { token } = await params;
-  const result = await userRepository.verifyUserByToken({ token });
+  const result = await verifyUserByToken({ token });
 
   return (
     <div className="flex justify-center items-center bg-background">
