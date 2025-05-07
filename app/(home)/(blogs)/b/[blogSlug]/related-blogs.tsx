@@ -8,7 +8,7 @@ export const RelatedBlogs = ({ blogs }: { blogs: BlogType[] }) => {
   return (
     <CarouselList
       items={blogs}
-      columns={{ sm: 1 }}
+      columns={{ sm: 1, md: 2, lg: 2 }}
       render={(blog) => (
         <div className="m-1 shadow-sm">
           <Blogcard blog={blog} />

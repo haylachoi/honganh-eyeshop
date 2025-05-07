@@ -40,7 +40,7 @@ export const CarouselList = <T extends { id: string }>({
   columns?: Partial<{
     sm: 1 | 2;
     md: 2 | 3;
-    lg: 3 | 4;
+    lg: 2 | 3 | 4;
     xl: 4 | 5;
   }>;
 }) => {

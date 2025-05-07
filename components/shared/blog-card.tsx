@@ -25,7 +25,7 @@ export const Blogcard = ({ blog }: { blog: BlogType }) => {
           {dateFormatter.format(new Date(blog.updatedAt))}
         </span>
       </div>
-      <div className="p-2 mt-3">
+      <div className="p-2 mt-3 h-18 overflow-hidden line-clamp-2">
         <Link
           href={getLink.blog.view({ blogSlug: blog.slug })}
           className="hover:underline"
