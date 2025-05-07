@@ -129,8 +129,10 @@ const RelatedBlogsProvider = async ({
     (blog) => blog.id !== exludeBlogId,
   );
   return (
-    <div>
-      <h3 className="text-xl font-semibold mb-2">Các bài viết liên quan</h3>
+    <div className="py-4">
+      <h3 className="text-2xl font-semibold mb-4 border-b-6 border-primary/60 inline-block">
+        Các bài viết liên quan
+      </h3>
       <RelatedBlogs blogs={blogs} />
     </div>
   );
