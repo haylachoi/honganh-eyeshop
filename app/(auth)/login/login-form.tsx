@@ -33,8 +33,8 @@ export default function LoginForm() {
     onError: onActionError,
   });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("hihi@gmail.com");
+  const [password, setPassword] = useState("123");
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit: (formData: FormData) => void | Promise<void> = async () => {
