@@ -1,5 +1,8 @@
 import ProductView from "@/app/(home)/c/[categorySlug]/[productSlug]/_components/product-view";
-import { getProductBySlug } from "@/features/products/product.queries";
+import {
+  getProductBySlug,
+  getPublishedProductsForEachCategory,
+} from "@/features/products/product.queries";
 import { getReviewsWithUserNameByProductId } from "@/features/reviews/review.queries";
 import { Id } from "@/types";
 import { ReviewsView } from "./_components/reviews-view";
@@ -9,6 +12,8 @@ import { ViewCount } from "./_components/view-count";
 import { notFound } from "next/navigation";
 import { getFullLink } from "@/lib/utils";
 import { PRICE_CURRENCY } from "@/constants";
+import { ProductType } from "@/features/products/product.types";
+import { RelatedProductsView } from "./_components/related-products";
 
 const getProduct = cache(
   async ({
@@ -95,11 +100,37 @@ const ProductPage = async ({ params }: { params: Params }) => {
       <Suspense fallback={<div>Loading...</div>}>
         <ReviewsProvider productId={product.id} />
       </Suspense>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <RelatedProductsProvider product={product} />
+      </Suspense>
     </div>
   );
 };
 
 export default ProductPage;
+
+const RelatedProductsProvider = async ({
+  product,
+}: {
+  product: ProductType;
+}) => {
+  const categoryWithProducts = await getPublishedProductsForEachCategory();
+  if (!categoryWithProducts.success) {
+    return null;
+  }
+  const categoryWithProductsResult = categoryWithProducts.data;
+
+  const relatedProducts = categoryWithProductsResult.find(
+    (category) => category.id === product.category.id,
+  );
+
+  if (!relatedProducts) {
+    return null;
+  }
+
+  return <RelatedProductsView products={relatedProducts.products} />;
+};
 
 const ReviewsProvider = async ({ productId }: { productId: Id }) => {
   const reviewsResult = await getReviewsWithUserNameByProductId(productId);

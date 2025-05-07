@@ -285,6 +285,18 @@
   @media (max-width: 48rem) {
     padding-inline: 2px;
   }
+
+  @media (max-width: 40rem) {
+    max-width: 36rem;
+  }
+
+  @media (max-width: 36rem) {
+    max-width: 30rem;
+  }
+
+  @media (max-width: 30rem) {
+    max-width: 26rem;
+  }
 }
 
 body:has(:is(#header-navigation-trigger, #search-box-trigger):checked) {

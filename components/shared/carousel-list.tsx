@@ -74,7 +74,7 @@ export const CarouselList = <T extends { id: string }>({
     <Carousel
       opts={{ align: "start" }}
       setApi={setEmblaApi}
-      className={cn("", className)}
+      className={cn("w-full", className)}
     >
       <CarouselContent className="-ml-2">
         {items.map((item) => (
