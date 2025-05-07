@@ -25,7 +25,10 @@ async function middlewareAuth(request: NextRequest) {
     }
   }
 
-  if (adminRoutes.includes(request.nextUrl.pathname)) {
+  if (
+    adminRoutes.includes(request.nextUrl.pathname) ||
+    request.nextUrl.pathname.includes("/admin")
+  ) {
     const result = await getSession();
     if (!result.success) {
       return NextResponse.redirect(new URL("/login", request.url));
