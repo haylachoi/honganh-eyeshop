@@ -1,15 +1,13 @@
 "use client";
 
-import { CarouselProducts } from "@/components/shared/carousel-products";
+import { CarouselList } from "@/components/shared/carousel-list";
 import { PreviewCard } from "@/components/shared/product-preview-card";
 import { ProductPreview } from "@/features/products/product.types";
 import { useBreakpoint } from "@/hooks/use-is-mobile";
 
 export const ProductsContainer = ({
   products,
-  className,
 }: {
-  className?: string;
   products: ProductPreview[];
 }) => {
   const breakpoint = useBreakpoint();
@@ -24,10 +22,8 @@ export const ProductsContainer = ({
     );
   }
   return (
-    // toto: fix mobile screen with no carousel
-    <CarouselProducts
-      products={products}
-      className={className}
+    <CarouselList
+      items={products}
       render={(product) => <PreviewCard product={product} />}
     />
   );
