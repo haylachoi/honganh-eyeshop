@@ -20,18 +20,22 @@ export const shippingAddressSchema = z.object({
 const roleSchema = z.string().min(2).trim();
 const avatarSchema = z.string().trim().optional();
 
-export const userSchema = z
-  .object({
+const baseUserSchema = z.object({
+  name: userNameSchema,
+  email: userEmailSchema,
+  role: roleSchema,
+  avatar: avatarSchema,
+  phone: userPhoneSchema,
+  password: passwordSchema,
+  salt: saltSchema,
+  isVerified: z.boolean().optional(),
+  isLocked: z.boolean().optional(),
+  shippingAddress: shippingAddressSchema.optional(),
+});
+
+export const userSchema = baseUserSchema
+  .extend({
     _id: MongoIdSchema,
-    name: userNameSchema,
-    email: userEmailSchema,
-    role: roleSchema,
-    avatar: avatarSchema,
-    phone: userPhoneSchema,
-    password: passwordSchema,
-    salt: saltSchema,
-    isVerified: z.boolean().optional(),
-    shippingAddress: shippingAddressSchema.optional(),
   })
   .strip()
   .transform(({ _id, ...rest }) => ({
@@ -39,21 +43,53 @@ export const userSchema = z
     id: _id.toString(),
   }));
 
-export const safeUserInfoFromSessionSchema = z.object({
-  id: IdSchema,
-  name: userNameSchema,
-  role: roleSchema,
-  avatar: avatarSchema,
-});
-
-export const safeUserInfoSchema = z
+export const adminUserInputSchema = z
   .object({
-    _id: MongoIdSchema,
     name: userNameSchema,
+    email: userEmailSchema,
+    phone: userPhoneSchema,
     role: roleSchema,
-    avatar: avatarSchema,
-    phone: phoneSchema,
-    shippingAddress: shippingAddressSchema.optional(),
+    password: passwordSchema,
+    confirmPassword: passwordSchema,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export const safeUserInfoFromSessionSchema = baseUserSchema
+  .pick({
+    name: true,
+    role: true,
+    avatar: true,
+  })
+  .extend({
+    id: IdSchema,
+  });
+
+export const safeUserInfoSchema = baseUserSchema
+  .pick({
+    name: true,
+    role: true,
+    avatar: true,
+    phone: true,
+    shippingAddress: true,
+  })
+  .extend({
+    _id: MongoIdSchema,
+  })
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+  }));
+
+export const safeAdminUserInfoSchema = baseUserSchema
+  .omit({
+    password: true,
+    salt: true,
+  })
+  .extend({
+    _id: MongoIdSchema,
   })
   .transform(({ _id, ...rest }) => ({
     ...rest,

@@ -105,6 +105,7 @@ export const ADMIN_ENDPOINTS = {
     ALL: "/admin/orders/all",
   },
   REVIEWS: "/admin/reviews",
+  ACCOUNTS: "/admin/accounts",
   OTHERS: "/admin/others",
 };
 
@@ -186,6 +187,7 @@ export const ERROR_MESSAGES = {
   USER: {
     NOT_FOUND: "Người dùng không tồn tại",
     NOT_VERIFIED: "Tài khoản chưa được xác minh",
+    LOCKED: "Tài khoản đã bị khóa",
   },
   BLOG: {
     NOT_FOUND: "Blog không tồn tại",
@@ -288,6 +290,14 @@ export const TOAST_MESSAGES = {
         GENERAL: "Tạo đơn hàng thất bại",
         UNAVAILABLE: "Sản phẩm không hợp lệ hoặc không đủ hàng",
       },
+    },
+  },
+  USER: {
+    LOCK: {
+      SUCCESS: "Đã khóa tài khoản thành công",
+    },
+    UNLOCK: {
+      SUCCESS: "Đã mở khóa tài khoản thành công",
     },
   },
 };

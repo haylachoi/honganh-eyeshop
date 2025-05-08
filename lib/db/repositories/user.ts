@@ -5,7 +5,10 @@ import User from "@/lib/db/model/user.model";
 import { ERROR_MESSAGES } from "@/constants";
 import { Id } from "@/types";
 import { SignUpType } from "@/features/auth/auth.type";
-import { userSchema } from "@/features/users/user.validator";
+import {
+  safeAdminUserInfoSchema,
+  userSchema,
+} from "@/features/users/user.validator";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { FilterQuery, UpdateQuery } from "mongoose";
 import { safeUserInfoSchema } from "@/features/users/user.validator";
@@ -17,6 +20,21 @@ const getAllUsers = async () => {
   const user = await User.find().sort().lean();
 
   const result = userSchema.array().parse(user);
+
+  return result;
+};
+
+const getAllSafeAdminUsers = async () => {
+  await connectToDatabase();
+  const user = await User.find({
+    role: {
+      $in: ["admin", "seller"],
+    },
+  })
+    .sort()
+    .lean();
+
+  const result = safeAdminUserInfoSchema.array().parse(user);
 
   return result;
 };
@@ -117,7 +135,7 @@ const changePassword = async ({
   };
 };
 
-const deleteUser = async (ids: string | string[]) => {
+const deleteUsers = async ({ ids }: { ids: Id | Id[] }) => {
   await connectToDatabase();
   const idsArray = Array.isArray(ids) ? ids : [ids];
 
@@ -134,15 +152,52 @@ const deleteUser = async (ids: string | string[]) => {
   return ids;
 };
 
+const lockUsers = async ({ ids }: { ids: Id | Id[] }) => {
+  await connectToDatabase();
+  const idsArray = Array.isArray(ids) ? ids : [ids];
+
+  const existingUsers = await User.find({ _id: { $in: idsArray } });
+  if (existingUsers.length !== idsArray.length) {
+    throw new NotFoundError({
+      resource: "user",
+      message: ERROR_MESSAGES.USER.NOT_FOUND,
+    });
+  }
+
+  await User.updateMany({ _id: { $in: idsArray } }, { isLocked: true });
+
+  return ids;
+};
+
+const unlockUsers = async ({ ids }: { ids: Id | Id[] }) => {
+  await connectToDatabase();
+  const idsArray = Array.isArray(ids) ? ids : [ids];
+
+  const existingUsers = await User.find({ _id: { $in: idsArray } });
+  if (existingUsers.length !== idsArray.length) {
+    throw new NotFoundError({
+      resource: "user",
+      message: ERROR_MESSAGES.USER.NOT_FOUND,
+    });
+  }
+
+  await User.updateMany({ _id: { $in: idsArray } }, { isLocked: false });
+
+  return ids;
+};
+
 const userRepository = {
   getAllUsers,
+  getAllSafeAdminUsers,
   getUserByEmail,
   getUserById,
   getSafeUserById,
   createUser,
   updateUserInfo,
   changePassword,
-  deleteUser,
+  deleteUsers,
+  lockUsers,
+  unlockUsers,
 };
 
 export default userRepository;

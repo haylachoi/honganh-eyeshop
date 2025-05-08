@@ -2,6 +2,7 @@
 
 import { getAuthActionClient } from "@/lib/actions";
 import {
+  adminUserInputSchema,
   customerInfoUpdateSchema,
   passwordChangeSchema,
   shippingAddressUpdateSchema,
@@ -16,11 +17,63 @@ import { revalidateTag } from "next/cache";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import next_cache from "@/cache";
 import { generateSalt, hashPassword } from "@/lib/utils";
+import { createVerificationToken } from "../auth/auth.utils";
+import { emailVerificationTokenRepository } from "@/lib/db/repositories/email-verification";
+import { VERIFYTOKEN_DURATION_IN_MILISECOND } from "../auth/auth.constants";
+import { sendVerificationEmail } from "../email/email.utils";
+import { IdSchema } from "@/lib/validator";
 
 const cacheTag = CACHE_CONFIG.USERS.ALL.TAGS[0];
 
+const resource = "user";
+
+export const createAdminAccountAction = getAuthActionClient({
+  resource,
+  action: "create",
+  scope: "all",
+})
+  .metadata({
+    actionName: "createAdminAccount",
+  })
+  .schema(adminUserInputSchema)
+  .action(async ({ parsedInput }) => {
+    const salt = generateSalt();
+    const input = {
+      name: parsedInput.name,
+      email: parsedInput.email,
+      phone: parsedInput.phone,
+      salt,
+      role: parsedInput.role,
+      password: await hashPassword({
+        password: parsedInput.password,
+        salt,
+      }),
+      isverified: false,
+      isLocked: false,
+    };
+    const user = await userRepository.createUser(input);
+    revalidateTag(cacheTag);
+
+    const token = createVerificationToken();
+
+    await emailVerificationTokenRepository.createEmailVerification({
+      email: parsedInput.email,
+      token,
+      expiresAt: new Date(Date.now() + VERIFYTOKEN_DURATION_IN_MILISECOND),
+      sentAt: new Date(),
+    });
+
+    await sendVerificationEmail({
+      email: parsedInput.email,
+      token,
+      name: user.name,
+    });
+
+    return user.id;
+  });
+
 export const updateCustomerInfoAction = getAuthActionClient({
-  resource: "user",
+  resource,
   action: "modify",
   scope: "own",
 })
@@ -56,7 +109,7 @@ export const updateCustomerInfoAction = getAuthActionClient({
   });
 
 export const updateCustomerAvatarAction = getAuthActionClient({
-  resource: "user",
+  resource,
   action: "modify",
   scope: "own",
 })
@@ -107,7 +160,7 @@ export const updateCustomerAvatarAction = getAuthActionClient({
   });
 
 export const updateCustomerShippingAddressAction = getAuthActionClient({
-  resource: "user",
+  resource,
   action: "modify",
   scope: "own",
 })
@@ -132,7 +185,7 @@ export const updateCustomerShippingAddressAction = getAuthActionClient({
   });
 
 export const changeCustomerPasswordAction = getAuthActionClient({
-  resource: "user",
+  resource,
   action: "modify",
   scope: "own",
 })
@@ -180,3 +233,63 @@ export const changeCustomerPasswordAction = getAuthActionClient({
       return result;
     },
   );
+
+export const lockUserAction = getAuthActionClient({
+  resource,
+  action: "modify",
+  scope: "all",
+})
+  .metadata({
+    actionName: "lockUser",
+  })
+  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .action(async ({ parsedInput }) => {
+    const { ids } = parsedInput;
+
+    const result = await userRepository.lockUsers({
+      ids,
+    });
+
+    revalidateTag(cacheTag);
+    return result;
+  });
+
+export const unlockUserAction = getAuthActionClient({
+  resource,
+  action: "modify",
+  scope: "all",
+})
+  .metadata({
+    actionName: "unlockUser",
+  })
+  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .action(async ({ parsedInput }) => {
+    const { ids } = parsedInput;
+
+    const result = await userRepository.unlockUsers({
+      ids,
+    });
+
+    revalidateTag(cacheTag);
+    return result;
+  });
+
+export const deleteUserAction = getAuthActionClient({
+  resource,
+  action: "delete",
+  scope: "all",
+})
+  .metadata({
+    actionName: "deleteUser",
+  })
+  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .action(async ({ parsedInput }) => {
+    const { ids } = parsedInput;
+
+    const result = await userRepository.deleteUsers({
+      ids,
+    });
+
+    revalidateTag(cacheTag);
+    return result;
+  });

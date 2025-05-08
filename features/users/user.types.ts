@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   customerInfoUpdateSchema,
   passwordChangeSchema,
+  safeAdminUserInfoSchema,
   safeUserInfoFromSessionSchema,
   safeUserInfoSchema,
   shippingAddressUpdateSchema,
@@ -14,6 +15,8 @@ export type SafeUserInfoFromSession = z.infer<
 
 export type UserType = z.infer<typeof userSchema>;
 export type SafeUserInfo = z.infer<typeof safeUserInfoSchema>;
+export type SafeAdminUserInfo = z.infer<typeof safeAdminUserInfoSchema>;
+
 export type CustomerInfoUpdateType = z.infer<typeof customerInfoUpdateSchema>;
 export type ShippingAddressUpdateType = z.infer<
   typeof shippingAddressUpdateSchema

@@ -59,10 +59,6 @@ const CategoryCreateForm = () => {
 
   const [debouncedName] = useDebounce(nameValue, 200);
 
-  // if (!manualSlug) {
-  //   setValue("slug", slugify(debouncedName, { lower: true, strict: true }));
-  // }
-
   useEffect(() => {
     if (!isManualSlug) {
       setValue("slug", slugify(debouncedName, { lower: true, strict: true }));

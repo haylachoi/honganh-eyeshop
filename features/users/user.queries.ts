@@ -4,7 +4,6 @@ import { authCustomerQueryClient } from "@/lib/query";
 
 export const getSafeUserInfo = authCustomerQueryClient.query(
   async ({ ctx }) => {
-    console.log(ctx.userId);
     const user = await next_cache.users.getSafeUserInfo({
       id: ctx.userId,
     });
@@ -16,3 +15,9 @@ export const getSafeUserInfo = authCustomerQueryClient.query(
     return user;
   },
 );
+
+export const getSafeAdminUserInfo = authCustomerQueryClient.query(async () => {
+  const users = await next_cache.users.getSafeAdminUserInfo();
+
+  return users;
+});

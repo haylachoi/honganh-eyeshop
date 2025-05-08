@@ -51,7 +51,6 @@ export const userWithoutPasswordSchema = z
 export const signUpInputSchema = signInInputSchema
   .extend({
     name: userNameSchema,
-    role: roleSchema.optional(),
     phone: userPhoneSchema,
     confirmPassword: passwordSchema,
   })

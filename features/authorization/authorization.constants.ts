@@ -18,7 +18,8 @@ export const RESOURCE_TYPES = {
 
 export const ACTION = ["create", "modify", "delete", "view", "all"] as const;
 export const SCOPE = ["all", "own", "public"] as const;
-export const ROLES = ["customer", "seller", "admin", "guest"] as const;
+export const ADMIN_ROLES = ["admin", "seller"] as const;
+export const ROLES = ["customer", ...ADMIN_ROLES, "guest"] as const;
 
 export type Role = (typeof ROLES)[number];
 export type Resource = (typeof RESOURCE_TYPES)[keyof typeof RESOURCE_TYPES];

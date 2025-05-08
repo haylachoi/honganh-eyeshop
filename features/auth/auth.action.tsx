@@ -40,6 +40,7 @@ export const signUpAction = actionClient
         salt,
       }),
       isverified: false,
+      isLocked: false,
     };
     const user = await userRepository.createUser(input);
 
@@ -338,6 +339,12 @@ export const signIn = actionClient
       return {
         success: false,
         message: ERROR_MESSAGES.USER.NOT_FOUND,
+      };
+    }
+    if (user.isLocked) {
+      return {
+        success: false,
+        message: ERROR_MESSAGES.USER.LOCKED,
       };
     }
     if (!user.isVerified) {

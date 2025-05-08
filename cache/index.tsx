@@ -47,8 +47,8 @@ const blogsMapCache = unstable_cache(
 
 const next_cache = {
   users: {
-    getAll: unstable_cache(
-      userRepository.getAllUsers,
+    getSafeAdminUserInfo: unstable_cache(
+      userRepository.getAllSafeAdminUsers,
       CACHE_CONFIG.USERS.ALL.KEY_PARTS,
       {
         tags: CACHE_CONFIG.USERS.ALL.TAGS,

@@ -16,6 +16,7 @@ const userSchema = new Schema<UserModel>(
     password: { type: String, required: true },
     salt: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
+    isLocked: { type: Boolean, default: false },
     shippingAddress: {
       type: {
         address: { type: String },

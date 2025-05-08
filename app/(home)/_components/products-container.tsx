@@ -9,6 +9,7 @@ export const ProductsContainer = ({
   products,
 }: {
   products: ProductPreview[];
+  className?: string;
 }) => {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
