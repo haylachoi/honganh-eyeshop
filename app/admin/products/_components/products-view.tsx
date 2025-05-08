@@ -120,7 +120,6 @@ export const columns: ColumnDef<ProductType>[] = [
       <div className="">{row.original.avgRating.toFixed(1)}</div>
     ),
   },
-  // todo: format variants
   {
     accessorKey: "variants",
     header: "Variants",
@@ -159,7 +158,7 @@ export const columns: ColumnDef<ProductType>[] = [
             ))}
             {hiddenCount > 0 && (
               <li className="text-xs text-muted-foreground italic">
-                +{hiddenCount} biến thể khác
+                +{hiddenCount} Tùy chọn khác
               </li>
             )}
           </ul>
