@@ -59,6 +59,9 @@ const CartView = ({
       <h2 className="text-2xl font-bold mb-4">Giỏ hàng</h2>
       <div className="w-full grid lg:grid-cols-[1fr_300px] gap-12">
         <ul className="space-y-8">
+          {cartList.length === 0 && (
+            <li className="text-center">Chưa có sản phẩm trong giỏ hàng</li>
+          )}
           {cartList.map((item) => (
             <li
               key={`${item.productId}-${item.variant.uniqueId}`}
