@@ -22,6 +22,7 @@ import { emailVerificationTokenRepository } from "@/lib/db/repositories/email-ve
 import { VERIFYTOKEN_DURATION_IN_MILISECOND } from "../auth/auth.constants";
 import { sendVerificationEmail } from "../email/email.utils";
 import { IdSchema } from "@/lib/validator";
+import { ADMIN_ROLES } from "../authorization/authorization.constants";
 
 const cacheTag = CACHE_CONFIG.USERS.ALL.TAGS[0];
 
@@ -288,6 +289,31 @@ export const deleteUserAction = getAuthActionClient({
 
     const result = await userRepository.deleteUsers({
       ids,
+    });
+
+    revalidateTag(cacheTag);
+    return result;
+  });
+
+export const changeUserRoleAction = getAuthActionClient({
+  resource,
+  action: "modify",
+  scope: "all",
+})
+  .metadata({
+    actionName: "changeUserRole",
+  })
+  .schema(z.object({ id: IdSchema, role: z.enum(ADMIN_ROLES) }))
+  .action(async ({ parsedInput }) => {
+    const { id, role } = parsedInput;
+
+    const result = await userRepository.updateUserInfo({
+      query: { _id: id },
+      updateQuery: {
+        $set: {
+          role,
+        },
+      },
     });
 
     revalidateTag(cacheTag);

@@ -155,14 +155,13 @@ const productSchema = new Schema<ProductModel>(
   },
 );
 
+// warning: Indexing is only effective with a large number of records
 productSchema.index({ name: 1 });
 productSchema.index({ slug: 1 }, { unique: true });
 productSchema.index({ "category.slug": 1 });
-// productSchema.index({ slug: 1, "category.slug": 1 }, { unique: true });
 productSchema.index({ tags: 1 });
 productSchema.index({ nameNoAccent: "text" }, { default_language: "none" });
 productSchema.index({ isPublished: 1, isAvailable: 1 });
-// todo: index for sorting
 
 const Product =
   (models.Product as Model<ProductModel>) ||

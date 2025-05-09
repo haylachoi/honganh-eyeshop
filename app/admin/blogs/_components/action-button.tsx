@@ -14,6 +14,7 @@ import {
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
 
+// warning: menu button is unmount when click, so toast not show. Move useAction to parent component will fix this
 export const ActionButton = ({ blog }: { blog: BlogType }) => {
   return (
     <ThreeDotsMenu>

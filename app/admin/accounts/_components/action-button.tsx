@@ -1,85 +1,121 @@
 import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants";
 import { useAction } from "next-safe-action/hooks";
-import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
+import { ThreeDotsMenu } from "@/components/shared/three-dots-menu";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
 import { SafeAdminUserInfo } from "@/features/users/user.types";
 import {
+  changeUserRoleAction,
   deleteUserAction,
   lockUserAction,
   unlockUserAction,
 } from "@/features/users/user.actions";
+import {
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ADMIN_ROLES } from "@/features/authorization/authorization.constants";
 
 export const ActionButton = ({ user }: { user: SafeAdminUserInfo }) => {
-  return (
-    <ThreeDotsMenu>
-      {user.isLocked ? (
-        <MenuButton
-          label="Mở khóa"
-          description="Mở khóa tài khoản này?"
-          successMessage={TOAST_MESSAGES.USER.UNLOCK.SUCCESS}
-          ids={[user.id]}
-          action={unlockUserAction}
-        />
-      ) : (
-        <MenuButton
-          label="Khóa"
-          description="Khóa tài khoản này?"
-          successMessage={TOAST_MESSAGES.USER.LOCK.SUCCESS}
-          ids={[user.id]}
-          action={lockUserAction}
-        />
-      )}
+  const { showDialog } = useGlobalAlertDialog();
 
-      <MenuButton
-        label="Xoá"
-        description="Xoá tài khoản này?"
-        successMessage={TOAST_MESSAGES.DELETE.SUCCESS}
-        ids={[user.id]}
-        action={deleteUserAction}
-      />
-    </ThreeDotsMenu>
-  );
-};
-
-const MenuButton = ({
-  action,
-  successMessage,
-  label,
-  description,
-  ids,
-}: {
-  label: string;
-  description: string;
-  successMessage: string;
-  ids: string | string[];
-  action: Parameters<typeof useAction>[0];
-}) => {
-  const { execute, isPending } = useAction(action, {
-    onSuccess: () => {
-      toast.success(successMessage);
-    },
+  const lock = useAction(lockUserAction, {
+    onSuccess: () => toast.success(TOAST_MESSAGES.USER.LOCK.SUCCESS),
     onError: onActionError,
   });
 
-  const { showDialog } = useGlobalAlertDialog();
+  const unlock = useAction(unlockUserAction, {
+    onSuccess: () => toast.success(TOAST_MESSAGES.USER.UNLOCK.SUCCESS),
+    onError: onActionError,
+  });
+
+  const remove = useAction(deleteUserAction, {
+    onSuccess: () => toast.success(TOAST_MESSAGES.DELETE.SUCCESS),
+    onError: onActionError,
+  });
+
+  const role = useAction(changeUserRoleAction, {
+    onSuccess: () => toast.success("Đã thay đổi role thành công"),
+    onError: onActionError,
+  });
+
+  const handleConfirm = (description: string, execute: () => void) =>
+    showDialog({ description, onConfirm: execute });
 
   return (
-    <ThreeDotsMenuButtonItem
-      action={() =>
-        showDialog({
-          description,
-          onConfirm: () =>
-            execute({
-              ids,
-            }),
-        })
-      }
-      isPending={isPending}
-    >
-      {label}
-    </ThreeDotsMenuButtonItem>
+    <ThreeDotsMenu>
+      {user.isLocked ? (
+        <ThreeDotsMenuButtonItem
+          action={() =>
+            handleConfirm("Mở khóa tài khoản này?", () =>
+              unlock.execute({ ids: [user.id] }),
+            )
+          }
+          isPending={unlock.isPending}
+        >
+          Mở khóa
+        </ThreeDotsMenuButtonItem>
+      ) : (
+        <ThreeDotsMenuButtonItem
+          action={() =>
+            handleConfirm("Khóa tài khoản này?", () =>
+              lock.execute({ ids: [user.id] }),
+            )
+          }
+          isPending={lock.isPending || user.role === "admin"}
+        >
+          Khóa
+        </ThreeDotsMenuButtonItem>
+      )}
+
+      <ThreeDotsMenuButtonItem
+        action={() =>
+          handleConfirm("Xoá tài khoản này?", () =>
+            remove.execute({ ids: [user.id] }),
+          )
+        }
+        isPending={remove.isPending || user.role === "admin"}
+      >
+        Xoá
+      </ThreeDotsMenuButtonItem>
+
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger>Chọn role</DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioGroup
+              value={user.role}
+              onValueChange={(value) => {
+                if (role.isPending) return;
+                role.execute({ id: user.id, role: value } as Parameters<
+                  typeof role.execute
+                >[0]);
+              }}
+            >
+              {ADMIN_ROLES.map((r) => (
+                <DropdownMenuRadioItem
+                  key={r}
+                  value={r}
+                  disabled={
+                    role.isPending ||
+                    user.role === r ||
+                    r === "admin" ||
+                    user.role === "admin"
+                  }
+                >
+                  {r}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    </ThreeDotsMenu>
   );
 };

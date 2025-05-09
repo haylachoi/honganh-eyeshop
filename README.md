@@ -40,5 +40,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - add href to main navigation
 - generate metadata
 - don't delete token
-- delte unactive account after x days
 - use find method from cache_all for get something by ...

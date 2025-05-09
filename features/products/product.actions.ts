@@ -222,7 +222,6 @@ export const createProductAction = createProductActionClient
     }
   });
 
-// todo: update only changed value
 export const updateProductAction = modifyProductActionClient
   .metadata({
     actionName: "updateProduct",
