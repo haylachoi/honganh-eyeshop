@@ -1,5 +1,5 @@
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import CouponsView from "./_components/coupons-view";
 import { getAllCouponsQuery } from "@/features/coupons/coupon.queries";
 

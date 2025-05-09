@@ -1,7 +1,7 @@
 import React from "react";
 import CategoriesView from "./_components/categories-view";
 import { getAllCategories } from "@/features/categories/category.queries";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 
 const CategoryPage = async () => {

@@ -23,9 +23,10 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useRouter } from "next/navigation";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 
 const defaultValues: CategoryInputType = {
   name: "",

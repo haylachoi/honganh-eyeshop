@@ -6,7 +6,7 @@ import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { signUpAction } from "../../../features/auth/auth.action";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants";
 import {
   LucideUser,
   LucideMail,
@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { PASSWORD_ERROR_MESSAGE, PASSWORD_REGEX } from "@/constants/regex";
 import { useRouter } from "next/navigation";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 
 export default function SignUpForm() {
   const router = useRouter();

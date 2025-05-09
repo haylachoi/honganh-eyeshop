@@ -1,15 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import {
-  ADMIN_ENDPOINTS,
-  BASE_URL,
-  ENDPOINTS,
-  FILTER_NAME,
-  SORTING_OPTIONS,
-} from "@/constants";
+import { BASE_URL, FILTER_NAME, SORTING_OPTIONS } from "@/constants";
 import slugify from "slugify";
 import { AddressType, SearchParams } from "@/types";
+import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

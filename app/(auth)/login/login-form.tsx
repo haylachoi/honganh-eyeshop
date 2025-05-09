@@ -6,12 +6,11 @@ import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { signIn } from "../../../features/auth/auth.action";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { ADMIN_ENDPOINTS } from "@/constants";
 import { useRouter } from "next/navigation";
 import { LucideMail, LucideLock, Eye, EyeOff } from "lucide-react";
-import { ENDPOINTS } from "@/constants";
 import Link from "next/link";
 import { useState } from "react";
+import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 
 export default function LoginForm() {
   const router = useRouter();

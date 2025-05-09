@@ -1,7 +1,7 @@
 "use client";
 
 import MainPageHeading from "@/components/shared/admin/main-page-heading";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

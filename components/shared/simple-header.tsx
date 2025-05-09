@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import Link from "next/link";
 
 export const SimpleHeader = () => {

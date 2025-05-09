@@ -1,6 +1,7 @@
 "use client";
 
-import { API_ENDPOINTS, VIEWS_COUNT_CONFIG } from "@/constants";
+import { VIEWS_COUNT_CONFIG } from "@/constants";
+import { API_ENDPOINTS } from "@/constants/endpoints.constants";
 import { Role } from "@/features/authorization/authorization.constants";
 import { useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";

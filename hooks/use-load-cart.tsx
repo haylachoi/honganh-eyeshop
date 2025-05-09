@@ -1,4 +1,4 @@
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { syncLocalCart } from "@/features/cart/cart.utils";
 import useCartStore from "@/hooks/use-cart";
 import { usePathname } from "next/navigation";

@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/custom-ui/accordion";
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { cn } from "@/lib/utils";
 import { ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";

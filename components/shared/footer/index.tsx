@@ -1,11 +1,5 @@
-import {
-  ADDRESS,
-  EMAIL,
-  EMAIL_LINK,
-  ENDPOINTS,
-  PHONE,
-  PHONE_LINK,
-} from "@/constants";
+import { ADDRESS, EMAIL, EMAIL_LINK, PHONE, PHONE_LINK } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { getPolicyPreviews } from "@/features/others/other.services";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

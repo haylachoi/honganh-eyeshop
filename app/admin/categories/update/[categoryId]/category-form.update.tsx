@@ -24,12 +24,13 @@ import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 import { onActionError } from "@/lib/actions/action.helper";
 import SubmitButton from "@/components/custom-ui/submit-button";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 
 const CategoryUpdateForm = ({ category }: { category: CategoryType }) => {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { getAllBlogs } from "@/features/blogs/blog.queries";
 import BlogsView from "./_components/blogs-view";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 
 const BlogPage = async () => {

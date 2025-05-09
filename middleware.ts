@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSession, updateSession } from "./features/session/session.core";
-import { ENDPOINTS } from "./constants";
+import { ENDPOINTS } from "./constants/endpoints.constants";
 
 const adminRoutes = ["/admin"];
 const protectedRoutes = [

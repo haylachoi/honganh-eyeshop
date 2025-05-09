@@ -1,6 +1,6 @@
 "use client";
 
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import useCartStore from "@/hooks/use-cart";
 import { useLoadCart } from "@/hooks/use-load-cart";
 import { ShoppingCart } from "lucide-react";

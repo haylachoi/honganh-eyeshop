@@ -1,7 +1,7 @@
 import React from "react";
 import ProductCreateForm from "./product-form.create";
 import Link from "next/link";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import { getAllTags } from "@/features/tags/tag.queries";
 import { getAllCategories } from "@/features/categories/category.queries";
 

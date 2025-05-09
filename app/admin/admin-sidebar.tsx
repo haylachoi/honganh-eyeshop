@@ -1,6 +1,6 @@
 import { LogoutButton } from "@/components/shared/logout-button";
 import AdminNavigation from "./admin-navigation";
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import Link from "next/link";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { auth } from "@/features/auth/auth.auth";

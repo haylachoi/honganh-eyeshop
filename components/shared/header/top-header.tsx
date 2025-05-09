@@ -3,7 +3,7 @@ import { NavigationMenu } from "./header-navigation";
 import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { CartButton } from "./cart-button";
 import UserButton from "../user-button";
 import SearchBox from "./search-box";

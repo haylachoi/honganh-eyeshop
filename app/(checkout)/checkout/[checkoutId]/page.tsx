@@ -3,7 +3,7 @@ import CheckoutForm from "./checkout-form";
 import { CompletedCheckoutView } from "./completed-checkout-view";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 
 type Params = Promise<{ checkoutId: string }>;
 const CheckoutPage = async ({ params }: { params: Params }) => {

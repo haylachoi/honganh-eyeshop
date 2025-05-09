@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { blogUpdateSchema } from "@/features/blogs/blog.validators";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { useDebounce } from "use-debounce";
@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 import { generateHtmlAndTOC } from "@/features/blogs/blog.utils";
 import FormTextArea from "@/components/shared/form/form-text-area";
 import { TagInput } from "../../_components/input-tags";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 
 const BlogUpdateForm = ({
   defaultValues,

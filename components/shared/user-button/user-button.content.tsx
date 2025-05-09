@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS, ENDPOINTS } from "@/constants/endpoints.constants";
 import { logoutAction } from "@/features/auth/auth.action";
 
 import { SafeUserInfoFromSession } from "@/features/users/user.types";

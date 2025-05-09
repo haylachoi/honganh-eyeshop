@@ -62,61 +62,6 @@ export const PAGE_SIZE = {
   },
 };
 
-export const ENDPOINTS = {
-  HOME: "/",
-  AUTH: {
-    VERIFY_TOKEN: "/verify",
-    ACTIVE_ACCOUNT: "/active-account",
-    RESET_PASSWORD: "/reset-password",
-    FORGOT_PASSWORD: "/forgot-password",
-    LOGIN: "/login",
-    SIGN_UP: "/signup",
-  },
-  PROFILE: {
-    USER_INFO: "/user-info",
-    USER_PASSWORD: "/user-password",
-    USER_ADDRESS: "/user-address",
-  },
-  CART: "/cart",
-  CHECKOUT: "/checkout",
-  CATEGORIES: "/c",
-  PRODUCTS: "/c",
-  BLOGS: {
-    home: "/blogs",
-    view: "/b",
-  },
-  ORDER: "/order",
-  ON_SALE: "/on-sale",
-  MOST_POPULAR: "/most-popular",
-  TRENDING: "/trending",
-  NEW_ARRIVAL: "/new-arrival",
-  ORDER_ONLINE: "/order-online",
-  CHEAP_GLASSES: "/cheap-glasses",
-  POLICY: "/policy",
-  SEARCH: "/search",
-};
-
-export const ADMIN_ENDPOINTS = {
-  HOME: "/admin",
-  OVERVIEW: "/admin",
-  CATEGORIES: "/admin/categories",
-  PRODUCTS: "/admin/products",
-  TAGS: "/admin/tags",
-  BLOGS: "/admin/blogs",
-  COUPONS: "/admin/coupons",
-  ORDERS: {
-    LAST_30_DAYS: "/admin/orders/last30days",
-    ALL: "/admin/orders/all",
-  },
-  REVIEWS: "/admin/reviews",
-  ACCOUNTS: "/admin/accounts",
-  OTHERS: "/admin/others",
-};
-
-export const API_ENDPOINTS = {
-  VIEW_COUNT: "/api/viewCount",
-};
-
 export const SORT_BY_VALUES = ["asc", "desc"] as const;
 export const SORT_BY_OPTIONS = createUppercaseMap(SORT_BY_VALUES);
 

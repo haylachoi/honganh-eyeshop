@@ -1,6 +1,6 @@
 import { getSafeAdminUserInfo } from "@/features/users/user.queries";
 import AdminAccountsView from "./_components/admin-accounts-view";
-import { ADMIN_ENDPOINTS } from "@/constants";
+import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 
 const AccountsPage = async () => {

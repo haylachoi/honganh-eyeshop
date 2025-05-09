@@ -1,6 +1,6 @@
 "use client";
 
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import UserButtonContent from "./user-button.content";

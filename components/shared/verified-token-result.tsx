@@ -1,6 +1,6 @@
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import clsx from "clsx";
-import { ENDPOINTS } from "@/constants";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 
 type VerifyResultProps = {
   success: boolean;
