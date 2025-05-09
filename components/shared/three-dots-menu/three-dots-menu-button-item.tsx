@@ -10,7 +10,11 @@ export const ThreeDotsMenuButtonItem = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <DropdownMenuItem onClick={action} disabled={isPending}>
+    <DropdownMenuItem
+      className="cursor-pointer"
+      onClick={action}
+      disabled={isPending}
+    >
       {children}
     </DropdownMenuItem>
   );

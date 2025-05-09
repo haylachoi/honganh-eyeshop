@@ -57,7 +57,9 @@ export const ActionButton = ({ blog }: { blog: BlogType }) => {
       </ThreeDotsMenuButtonItem>
 
       <DropdownMenuItem>
-        <Link href={getLink.blog.update({ id: blog.id })}>Cập nhật</Link>
+        <Link className="w-full" href={getLink.blog.update({ id: blog.id })}>
+          Cập nhật
+        </Link>
       </DropdownMenuItem>
     </ThreeDotsMenu>
   );
