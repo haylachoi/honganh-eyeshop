@@ -65,8 +65,10 @@ export const PERMISSIONS: {
       view: ["all"],
     },
     blog: {
+      create: ["all"],
       view: ["all"],
-      modify: ["all"],
+      modify: ["own"],
+      delete: ["own"],
     },
     tag: {
       view: ["all"],

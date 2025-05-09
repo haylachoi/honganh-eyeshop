@@ -3,6 +3,10 @@ import { JSONContent } from "@tiptap/react";
 import { generateHTML } from "@tiptap/core";
 import { TIPTAP_EXTENSIONS } from "./blog.contants";
 import { TOCEntry } from "./blog.types";
+import { Id } from "@/types";
+import { Scope } from "../authorization/authorization.constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
+import { NotFoundError } from "@/lib/error";
 
 export function addHeadingIds(doc: JSONContent): JSONContent {
   const usedIds = new Set<string>();
@@ -78,3 +82,35 @@ export function generateHtmlAndTOC(doc: JSONContent) {
   const html = generateHTML(newJSON, TIPTAP_EXTENSIONS);
   return { html, toc };
 }
+
+export const validateAction = ({
+  blogs,
+  userId,
+  scopes,
+}: {
+  blogs: { id: Id; author: { id: Id } }[];
+  userId: Id;
+  scopes: Scope[];
+}) => {
+  for (let i = 0; i < blogs.length; i++) {
+    const blog = blogs[i];
+    if (!blog) {
+      throw new NotFoundError({
+        resource: "blog",
+        message: ERROR_MESSAGES.BLOG.NOT_FOUND,
+      });
+    }
+
+    if (
+      scopes &&
+      !scopes.includes("all") &&
+      scopes.includes("own") &&
+      blog.author.id !== userId
+    ) {
+      throw new NotFoundError({
+        resource: "blog",
+        message: ERROR_MESSAGES.AUTH.UNAUTHORIZED,
+      });
+    }
+  }
+};

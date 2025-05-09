@@ -90,7 +90,8 @@ export const authActionClient = actionClient.use(async ({ next }) => {
 
   const userId = session.id;
   const role = session.role;
-  return next({ ctx: { userId, role } });
+  const name = session.name;
+  return next({ ctx: { userId, role, name } });
 });
 
 export const getAuthActionClient = ({

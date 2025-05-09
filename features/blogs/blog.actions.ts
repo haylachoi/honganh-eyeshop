@@ -16,6 +16,7 @@ import { NotFoundError } from "@/lib/error";
 import { removeDiacritics } from "@/lib/utils";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import next_cache from "@/cache";
+import { validateAction } from "./blog.utils";
 
 const resource = "blog";
 const blogCacheTags = CACHE_CONFIG.BLOGS.ALL.TAGS[0];
@@ -101,15 +102,14 @@ export const setPublishedBlogStatusAction = modifyBlogActionClient
       isPublished: z.boolean(),
     }),
   )
-  .action(async ({ parsedInput }) => {
-    const ids = Array.isArray(parsedInput) ? parsedInput : [parsedInput];
+  .action(async ({ parsedInput, ctx }) => {
+    const ids = Array.isArray(parsedInput.ids)
+      ? parsedInput.ids
+      : [parsedInput.ids];
 
-    if (ids.some((id) => !next_cache.blogs.byId(id))) {
-      throw new NotFoundError({
-        resource: "blog",
-        message: ERROR_MESSAGES.BLOG.NOT_FOUND,
-      });
-    }
+    const blogs = await Promise.all(ids.map((id) => next_cache.blogs.byId(id)));
+    validateAction({ blogs, userId: ctx.userId, scopes: ctx.scopes });
+
     const result = await blogsRepository.setPublishedStatus(parsedInput);
 
     revalidateTag(blogCacheTags);
@@ -121,7 +121,7 @@ export const updateBlogAction = modifyBlogActionClient
     actionName: "updateBlog",
   })
   .schema(blogUpdateSchema)
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput, ctx }) => {
     const {
       authorId,
       wallImage,
@@ -131,6 +131,11 @@ export const updateBlogAction = modifyBlogActionClient
       deletedImages,
       ...rest
     } = parsedInput;
+    const { userId, scopes } = ctx;
+
+    const blog = await next_cache.blogs.byId(rest.id);
+    validateAction({ blogs: [blog], userId, scopes });
+
     const user = await userRepository.getUserById(authorId);
 
     if (!user) {
@@ -192,15 +197,13 @@ export const deleteBlogAction = deleteBlogActionClient
     actionName: "deleteBlog",
   })
   .schema(z.union([z.string(), z.array(z.string())]))
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput, ctx }) => {
     const ids = Array.isArray(parsedInput) ? parsedInput : [parsedInput];
-    const blogs = await blogsRepository.getBlogsByIds(ids);
-    if (blogs.length !== ids.length) {
-      throw new NotFoundError({
-        resource: "blog",
-        message: ERROR_MESSAGES.BLOG.NOT_FOUND,
-      });
-    }
+    const blogs = await Promise.all(ids.map((id) => next_cache.blogs.byId(id)));
+    const { userId, scopes } = ctx;
+
+    validateAction({ blogs, userId, scopes });
+
     const result = await blogsRepository.deleteBlog(parsedInput);
     const deletedImages = blogs.flatMap((blog) => blog.images);
     deletedImages.push(...blogs.map((blog) => blog.wallImage));
