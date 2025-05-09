@@ -12,9 +12,48 @@ import { NotFoundError } from "@/lib/error";
 
 const getAllBlogs = async () => {
   await connectToDatabase();
-  const blogs = await Blog.find().sort({ updatedAt: -1 }).lean();
-  const result = blogs.map((blog) => blogTypeSchema.parse(blog));
 
+  const blogs = await Blog.aggregate([
+    {
+      $sort: { updatedAt: -1 },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author._id",
+        foreignField: "_id",
+        as: "authorInfo",
+      },
+    },
+    {
+      $unwind: {
+        path: "$authorInfo",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        title: 1,
+        titleNoAccent: 1,
+        slug: 1,
+        description: 1,
+        wallImage: 1,
+        images: 1,
+        content: 1,
+        toc: 1,
+        tags: 1,
+        isPublished: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        author: {
+          _id: { $ifNull: ["$authorInfo._id", "$author._id"] },
+          name: { $ifNull: ["$authorInfo.name", "$author.name"] },
+        },
+      },
+    },
+  ]);
+
+  const result = blogs.map((blog) => blogTypeSchema.parse(blog));
   return result;
 };
 
