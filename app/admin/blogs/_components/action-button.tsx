@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { TOAST_MESSAGES } from "@/constants";
 import { useAction } from "next-safe-action/hooks";
-import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
+import { ThreeDotsMenu } from "@/components/shared/three-dots-menu";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { getLink } from "@/lib/utils";
@@ -14,58 +14,51 @@ import {
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
 
-// warning: menu button is unmount when click, so toast not show. Move useAction to parent component will fix this
 export const ActionButton = ({ blog }: { blog: BlogType }) => {
+  const { showDialog } = useGlobalAlertDialog();
+
+  const publishAction = useAction(setPublishedBlogStatusAction, {
+    onSuccess: () => toast.success(TOAST_MESSAGES.UPDATE.SUCCESS),
+    onError: onActionError,
+  });
+
+  const deleteAction = useAction(deleteBlogAction, {
+    onSuccess: () => toast.success(TOAST_MESSAGES.DELETE.SUCCESS),
+    onError: onActionError,
+  });
+
+  const handleTogglePublish = () => {
+    publishAction.execute({
+      ids: blog.id,
+      isPublished: !blog.isPublished,
+    });
+  };
+
+  const handleDelete = () => {
+    showDialog({
+      onConfirm: () => deleteAction.execute(blog.id),
+    });
+  };
+
   return (
     <ThreeDotsMenu>
-      <SetPublishedStatusButton blog={blog} />
-      <DeleteBlogButton blog={blog} />
+      <ThreeDotsMenuButtonItem
+        action={handleTogglePublish}
+        isPending={publishAction.isPending}
+      >
+        {blog.isPublished ? "Chuyển thành nháp" : "Công khai"}
+      </ThreeDotsMenuButtonItem>
+
+      <ThreeDotsMenuButtonItem
+        action={handleDelete}
+        isPending={deleteAction.isPending}
+      >
+        Xóa
+      </ThreeDotsMenuButtonItem>
+
       <DropdownMenuItem>
         <Link href={getLink.blog.update({ id: blog.id })}>Cập nhật</Link>
       </DropdownMenuItem>
     </ThreeDotsMenu>
-  );
-};
-
-const SetPublishedStatusButton = ({ blog }: { blog: BlogType }) => {
-  const { execute, isPending } = useAction(setPublishedBlogStatusAction, {
-    onSuccess: () => {
-      toast.success(TOAST_MESSAGES.UPDATE.SUCCESS);
-    },
-    onError: onActionError,
-  });
-
-  return (
-    <ThreeDotsMenuButtonItem
-      action={() =>
-        execute({
-          ids: blog.id,
-          isPublished: !blog.isPublished,
-        })
-      }
-      isPending={isPending}
-    >
-      {blog.isPublished ? "Chuyển thành nháp" : "Công khai"}
-    </ThreeDotsMenuButtonItem>
-  );
-};
-
-const DeleteBlogButton = ({ blog }: { blog: BlogType }) => {
-  const { execute, isPending } = useAction(deleteBlogAction, {
-    onSuccess: () => {
-      toast.success(TOAST_MESSAGES.DELETE.SUCCESS);
-    },
-    onError: onActionError,
-  });
-
-  const { showDialog } = useGlobalAlertDialog();
-
-  return (
-    <ThreeDotsMenuButtonItem
-      action={() => showDialog({ onConfirm: () => execute(blog.id) })}
-      isPending={isPending}
-    >
-      Xóa
-    </ThreeDotsMenuButtonItem>
   );
 };
