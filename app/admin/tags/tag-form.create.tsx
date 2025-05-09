@@ -36,7 +36,7 @@ const TagFormCreate = () => {
   return (
     <Form {...form}>
       <form
-        className="flex "
+        className="flex gap-2"
         onSubmit={form.handleSubmit((data) => execute(data))}
       >
         <FormField
