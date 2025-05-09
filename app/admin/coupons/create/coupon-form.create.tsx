@@ -5,7 +5,7 @@ import FormRadioGroup from "@/components/shared/form/form-radio-group";
 import FormSelectInput from "@/components/shared/form/form-select-input";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import { Form } from "@/components/ui/form";
-import { TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { createCouponAction } from "@/features/coupons/coupon.actions";
 import {
   COUPON_STATUS,
@@ -15,6 +15,7 @@ import { onActionError } from "@/lib/actions/action.helper";
 import { formatDateTimeLocal } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,8 +37,10 @@ const defaultValues: InputType = {
   status: "active",
 };
 export const CouponCreateForm = () => {
+  const router = useRouter();
   const { execute, isPending } = useAction(createCouponAction, {
     onSuccess: () => {
+      router.push(ADMIN_ENDPOINTS.COUPONS);
       toast.success(TOAST_MESSAGES.CREATE.SUCCESS);
     },
     onError: onActionError,
