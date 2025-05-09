@@ -20,7 +20,6 @@ const _keepTailwindClasses = `
   xl:basis-full xl:basis-1/2 xl:basis-1/3 xl:basis-1/4 xl:basis-1/5
 `;
 
-// todo: use this insteexport
 export const CarouselList = <T extends { id: string }>({
   className,
   items,

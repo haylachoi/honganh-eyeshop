@@ -27,7 +27,7 @@ cron.schedule("0 0 * * *", async () => {
     const response = await fetch("http://localhost:3000/api/dashboard", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", // Đảm bảo gửi dưới dạng JSON
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         jobName: "last7Days",
@@ -65,7 +65,7 @@ cron.schedule("0 3 1 * *", async () => {
     const response = await fetch("http://localhost:3000/api/dashboard", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", // Đảm bảo gửi dưới dạng JSON
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         jobName: "monthly",
@@ -76,5 +76,26 @@ cron.schedule("0 3 1 * *", async () => {
     console.log("Dashboard updated:", data.message);
   } catch (error) {
     console.error("Error calling API:", error);
+  }
+});
+
+cron.schedule("0 1 * * *", async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/account/clean-unverified-account",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret,
+        }),
+      },
+    );
+    const data = await response.json();
+    console.log(data.message);
+  } catch (error) {
+    console.error("Error cleaning up unverified accounts:", error);
   }
 });

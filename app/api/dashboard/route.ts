@@ -1,8 +1,8 @@
+import { JOB_SECRET } from "@/constants";
 import dashboardRepository from "@/lib/db/repositories/dashboard";
 import { NextRequest, NextResponse } from "next/server";
 
-// todo: read from file
-const secret = process.env.JOB_SECRET;
+const secret = JOB_SECRET;
 
 const jobNameList = ["daily", "monthly", "last7Days"];
 

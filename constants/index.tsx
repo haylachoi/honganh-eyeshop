@@ -17,6 +17,10 @@ export const MAX_IMAGE_SIZE = 1024 * 100; // 100 KB
 
 export const PRICE_CURRENCY = "VND";
 
+export const JOB_SECRET = process.env.JOB_SECRET;
+
+export const UNVERIFIED_ACCOUNT_CLEANUP_DAYS = 7;
+
 export const PAGE_SIZE = {
   TRENDING: {
     SM: 8,

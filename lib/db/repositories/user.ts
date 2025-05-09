@@ -2,7 +2,7 @@
 
 import { connectToDatabase } from "..";
 import User from "@/lib/db/model/user.model";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES, UNVERIFIED_ACCOUNT_CLEANUP_DAYS } from "@/constants";
 import { Id } from "@/types";
 import { SignUpType } from "@/features/auth/auth.type";
 import {
@@ -152,6 +152,19 @@ const deleteUsers = async ({ ids }: { ids: Id | Id[] }) => {
   return ids;
 };
 
+const cleanUpUnverifiedAccount = async () => {
+  await connectToDatabase();
+  const oneWeekAgo = new Date(
+    Date.now() - UNVERIFIED_ACCOUNT_CLEANUP_DAYS * 24 * 60 * 60 * 1000,
+  );
+  const result = await User.deleteMany({
+    isVerified: false,
+    createdAt: { $lt: oneWeekAgo },
+  });
+
+  console.log(`${result.deletedCount} unverified users deleted`);
+};
+
 const lockUsers = async ({ ids }: { ids: Id | Id[] }) => {
   await connectToDatabase();
   const idsArray = Array.isArray(ids) ? ids : [ids];
@@ -198,6 +211,7 @@ const userRepository = {
   deleteUsers,
   lockUsers,
   unlockUsers,
+  cleanUpUnverifiedAccount,
 };
 
 export default userRepository;
