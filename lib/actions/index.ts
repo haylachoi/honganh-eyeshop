@@ -111,11 +111,13 @@ export const getAuthActionClient = ({
     });
 
     const isAuthorized =
-      scopes?.includes("all") || (scope ? scopes?.includes(scope) : true);
+      scopes &&
+      (scopes.includes("all") || (scope ? scopes.includes(scope) : true));
 
     if (!isAuthorized) {
       throw new AuthorizationError({ resource });
     }
+
     return next({
       ctx: {
         ...ctx,
