@@ -1,6 +1,6 @@
 import cron from "node-cron";
 
-const secret = "kfklkdflakdfjaoid";
+const secret = process.env.JOB_SECRET;
 
 // Cron job sẽ chạy mỗi phút
 cron.schedule("* * * * *", async () => {
