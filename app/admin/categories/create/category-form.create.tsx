@@ -23,8 +23,9 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { ADMIN_ENDPOINTS, TOAST_MESSAGES } from "@/constants";
 import { onActionError } from "@/lib/actions/action.helper";
+import { useRouter } from "next/navigation";
 
 const defaultValues: CategoryInputType = {
   name: "",
@@ -33,12 +34,14 @@ const defaultValues: CategoryInputType = {
   attributes: [{ name: "", display: "" }],
 };
 const CategoryCreateForm = () => {
+  const router = useRouter();
   const form = useForm<CategoryInputType>({
     resolver: zodResolver(CategoryInputSchema),
     defaultValues,
   });
   const { execute, isPending } = useAction(createCategoryAction, {
     onSuccess: () => {
+      router.push(ADMIN_ENDPOINTS.CATEGORIES);
       toast.success(TOAST_MESSAGES.CREATE.SUCCESS);
     },
     onError: onActionError,
