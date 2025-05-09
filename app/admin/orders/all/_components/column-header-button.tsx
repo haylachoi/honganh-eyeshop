@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { SORTING_OPTIONS } from "@/constants";
 
 type SortHandler =
   | string
@@ -26,14 +27,17 @@ export const ColumnHeaderButton = ({
     if (typeof onSort === "function") {
       onSort({ router, searchParams });
     } else if (typeof onSort === "string") {
-      const currentSort = searchParams.get("sortBy");
-      const currentOrder = searchParams.get("orderBy") || "DESC";
+      const currentSort = searchParams.get(SORTING_OPTIONS.SORT_BY);
+      const currentOrder =
+        searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
       const newOrder =
-        currentSort === onSort && currentOrder === "ASC" ? "DESC" : "ASC";
+        currentSort === onSort && currentOrder === SORTING_OPTIONS.ASC
+          ? SORTING_OPTIONS.DESC
+          : SORTING_OPTIONS.ASC;
 
       const newParams = new URLSearchParams(searchParams);
-      newParams.set("sortBy", onSort);
-      newParams.set("orderBy", newOrder);
+      newParams.set(SORTING_OPTIONS.SORT_BY, onSort);
+      newParams.set(SORTING_OPTIONS.ORDER_BY, newOrder);
 
       router.replace(`?${newParams.toString()}`);
     }

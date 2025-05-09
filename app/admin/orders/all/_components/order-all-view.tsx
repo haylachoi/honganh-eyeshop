@@ -38,7 +38,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnHeaderButton } from "./column-header-button";
-import { PAGE_SIZE } from "@/constants";
+import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
 
@@ -225,8 +225,9 @@ const size = PAGE_SIZE.ORDER.ALL.MD;
 const OrdersAllView = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") ?? "1");
-  const sortBy = searchParams.get("sortBy") || "createdAt";
-  const orderBy = searchParams.get("orderBy") || "DESC";
+  const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
+  const orderBy =
+    searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
 
   const { data, isPending } = useQuery({
     queryKey: [
@@ -239,7 +240,7 @@ const OrdersAllView = () => {
     ],
     queryFn: async () => {
       const res = await fetch(
-        `/api/orders?page=${page}&sortBy=${sortBy}&orderBy=${orderBy}`,
+        `/api/orders?page=${page}&${SORTING_OPTIONS.SORT_BY}=${sortBy}&${SORTING_OPTIONS.ORDER_BY}=${orderBy}`,
       );
       const json = await res.json();
 
