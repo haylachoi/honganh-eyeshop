@@ -20,7 +20,7 @@ import { onActionError } from "@/lib/actions/action.helper";
 import { TagType } from "@/features/tags/tag.type";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { Switch } from "@/components/ui/switch";
 import { useDebounce } from "use-debounce";
 import FormTextInput from "@/components/shared/form/form-text-input";

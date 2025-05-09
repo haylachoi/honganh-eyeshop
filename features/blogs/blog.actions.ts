@@ -4,7 +4,7 @@ import { getAuthActionClient } from "@/lib/actions";
 import { blogInputSchema, blogUpdateSchema } from "./blog.validators";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import userRepository from "@/lib/db/repositories/user";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import {

@@ -5,7 +5,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { updateTagAction } from "@/features/tags/tag.actions";
 import { TagUpdateType } from "@/features/tags/tag.type";
 import { onActionError } from "@/lib/actions/action.helper";

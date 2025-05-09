@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { RESOURCE_TYPES } from "@/features/authorization/authorization.constants";
 
 export const DEFAULT_SERVER_ERROR_MESSAGE = "Có lỗi xảy ra";

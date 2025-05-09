@@ -8,7 +8,7 @@ import { Id } from "@/types";
 import { checkoutTypeSchema } from "@/features/checkouts/checkout.validator";
 import mongoose from "mongoose";
 import { NotFoundError } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 
 const getCheckoutById = async (id: Id) => {
   await connectToDatabase();

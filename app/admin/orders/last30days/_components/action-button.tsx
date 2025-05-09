@@ -1,4 +1,4 @@
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
 import {
   confirmOrderAction,

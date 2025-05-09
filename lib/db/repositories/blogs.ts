@@ -1,7 +1,8 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { ERROR_MESSAGES, MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";

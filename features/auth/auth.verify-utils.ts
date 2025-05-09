@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { connectToDatabase } from "@/lib/db";
 import EmailVerificationToken from "@/lib/db/model/email-verification.model";
 import PasswordResetToken from "@/lib/db/model/password-reset-token.model";

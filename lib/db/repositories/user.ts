@@ -2,7 +2,8 @@
 
 import { connectToDatabase } from "..";
 import User from "@/lib/db/model/user.model";
-import { ERROR_MESSAGES, UNVERIFIED_ACCOUNT_CLEANUP_DAYS } from "@/constants";
+import { UNVERIFIED_ACCOUNT_CLEANUP_DAYS } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id } from "@/types";
 import { SignUpType } from "@/features/auth/auth.type";
 import {

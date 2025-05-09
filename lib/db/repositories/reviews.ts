@@ -8,7 +8,7 @@ import {
 import Product from "../model/product.model";
 import mongoose, { FilterQuery } from "mongoose";
 import { NotFoundError, ServerError } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id } from "@/types";
 import Order from "../model/order.model";
 import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";

@@ -1,5 +1,5 @@
 "use client";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { createReviewAction } from "@/features/reviews/review.actions";
 import { ReviewType } from "@/features/reviews/review.type";
 import { ReviewInputSchema } from "@/features/reviews/review.validator";

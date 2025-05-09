@@ -12,7 +12,7 @@ import {
   ERROR_TYPES,
   ValidationError,
 } from "../error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import {
   Action,
   Resource,

@@ -10,7 +10,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { validateItems } from "./checkout.utils";
 
 export const createCheckoutAction = customerActionClient

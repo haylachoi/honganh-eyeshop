@@ -24,7 +24,7 @@ import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";

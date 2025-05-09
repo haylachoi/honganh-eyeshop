@@ -16,7 +16,7 @@ import {
   sendPasswordResetEmail,
   sendVerificationEmail,
 } from "../email/email.utils";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { z } from "zod";
 import { passwordResetTokenRepository } from "@/lib/db/repositories/password-reset-token";
 import { validatePasswordResetToken } from "./auth.verify-utils";

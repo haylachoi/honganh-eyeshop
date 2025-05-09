@@ -15,7 +15,7 @@ import { randomBytes } from "crypto";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { deleteFile } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 
 const fakeCategories = [
   {

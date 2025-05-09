@@ -5,7 +5,7 @@ import FormRadioGroup from "@/components/shared/form/form-radio-group";
 import FormSelectInput from "@/components/shared/form/form-select-input";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import { Form } from "@/components/ui/form";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import { updateCouponAction } from "@/features/coupons/coupon.actions";
 import {

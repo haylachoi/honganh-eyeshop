@@ -2,7 +2,7 @@
 
 import { connectToDatabase } from "..";
 import Category from "@/lib/db/model/category.model";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id } from "@/types";
 import {
   CategoryType,

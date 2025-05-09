@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { addItemToCart } from "@/features/cart/cart.actions";
 import useCartStore from "@/hooks/use-cart";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import QuantityInput from "@/components/shared/quantity-input/index";
 import { AdjustQuantityButton } from "@/components/shared/quantity-input/adjust-quantity-button";
 import { useAuth } from "@/hooks/use-auth";

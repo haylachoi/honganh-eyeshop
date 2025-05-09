@@ -1,7 +1,7 @@
 "use client";
 
 import SubmitButton from "@/components/custom-ui/submit-button";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { updateCartAfterOrder } from "@/features/cart/cart.utils";
 import { updateCheckoutAction } from "@/features/checkouts/checkout.actions";
 import {

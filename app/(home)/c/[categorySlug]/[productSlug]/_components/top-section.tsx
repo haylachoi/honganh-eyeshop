@@ -4,7 +4,7 @@ import ImageSection from "./image-section";
 import VariantSelector from "./variant-section";
 import BuyButton from "./buy-btn";
 import { Star } from "lucide-react";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";
 
 type topContextProps = {

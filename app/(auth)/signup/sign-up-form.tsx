@@ -6,7 +6,7 @@ import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { signUpAction } from "../../../features/auth/auth.action";
 import { onActionError } from "@/lib/actions/action.helper";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import {
   LucideUser,
   LucideMail,

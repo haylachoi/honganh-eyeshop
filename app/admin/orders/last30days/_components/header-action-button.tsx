@@ -3,7 +3,7 @@ import React from "react";
 import { Table } from "@tanstack/react-table";
 
 import { ThreeDotsMenuForHeader } from "@/components/shared/three-dots-menu/index";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { OrderType } from "@/features/orders/order.types";
 import {
   rejectOrderAction,

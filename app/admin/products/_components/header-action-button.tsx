@@ -5,7 +5,7 @@ import { Table } from "@tanstack/react-table";
 import { ThreeDotsMenuForHeader } from "@/components/shared/three-dots-menu/index";
 import { ProductType } from "../../../../features/products/product.types";
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { deleteProductAction } from "../../../../features/products/product.actions";
 import { onActionError } from "@/lib/actions/action.helper";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";

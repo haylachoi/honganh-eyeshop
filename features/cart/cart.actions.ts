@@ -4,7 +4,7 @@ import { authCustomerActionClient, getAuthActionClient } from "@/lib/actions";
 import { cartItemInputSchema } from "./cart.validator";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import productRepository from "@/lib/db/repositories/products";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { revalidateTag } from "next/cache";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";

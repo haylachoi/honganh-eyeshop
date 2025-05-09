@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { connectToDatabase } from "..";
 import { Id } from "@/types";
 import { NotFoundError } from "@/lib/error";

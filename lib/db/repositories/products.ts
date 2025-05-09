@@ -4,7 +4,8 @@ import {
 } from "@/features/products/product.types";
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
-import { ERROR_MESSAGES, MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,

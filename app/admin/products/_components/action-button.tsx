@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { ProductType } from "../../../../features/products/product.types";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { useAction } from "next-safe-action/hooks";
 import { deleteProductAction } from "../../../../features/products/product.actions";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";

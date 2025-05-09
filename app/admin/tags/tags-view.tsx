@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { deleteTagAction } from "@/features/tags/tag.actions";
 import { TagType } from "@/features/tags/tag.type";
 import { onActionError } from "@/lib/actions/action.helper";

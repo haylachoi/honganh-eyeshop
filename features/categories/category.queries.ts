@@ -4,7 +4,7 @@ import { z } from "zod";
 import { categorySlugSchema } from "./category.validator";
 import next_cache from "@/cache";
 import { NotFoundError } from "@/lib/error";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 
 export const getCategoryById = safeQuery
   .schema(z.string().min(3))

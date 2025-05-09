@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { connectToDatabase } from "..";
 import Tags from "../model/tag.model";
 import { TagInputType, TagType, TagUpdateType } from "@/features/tags/tag.type";

@@ -1,5 +1,5 @@
 import next_cache from "@/cache";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { cartRepository } from "@/lib/db/repositories/cart";
 import { NotFoundError } from "@/lib/error";
 import { authCustomerQueryClient, safeQuery } from "@/lib/query";

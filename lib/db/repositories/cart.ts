@@ -5,7 +5,7 @@ import {
   cartItemTypeSchema,
   cartTypeSchema,
 } from "@/features/cart/cart.validator";
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { connectToDatabase } from "..";
 import { NotFoundError, ServerError } from "@/lib/error";
 import { Id } from "@/types";

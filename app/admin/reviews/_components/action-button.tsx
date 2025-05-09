@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { TOAST_MESSAGES } from "@/constants";
+import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { useAction } from "next-safe-action/hooks";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";

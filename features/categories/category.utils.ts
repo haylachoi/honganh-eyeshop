@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import categoriesRepository from "@/lib/db/repositories/categories";
 import { NotFoundError } from "@/lib/error";
 

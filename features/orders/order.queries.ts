@@ -6,7 +6,8 @@ import {
 } from "@/lib/query";
 import { orderIdSchema } from "./order.validator";
 import { NotFoundError } from "@/lib/error";
-import { ERROR_MESSAGES, PAGE_SIZE } from "@/constants";
+import { PAGE_SIZE } from "@/constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import next_cache from "@/cache";
 import { z } from "zod";
 
