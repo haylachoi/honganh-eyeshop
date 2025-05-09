@@ -22,8 +22,8 @@ export const getFilterByCategorySlug = customerQueryClient
     return result;
   });
 
-export const getAllFilters = customerQueryClient.query(async () => {
-  const result = await next_cache.filters.getAll();
+export const getGlobalFilters = customerQueryClient.query(async () => {
+  const result = await next_cache.filters.getGlobal();
   return result;
 });
 

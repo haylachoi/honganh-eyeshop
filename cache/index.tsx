@@ -243,8 +243,8 @@ const next_cache = {
   },
 
   filters: {
-    getAll: unstable_cache(
-      filtersRepository.getAllFilters,
+    getGlobal: unstable_cache(
+      filtersRepository.getGlobalFilters,
       CACHE_CONFIG.FILTER.ALL.KEY_PARTS,
       {
         tags: CACHE_CONFIG.FILTER.ALL.TAGS,

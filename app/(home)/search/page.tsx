@@ -2,7 +2,7 @@ import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
 import { getAllCategories } from "@/features/categories/category.queries";
 import { FILTER_NAME } from "@/features/filter/filter.constants";
-import { getAllFilters } from "@/features/filter/filter.queries";
+import { getGlobalFilters } from "@/features/filter/filter.queries";
 import { FilterGroupType } from "@/features/filter/filter.types";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";
 import { getAllTags } from "@/features/tags/tag.queries";
@@ -27,7 +27,7 @@ export default SearchPage;
 
 const FilterProvider = async () => {
   const [attrRes, categoryRes, tagRes] = await Promise.all([
-    getAllFilters(),
+    getGlobalFilters(),
     getAllCategories(),
     getAllTags(),
   ]);
@@ -53,8 +53,6 @@ const FilterProvider = async () => {
       valueSlug: t.name,
     })),
   };
-
-  console.log(categoryFilter);
 
   const attributes = [
     ...attrRes.data,

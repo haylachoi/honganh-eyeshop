@@ -14,12 +14,10 @@ const filterSchema = new Schema<FilterModel>(
   {
     categoryId: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "Category",
     },
     categorySlug: {
       type: String,
-      required: true,
     },
     name: {
       type: String,

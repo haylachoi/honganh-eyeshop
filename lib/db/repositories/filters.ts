@@ -4,9 +4,11 @@ import Product from "../model/product.model";
 import Category from "../model/category.model";
 import { filterGroupSchema } from "@/features/filter/filter.validator";
 
-const getAllFilters = async () => {
+const getGlobalFilters = async () => {
   await connectToDatabase();
-  const filter = await Filter.find().lean();
+  const filter = await Filter.find({
+    categoryId: { $exists: false },
+  }).lean();
 
   const result = filterGroupSchema.array().parse(filter);
   return result;
@@ -32,17 +34,14 @@ const getFilterByCategorySlug = async (categorySlug: string) => {
 
 export const createFilter = async () => {
   await connectToDatabase();
+
   const categories = await Category.find().lean();
 
-  const results = await Promise.all(
+  const perCategoryResults = await Promise.all(
     categories.map((category) =>
       Product.aggregate([
-        {
-          $match: { "category._id": category._id },
-        },
-        {
-          $unwind: "$attributes",
-        },
+        { $match: { "category._id": category._id } },
+        { $unwind: "$attributes" },
         {
           $group: {
             _id: {
@@ -54,7 +53,7 @@ export const createFilter = async () => {
             values: {
               $addToSet: {
                 value: "$attributes.value",
-                valueSlug: "$attributes.valueSlug", // Lấy valueSlug từ attributes
+                valueSlug: "$attributes.valueSlug",
               },
             },
           },
@@ -62,10 +61,10 @@ export const createFilter = async () => {
         {
           $project: {
             _id: 0,
-            categoryId: "$_id.categoryId",
-            categorySlug: "$_id.categorySlug",
             name: "$_id.name",
             displayName: "$_id.displayName",
+            categoryId: "$_id.categoryId",
+            categorySlug: "$_id.categorySlug",
             values: 1,
           },
         },
@@ -73,13 +72,40 @@ export const createFilter = async () => {
     ),
   );
 
-  const input = results.flat();
+  const globalResults = await Product.aggregate([
+    { $unwind: "$attributes" },
+    {
+      $group: {
+        _id: {
+          name: "$attributes.name",
+          displayName: "$attributes.displayName",
+        },
+        values: {
+          $addToSet: {
+            value: "$attributes.value",
+            valueSlug: "$attributes.valueSlug",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        name: "$_id.name",
+        displayName: "$_id.displayName",
+        values: 1,
+      },
+    },
+  ]);
+
+  const input = [...perCategoryResults.flat(), ...globalResults];
+
   await Filter.deleteMany({});
   await Filter.insertMany(input);
 };
 
 const filtersRepository = {
-  getAllFilters,
+  getGlobalFilters,
   getFilterByCategoryId,
   getFilterByCategorySlug,
   createFilter,

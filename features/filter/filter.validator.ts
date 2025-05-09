@@ -26,8 +26,8 @@ export const filterGroupSchema = z.object({
 });
 
 export const filterInputSchema = z.object({
-  categoryId: IdSchema,
-  categorySlug: categorySlugSchema,
+  categoryId: IdSchema.optional(),
+  categorySlug: categorySlugSchema.optional(),
   name: filterNameSchema,
   displayName: filterNameSchema,
   values: z.array(filterValueSchema),
@@ -40,8 +40,8 @@ export const filterTypeSchema = filterInputSchema
   })
   .transform(({ _id, categoryId, ...rest }) => ({
     ...rest,
-    id: _id.toString(),
-    categoryId: categoryId.toString(),
+    id: _id?.toString(),
+    categoryId: categoryId?.toString(),
   }));
 
 export const searchInputSchema = z.object({
