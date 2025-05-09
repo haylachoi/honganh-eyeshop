@@ -2,7 +2,7 @@ import {
   countBlogsByQuery,
   searchBlogsByQuery,
 } from "@/features/blogs/blog.queries";
-import { PAGE_NUMBER_REGEX, PAGE_SIZE } from "@/constants";
+import { PAGE_SIZE } from "@/constants";
 import Image from "next/image";
 import { BlogsPagination } from "../_components/blogs-pagination";
 import { BlogsContent } from "../_components/blogs-content";
@@ -10,6 +10,7 @@ import { notFound, redirect, RedirectType } from "next/navigation";
 import { getLink, getPageNumber, getTotalPages } from "@/lib/utils";
 import { cache } from "react";
 import { MAX_BLOG_PAGES_FOR_STATIC } from "@/features/blogs/blog.contants";
+import { PAGE_NUMBER_REGEX } from "@/constants/regex";
 
 const size = PAGE_SIZE.BLOGS.SM;
 const countBlogs = cache(() => countBlogsByQuery(undefined));

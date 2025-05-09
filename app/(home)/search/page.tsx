@@ -1,7 +1,7 @@
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
-import { FILTER_NAME } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
+import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { getAllFilters } from "@/features/filter/filter.queries";
 import { FilterGroupType } from "@/features/filter/filter.types";
 import { getPriceFilterOptions } from "@/features/filter/filter.utils";

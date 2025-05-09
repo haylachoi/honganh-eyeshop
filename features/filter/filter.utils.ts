@@ -1,5 +1,5 @@
-import { FILTER_NAME } from "@/constants";
 import { currencyFormatter } from "@/lib/utils";
+import { FILTER_NAME } from "./filter.constants";
 
 export const getPriceFilterOptions = () => {
   return {

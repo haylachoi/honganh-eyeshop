@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { ProductType } from "../products/product.types";
-import { FILTER_NAME } from "@/constants";
 import { normalizeSearchParams } from "@/lib/utils";
+import { FILTER_NAME } from "./filter.constants";
 
 export const createProductQueryFilter = ({
   input,

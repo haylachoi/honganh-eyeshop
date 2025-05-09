@@ -76,13 +76,6 @@ export const SORTING_OPTIONS = {
   DESC: "desc",
 };
 
-export const FILTER_NAME = {
-  CATEGORY: "category",
-  PRICE: "price",
-  SEARCH: "search",
-  TAG: "tag",
-};
-
 export const VIEWS_COUNT_CONFIG = {
   DELAY_THRESHOLD: 5000,
   MAX_VIEW_ACCUMULATION: 10,
@@ -96,5 +89,3 @@ export const EMAIL = "nv@nv.com.vn";
 export const EMAIL_LINK = `mailto:${EMAIL}`;
 
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);
-
-export const PAGE_NUMBER_REGEX = /page-(\d+)/;
