@@ -2,6 +2,7 @@
 
 import { MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
 import { searchAction } from "@/features/filter/filter.actions";
+import { FILTER_NAME } from "@/features/filter/filter.constants";
 import {
   SearchBlogResultType,
   searchProductResultType,
@@ -96,7 +97,16 @@ const SearchBox = () => {
         }
         if (e.key === "Enter") {
           setIsOpen(false);
-          router.push(getLink.search({ keyword: search }));
+          router.push(
+            getLink.search({
+              queries: [
+                {
+                  key: FILTER_NAME.SEARCH,
+                  value: search,
+                },
+              ],
+            }),
+          );
         }
       }}
     >

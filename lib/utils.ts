@@ -318,8 +318,12 @@ export const getLink = {
       return `${ENDPOINTS.SEARCH}?${FILTER_NAME.TAG}=new-arrival`;
     },
   },
-  search({ keyword }: { keyword: string }) {
-    return `${ENDPOINTS.SEARCH}?${FILTER_NAME.SEARCH}=${keyword}`;
+  search({ queries }: { queries: { key: string; value: string }[] }) {
+    const params = new URLSearchParams();
+    for (const query of queries) {
+      params.append(query.key, query.value);
+    }
+    return `${ENDPOINTS.SEARCH}?${params.toString()}`;
   },
 };
 

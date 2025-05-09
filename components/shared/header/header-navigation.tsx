@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/custom-ui/accordion";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
-import { cn } from "@/lib/utils";
+import { cn, getLink } from "@/lib/utils";
 import { ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,9 +31,19 @@ const links: LinkType[] = [
       {
         title: "Mua ngay",
         links: [
-          { title: "Kính", href: "/" },
-          { title: "Kính nam", href: "/" },
-          { title: "Kính nữ", href: "/" },
+          { title: "Kính", href: getLink.search({ queries: [] }) },
+          {
+            title: "Kính nam",
+            href: getLink.search({
+              queries: [{ key: "gender", value: "nam" }],
+            }),
+          },
+          {
+            title: "Kính nữ",
+            href: getLink.search({
+              queries: [{ key: "gender", value: "nu" }],
+            }),
+          },
         ],
       },
       {
