@@ -3,13 +3,12 @@ import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { useAction } from "next-safe-action/hooks";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { getLink } from "@/lib/utils";
-import Link from "next/link";
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
 import { CouponType } from "@/features/coupons/coupon.types";
 import { deleteCouponActions } from "@/features/coupons/coupon.actions";
+import { ThreeDotsMenuLink } from "@/components/shared/three-dots-menu/three-dots-menu-link";
 
 export const ActionButton = ({ coupon }: { coupon: CouponType }) => {
   const { execute, isPending } = useAction(deleteCouponActions, {
@@ -35,9 +34,9 @@ export const ActionButton = ({ coupon }: { coupon: CouponType }) => {
       >
         Xóa
       </ThreeDotsMenuButtonItem>
-      <DropdownMenuItem>
-        <Link href={getLink.coupon.update({ id: coupon.id })}>Cập nhật</Link>
-      </DropdownMenuItem>
+      <ThreeDotsMenuLink href={getLink.coupon.update({ id: coupon.id })}>
+        Cập nhật
+      </ThreeDotsMenuLink>
     </ThreeDotsMenu>
   );
 };

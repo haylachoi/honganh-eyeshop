@@ -3,9 +3,7 @@ import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { useAction } from "next-safe-action/hooks";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { getLink } from "@/lib/utils";
-import Link from "next/link";
 import { BlogType } from "@/features/blogs/blog.types";
 import {
   deleteBlogAction,
@@ -13,6 +11,7 @@ import {
 } from "@/features/blogs/blog.actions";
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
+import { ThreeDotsMenuLink } from "@/components/shared/three-dots-menu/three-dots-menu-link";
 
 export const ActionButton = ({ blog }: { blog: BlogType }) => {
   const { showDialog } = useGlobalAlertDialog();
@@ -56,11 +55,9 @@ export const ActionButton = ({ blog }: { blog: BlogType }) => {
         Xóa
       </ThreeDotsMenuButtonItem>
 
-      <DropdownMenuItem>
-        <Link className="w-full" href={getLink.blog.update({ id: blog.id })}>
-          Cập nhật
-        </Link>
-      </DropdownMenuItem>
+      <ThreeDotsMenuLink href={getLink.blog.update({ id: blog.id })}>
+        Cập nhật
+      </ThreeDotsMenuLink>
     </ThreeDotsMenu>
   );
 };

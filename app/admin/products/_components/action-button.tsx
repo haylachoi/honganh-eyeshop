@@ -5,11 +5,10 @@ import { useAction } from "next-safe-action/hooks";
 import { deleteProductAction } from "../../../../features/products/product.actions";
 import { ThreeDotsMenu } from "@/components/shared/three-dots-menu/index";
 import { ThreeDotsMenuButtonItem } from "@/components/shared/three-dots-menu/three-dots-menu-button-item";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { getLink } from "@/lib/utils";
-import Link from "next/link";
 import { useGlobalAlertDialog } from "@/components/shared/alert-dialog-provider";
 import { onActionError } from "@/lib/actions/action.helper";
+import { ThreeDotsMenuLink } from "@/components/shared/three-dots-menu/three-dots-menu-link";
 
 export const ActionButton = ({ product }: { product: ProductType }) => {
   const { execute, isPending } = useAction(deleteProductAction, {
@@ -28,9 +27,9 @@ export const ActionButton = ({ product }: { product: ProductType }) => {
       >
         Xóa
       </ThreeDotsMenuButtonItem>
-      <DropdownMenuItem>
-        <Link href={getLink.product.update({ id: product.id })}>Cập nhật</Link>
-      </DropdownMenuItem>
+      <ThreeDotsMenuLink href={getLink.product.update({ id: product.id })}>
+        Cập nhật
+      </ThreeDotsMenuLink>
     </ThreeDotsMenu>
   );
 };
