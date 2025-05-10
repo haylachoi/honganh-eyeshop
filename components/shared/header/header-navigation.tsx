@@ -31,7 +31,6 @@ const links: LinkType[] = [
       {
         title: "Mua ngay",
         links: [
-          { title: "Kính", href: getLink.search({ queries: [] }) },
           {
             title: "Kính nam",
             href: getLink.search({
@@ -49,20 +48,23 @@ const links: LinkType[] = [
       {
         title: "Nổi bật",
         links: [
-          { title: "Phổ biến", href: `${ENDPOINTS.MOST_POPULAR}` },
+          {
+            title: "Phổ biến",
+            href: getLink.search({
+              queries: [{ key: "tag", value: "trending" }],
+            }),
+          },
           {
             title: "Giảm giá",
             href: `${ENDPOINTS.ON_SALE}`,
           },
           {
             title: "Sắp về",
-            href: `${ENDPOINTS.NEW_ARRIVAL}`,
+            href: getLink.search({
+              queries: [{ key: "tag", value: "new-arrival" }],
+            }),
           },
         ],
-      },
-      {
-        title: "Hướng dẫn",
-        links: [{ title: "Mua online", href: `${ENDPOINTS.ORDER_ONLINE}` }],
       },
       {
         title: "Kính rẻ",
@@ -72,28 +74,14 @@ const links: LinkType[] = [
     ],
   },
   {
-    title: "Kính thuốc",
+    title: "Xem thêm",
     contents: [
       {
-        title: "Mua ngay",
+        title: "Bài viết",
         links: [
           { title: "Kính", href: "/" },
           { title: "Kính nam", href: "/" },
           { title: "Kính nữ", href: "/" },
-        ],
-      },
-      {
-        title: "Nổi bật",
-        links: [
-          { title: "Phổ biến", href: `${ENDPOINTS.MOST_POPULAR}` },
-          {
-            title: "Giảm giá",
-            href: `${ENDPOINTS.ON_SALE}`,
-          },
-          {
-            title: "Sắp về",
-            href: `${ENDPOINTS.NEW_ARRIVAL}`,
-          },
         ],
       },
       {
@@ -133,7 +121,7 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
                         <h3 className="text-lg font-semibold">
                           {content.title}
                         </h3>
-                        <ul>
+                        <ul className="flex flex-col gap-3 mt-4">
                           {content.links.map((link) => (
                             <li
                               key={link.title}
