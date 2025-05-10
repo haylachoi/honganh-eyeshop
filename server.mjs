@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import "dotenv/config";
 
 const secret = process.env.JOB_SECRET;
 
