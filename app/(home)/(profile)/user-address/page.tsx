@@ -1,6 +1,8 @@
 import { getSafeUserInfo } from "@/features/users/user.queries";
 import ShippingAddressForm from "./user-address-form";
 
+export const dynamic = "force-dynamic";
+
 const UserAddressPage = async () => {
   const result = await getSafeUserInfo();
   if (!result.success) return null;

@@ -3,6 +3,8 @@ import AdminAccountsView from "./_components/admin-accounts-view";
 import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 
+export const dynamic = "force-dynamic";
+
 const AccountsPage = async () => {
   const result = await getSafeAdminUserInfo();
 

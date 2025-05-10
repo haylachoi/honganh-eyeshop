@@ -5,6 +5,8 @@ import {
 import OrdersView from "./customer-orders-view";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 const size = 3;
 const CustomerOrderPage = async () => {
   const ordersPromise = getOrderByUserId({

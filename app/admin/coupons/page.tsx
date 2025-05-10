@@ -3,6 +3,8 @@ import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import CouponsView from "./_components/coupons-view";
 import { getAllCouponsQuery } from "@/features/coupons/coupon.queries";
 
+export const dynamic = "force-dynamic";
+
 const CouponPage = async () => {
   const result = await getAllCouponsQuery();
   if (!result.success) {

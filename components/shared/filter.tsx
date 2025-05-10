@@ -14,7 +14,6 @@ import React from "react";
 const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  console.log(attributes);
   const setSearchParam = ({ name, value }: { name: string; value: string }) => {
     const params = new URLSearchParams(searchParams);
     const existingValue = params.get(name);

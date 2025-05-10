@@ -3,6 +3,8 @@ import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import { getAllProducts } from "@/features/products/product.queries";
 
+export const dynamic = "force-dynamic";
+
 const ProductPage = async () => {
   const result = await getAllProducts();
 

@@ -12,7 +12,6 @@ export const AttributesForm = () => {
   const { watch } = useFormContext<ProductInputType | ProductUpdateType>();
 
   const attributes = watch("attributes");
-  console.log(attributes);
 
   return (
     <>

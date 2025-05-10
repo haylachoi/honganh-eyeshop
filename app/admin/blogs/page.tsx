@@ -3,6 +3,8 @@ import BlogsView from "./_components/blogs-view";
 import { ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import AdminMainTopSection from "@/components/shared/admin/main-top-section";
 
+export const dynamic = "force-dynamic";
+
 const BlogPage = async () => {
   const result = await getAllBlogs();
 
