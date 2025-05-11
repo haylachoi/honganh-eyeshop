@@ -36,7 +36,7 @@ const QuantityInput = ({
     <input
       {...props}
       type="text"
-      area-label="quantity"
+      aria-label="quantity"
       inputMode="numeric"
       pattern="\d*"
       value={value}
