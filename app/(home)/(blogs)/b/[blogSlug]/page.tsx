@@ -41,6 +41,9 @@ export const generateMetadata = async ({
       },
     },
     openGraph: {
+      locale: "vi_VN",
+      type: "article",
+      siteName: APP_NAME,
       images: [
         {
           url: blog.wallImage,

@@ -37,7 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Todo
 
-- make first Image in page piority to improve largest content paint
+- make first Image in page priority to improve largest content paint
 - add href to main navigation
 - generate metadata
 - don't delete token
