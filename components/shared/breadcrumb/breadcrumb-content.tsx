@@ -30,7 +30,7 @@ export const BreadcrumbContent = ({ map }: { map: Record<string, string> }) => {
     <nav className="">
       <ul className="flex items-center gap-3">
         <li className="after:content-['>'] flex items-center gap-1">
-          <Link href="/" className="hover:underline">
+          <Link aria-label="Home" href="/" className="hover:underline">
             <House className="size-5" />
           </Link>
         </li>

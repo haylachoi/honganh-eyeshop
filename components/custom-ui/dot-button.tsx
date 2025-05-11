@@ -19,6 +19,7 @@ const CarouselDotButton = ({
         <button
           key={n}
           onClick={() => onDotButtonClick(n)}
+          aria-label={`slide ${n + 1}`}
           className={cn(
             "size-[10px] bg-primary opacity-50 transition-all cursor-pointer",
             current === n &&

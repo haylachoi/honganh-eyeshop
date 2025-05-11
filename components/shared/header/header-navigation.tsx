@@ -146,7 +146,7 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
                         <Image
                           className="w-full h-auto max-h-[200px] object-cover object-center"
                           src={content.image}
-                          alt={content.title}
+                          alt=""
                           width={600}
                           height={200}
                         />
