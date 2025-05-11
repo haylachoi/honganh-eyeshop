@@ -51,7 +51,7 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
     },
     openGraph: {
       locale: "vi_VN",
-      type: "product",
+      type: "website",
       siteName: APP_NAME,
       images: [
         {
