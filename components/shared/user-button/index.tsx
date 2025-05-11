@@ -16,7 +16,11 @@ const UserButton = () => {
 
   if (!user) {
     return (
-      <Link href={ENDPOINTS.AUTH.LOGIN} className="cursor-pointer">
+      <Link
+        aria-label="Login"
+        href={ENDPOINTS.AUTH.LOGIN}
+        className="cursor-pointer"
+      >
         <CircleUserRound className="size-6" />
       </Link>
     );

@@ -119,6 +119,7 @@ const SearchBox = () => {
       />
       <input
         className="py-1 focus-visible:outline-none hidden md:block"
+        aria-label="search something"
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -126,6 +127,7 @@ const SearchBox = () => {
       />
       <button
         className="cursor-pointer"
+        aria-label="Search"
         onClick={() => {
           const width = window.innerWidth;
           // if mobile screen, text input not show, so we don't need to delete search text, other button will delete text
