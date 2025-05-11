@@ -34,6 +34,7 @@ const ImageSection = ({ product }: { product: ProductType }) => {
           alt={product.name}
           width={600}
           height={300}
+          priority
         />
 
         {/* Zoom overlay */}
