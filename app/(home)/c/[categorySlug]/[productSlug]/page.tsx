@@ -40,7 +40,9 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
 
   return {
     title: product.name,
-    description: product.description,
+    description:
+      product.description ??
+      "Sản phẩm chất lượng, giá cả hợp lý, phù hợp với mọi nhu cầu.",
     robots: {
       index: true,
       follow: true,
@@ -74,7 +76,9 @@ const ProductPage = async ({ params }: { params: Params }) => {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.description,
+    description:
+      product.description ??
+      "Sản phẩm chất lượng, giá cả hợp lý, phù hợp với mọi nhu cầu.",
     image: getFullLink(product.variants?.[0].images?.[0]),
     offers: {
       "@type": "AggregateOffer",
