@@ -31,9 +31,7 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
                   {dayjs(review.createdAt).fromNow()}
                 </p>
               </div>
-              <ul className="flex gap-2">
-                <StarRatingDisplay rating={review.rating} />
-              </ul>
+              <StarRatingDisplay rating={review.rating} />
               <p className="mt-4">{review.comment}</p>
             </div>
           </li>

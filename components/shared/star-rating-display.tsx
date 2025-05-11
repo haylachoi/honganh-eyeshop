@@ -9,7 +9,7 @@ export const StarRatingDisplay = ({
   className?: string;
 }) => {
   return (
-    <div className="flex gap-2">
+    <ul className={cn("flex gap-2", className)}>
       {[1, 2, 3, 4, 5].map((i) => (
         <Star
           key={i}
@@ -20,6 +20,6 @@ export const StarRatingDisplay = ({
           )}
         />
       ))}
-    </div>
+    </ul>
   );
 };
