@@ -337,7 +337,14 @@ export const getFromLocalStorage = <T>(key: string, defaultValue: T) => {
   }
 };
 
-export const getFullLink = (url: string) => `${BASE_URL}${url}`;
+export const getFullLink = (url?: string) => {
+  const normalizedBase = BASE_URL.replace(/\/+$/, "");
+
+  if (!url || url === "/") return `${normalizedBase}/`;
+
+  const normalizedUrl = url.startsWith("/") ? url : `/${url}`;
+  return `${normalizedBase}${normalizedUrl}`;
+};
 
 export const saveToLocalStorage = ({
   key,

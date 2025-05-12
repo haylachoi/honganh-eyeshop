@@ -9,6 +9,7 @@ export const attributeNameSchema = z
     "Chỉ chứa chữ thường, số và dấu gạch ngang.",
   );
 export const attributeDisplayNameSchema = z.string().min(1);
+const updatedAtSchema = z.date();
 
 export const CategoryInputSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -25,6 +26,7 @@ export const CategoryInputSchema = z.object({
 
 export const CategoryTypeSchema = CategoryInputSchema.extend({
   _id: MongoIdSchema,
+  updatedAt: updatedAtSchema,
 })
   .strip()
   .transform(({ _id, ...rest }) => ({

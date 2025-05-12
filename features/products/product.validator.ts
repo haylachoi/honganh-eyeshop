@@ -22,6 +22,7 @@ const tagSchema = z.object({
   id: z.string(),
   name: z.string(),
 });
+const updatedAtSchema = z.date();
 const categorySchema = z.string();
 
 const imageSchema = z.instanceof(File);
@@ -180,6 +181,7 @@ export const productTypeWithoutTransformSchema = z.object({
     .optional(),
   totalReviews: z.number().default(0),
   totalSales: z.number().default(0),
+  updatedAt: updatedAtSchema,
 });
 
 export const ProductTypeSchema = productTypeWithoutTransformSchema.transform(
