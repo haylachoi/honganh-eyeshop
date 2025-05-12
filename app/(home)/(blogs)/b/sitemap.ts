@@ -1,5 +1,5 @@
+import next_cache from "@/cache";
 import { SITE_COUNT, SITEMAP_CONFIG } from "@/constants/sitemap.constants";
-import { getAllBlogs } from "@/features/blogs/blog.queries";
 import { getFullLink, getLink } from "@/lib/utils";
 import { MetadataRoute } from "next";
 
@@ -17,12 +17,8 @@ export default async function sitemap({
   id: number | string;
 }): Promise<MetadataRoute.Sitemap> {
   if (id == 0) {
-    const result = await getAllBlogs();
+    const blogs = await next_cache.blogs.all();
 
-    if (!result.success) {
-      return [];
-    }
-    const blogs = result.data;
     return blogs.map((blog) => ({
       url: getFullLink(
         getLink.blog.view({

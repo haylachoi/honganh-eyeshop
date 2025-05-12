@@ -1,6 +1,5 @@
+import next_cache from "@/cache";
 import { SITE_COUNT, SITEMAP_CONFIG } from "@/constants/sitemap.constants";
-import { getAllCategories } from "@/features/categories/category.queries";
-import { getAllProducts } from "@/features/products/product.queries";
 import { getFullLink, getLink } from "@/lib/utils";
 import { MetadataRoute } from "next";
 
@@ -18,12 +17,7 @@ export default async function sitemap({
   id: number | string;
 }): Promise<MetadataRoute.Sitemap> {
   if (id == 0) {
-    const result = await getAllProducts();
-
-    if (!result.success) {
-      return [];
-    }
-    const products = result.data;
+    const products = await next_cache.products.getAll();
     return products.map((product) => ({
       url: getFullLink(
         getLink.product.home({
@@ -38,11 +32,7 @@ export default async function sitemap({
   }
 
   if (id == 1) {
-    const result = await getAllCategories();
-    if (!result.success) {
-      return [];
-    }
-    const categories = result.data;
+    const categories = await next_cache.categories.getAll();
     return categories.map((category) => ({
       url: getFullLink(
         getLink.category.home({

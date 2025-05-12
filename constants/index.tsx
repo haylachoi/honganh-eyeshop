@@ -3,6 +3,8 @@ import { createUppercaseMap } from "../lib/utils";
 // todo: validate env
 export const APP_NAME = "Kính mắt Hồng Anh";
 export const SOLOGAN = "Nét đẹp từ ánh nhìn đầu tiên";
+
+// todo: remove local host
 export const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
   process.env.BASE_URL ||
