@@ -6,8 +6,16 @@ import NewArrival from "./_components/new-arrival";
 import RecentBlog from "./_components/recent-blogs";
 import { APP_NAME, BASE_URL } from "@/constants";
 import { getFullLink } from "@/lib/utils";
+import { CustomerTestimonials } from "./_components/customer-testimonials";
 
-const sections = [Hero, Trending, TopProducts, NewArrival, RecentBlog];
+const sections = [
+  Hero,
+  Trending,
+  TopProducts,
+  NewArrival,
+  RecentBlog,
+  CustomerTestimonials,
+];
 
 // metadata in layout auto add base url
 export const metadata = {
