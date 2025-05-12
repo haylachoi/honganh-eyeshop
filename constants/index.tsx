@@ -2,6 +2,7 @@ import { createUppercaseMap } from "../lib/utils";
 
 // todo: validate env
 export const APP_NAME = "Kính mắt Hồng Anh";
+export const SOLOGAN = "Nét đẹp từ ánh nhìn đầu tiên";
 export const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 export const SESSION_NAME = "session";
