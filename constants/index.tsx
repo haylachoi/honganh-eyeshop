@@ -3,7 +3,11 @@ import { createUppercaseMap } from "../lib/utils";
 // todo: validate env
 export const APP_NAME = "Kính mắt Hồng Anh";
 export const SOLOGAN = "Nét đẹp từ ánh nhìn đầu tiên";
-export const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  process.env.BASE_URL ||
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  "http://localhost:3000";
 
 export const SESSION_NAME = "session";
 export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;
