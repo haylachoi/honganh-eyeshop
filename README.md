@@ -35,6 +35,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Warning
+
+- In Nextjs 15, metadata be in `body` tag cause meta data streaming
+
 ## Todo
 
 - make first Image in page priority to improve largest content paint
