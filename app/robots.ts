@@ -1,4 +1,5 @@
 import { ENDPOINTS } from "@/constants/endpoints.constants";
+import { getFullLink } from "@/lib/utils";
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
@@ -13,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
         ENDPOINTS.PROFILE.USER_ADDRESS,
       ],
     },
-    sitemap: "https://acme.com/sitemap.xml",
+    sitemap: getFullLink("sitemap.xml"),
   };
 }
