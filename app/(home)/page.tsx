@@ -5,6 +5,7 @@ import TopProducts from "./_components/top-products";
 import NewArrival from "./_components/new-arrival";
 import RecentBlog from "./_components/recent-blogs";
 import { APP_NAME, BASE_URL } from "@/constants";
+import { getFullLink } from "@/lib/utils";
 
 const sections = [Hero, Trending, TopProducts, NewArrival, RecentBlog];
 
@@ -28,6 +29,7 @@ export const metadata = {
         alt: "Hồng Anh - Kính mắt thời trang",
       },
     ],
+    url: getFullLink(),
   },
   twitter: {
     card: "summary_large_image",

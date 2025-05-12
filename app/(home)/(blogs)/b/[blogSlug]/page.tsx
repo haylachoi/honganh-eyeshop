@@ -44,6 +44,7 @@ export const generateMetadata = async ({
       locale: "vi_VN",
       type: "article",
       siteName: APP_NAME,
+      url: getFullLink(),
       images: [
         {
           url: blog.wallImage,
