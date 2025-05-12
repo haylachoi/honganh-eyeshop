@@ -88,6 +88,12 @@ const links: LinkType[] = [
         title: "Hướng dẫn",
         links: [{ title: "Mua online", href: `${ENDPOINTS.ORDER_ONLINE}` }],
       },
+      {
+        title: "Hỗ trợ",
+        links: [
+          { title: "Về chúng tôi", href: `${ENDPOINTS.SUPPORT.ABOUT_US}` },
+        ],
+      },
     ],
   },
 ];

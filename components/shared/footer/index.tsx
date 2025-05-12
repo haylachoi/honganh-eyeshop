@@ -31,7 +31,9 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
             <FooterGroupTitle title="Về Hồng Anh" />
             <ul>
               <li>
-                <Link href="/about-us">Giới thiệu Hồng Anh</Link>
+                <Link href={ENDPOINTS.SUPPORT.ABOUT_US}>
+                  Giới thiệu Hồng Anh
+                </Link>
               </li>
               <li>
                 <Link href="/stores">Hệ thống cửa hàng</Link>

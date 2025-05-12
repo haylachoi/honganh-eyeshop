@@ -30,6 +30,9 @@ export const ENDPOINTS = {
   CHEAP_GLASSES: "/cheap-glasses",
   POLICY: "/policy",
   SEARCH: "/search",
+  SUPPORT: {
+    ABOUT_US: "/support/about-us",
+  },
 };
 
 export const ADMIN_ENDPOINTS = {
