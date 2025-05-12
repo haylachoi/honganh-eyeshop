@@ -55,7 +55,7 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
       locale: "vi_VN",
       type: "website",
       siteName: APP_NAME,
-      url: getFullLink(),
+      url: getFullLink(getLink.product.home({ categorySlug, productSlug })),
       images: [
         {
           url: product.variants?.[0].images?.[0],
