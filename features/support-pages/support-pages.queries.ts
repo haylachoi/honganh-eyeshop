@@ -7,12 +7,12 @@ export const getSupportPages = safeQuery
   .schema(
     z.object({
       slug: z.string(),
+      includesPrivate: z.boolean().optional().default(false),
     }),
   )
   .query(async ({ parsedInput }) => {
     const supportPages = await next_cache.supportPages.getSupportPages({
       ...parsedInput,
-      includePrivate: true,
     });
     if (!supportPages) {
       throw new NotFoundError({});

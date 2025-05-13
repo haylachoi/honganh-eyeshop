@@ -51,6 +51,7 @@ export const SupportPageFormUpdate = ({
 
   const editor = useTipTapEditor({
     content: defaultValues.content,
+    type: "support",
     onUpdate: ({ editor }) => {
       setValue("content", editor.getHTML());
     },

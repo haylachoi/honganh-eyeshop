@@ -1,4 +1,7 @@
+import { ENDPOINTS } from "@/constants/endpoints.constants";
+import { getSupportPages } from "@/features/support-pages/support-pages.queries";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Về chúng tôi - Hồng Anh",
@@ -6,7 +9,28 @@ export const metadata: Metadata = {
     "Hồng Anh – Cửa hàng kính mắt uy tín, cung cấp kính thời trang, kính cận và kính râm chất lượng. Miễn phí đo mắt, giao hàng toàn quốc.",
 };
 
-export default function AboutPage() {
+const AboutUsPage = async () => {
+  const result = await getSupportPages({
+    slug: "about-us",
+  });
+  if (!result.success) {
+    return <DefaultAboutUsPage />;
+  }
+
+  const pageInfo = result.data;
+  return (
+    <div>
+      <div
+        className="support-container"
+        dangerouslySetInnerHTML={{ __html: pageInfo.content }}
+      />
+    </div>
+  );
+};
+
+export default AboutUsPage;
+
+const DefaultAboutUsPage = () => {
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 space-y-12">
       <section className="text-center">
@@ -59,13 +83,13 @@ export default function AboutPage() {
           📍 123 Đường ABC, Quận XYZ, TP. HCM
         </p>
         <p className="text-gray-700 mb-4">📞 Hotline: 0909 123 456</p>
-        <a
-          href="/contact"
+        <Link
+          href={ENDPOINTS.SUPPORT.CONTACT}
           className="inline-block bg-primary text-white px-6 py-2 rounded hover:bg-primary/80 transition"
         >
           Liên hệ với chúng tôi
-        </a>
+        </Link>
       </section>
     </main>
   );
-}
+};

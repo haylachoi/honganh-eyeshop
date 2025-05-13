@@ -89,6 +89,13 @@ export const VIEWS_COUNT_CONFIG = {
   DB_FLUSH_THRESHOLD: 60 * 1000 * 2,
 };
 
+export const STORE_INFO = {
+  NAME: "honganh-eyeshop",
+  ADDRESS: "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội",
+  PHONE: "123-456-7890",
+  EMAIL: "nv@nv.com.vn",
+};
+
 export const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";
 export const PHONE = "123-456-7890";
 export const PHONE_LINK = `tel:${PHONE}`;

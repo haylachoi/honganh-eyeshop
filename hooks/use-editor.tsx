@@ -7,7 +7,7 @@ import { TIPTAP_EXTENSIONS } from "@/features/blogs/blog.contants";
 type UseTipTapEditorProps = {
   onUpdate?: ((props: EditorEvents["update"]) => void) | undefined;
   content?: string;
-  type?: "blog" | "page";
+  type?: "blog" | "support";
 };
 
 export default function useTipTapEditor({
@@ -15,7 +15,7 @@ export default function useTipTapEditor({
   content,
   type = "blog",
 }: UseTipTapEditorProps = {}) {
-  const className = type === "blog" ? "blog-container" : "page-container";
+  const className = type === "blog" ? "blog-container" : "support-container";
   const editor = useEditor({
     onUpdate: onUpdate,
     editorProps: {

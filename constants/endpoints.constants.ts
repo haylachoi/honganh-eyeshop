@@ -32,6 +32,7 @@ export const ENDPOINTS = {
   SEARCH: "/search",
   SUPPORT: {
     ABOUT_US: "/support/about-us",
+    CONTACT: "/support/contact",
   },
 };
 

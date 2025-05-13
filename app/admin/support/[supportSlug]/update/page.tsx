@@ -8,6 +8,10 @@ const availabelPages = [
     slug: "about-us",
     title: "Về chúng tôi",
   },
+  {
+    slug: "contact",
+    title: "Liên hệ với chúng tôi",
+  },
 ];
 
 type Params = {

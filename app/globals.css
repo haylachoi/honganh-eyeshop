@@ -179,6 +179,7 @@
     @apply bg-background text-foreground;
   }
 
+  .support-container,
   .blog_post,
   .tiptap {
     /* Link styles */
@@ -322,4 +323,8 @@ body:has(:is(#header-navigation-trigger, #search-box-trigger):checked) {
 
 .blog-container {
   @apply focus:outline-none print:border-0 flex flex-col min-h-[200px] md:max-w-[720px]  cursor-text;
+}
+
+.support-container {
+  @apply focus:outline-none print:border-0 flex flex-col min-h-[200px] md:max-w-[720px]  cursor-text mx-auto;
 }
