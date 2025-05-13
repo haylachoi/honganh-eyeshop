@@ -102,4 +102,7 @@ export const STORE_INFO = {
   EMAIL,
 };
 
+const ZALO_PHONE = process.env.NEXT_PUBLIC_ZALO_PHONE;
+export const ZALO_LINK = `https://zalo.me/${ZALO_PHONE}`;
+
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);

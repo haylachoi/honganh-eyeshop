@@ -51,8 +51,22 @@ export const ADMIN_ENDPOINTS = {
   REVIEWS: "/admin/reviews",
   ACCOUNTS: "/admin/accounts",
   OTHERS: "/admin/others",
+  SUPPORT: {
+    SEGMENT: "/admin/support",
+  },
 };
 
 export const API_ENDPOINTS = {
   VIEW_COUNT: "/api/viewCount",
 };
+
+export const AVAILABEL_SUPPORT_PAGES = [
+  {
+    slug: "about-us",
+    title: "Về chúng tôi",
+  },
+  {
+    slug: "contact",
+    title: "Liên hệ với chúng tôi",
+  },
+];
