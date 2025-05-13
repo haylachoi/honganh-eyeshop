@@ -1,4 +1,4 @@
-import { ADDRESS, EMAIL, EMAIL_LINK, PHONE, PHONE_LINK } from "@/constants";
+import { EMAIL_LINK, PHONE_LINK, STORE_INFO } from "@/constants";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { getPolicyPreviews } from "@/features/others/other.services";
 import { cn } from "@/lib/utils";
@@ -13,15 +13,15 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
         <div>
           <FooterGroupTitle title="Thông tin liên hệ" />
           <ul>
-            <li>Địa chỉ: {ADDRESS}</li>
+            <li>Địa chỉ: {STORE_INFO.ADDRESS}</li>
             <li>MSDN: 1234567890</li>
             <li>
-              <Link href={EMAIL_LINK}>Email: {EMAIL}</Link>
+              <Link href={EMAIL_LINK}>Email: {STORE_INFO.EMAIL}</Link>
             </li>
             <li>Người đại diện: 123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội</li>
             <li>
               <Link className="cursor-pointer" href={PHONE_LINK}>
-                Số điện thoại: {PHONE}
+                Số điện thoại: {STORE_INFO.PHONE}
               </Link>
             </li>
           </ul>
