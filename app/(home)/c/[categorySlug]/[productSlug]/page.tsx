@@ -10,7 +10,7 @@ import { cache, Suspense } from "react";
 import { ReviewForm } from "./_components/review-form";
 import { ViewCount } from "./_components/view-count";
 import { notFound } from "next/navigation";
-import { getFullLink } from "@/lib/utils";
+import { getFullLink, getLink } from "@/lib/utils";
 import { APP_NAME, PRICE_CURRENCY } from "@/constants";
 import { ProductType } from "@/features/products/product.types";
 import { RelatedProductsView } from "./_components/related-products";
