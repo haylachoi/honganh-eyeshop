@@ -2,10 +2,24 @@ import { SupportPageType } from "@/features/support-pages/support-pages.types";
 import { connectToDatabase } from "..";
 import SupportPages from "../model/support-pages.model";
 import { supportPageTypeSchema } from "@/features/support-pages/support-pages.validator";
+import { FilterQuery } from "mongoose";
 
-const getSupportPages = async ({ slug }: { slug: string }) => {
+const getSupportPages = async ({
+  slug,
+  includePrivate = false,
+}: {
+  slug: string;
+  includePrivate?: boolean;
+}) => {
   await connectToDatabase();
-  const supportPages = await SupportPages.findOne({ slug });
+  const query: FilterQuery<SupportPageType> = {
+    slug,
+  };
+  if (!includePrivate) {
+    query.isPublished = true;
+  }
+
+  const supportPages = await SupportPages.findOne(query);
   return supportPages ? supportPageTypeSchema.parse(supportPages) : null;
 };
 const createOrUpdateSupportPages = async ({

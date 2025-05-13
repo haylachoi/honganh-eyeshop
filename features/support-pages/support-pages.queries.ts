@@ -1,4 +1,4 @@
-import { supportPagesRepository } from "@/lib/db/repositories/support-pages";
+import next_cache from "@/cache";
 import { NotFoundError } from "@/lib/error";
 import { safeQuery } from "@/lib/query";
 import { z } from "zod";
@@ -10,8 +10,10 @@ export const getSupportPages = safeQuery
     }),
   )
   .query(async ({ parsedInput }) => {
-    const supportPages =
-      await supportPagesRepository.getSupportPages(parsedInput);
+    const supportPages = await next_cache.supportPages.getSupportPages({
+      ...parsedInput,
+      includePrivate: true,
+    });
     if (!supportPages) {
       throw new NotFoundError({});
     }

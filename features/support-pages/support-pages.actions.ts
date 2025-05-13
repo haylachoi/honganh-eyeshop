@@ -5,8 +5,11 @@ import { ResourceType } from "@/lib/error";
 import { supportPageUpdateSchema } from "./support-pages.validator";
 import { supportPagesRepository } from "@/lib/db/repositories/support-pages";
 import { writeImageSourcesToDisk } from "@/lib/server-utils";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
+import { revalidateTag } from "next/cache";
 
 const resource: ResourceType = "supportPage";
+const cacheTag = CACHE_CONFIG.SUPPORT_PAGES.SINGLE.TAGS[0];
 
 export const createOrUpdateSupportPagesAction = getAuthActionClient({
   resource,
@@ -38,4 +41,6 @@ export const createOrUpdateSupportPagesAction = getAuthActionClient({
         images,
       },
     });
+
+    revalidateTag(cacheTag);
   });

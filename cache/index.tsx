@@ -13,6 +13,7 @@ import userRepository from "@/lib/db/repositories/user";
 import { BlogType } from "@/features/blogs/blog.types";
 import { PAGE_SIZE } from "@/constants";
 import dashboardRepository from "@/lib/db/repositories/dashboard";
+import { supportPagesRepository } from "@/lib/db/repositories/support-pages";
 
 const blogsMapCache = unstable_cache(
   async () => {
@@ -265,6 +266,16 @@ const next_cache = {
       {
         tags: CACHE_CONFIG.FILTER.SLUG.TAGS,
         revalidate: CACHE_CONFIG.FILTER.SLUG.TIME,
+      },
+    ),
+  },
+  supportPages: {
+    getSupportPages: unstable_cache(
+      supportPagesRepository.getSupportPages,
+      CACHE_CONFIG.SUPPORT_PAGES.SINGLE.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.SUPPORT_PAGES.SINGLE.TAGS,
+        revalidate: CACHE_CONFIG.SUPPORT_PAGES.SINGLE.TIME,
       },
     ),
   },

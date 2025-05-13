@@ -158,4 +158,11 @@ export const CACHE_CONFIG = {
       TIME: 60,
     },
   },
+  SUPPORT_PAGES: {
+    SINGLE: {
+      KEY_PARTS: ["supportPages", "slug", "includePrivate"],
+      TAGS: ["supportPages"],
+      TIME: 3600,
+    },
+  },
 };
