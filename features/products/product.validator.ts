@@ -24,6 +24,7 @@ const tagSchema = z.object({
 });
 const updatedAtSchema = z.date();
 const categorySchema = z.string();
+const highestDiscountSchema = z.number().int().nonnegative();
 
 const imageSchema = z.instanceof(File);
 
@@ -109,6 +110,7 @@ export const ProductDbInputSchema = z.object({
   tags: z.array(z.object({ _id: z.string(), name: z.string() })),
   minPrice: MoneySchema,
   maxPrice: MoneySchema,
+  highestDiscount: highestDiscountSchema,
   variants: z.array(
     baseVariantSchema
       .omit({ images: true })
@@ -170,6 +172,7 @@ export const productTypeWithoutTransformSchema = z.object({
   maxPrice: MoneySchema,
   variants: z.array(variantTypeSchema),
   avgRating: z.number().default(0),
+  highestDiscount: highestDiscountSchema.optional().default(0),
   rating: z
     .object({
       1: z.number().default(0),

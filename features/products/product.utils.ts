@@ -1,5 +1,9 @@
 import { writeFile } from "fs/promises";
-import { ProductInputType, ProductUpdateType } from "./product.types";
+import {
+  ProductInputType,
+  ProductType,
+  ProductUpdateType,
+} from "./product.types";
 import path from "path";
 import crypto from "crypto";
 
@@ -102,4 +106,21 @@ export const transformUpdateInputVariantToDbVariant = async ({
 
   await Promise.all(progress);
   return newVariants;
+};
+
+export const highestDiscount = ({
+  variants,
+}: {
+  variants: ProductType["variants"];
+}) => {
+  return variants.reduce((maxDiscount, variant) => {
+    const { originPrice, price } = variant;
+
+    if (originPrice > 0 && price < originPrice) {
+      const discount = Math.round(((originPrice - price) / originPrice) * 100);
+      return Math.max(maxDiscount, discount);
+    }
+
+    return maxDiscount;
+  }, 0);
 };

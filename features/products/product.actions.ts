@@ -7,6 +7,7 @@ import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { getCategoryInfoById } from "../categories/category.utils";
 import {
+  highestDiscount,
   transformCreateInputVariantToDbVariant,
   transformUpdateInputVariantToDbVariant,
 } from "./product.utils";
@@ -54,6 +55,7 @@ const fakeProduct = {
   ],
   brand: "brand",
   description: "hhihi",
+  highestDiscount: 0,
   isPublished: true,
   isAvailable: true,
   tags: [
@@ -208,6 +210,7 @@ export const createProductAction = createProductActionClient
       nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
+      highestDiscount: highestDiscount({ variants: newVariants }),
       minPrice,
       maxPrice,
       tags: newTags,
@@ -257,6 +260,7 @@ export const updateProductAction = modifyProductActionClient
       nameNoAccent: removeDiacritics(parsedInput.name),
       category: newCategory,
       variants: newVariants,
+      highestDiscount: highestDiscount({ variants: newVariants }),
       minPrice,
       maxPrice,
       tags: newTags,

@@ -63,10 +63,7 @@ const ProductBadge = ({
   className?: string;
   product: ProductPreview;
 }) => {
-  const variant0 = product.variants[0];
-  const rawValue =
-    (variant0.originPrice - variant0.price) / variant0.originPrice;
-  const value = Math.round(rawValue * 100);
+  const value = product.highestDiscount;
 
   if (value === 0) return;
 

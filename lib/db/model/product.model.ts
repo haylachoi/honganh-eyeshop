@@ -84,6 +84,10 @@ const productSchema = new Schema<ProductModel>(
       type: Number,
       required: true,
     },
+    highestDiscount: {
+      type: Number,
+      required: true,
+    },
     variants: [
       {
         _id: false,
