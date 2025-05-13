@@ -13,6 +13,7 @@ export const RESOURCE_TYPES = {
   REVIEW: "review",
   VERIFY_TOKEN: "verifyToken",
   DASHBOARD: "dashboard",
+  SUPPORT_PAGE: "supportPage",
   ALL: "all",
 } as const;
 

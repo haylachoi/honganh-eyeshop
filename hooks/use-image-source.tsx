@@ -9,6 +9,7 @@ interface UseImageSourcesProps {
   setItems: (items: ItemType[]) => void;
   addItem: (item: ItemType) => void;
 }
+// todo: clean up when unmount editor
 export const useImageSourceStore = create<UseImageSourcesProps>((set) => ({
   imageSources: [],
   setItems: (items) => set((state) => ({ ...state, imageSources: items })),

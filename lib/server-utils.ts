@@ -34,7 +34,7 @@ export const writeImageSourcesToDisk = async ({
   identity,
 }: {
   imageSources: ImageSourceType[];
-  to: "products" | "blogs";
+  to: "products" | "blogs" | "supportPages";
   identity?: string;
 }) => {
   const savedFiles: {
