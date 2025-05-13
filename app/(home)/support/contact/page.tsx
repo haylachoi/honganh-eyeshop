@@ -56,50 +56,50 @@ const DefaultContactPage = () => {
           </div>
         </div>
 
-        <form className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block font-medium">
-              Họ và tên
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block font-medium">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="message" className="block font-medium">
-              Nội dung
-            </label>
-            <textarea
-              id="message"
-              rows={4}
-              className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-              required
-            ></textarea>
-          </div>
-
-          <button
-            type="submit"
-            className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90"
-          >
-            Gửi liên hệ
-          </button>
-        </form>
+        {/* <form className="space-y-4"> */}
+        {/*   <div> */}
+        {/*     <label htmlFor="name" className="block font-medium"> */}
+        {/*       Họ và tên */}
+        {/*     </label> */}
+        {/*     <input */}
+        {/*       type="text" */}
+        {/*       id="name" */}
+        {/*       className="w-full border border-gray-300 rounded px-3 py-2 mt-1" */}
+        {/*       required */}
+        {/*     /> */}
+        {/*   </div> */}
+        {/**/}
+        {/*   <div> */}
+        {/*     <label htmlFor="email" className="block font-medium"> */}
+        {/*       Email */}
+        {/*     </label> */}
+        {/*     <input */}
+        {/*       type="email" */}
+        {/*       id="email" */}
+        {/*       className="w-full border border-gray-300 rounded px-3 py-2 mt-1" */}
+        {/*       required */}
+        {/*     /> */}
+        {/*   </div> */}
+        {/**/}
+        {/*   <div> */}
+        {/*     <label htmlFor="message" className="block font-medium"> */}
+        {/*       Nội dung */}
+        {/*     </label> */}
+        {/*     <textarea */}
+        {/*       id="message" */}
+        {/*       rows={4} */}
+        {/*       className="w-full border border-gray-300 rounded px-3 py-2 mt-1" */}
+        {/*       required */}
+        {/*     ></textarea> */}
+        {/*   </div> */}
+        {/**/}
+        {/*   <button */}
+        {/*     type="submit" */}
+        {/*     className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90" */}
+        {/*   > */}
+        {/*     Gửi liên hệ */}
+        {/*   </button> */}
+        {/* </form> */}
       </div>
     </section>
   );
