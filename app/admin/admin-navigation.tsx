@@ -15,6 +15,7 @@ import {
   Star,
   MoreHorizontal,
   User,
+  Settings,
 } from "lucide-react";
 
 const links = [
@@ -31,6 +32,7 @@ const links = [
   },
   { name: "Đánh giá", href: ADMIN_ENDPOINTS.REVIEWS, icon: Star },
   { name: "Tài khoản", href: ADMIN_ENDPOINTS.ACCOUNTS, icon: User },
+  { name: "Thiết lập", href: ADMIN_ENDPOINTS.SETTINGS, icon: Settings },
   { name: "Khác", href: ADMIN_ENDPOINTS.OTHERS, icon: MoreHorizontal },
 ];
 

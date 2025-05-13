@@ -14,6 +14,7 @@ export const RESOURCE_TYPES = {
   VERIFY_TOKEN: "verifyToken",
   DASHBOARD: "dashboard",
   SUPPORT_PAGE: "supportPage",
+  SETTINGS: "settings",
   ALL: "all",
 } as const;
 

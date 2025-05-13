@@ -6,6 +6,11 @@ import { BASE_IMAGES_FOLDER } from "@/constants";
 
 // todo: move others server utils to here
 
+export const getPublicDir = () => path.join(process.cwd(), "public");
+export const getFullPublicAssetPath = (fileName: string) => {
+  return path.join(getPublicDir(), fileName);
+};
+
 // warning: identity is slug is not recommend, because it can be changed
 export const writeFileToDisk = async ({
   file,
@@ -56,6 +61,24 @@ export const writeImageSourcesToDisk = async ({
   }
 
   return savedFiles;
+};
+
+export const writeStringToFile = async ({
+  content,
+  fileName,
+  to,
+}: {
+  content: string;
+  fileName: string;
+  to?: string;
+}) => {
+  const baseDir = path.join(process.cwd(), "public");
+  const uploadDir = to ? path.join(baseDir, to) : baseDir;
+  const filePath = path.join(uploadDir, fileName);
+
+  await writeFile(filePath, content, "utf-8");
+
+  return `/${fileName}`;
 };
 
 export const deleteFile = async (

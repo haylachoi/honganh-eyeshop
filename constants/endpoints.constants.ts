@@ -51,6 +51,7 @@ export const ADMIN_ENDPOINTS = {
   REVIEWS: "/admin/reviews",
   ACCOUNTS: "/admin/accounts",
   OTHERS: "/admin/others",
+  SETTINGS: "/admin/settings",
   SUPPORT: {
     SEGMENT: "/admin/support",
   },

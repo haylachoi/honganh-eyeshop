@@ -149,7 +149,7 @@ const VariantAttributeForm = ({ VariantIndex }: { VariantIndex: number }) => {
               name={`variants.${VariantIndex}.attributes.${index}.value`}
               placeholder="Nhập giá trị"
             />
-
+            {/* todo: use trash icon */}
             <Button
               type="button"
               tabIndex={-1}

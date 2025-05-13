@@ -14,6 +14,7 @@ import { BlogType } from "@/features/blogs/blog.types";
 import { PAGE_SIZE } from "@/constants";
 import dashboardRepository from "@/lib/db/repositories/dashboard";
 import { supportPagesRepository } from "@/lib/db/repositories/support-pages";
+import settingsRepository from "@/lib/db/repositories/settings";
 
 const blogsMapCache = unstable_cache(
   async () => {
@@ -266,6 +267,16 @@ const next_cache = {
       {
         tags: CACHE_CONFIG.FILTER.SLUG.TAGS,
         revalidate: CACHE_CONFIG.FILTER.SLUG.TIME,
+      },
+    ),
+  },
+  settings: {
+    getSettings: unstable_cache(
+      settingsRepository.getSettings,
+      CACHE_CONFIG.SETTINGS.ALL.KEY_PARTS,
+      {
+        tags: CACHE_CONFIG.SETTINGS.ALL.TAGS,
+        revalidate: CACHE_CONFIG.SETTINGS.ALL.TIME,
       },
     ),
   },
