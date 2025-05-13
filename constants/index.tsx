@@ -103,6 +103,8 @@ export const STORE_INFO = {
 };
 
 const ZALO_PHONE = process.env.NEXT_PUBLIC_ZALO_PHONE;
+const FACEBOOK_USERNAME = process.env.NEXT_PUBLIC_FACEBOOK_USERNAME;
 export const ZALO_LINK = `https://zalo.me/${ZALO_PHONE}`;
+export const FACEBOOK_LINK = `https://m.me/${FACEBOOK_USERNAME}`;
 
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);

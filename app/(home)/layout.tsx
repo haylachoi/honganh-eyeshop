@@ -1,7 +1,7 @@
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import { ZaloButton } from "@/components/shared/zalo-btn";
+import { FloatingSupportBtn } from "@/components/shared/floating-support-btn";
 
 export default function Layout({
   children,
@@ -16,7 +16,7 @@ export default function Layout({
       </div>
       <div className="mt-2">{children}</div>
       <Footer className="mt-12" />
-      <ZaloButton />
+      <FloatingSupportBtn />
     </div>
   );
 }
