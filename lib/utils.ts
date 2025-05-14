@@ -463,3 +463,15 @@ export const formatFileSize = (bytes: number) => {
   else if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
   else return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 };
+
+export const updateSearchParam = (key: string, value: string) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set(key, value);
+  window.history.replaceState({}, "", url.toString());
+};
+
+export const removeSearchParam = (key: string) => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(key);
+  window.history.replaceState({}, "", url.toString());
+};

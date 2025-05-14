@@ -9,18 +9,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   SellersSettingsUpdateType,
   SiteSettingsUpdateType,
+  StoresSettingsUpdateType,
 } from "@/features/settings/settings.types";
 import { SiteFormUpdate } from "./_components/site-form.update";
 import { getSettings } from "@/features/settings/settings.queries";
 import { SellerFormUpdate } from "./_components/seller-form.update";
 import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
+import { StoreFormUpdate } from "./_components/store-form.update";
+import { SearchParams } from "@/types";
 
 const siteDefaultValues: SiteSettingsUpdateType = DEFAULT_SETTINGS.site;
 const SiteSettingsProvider = async () => {
   const result = await getSettings();
-  const defaultValues: SiteSettingsUpdateType = result.success
-    ? result.data.site
-    : siteDefaultValues;
+  const defaultValues: SiteSettingsUpdateType =
+    result.success && result.data.site ? result.data.site : siteDefaultValues;
 
   return <SiteFormUpdate defaultValues={defaultValues} />;
 };
@@ -42,7 +44,25 @@ const SellerSettingsProvider = async () => {
     />
   );
 };
-const tabs = [
+
+const storeDefaultValues: StoresSettingsUpdateType = DEFAULT_SETTINGS.stores;
+const StoreSettingsProvider = async () => {
+  const result = await getSettings();
+  const defaultValues: StoresSettingsUpdateType =
+    result.success && result.data.stores.length > 0
+      ? result.data.stores
+      : storeDefaultValues;
+
+  return (
+    <StoreFormUpdate
+      defaultValues={{
+        stores: defaultValues,
+      }}
+    />
+  );
+};
+
+const tabsInfo = [
   {
     value: "general",
     title: "Chung",
@@ -55,14 +75,30 @@ const tabs = [
     description: "Thông tin về nhân viên bán hàng.",
     content: <SellerSettingsProvider />,
   },
+  {
+    value: "stores",
+    title: "Cửa hàng",
+    description: "Thông tin về cửa hàng.",
+    content: <StoreSettingsProvider />,
+  },
 ];
 
-const SettingsPage = () => {
+const SettingsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) => {
+  const { tab } = await searchParams;
+  const defaultTab =
+    tabsInfo.some((item) => item.value === tab) && typeof tab === "string"
+      ? tab
+      : "general";
+
   return (
     <div className="">
-      <Tabs defaultValue="general">
-        <TabsList className="grid grid-cols-2">
-          {tabs.map((tab) => (
+      <Tabs defaultValue={defaultTab}>
+        <TabsList className="">
+          {tabsInfo.map((tab) => (
             <TabsTrigger
               className="cursor-pointer"
               key={tab.value}
@@ -73,7 +109,7 @@ const SettingsPage = () => {
           ))}
         </TabsList>
 
-        {tabs.map((tab) => (
+        {tabsInfo.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
             <Card>
               <CardHeader>

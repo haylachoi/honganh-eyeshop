@@ -12,7 +12,7 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
     ? settingsResult.data
     : DEFAULT_SETTINGS;
 
-  const siteSettings = settings.site;
+  const siteSettings = settings.site || DEFAULT_SETTINGS.site;
 
   const policyPreviews = await getPolicyPreviews();
   return (

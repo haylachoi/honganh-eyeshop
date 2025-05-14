@@ -16,7 +16,7 @@ import {
 
 interface FormSelectInputProps<Q, T extends FieldValues> {
   control: Control<T>;
-  name: keyof T;
+  name: Path<T>;
   label: string;
   placeholder?: string;
   list: readonly Q[];
@@ -36,7 +36,7 @@ const FormSelectInput = <Q, T extends FieldValues>({
   return (
     <FormField
       control={control}
-      name={name as Path<T>}
+      name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>

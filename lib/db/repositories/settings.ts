@@ -4,6 +4,7 @@ import Settings from "../model/settings.model";
 import {
   SellersSettingsDbInputType,
   SiteSettingsDbInputType,
+  StoresSettingsDbInputType,
 } from "@/features/settings/settings.types";
 import { ServerError } from "@/lib/error";
 
@@ -59,9 +60,33 @@ const updateSellersSettings = async ({
   }
 };
 
+const updateStoresSettings = async ({
+  input,
+}: {
+  input: StoresSettingsDbInputType;
+}) => {
+  await connectToDatabase();
+  const result = await Settings.findOneAndUpdate(
+    {},
+    {
+      $set: {
+        stores: input,
+      },
+    },
+    {
+      upsert: true,
+    },
+  );
+
+  if (!result) {
+    throw new ServerError({});
+  }
+};
+
 const settingsRepository = {
   getSettings,
   updateSiteSettings,
   updateSellersSettings,
+  updateStoresSettings,
 };
 export default settingsRepository;

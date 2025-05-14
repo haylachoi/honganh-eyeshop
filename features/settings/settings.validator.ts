@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { STORE_TYPES_LIST } from "./settings.constants";
 
 // export const SettingInputSchema = z.object({
 //   // common: z.object({
@@ -44,13 +45,57 @@ export const sellerSchema = z.object({
   email: z.string().min(1, "Email is required"),
   phone: z.string().min(1, "Phone is required"),
   facebook: z.string().min(1, "Facebook is required"),
+  isActive: z.boolean().default(true),
 });
 
 export const sellersSettingsUpdateSchema = z.array(sellerSchema);
 
-export const storeAddressSchema = z.object({});
+export const storeSchema = z.object({
+  name: z.string().min(1, "Store name is required"),
+  description: z.string().optional(),
+
+  type: z
+    .enum(STORE_TYPES_LIST, {
+      required_error: "Store type is required",
+    })
+    .default(STORE_TYPES_LIST[0]),
+
+  addressInfo: z.object({
+    address: z.string().min(1, "Address is required"),
+    district: z.string().min(1, "District is required"),
+    province: z.string().min(1, "Province is required"),
+    postalCode: z.string().optional(),
+  }),
+
+  contactInfo: z
+    .object({
+      phone: z.string().optional(),
+      email: z.string().email("Invalid email").optional(),
+      facebook: z.string().url().optional(),
+      zalo: z.string().url().optional(),
+    })
+    .optional(),
+
+  location: z.object({
+    latitude: z.coerce
+      .number()
+      .min(-90, "Latitude must be ≥ -90")
+      .max(90, "Latitude must be ≤ 90"),
+    longitude: z.coerce
+      .number()
+      .min(-180, "Longitude must be ≥ -180")
+      .max(180, "Longitude must be ≤ 180"),
+    googleMapLink: z.union([z.string().url(), z.literal("")]).optional(),
+  }),
+
+  openingHours: z.string().optional(),
+  isOpenNow: z.boolean().optional(),
+});
+
+export const storesSettingsUpdateSchema = z.array(storeSchema);
 
 export const settingsTypeSchema = z.object({
-  site: siteSettingsUpdateSchema,
+  site: siteSettingsUpdateSchema.optional(),
   sellers: sellersSettingsUpdateSchema.default([]),
+  stores: storesSettingsUpdateSchema.default([]),
 });

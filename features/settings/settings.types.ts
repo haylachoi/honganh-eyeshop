@@ -3,6 +3,7 @@ import {
   sellersSettingsUpdateSchema,
   settingsTypeSchema,
   siteSettingsUpdateSchema,
+  storesSettingsUpdateSchema,
 } from "./settings.validator";
 
 export type SettingType = z.infer<typeof settingsTypeSchema>;
@@ -14,3 +15,8 @@ export type SellersSettingsUpdateType = z.infer<
   typeof sellersSettingsUpdateSchema
 >;
 export type SellersSettingsDbInputType = SellersSettingsUpdateType;
+
+export type StoresSettingsUpdateType = z.infer<
+  typeof storesSettingsUpdateSchema
+>;
+export type StoresSettingsDbInputType = StoresSettingsUpdateType;

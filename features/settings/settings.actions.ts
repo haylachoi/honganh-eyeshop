@@ -5,6 +5,7 @@ import { Resource } from "../authorization/authorization.constants";
 import {
   sellersSettingsUpdateSchema,
   siteSettingsUpdateSchema,
+  storesSettingsUpdateSchema,
 } from "./settings.validator";
 import settingsRepository from "@/lib/db/repositories/settings";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
@@ -43,5 +44,15 @@ export const createOrUpdateSellersSettingsAction = modifyQueryClient
   .schema(sellersSettingsUpdateSchema)
   .action(async ({ parsedInput }) => {
     await settingsRepository.updateSellersSettings({ input: parsedInput });
+    revalidateTag(cacheTag);
+  });
+
+export const createOrUpdateStoresSettingsAction = modifyQueryClient
+  .metadata({
+    actionName: "createOrUpdateStoresSettings",
+  })
+  .schema(storesSettingsUpdateSchema)
+  .action(async ({ parsedInput }) => {
+    await settingsRepository.updateStoresSettings({ input: parsedInput });
     revalidateTag(cacheTag);
   });

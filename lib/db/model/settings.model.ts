@@ -1,3 +1,4 @@
+import { STORE_TYPES_LIST } from "@/features/settings/settings.constants";
 import { settingsTypeSchema } from "@/features/settings/settings.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
@@ -31,6 +32,38 @@ const settingSchema = new Schema<SettingModel>(
           email: { type: String, required: true },
           phone: { type: String, required: true },
           facebook: { type: String, required: true },
+          isActive: { type: Boolean, default: true },
+        },
+      ],
+      required: true,
+    },
+
+    stores: {
+      type: [
+        {
+          name: { type: String, required: true },
+          description: { type: String, required: true },
+          type: { type: String, enum: STORE_TYPES_LIST, required: true },
+          addressInfo: {
+            address: { type: String, required: true },
+            district: { type: String, required: true },
+            province: { type: String, required: true },
+            postalCode: { type: String },
+          },
+          contactInfo: {
+            phone: { type: String },
+            email: { type: String },
+            facebook: { type: String },
+            zalo: { type: String },
+          },
+          location: {
+            latitude: { type: Number, required: true },
+            longitude: { type: Number, required: true },
+            googleMapLink: { type: String },
+          },
+
+          openingHours: { type: String, required: true },
+          isOpenNow: { type: Boolean },
         },
       ],
       required: true,

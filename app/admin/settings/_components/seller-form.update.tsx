@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +14,10 @@ import { useAction } from "next-safe-action/hooks";
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { Separator } from "@/components/ui/separator";
 import { TrashIcon } from "lucide-react";
+import FormCheckbox from "@/components/shared/form/form-check-box";
+import FormTextInput from "@/components/shared/form/form-text-input";
+import { useEffect } from "react";
+import { updateSearchParam } from "@/lib/utils";
 
 const updateSchema = settingsTypeSchema.pick({
   sellers: true,
@@ -53,6 +49,16 @@ export const SellerFormUpdate = ({
     },
   );
 
+  // const updateSearchParam = (key: string, value: string) => {
+  //   const url = new URL(window.location.href);
+  //   url.searchParams.set(key, value);
+  //   window.history.replaceState({}, "", url.toString());
+  // };
+
+  useEffect(() => {
+    updateSearchParam("tab", "sellers");
+  }, []);
+
   const onSubmit = (data: SellersFormType) => {
     execute(data.sellers);
   };
@@ -74,60 +80,34 @@ export const SellerFormUpdate = ({
               </Button>
             </div>
 
-            <FormField
+            <FormTextInput
               control={form.control}
               name={`sellers.${index}.name`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tên</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Tên"
             />
 
-            <FormField
+            <FormTextInput
               control={form.control}
               name={`sellers.${index}.email`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Email"
             />
 
-            <FormField
+            <FormTextInput
               control={form.control}
               name={`sellers.${index}.phone`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Số điện thoại"
             />
 
-            <FormField
+            <FormTextInput
               control={form.control}
               name={`sellers.${index}.facebook`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Facebook</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Facebook"
+            />
+
+            <FormCheckbox
+              label="Kích hoạt"
+              control={form.control}
+              name={`sellers.${index}.isActive`}
             />
 
             {index < fields.length - 1 && <Separator className="my-6" />}
@@ -138,7 +118,13 @@ export const SellerFormUpdate = ({
           type="button"
           variant="outline"
           onClick={() =>
-            append({ name: "", email: "", phone: "", facebook: "" })
+            append({
+              name: "",
+              email: "",
+              phone: "",
+              facebook: "",
+              isActive: true,
+            })
           }
         >
           Thêm người bán

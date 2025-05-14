@@ -1,6 +1,7 @@
 import { SettingType } from "./settings.types";
 
-export const DEFAULT_SETTINGS: SettingType = {
+export const STORE_TYPES_LIST = ["showroom", "warehouse", "other"] as const;
+export const DEFAULT_SETTINGS: Required<SettingType> = {
   site: {
     name: "Kính mắt Hồng Anh",
     logo: "https://www.honganh.com/images/logo.png",
@@ -13,5 +14,29 @@ export const DEFAULT_SETTINGS: SettingType = {
     businessRegistrationNumber: "1234567890",
     legalRepresentative: "Nguyễn Văn Nhật",
   },
-  sellers: [],
+  sellers: [
+    {
+      name: "sdfs ",
+      email: "sdfsdf",
+      phone: "sdfs",
+      facebook: "sdfs",
+      isActive: true,
+    },
+  ],
+  stores: [
+    {
+      name: "sdfs ",
+      description: "sdfsdf",
+      addressInfo: {
+        address: "sdlf",
+        district: "sdfs",
+        province: "sdf",
+        postalCode: "sdfs",
+      },
+      location: { latitude: 0, longitude: 0, googleMapLink: "" },
+      openingHours: "",
+      type: STORE_TYPES_LIST[0],
+      isOpenNow: true,
+    },
+  ],
 };
