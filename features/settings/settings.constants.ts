@@ -64,13 +64,16 @@ export const DEFAULT_SETTINGS: Required<SettingType> = {
     },
   ],
   banners: {
-    benefits: [
-      {
-        title: "",
-        description: "",
-        details: "",
-        icon: "",
-      },
-    ],
+    benefits: {
+      isActive: true,
+      items: [
+        {
+          title: "",
+          description: "",
+          details: "",
+          icon: "",
+        },
+      ],
+    },
   },
 };

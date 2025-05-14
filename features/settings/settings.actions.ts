@@ -78,9 +78,11 @@ export const createOrUpdateBannersSettingsAction = modifyQueryClient
   })
   .schema(bannersSettingsUpdateSchema)
   .action(async ({ parsedInput }) => {
-    const { benefits } = parsedInput;
+    const {
+      benefits: { items },
+    } = parsedInput;
     const dbBenefits = await Promise.all(
-      benefits.map(async (benefit, index) => {
+      items.map(async (benefit, index) => {
         if (benefit.icon instanceof File) {
           const path = await writePublicImageToDisk({
             file: benefit.icon,
@@ -98,7 +100,7 @@ export const createOrUpdateBannersSettingsAction = modifyQueryClient
 
     await settingsRepository.updateBannersSettings({
       input: {
-        benefits: dbBenefits,
+        benefits: { ...parsedInput.benefits, items: dbBenefits },
       },
     });
 

@@ -97,26 +97,34 @@ export const storeSchema = z.object({
 
 export const storesSettingsUpdateSchema = z.array(storeSchema);
 
+const benefitBaseSchema = {
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  details: z.string().optional(),
+};
+
 export const bannersSettingsUpdateSchema = z.object({
-  benefits: z.array(
-    z.object({
-      title: z.string().min(1, "Title is required"),
-      description: z.string().min(1, "Description is required"),
-      details: z.string(),
-      icon: z.union([z.string(), z.instanceof(File)]),
-    }),
-  ),
+  benefits: z.object({
+    isActive: z.boolean(),
+    items: z.array(
+      z.object({
+        ...benefitBaseSchema,
+        icon: z.union([z.string(), z.instanceof(File)]),
+      }),
+    ),
+  }),
 });
 
 export const bannersSettingsSchema = z.object({
-  benefits: z.array(
-    z.object({
-      title: z.string().min(1, "Title is required"),
-      description: z.string().min(1, "Description is required"),
-      details: z.string().optional(),
-      icon: z.string(),
-    }),
-  ),
+  benefits: z.object({
+    isActive: z.boolean(),
+    items: z.array(
+      z.object({
+        ...benefitBaseSchema,
+        icon: z.string(),
+      }),
+    ),
+  }),
 });
 
 export const settingsTypeSchema = z.object({

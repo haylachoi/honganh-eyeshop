@@ -19,6 +19,7 @@ import { updateSearchParam } from "@/lib/utils";
 import { bannersSettingsUpdateSchema } from "@/features/settings/settings.validator";
 import { UploadFileIcon } from "./upload-icon";
 import { BannersSettingsType } from "@/features/settings/settings.types";
+import FormCheckbox from "@/components/shared/form/form-check-box";
 
 const updateSchema = bannersSettingsUpdateSchema;
 type formType = z.infer<typeof updateSchema>;
@@ -35,7 +36,7 @@ export const BannersFormUpdate = ({
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "benefits",
+    name: "benefits.items",
   });
 
   const { execute, isPending } = useAction(
@@ -74,24 +75,24 @@ export const BannersFormUpdate = ({
             </div>
             <FormTextInput
               control={form.control}
-              name={`benefits.${index}.title`}
+              name={`benefits.items.${index}.title`}
               label="Tiêu đề"
             />
 
             <FormTextInput
               control={form.control}
-              name={`benefits.${index}.description`}
+              name={`benefits.items.${index}.description`}
               label="Mô tả"
             />
 
             <FormTextInput
               control={form.control}
-              name={`benefits.${index}.details`}
+              name={`benefits.items.${index}.details`}
               label="Chi tiết"
             />
 
             <UploadFileIcon
-              name={`benefits.${index}.icon`}
+              name={`benefits.items.${index}.icon`}
               control={form.control}
               defaultValue={typeof field.icon === "string" ? field.icon : ""}
             />
@@ -114,6 +115,12 @@ export const BannersFormUpdate = ({
         >
           Thêm
         </Button>
+
+        <FormCheckbox
+          label="Kich hoạt"
+          control={form.control}
+          name="benefits.isActive"
+        />
 
         <SubmitButton label="Lưu" isLoading={isPending} />
       </form>
