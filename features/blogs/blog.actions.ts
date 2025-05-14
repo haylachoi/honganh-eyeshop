@@ -9,7 +9,7 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import {
   deleteFile,
-  writeFileToDisk,
+  writeImageWithRandomNameToDisk,
   writeImageSourcesToDisk,
 } from "@/lib/server-utils";
 import { NotFoundError } from "@/lib/error";
@@ -60,7 +60,7 @@ export const createBlogAction = createBlogActionClient
 
     const wallImageUrl =
       wallImage instanceof File
-        ? await writeFileToDisk({
+        ? await writeImageWithRandomNameToDisk({
             file: wallImage,
             to: "blogs",
             identity: rest.slug,
@@ -147,7 +147,7 @@ export const updateBlogAction = modifyBlogActionClient
 
     const wallImageUrl =
       wallImage instanceof File
-        ? await writeFileToDisk({
+        ? await writeImageWithRandomNameToDisk({
             file: wallImage,
             to: "blogs",
             identity: rest.slug,

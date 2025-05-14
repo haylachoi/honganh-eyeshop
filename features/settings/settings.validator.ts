@@ -1,31 +1,6 @@
 import { z } from "zod";
 import { STORE_TYPES_LIST } from "./settings.constants";
 
-// export const SettingInputSchema = z.object({
-//   // common: z.object({
-//   //   pageSize: z.coerce
-//   //     .number()
-//   //     .min(1, "Page size must be at least 1")
-//   //     .default(9),
-//   //   freeShippingPrice: z.coerce
-//   //     .number()
-//   //     .min(0, "Free shipping price must be at least 0")
-//   //     .default(0),
-//   // }),
-//   site: z.object({
-//     name: z.string().min(1, "Name is required"),
-//     logo: z.string().min(1, "logo is required"),
-//     slogan: z.string().min(1, "Slogan is required"),
-//     description: z.string().min(1, "Description is required"),
-//     email: z.string().min(1, "Email is required"),
-//     phone: z.string().min(1, "Phone is required"),
-//     // copyright: z.string().min(1, "Copyright is required"),
-//     address: z.string().min(1, "Address is required"),
-//   }),
-//
-//   defaultCurrency: z.string().min(1, "Currency is required"),
-// });
-
 export const siteSettingsUpdateSchema = z.object({
   name: z.string().min(1, "Name is required"),
   logo: z.string().min(1, "logo is required"),
@@ -122,8 +97,31 @@ export const storeSchema = z.object({
 
 export const storesSettingsUpdateSchema = z.array(storeSchema);
 
+export const bannersSettingsUpdateSchema = z.object({
+  benefits: z.array(
+    z.object({
+      title: z.string().min(1, "Title is required"),
+      description: z.string().min(1, "Description is required"),
+      details: z.string(),
+      icon: z.union([z.string(), z.instanceof(File)]),
+    }),
+  ),
+});
+
+export const bannersSettingsSchema = z.object({
+  benefits: z.array(
+    z.object({
+      title: z.string().min(1, "Title is required"),
+      description: z.string().min(1, "Description is required"),
+      details: z.string().optional(),
+      icon: z.string(),
+    }),
+  ),
+});
+
 export const settingsTypeSchema = z.object({
   site: siteSettingsUpdateSchema.optional(),
   sellers: sellersSettingsUpdateSchema.optional(),
   stores: storesSettingsUpdateSchema.default([]),
+  banners: bannersSettingsSchema.optional(),
 });

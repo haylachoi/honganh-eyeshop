@@ -2,6 +2,7 @@ import { settingsTypeSchema } from "@/features/settings/settings.validator";
 import { connectToDatabase } from "..";
 import Settings from "../model/settings.model";
 import {
+  BannersSettingsDbInputType,
   SellersSettingsDbInputType,
   SiteSettingsDbInputType,
   StoresSettingsDbInputType,
@@ -83,10 +84,34 @@ const updateStoresSettings = async ({
   }
 };
 
+const updateBannersSettings = async ({
+  input,
+}: {
+  input: BannersSettingsDbInputType;
+}) => {
+  await connectToDatabase();
+  const result = await Settings.findOneAndUpdate(
+    {},
+    {
+      $set: {
+        banners: input,
+      },
+    },
+    {
+      upsert: true,
+    },
+  );
+
+  if (!result) {
+    throw new ServerError({});
+  }
+};
+
 const settingsRepository = {
   getSettings,
   updateSiteSettings,
   updateSellersSettings,
   updateStoresSettings,
+  updateBannersSettings,
 };
 export default settingsRepository;

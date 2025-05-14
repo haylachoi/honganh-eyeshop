@@ -77,6 +77,16 @@ const settingSchema = new Schema<SettingModel>(
       ],
       required: true,
     },
+    banners: {
+      benefits: [
+        {
+          title: { type: String, required: true },
+          description: { type: String, required: true },
+          details: { type: String },
+          icon: { type: String, required: true },
+        },
+      ],
+    },
   },
   {
     timestamps: true,

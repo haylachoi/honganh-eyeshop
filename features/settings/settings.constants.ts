@@ -63,4 +63,14 @@ export const DEFAULT_SETTINGS: Required<SettingType> = {
       isOpenNow: true,
     },
   ],
+  banners: {
+    benefits: [
+      {
+        title: "",
+        description: "",
+        details: "",
+        icon: "",
+      },
+    ],
+  },
 };

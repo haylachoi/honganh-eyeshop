@@ -11,8 +11,38 @@ export const getFullPublicAssetPath = (fileName: string) => {
   return path.join(getPublicDir(), fileName);
 };
 
+const writeFileToDisk = async ({
+  file,
+  fullFilePath,
+}: {
+  file: File;
+  fullFilePath: string;
+}) => {
+  const data = await file.arrayBuffer();
+  const buffer = Buffer.from(data);
+
+  await writeFile(fullFilePath, buffer);
+};
+
+export const writePublicImageToDisk = async ({
+  file,
+  to,
+  fileName,
+}: {
+  file: File;
+  to: "products" | "blogs" | "icons";
+  fileName: string;
+}) => {
+  const basePath = path.join(BASE_IMAGES_FOLDER, to, fileName);
+  const fileLink = path.join("/", basePath);
+  const filePath = path.join(process.cwd(), "public", basePath);
+
+  await writeFileToDisk({ file, fullFilePath: filePath });
+  return fileLink;
+};
+
 // warning: identity is slug is not recommend, because it can be changed
-export const writeFileWithRandomNameToDisk = async ({
+export const writeImageWithRandomNameToDisk = async ({
   file,
   to,
   identity,
@@ -21,14 +51,12 @@ export const writeFileWithRandomNameToDisk = async ({
   to: "products" | "blogs" | "icons";
   identity?: string;
 }) => {
-  const data = await file.arrayBuffer();
-  const buffer = Buffer.from(data);
   const fileName = `${identity}_${crypto.randomUUID()}${path.extname(file.name)}`;
   const basePath = path.join(BASE_IMAGES_FOLDER, to, fileName);
   const fileLink = path.join("/", basePath);
   const filePath = path.join(process.cwd(), "public", basePath);
 
-  await writeFile(filePath, buffer);
+  await writeFileToDisk({ file, fullFilePath: filePath });
   return fileLink;
 };
 

@@ -3,6 +3,7 @@
 import { getAuthActionClient } from "@/lib/actions";
 import { Resource } from "../authorization/authorization.constants";
 import {
+  bannersSettingsUpdateSchema,
   sellersSettingsUpdateSchema,
   siteSettingsUpdateSchema,
   storesSettingsUpdateSchema,
@@ -11,6 +12,7 @@ import settingsRepository from "@/lib/db/repositories/settings";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { revalidateTag } from "next/cache";
 import { saveIcon, saveLogo } from "./settings.utils";
+import { writePublicImageToDisk } from "@/lib/server-utils";
 
 const resource: Resource = "settings";
 const cacheTag = CACHE_CONFIG.SETTINGS.ALL.TAGS[0];
@@ -67,5 +69,38 @@ export const createOrUpdateStoresSettingsAction = modifyQueryClient
   .schema(storesSettingsUpdateSchema)
   .action(async ({ parsedInput }) => {
     await settingsRepository.updateStoresSettings({ input: parsedInput });
+    revalidateTag(cacheTag);
+  });
+
+export const createOrUpdateBannersSettingsAction = modifyQueryClient
+  .metadata({
+    actionName: "createOrUpdateBannersSettings",
+  })
+  .schema(bannersSettingsUpdateSchema)
+  .action(async ({ parsedInput }) => {
+    const { benefits } = parsedInput;
+    const dbBenefits = await Promise.all(
+      benefits.map(async (benefit, index) => {
+        if (benefit.icon instanceof File) {
+          const path = await writePublicImageToDisk({
+            file: benefit.icon,
+            to: "icons",
+            fileName: `benefit${index}.svg`,
+          });
+
+          return { ...benefit, icon: path };
+        } else {
+          const path = benefit.icon;
+          return { ...benefit, icon: path };
+        }
+      }),
+    );
+
+    await settingsRepository.updateBannersSettings({
+      input: {
+        benefits: dbBenefits,
+      },
+    });
+
     revalidateTag(cacheTag);
   });
