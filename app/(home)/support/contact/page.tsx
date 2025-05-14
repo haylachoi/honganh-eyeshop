@@ -1,6 +1,7 @@
 import { STORE_INFO } from "@/constants";
 import { getSupportPages } from "@/features/support-pages/support-pages.queries";
 import { Metadata } from "next";
+import { SupportPagesHeading } from "../_components/heading";
 
 export const metadata: Metadata = {
   title: "Liên hệ | Hồng Anh Eyewear",
@@ -32,9 +33,7 @@ export default ContactPage;
 const DefaultContactPage = () => {
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-primary mb-6">
-        Liên hệ với chúng tôi
-      </h1>
+      <SupportPagesHeading>Liên hệ với chúng tôi</SupportPagesHeading>
 
       <div className="grid md:grid-cols-2 gap-8 mb-12">
         <div>

@@ -1,6 +1,7 @@
 import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
 import { getSettings } from "@/features/settings/settings.queries";
 import { StoresView } from "./Stores-view";
+import { SupportPagesHeading } from "../_components/heading";
 
 const StoresPage = async () => {
   const settingsResult = await getSettings();
@@ -12,7 +13,7 @@ const StoresPage = async () => {
 
   return (
     <div className="container">
-      <h1 className="text-2xl font-bold mb-4">Hệ thống cửa hàng</h1>
+      <SupportPagesHeading>Hệ thống cửa hàng</SupportPagesHeading>
       <StoresView stores={storesSettings} />
     </div>
   );

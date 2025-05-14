@@ -2,6 +2,7 @@ import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { getSupportPages } from "@/features/support-pages/support-pages.queries";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SupportPagesHeading } from "../_components/heading";
 
 export const metadata: Metadata = {
   title: "Về chúng tôi - Hồng Anh",
@@ -34,7 +35,7 @@ const DefaultAboutUsPage = () => {
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 space-y-12">
       <section className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Về Hồng Anh</h1>
+        <SupportPagesHeading>Về chúng tôi</SupportPagesHeading>
         <p className="text-lg text-gray-700">
           Chúng tôi là Hồng Anh – cửa hàng kính mắt uy tín chuyên cung cấp kính
           thời trang, kính cận, kính râm chất lượng cao cho mọi lứa tuổi.
