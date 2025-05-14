@@ -1,11 +1,19 @@
-import { EMAIL_LINK, PHONE_LINK, STORE_INFO } from "@/constants";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { getPolicyPreviews } from "@/features/others/other.services";
-import { cn } from "@/lib/utils";
+import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
+import { getSettings } from "@/features/settings/settings.queries";
+import { cn, formatPhone } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 
 const Footer = async ({ className }: Readonly<{ className?: string }>) => {
+  const settingsResult = await getSettings();
+  const settings = settingsResult.success
+    ? settingsResult.data
+    : DEFAULT_SETTINGS;
+
+  const siteSettings = settings.site;
+
   const policyPreviews = await getPolicyPreviews();
   return (
     <footer className={cn("bg-foreground text-background py-12", className)}>
@@ -13,30 +21,40 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
         <div>
           <FooterGroupTitle title="Thông tin liên hệ" />
           <ul>
-            <li>Địa chỉ: {STORE_INFO.ADDRESS}</li>
-            <li>MSDN: 1234567890</li>
+            <li>Địa chỉ: {siteSettings.address}</li>
+            {siteSettings.businessRegistrationNumber && (
+              <li>MSDN: {siteSettings.businessRegistrationNumber}</li>
+            )}
             <li>
-              <Link href={EMAIL_LINK}>Email: {STORE_INFO.EMAIL}</Link>
+              <Link href={`mailto:${siteSettings.email}`}>
+                Email: {siteSettings.email}
+              </Link>
             </li>
-            <li>Người đại diện: 123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội</li>
+            {siteSettings.legalRepresentative && (
+              <li>Người đại diện: {siteSettings.legalRepresentative}</li>
+            )}
             <li>
-              <Link className="cursor-pointer" href={PHONE_LINK}>
-                Số điện thoại: {STORE_INFO.PHONE}
+              <Link
+                className="cursor-pointer"
+                href={formatPhone({ phone: siteSettings.phone, type: "tel" })}
+              >
+                Số điện thoại: {formatPhone({ phone: siteSettings.phone })}
               </Link>
             </li>
           </ul>
         </div>
-        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))]">
+        <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))]">
           <div>
             <FooterGroupTitle title="Về Hồng Anh" />
             <ul>
               <li>
-                <Link href={ENDPOINTS.SUPPORT.ABOUT_US}>
-                  Giới thiệu Hồng Anh
+                <Link className="" href={ENDPOINTS.SUPPORT.ABOUT_US}>
+                  Giới thiệu về{" "}
+                  <span className="uppercase">{siteSettings.name}</span>
                 </Link>
               </li>
               <li>
-                <Link href="/stores">Hệ thống cửa hàng</Link>
+                <Link href={ENDPOINTS.SUPPORT.STORES}>Hệ thống cửa hàng</Link>
               </li>
             </ul>
           </div>
@@ -56,13 +74,15 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
             <FooterGroupTitle title="Hỗ trợ khách hàng" />
             <ul>
               <li>
-                <Link href="/contact-us">Liên hệ với chúng tôi</Link>
+                <Link href={ENDPOINTS.SUPPORT.CONTACT}>
+                  Liên hệ với chúng tôi
+                </Link>
               </li>
               <li>
-                <Link href="/recruitment">Tuyển dụng</Link>
+                <Link href={ENDPOINTS.SUPPORT.RECRUITMENT}>Tuyển dụng</Link>
               </li>
               <li>
-                <Link href="/faq">Câu hỏi thường gặp</Link>
+                <Link href={ENDPOINTS.SUPPORT.FAQ}>Câu hỏi thường gặp</Link>
               </li>
             </ul>
           </div>

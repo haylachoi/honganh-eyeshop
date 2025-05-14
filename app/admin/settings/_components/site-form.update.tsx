@@ -71,6 +71,16 @@ export const SiteFormUpdate = ({
         <FormTextInput control={control} name="email" label="Email" />
         <FormTextInput control={control} name="phone" label="Số điện thoại" />
         <FormTextInput control={control} name="address" label="Địa chỉ" />
+        <FormTextInput
+          control={control}
+          name="businessRegistrationNumber"
+          label="MSDN"
+        />
+        <FormTextInput
+          control={control}
+          name="legalRepresentative"
+          label="Người đại diện"
+        />
 
         <div className="flex flex-row-reverse justify-end gap-4 border border-input rounded-md p-4">
           {logoPreviewUrl && (

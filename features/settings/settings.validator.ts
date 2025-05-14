@@ -34,6 +34,9 @@ export const siteSettingsUpdateSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   // copyright: z.string().min(1, "Copyright is required"),
   address: z.string().min(1, "Address is required"),
+
+  businessRegistrationNumber: z.string().optional().default(""),
+  legalRepresentative: z.string().optional().default(""),
 });
 
 export const sellerSchema = z.object({
@@ -44,6 +47,8 @@ export const sellerSchema = z.object({
 });
 
 export const sellersSettingsUpdateSchema = z.array(sellerSchema);
+
+export const storeAddressSchema = z.object({});
 
 export const settingsTypeSchema = z.object({
   site: siteSettingsUpdateSchema,

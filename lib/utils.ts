@@ -6,6 +6,7 @@ import slugify from "slugify";
 import { AddressType, SearchParams } from "@/types";
 import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
 import { FILTER_NAME } from "@/features/filter/filter.constants";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -428,6 +429,26 @@ export const maskPhone = (phone?: string) => {
   return "****" + phone.slice(-4);
 };
 
+export const formatPhone = ({
+  phone,
+  type = "national",
+}: {
+  phone: string;
+  type?: "national" | "international" | "tel";
+}) => {
+  const parsed = parsePhoneNumberFromString(phone, "VN");
+  if (!parsed || !parsed.isValid()) return phone;
+
+  switch (type) {
+    case "international":
+      return parsed.formatInternational();
+    case "tel":
+      return `tel:${parsed.format("E.164")}`;
+    case "national":
+    default:
+      return parsed.formatNational();
+  }
+};
 export const getFullAdress = (addressInfo: AddressType) => {
   const { address, ward, district, city } = addressInfo;
   return [address, ward, district, city].filter(Boolean).join(", ");

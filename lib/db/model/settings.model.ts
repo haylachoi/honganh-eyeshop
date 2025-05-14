@@ -21,6 +21,8 @@ const settingSchema = new Schema<SettingModel>(
       phone: { type: String, required: true },
       address: { type: String, required: true },
       // copyright: { type: String, required: true },
+      businessRegistrationNumber: { type: String },
+      legalRepresentative: { type: String },
     },
     sellers: {
       type: [

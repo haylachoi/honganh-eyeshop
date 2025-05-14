@@ -33,6 +33,9 @@ export const ENDPOINTS = {
   SUPPORT: {
     ABOUT_US: "/support/about-us",
     CONTACT: "/support/contact",
+    STORES: "/support/stores",
+    RECRUITMENT: "/support/recruitment",
+    FAQ: "/support/faq",
   },
 };
 
