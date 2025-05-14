@@ -14,15 +14,33 @@ export const DEFAULT_SETTINGS: Required<SettingType> = {
     businessRegistrationNumber: "1234567890",
     legalRepresentative: "Nguyễn Văn Nhật",
   },
-  sellers: [
-    {
-      name: "sdfs ",
-      email: "sdfsdf",
-      phone: "sdfs",
-      facebook: "sdfs",
-      isActive: true,
+  sellers: {
+    socialIcons: {
+      icon1: {
+        name: "Facebook",
+        url: "",
+      },
+      icon2: {
+        name: "Instagram",
+        url: "",
+      },
+      icon3: {
+        name: "Youtube",
+        url: "",
+      },
     },
-  ],
+    list: [
+      {
+        name: "Nguyễn Văn Nhật",
+        email: "nv@nv.com.vn",
+        phone: "123-456-7890",
+        socialMedia1: "https://www.facebook.com/honganh.eyeshop",
+        socialMedia2: "https://www.instagram.com/honganh.eyeshop",
+        socialMedia3: "https://www.youtube.com/channel/UC7-0-3-9-1",
+        isActive: true,
+      },
+    ],
+  },
   stores: [
     {
       name: "sdfs ",

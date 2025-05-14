@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
-import { settingsTypeSchema } from "@/features/settings/settings.validator";
-import { z } from "zod";
+import { sellersSettingsUpdateSchema } from "@/features/settings/settings.validator";
 import { toast } from "sonner";
 import { onActionError } from "@/lib/actions/action.helper";
 import { createOrUpdateSellersSettingsAction } from "@/features/settings/settings.actions";
@@ -18,12 +17,14 @@ import FormCheckbox from "@/components/shared/form/form-check-box";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import { useEffect } from "react";
 import { updateSearchParam } from "@/lib/utils";
+import { SellersSettingsUpdateType } from "@/features/settings/settings.types";
+import { UploadIcon } from "./upload-icon";
 
-const updateSchema = settingsTypeSchema.pick({
-  sellers: true,
-});
-type SellersFormType = z.infer<typeof updateSchema>;
+const updateSchema = sellersSettingsUpdateSchema;
 
+type SellersFormType = SellersSettingsUpdateType;
+
+const iconKeys = ["icon1", "icon2", "icon3"] as const;
 export const SellerFormUpdate = ({
   defaultValues,
 }: {
@@ -34,9 +35,15 @@ export const SellerFormUpdate = ({
     defaultValues,
   });
 
+  const { watch } = form;
+
+  const socialMedia1 = watch("socialIcons.icon1.name");
+  const socialMedia2 = watch("socialIcons.icon2.name");
+  const socialMedia3 = watch("socialIcons.icon3.name");
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "sellers",
+    name: "list",
   });
 
   const { execute, isPending } = useAction(
@@ -54,12 +61,38 @@ export const SellerFormUpdate = ({
   }, []);
 
   const onSubmit = (data: SellersFormType) => {
-    execute(data.sellers);
+    execute(data);
   };
+
+  const textInputInfo = [
+    { name: "name", label: "Tên" },
+    { name: "email", label: "Email" },
+    { name: "phone", label: "Số điện thoại" },
+    { name: "socialMedia1", label: socialMedia1 },
+    { name: "socialMedia2", label: socialMedia2 },
+    { name: "socialMedia3", label: socialMedia3 },
+  ] as const;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <ul className="grid grid-cols-3 gap-2">
+          {iconKeys.map((key, index) => (
+            <li key={key} className="flex flex-col gap-4">
+              <FormTextInput
+                control={form.control}
+                name={`socialIcons.${key}.name`}
+                label={`Tên Social media ${index + 1}`}
+              />
+              <UploadIcon
+                name={`socialIcons.${key}.url`}
+                control={form.control}
+                defaultValue={defaultValues?.socialIcons?.[key]?.url}
+              />
+            </li>
+          ))}
+        </ul>
+
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-4 relative">
             <div className="flex justify-between items-center">
@@ -74,34 +107,19 @@ export const SellerFormUpdate = ({
               </Button>
             </div>
 
-            <FormTextInput
-              control={form.control}
-              name={`sellers.${index}.name`}
-              label="Tên"
-            />
-
-            <FormTextInput
-              control={form.control}
-              name={`sellers.${index}.email`}
-              label="Email"
-            />
-
-            <FormTextInput
-              control={form.control}
-              name={`sellers.${index}.phone`}
-              label="Số điện thoại"
-            />
-
-            <FormTextInput
-              control={form.control}
-              name={`sellers.${index}.facebook`}
-              label="Facebook"
-            />
+            {textInputInfo.map(({ name, label }) => (
+              <FormTextInput
+                key={name}
+                control={form.control}
+                name={`list.${index}.${name}`}
+                label={label}
+              />
+            ))}
 
             <FormCheckbox
               label="Kích hoạt"
               control={form.control}
-              name={`sellers.${index}.isActive`}
+              name={`list.${index}.isActive`}
             />
 
             {index < fields.length - 1 && <Separator className="my-6" />}
@@ -116,7 +134,9 @@ export const SellerFormUpdate = ({
               name: "",
               email: "",
               phone: "",
-              facebook: "",
+              socialMedia1: "",
+              socialMedia2: "",
+              socialMedia3: "",
               isActive: true,
             })
           }

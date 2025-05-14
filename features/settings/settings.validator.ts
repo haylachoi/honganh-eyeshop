@@ -40,15 +40,34 @@ export const siteSettingsUpdateSchema = z.object({
   legalRepresentative: z.string().optional().default(""),
 });
 
+const socialMediaSchema = z
+  .union([z.string().url("Invalid URL"), z.literal("")])
+  .optional()
+  .default("");
+
 export const sellerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().min(1, "Email is required"),
   phone: z.string().min(1, "Phone is required"),
-  facebook: z.string().min(1, "Facebook is required"),
+  socialMedia1: socialMediaSchema,
+  socialMedia2: socialMediaSchema,
+  socialMedia3: socialMediaSchema,
   isActive: z.boolean().default(true),
 });
 
-export const sellersSettingsUpdateSchema = z.array(sellerSchema);
+const iconSchema = z.object({
+  name: z.string(),
+  url: z.string(),
+});
+
+export const sellersSettingsUpdateSchema = z.object({
+  socialIcons: z.object({
+    icon1: iconSchema,
+    icon2: iconSchema,
+    icon3: iconSchema,
+  }),
+  list: z.array(sellerSchema).default([]),
+});
 
 export const storeSchema = z.object({
   name: z.string().min(1, "Store name is required"),
@@ -74,14 +93,8 @@ export const storeSchema = z.object({
         .union([z.string().email("Invalid email"), z.literal("")])
         .optional()
         .default(""),
-      facebook: z
-        .union([z.string().url("Invalid URL"), z.literal("")])
-        .optional()
-        .default(""),
-      zalo: z
-        .union([z.string().url("Invalid URL"), z.literal("")])
-        .optional()
-        .default(""),
+      facebook: socialMediaSchema,
+      zalo: socialMediaSchema,
     })
     .optional()
     .default({
@@ -111,6 +124,6 @@ export const storesSettingsUpdateSchema = z.array(storeSchema);
 
 export const settingsTypeSchema = z.object({
   site: siteSettingsUpdateSchema.optional(),
-  sellers: sellersSettingsUpdateSchema.default([]),
+  sellers: sellersSettingsUpdateSchema.optional(),
   stores: storesSettingsUpdateSchema.default([]),
 });

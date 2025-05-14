@@ -78,7 +78,8 @@ export const writeStringToFile = async ({
 
   await writeFile(filePath, content, "utf-8");
 
-  return `/${fileName}`;
+  const relativePath = to ? path.posix.join("/", to, fileName) : `/${fileName}`;
+  return relativePath;
 };
 
 export const deleteFile = async (

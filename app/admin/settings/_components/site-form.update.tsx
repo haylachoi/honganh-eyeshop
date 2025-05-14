@@ -121,7 +121,6 @@ export const SiteFormUpdate = ({
                       const objectUrl = URL.createObjectURL(file);
                       setLogoPreviewUrl(objectUrl);
 
-                      // Tùy server: có thể cần gửi `file`, hoặc `file.text()` để lấy string
                       file.text().then((text) => {
                         onChange(text);
                       });

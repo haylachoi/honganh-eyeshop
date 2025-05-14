@@ -32,17 +32,11 @@ const sellerDefaultValues: SellersSettingsUpdateType = DEFAULT_SETTINGS.sellers;
 const SellerSettingsProvider = async () => {
   const result = await getSettings();
   const defaultValues: SellersSettingsUpdateType =
-    result.success && result.data.sellers.length > 0
+    result.success && result.data.sellers
       ? result.data.sellers
       : sellerDefaultValues;
 
-  return (
-    <SellerFormUpdate
-      defaultValues={{
-        sellers: defaultValues,
-      }}
-    />
-  );
+  return <SellerFormUpdate defaultValues={defaultValues} />;
 };
 
 const storeDefaultValues: StoresSettingsUpdateType = DEFAULT_SETTINGS.stores;

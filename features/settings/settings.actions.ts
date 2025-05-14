@@ -10,7 +10,7 @@ import {
 import settingsRepository from "@/lib/db/repositories/settings";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { revalidateTag } from "next/cache";
-import { saveLogo } from "./settings.utils";
+import { saveIcon, saveLogo } from "./settings.utils";
 
 const resource: Resource = "settings";
 const cacheTag = CACHE_CONFIG.SETTINGS.ALL.TAGS[0];
@@ -43,6 +43,19 @@ export const createOrUpdateSellersSettingsAction = modifyQueryClient
   })
   .schema(sellersSettingsUpdateSchema)
   .action(async ({ parsedInput }) => {
+    const icons = parsedInput.socialIcons;
+
+    for (const key of Object.keys(icons) as (keyof typeof icons)[]) {
+      const icon = icons[key];
+      if (!icon.url.startsWith("/")) {
+        const path = await saveIcon({
+          content: icon.url,
+          fileName: `seller_${key}.svg`,
+        });
+        icon.url = path;
+      }
+    }
+
     await settingsRepository.updateSellersSettings({ input: parsedInput });
     revalidateTag(cacheTag);
   });

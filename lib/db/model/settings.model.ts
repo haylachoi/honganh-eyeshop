@@ -26,16 +26,25 @@ const settingSchema = new Schema<SettingModel>(
       legalRepresentative: { type: String },
     },
     sellers: {
-      type: [
-        {
-          name: { type: String, required: true },
-          email: { type: String, required: true },
-          phone: { type: String, required: true },
-          facebook: { type: String, required: true },
-          isActive: { type: Boolean, default: true },
-        },
-      ],
-      required: true,
+      socialIcons: {
+        icon1: { name: String, url: String },
+        icon2: { name: String, url: String },
+        icon3: { name: String, url: String },
+      },
+      list: {
+        type: [
+          {
+            name: { type: String, required: true },
+            email: { type: String, required: true },
+            phone: { type: String, required: true },
+            socialMedia1: { type: String },
+            socialMedia2: { type: String },
+            socialMedia3: { type: String },
+            isActive: { type: Boolean, required: true },
+          },
+        ],
+        required: true,
+      },
     },
 
     stores: {

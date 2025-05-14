@@ -3,6 +3,21 @@ import { exec } from "child_process";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
+
+export const saveIcon = async ({
+  content,
+  fileName,
+  to = "/icons",
+}: {
+  content: string;
+  fileName: string;
+  to?: "/icons";
+}) => {
+  const path = await writeStringToFile({ content, fileName, to });
+
+  return path;
+};
+
 export const saveLogo = async ({ content }: { content: string }) => {
   const fileName = "logo.svg";
   const path = await writeStringToFile({ content, fileName });
