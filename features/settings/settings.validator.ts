@@ -69,12 +69,27 @@ export const storeSchema = z.object({
 
   contactInfo: z
     .object({
-      phone: z.string().optional(),
-      email: z.string().email("Invalid email").optional(),
-      facebook: z.string().url().optional(),
-      zalo: z.string().url().optional(),
+      phone: z.string().optional().default(""),
+      email: z
+        .union([z.string().email("Invalid email"), z.literal("")])
+        .optional()
+        .default(""),
+      facebook: z
+        .union([z.string().url("Invalid URL"), z.literal("")])
+        .optional()
+        .default(""),
+      zalo: z
+        .union([z.string().url("Invalid URL"), z.literal("")])
+        .optional()
+        .default(""),
     })
-    .optional(),
+    .optional()
+    .default({
+      phone: "",
+      email: "",
+      facebook: "",
+      zalo: "",
+    }),
 
   location: z.object({
     latitude: z.coerce

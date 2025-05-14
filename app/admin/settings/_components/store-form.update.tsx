@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import SubmitButton from "@/components/custom-ui/submit-button";
@@ -51,12 +43,6 @@ export const StoreFormUpdate = ({
     onSuccess: () => toast.success("Cập nhật thành công"),
     onError: onActionError,
   });
-
-  // const updateSearchParam = (key: string, value: string) => {
-  //   const url = new URL(window.location.href);
-  //   url.searchParams.set(key, value);
-  //   window.history.replaceState({}, "", url.toString());
-  // };
 
   useEffect(() => {
     updateSearchParam("tab", "stores");
@@ -123,6 +109,23 @@ export const StoreFormUpdate = ({
               label="Mã bưu chính"
             />
 
+            <FormTextInput
+              control={form.control}
+              name={`stores.${index}.contactInfo.phone`}
+              label="Số điện thoại"
+            />
+            <FormTextInput
+              control={form.control}
+              name={`stores.${index}.contactInfo.email`}
+              label="Email"
+            />
+
+            <FormTextInput
+              control={form.control}
+              name={`stores.${index}.contactInfo.facebook`}
+              label="Facebook"
+            />
+
             {/* Location */}
             <FormTextInput
               control={form.control}
@@ -139,46 +142,13 @@ export const StoreFormUpdate = ({
               name={`stores.${index}.location.googleMapLink`}
               label="Google Map URL"
             />
-            {/* <FormField */}
-            {/*   control={form.control} */}
-            {/*   name={`stores.${index}.location.longitude`} */}
-            {/*   render={({ field }) => ( */}
-            {/*     <FormItem> */}
-            {/*       <FormLabel>Longitude</FormLabel> */}
-            {/*       <FormControl> */}
-            {/*         <Input type="number" {...field} /> */}
-            {/*       </FormControl> */}
-            {/*       <FormMessage /> */}
-            {/*     </FormItem> */}
-            {/*   )} */}
-            {/* /> */}
-            {/* <FormField */}
-            {/*   control={form.control} */}
-            {/*   name={`stores.${index}.location.googleMapLink`} */}
-            {/*   render={({ field }) => ( */}
-            {/*     <FormItem> */}
-            {/*       <FormLabel>Google Map URL</FormLabel> */}
-            {/*       <FormControl> */}
-            {/*         <Input type="url" {...field} /> */}
-            {/*       </FormControl> */}
-            {/*       <FormMessage /> */}
-            {/*     </FormItem> */}
-            {/*   )} */}
-            {/* /> */}
 
             {/* Giờ hoạt động */}
-            <FormField
+            <FormTextInput
               control={form.control}
               name={`stores.${index}.openingHours`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Giờ hoạt động</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ví dụ: 8:00 - 17:00" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Giờ hoạt động"
+              placeholder="Ví dụ: 8:00 - 17:00"
             />
 
             <FormCheckbox
@@ -205,6 +175,12 @@ export const StoreFormUpdate = ({
                 postalCode: "",
               },
               location: { latitude: 0, longitude: 0, googleMapLink: "" },
+              contactInfo: {
+                phone: "",
+                email: "",
+                facebook: "",
+                zalo: "",
+              },
               openingHours: "",
               type: STORE_TYPES_LIST[0],
               isOpenNow: true,

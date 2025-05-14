@@ -34,6 +34,12 @@ export const DEFAULT_SETTINGS: Required<SettingType> = {
         postalCode: "sdfs",
       },
       location: { latitude: 0, longitude: 0, googleMapLink: "" },
+      contactInfo: {
+        phone: "",
+        email: "",
+        facebook: "",
+        zalo: "",
+      },
       openingHours: "",
       type: STORE_TYPES_LIST[0],
       isOpenNow: true,
