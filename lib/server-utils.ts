@@ -12,13 +12,13 @@ export const getFullPublicAssetPath = (fileName: string) => {
 };
 
 // warning: identity is slug is not recommend, because it can be changed
-export const writeFileToDisk = async ({
+export const writeFileWithRandomNameToDisk = async ({
   file,
   to,
   identity,
 }: {
   file: File;
-  to: "products" | "blogs";
+  to: "products" | "blogs" | "icons";
   identity?: string;
 }) => {
   const data = await file.arrayBuffer();
@@ -27,7 +27,7 @@ export const writeFileToDisk = async ({
   const basePath = path.join(BASE_IMAGES_FOLDER, to, fileName);
   const fileLink = path.join("/", basePath);
   const filePath = path.join(process.cwd(), "public", basePath);
-  // warning : can't use await
+
   await writeFile(filePath, buffer);
   return fileLink;
 };
