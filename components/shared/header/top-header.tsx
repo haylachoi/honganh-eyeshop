@@ -7,6 +7,7 @@ import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { CartButton } from "./cart-button";
 import UserButton from "../user-button";
 import SearchBox from "./search-box";
+import Image from "next/image";
 
 const TopHeader = ({ className }: { className?: string }) => {
   return (
@@ -40,7 +41,11 @@ const TopHeader = ({ className }: { className?: string }) => {
 export default TopHeader;
 
 const Logo = () => {
-  return <Link href={ENDPOINTS.HOME}>Logo</Link>;
+  return (
+    <Link href={ENDPOINTS.HOME}>
+      <Image src="/logo.svg" alt="logo" width={36} height={36} />
+    </Link>
+  );
 };
 
 const ActionButtons = () => {
