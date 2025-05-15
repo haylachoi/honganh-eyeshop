@@ -13,8 +13,8 @@ const sections = [
   Trending,
   TopProducts,
   NewArrival,
-  RecentBlog,
   CustomerTestimonials,
+  RecentBlog,
 ];
 
 // metadata in layout auto add base url
