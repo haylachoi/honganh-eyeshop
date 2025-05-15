@@ -82,20 +82,25 @@ export const SellerFormUpdate = ({
           description="Thông tin về thông tin liên lạc qua mạng xã."
         >
           <ul className="grid grid-cols-3 gap-2">
-            {iconKeys.map((key, index) => (
-              <li key={key} className="flex flex-col gap-4">
-                <FormTextInput
-                  control={form.control}
-                  name={`socialIcons.${key}.name`}
-                  label={`Tên Social media ${index + 1}`}
-                />
-                <UploadIcon
-                  name={`socialIcons.${key}.url`}
-                  control={form.control}
-                  defaultValue={defaultValues?.socialIcons?.[key]?.url}
-                />
-              </li>
-            ))}
+            {iconKeys.map((key, index) => {
+              const name = watch(`socialIcons.${key}.name`);
+              return (
+                <li key={key} className="flex flex-col gap-4">
+                  <FormTextInput
+                    control={form.control}
+                    name={`socialIcons.${key}.name`}
+                    label={`Tên Social media ${index + 1}`}
+                  />
+                  {name?.trim() && (
+                    <UploadIcon
+                      name={`socialIcons.${key}.url`}
+                      control={form.control}
+                      defaultValue={defaultValues?.socialIcons?.[key]?.url}
+                    />
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </SettingCard>
 
@@ -121,14 +126,16 @@ export const SellerFormUpdate = ({
                     </Button>
                   </div>
 
-                  {textInputInfo.map(({ name, label }) => (
-                    <FormTextInput
-                      key={name}
-                      control={form.control}
-                      name={`list.${index}.${name}`}
-                      label={label}
-                    />
-                  ))}
+                  {textInputInfo
+                    .filter((item) => item.label != "")
+                    .map(({ name, label }) => (
+                      <FormTextInput
+                        key={name}
+                        control={form.control}
+                        name={`list.${index}.${name}`}
+                        label={label}
+                      />
+                    ))}
 
                   <FormCheckbox
                     label="Kích hoạt"
