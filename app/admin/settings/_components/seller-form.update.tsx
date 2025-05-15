@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { updateSearchParam } from "@/lib/utils";
 import { SellersSettingsUpdateType } from "@/features/settings/settings.types";
 import { UploadIcon } from "./upload-icon";
+import { SettingCard } from "./setting-card";
 
 const updateSchema = sellersSettingsUpdateSchema;
 
@@ -76,73 +77,88 @@ export const SellerFormUpdate = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <ul className="grid grid-cols-3 gap-2">
-          {iconKeys.map((key, index) => (
-            <li key={key} className="flex flex-col gap-4">
-              <FormTextInput
-                control={form.control}
-                name={`socialIcons.${key}.name`}
-                label={`Tên Social media ${index + 1}`}
-              />
-              <UploadIcon
-                name={`socialIcons.${key}.url`}
-                control={form.control}
-                defaultValue={defaultValues?.socialIcons?.[key]?.url}
-              />
-            </li>
-          ))}
-        </ul>
-
-        {fields.map((field, index) => (
-          <div key={field.id} className="space-y-4 relative">
-            <div className="flex justify-between items-center">
-              <div className="font-semibold text-lg">Nhân viên {index + 1}</div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => remove(index)}
-              >
-                <TrashIcon className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {textInputInfo.map(({ name, label }) => (
-              <FormTextInput
-                key={name}
-                control={form.control}
-                name={`list.${index}.${name}`}
-                label={label}
-              />
-            ))}
-
-            <FormCheckbox
-              label="Kích hoạt"
-              control={form.control}
-              name={`list.${index}.isActive`}
-            />
-
-            {index < fields.length - 1 && <Separator className="my-6" />}
-          </div>
-        ))}
-
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() =>
-            append({
-              name: "",
-              email: "",
-              phone: "",
-              socialMedia1: "",
-              socialMedia2: "",
-              socialMedia3: "",
-              isActive: true,
-            })
-          }
+        <SettingCard
+          title="Thôn tin liên lạc"
+          description="Thông tin về thông tin liên lạc qua mạng xã."
         >
-          Thêm người bán
-        </Button>
+          <ul className="grid grid-cols-3 gap-2">
+            {iconKeys.map((key, index) => (
+              <li key={key} className="flex flex-col gap-4">
+                <FormTextInput
+                  control={form.control}
+                  name={`socialIcons.${key}.name`}
+                  label={`Tên Social media ${index + 1}`}
+                />
+                <UploadIcon
+                  name={`socialIcons.${key}.url`}
+                  control={form.control}
+                  defaultValue={defaultValues?.socialIcons?.[key]?.url}
+                />
+              </li>
+            ))}
+          </ul>
+        </SettingCard>
+
+        <SettingCard
+          title="Nhân viên"
+          description="Thông tin về nhân viên bán hàng."
+        >
+          <div className="space-y-8">
+            <ul className="space-y-4">
+              {fields.map((field, index) => (
+                <li key={field.id} className="space-y-4 relative">
+                  <div className="flex justify-between items-center">
+                    <div className="font-semibold text-lg">
+                      Nhân viên {index + 1}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => remove(index)}
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </Button>
+                  </div>
+
+                  {textInputInfo.map(({ name, label }) => (
+                    <FormTextInput
+                      key={name}
+                      control={form.control}
+                      name={`list.${index}.${name}`}
+                      label={label}
+                    />
+                  ))}
+
+                  <FormCheckbox
+                    label="Kích hoạt"
+                    control={form.control}
+                    name={`list.${index}.isActive`}
+                  />
+
+                  {index < fields.length - 1 && <Separator className="my-6" />}
+                </li>
+              ))}
+            </ul>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                append({
+                  name: "",
+                  email: "",
+                  phone: "",
+                  socialMedia1: "",
+                  socialMedia2: "",
+                  socialMedia3: "",
+                  isActive: true,
+                })
+              }
+            >
+              Thêm người bán
+            </Button>
+          </div>
+        </SettingCard>
 
         <SubmitButton label="Lưu" isLoading={isPending} />
       </form>
