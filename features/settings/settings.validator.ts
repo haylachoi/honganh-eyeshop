@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { STORE_TYPES_LIST } from "./settings.constants";
+import { SOCIAL_TYPES_LIST, STORE_TYPES_LIST } from "./settings.constants";
+
+const socialMediaSchema = z
+  .union([z.string().url("Invalid URL"), z.literal("")])
+  .optional()
+  .default("");
 
 export const siteSettingsUpdateSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  logo: z.string().min(1, "logo is required"),
+  logo: z.union([z.string(), z.instanceof(File)]),
   slogan: z.string().min(1, "Slogan is required"),
   description: z.string().min(1, "Description is required"),
   email: z.string().min(1, "Email is required"),
@@ -13,12 +18,41 @@ export const siteSettingsUpdateSchema = z.object({
 
   businessRegistrationNumber: z.string().optional().default(""),
   legalRepresentative: z.string().optional().default(""),
+  socialLinks: z
+    .array(
+      z.object({
+        name: z.string(),
+        url: socialMediaSchema,
+        type: z.enum(SOCIAL_TYPES_LIST),
+        icon: z.union([z.string(), z.instanceof(File)]),
+      }),
+    )
+    .default([]),
 });
 
-const socialMediaSchema = z
-  .union([z.string().url("Invalid URL"), z.literal("")])
-  .optional()
-  .default("");
+export const siteSettingsTypeSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  logo: z.string(),
+  slogan: z.string().min(1, "Slogan is required"),
+  description: z.string().min(1, "Description is required"),
+  email: z.string().min(1, "Email is required"),
+  phone: z.string().min(1, "Phone is required"),
+  // copyright: z.string().min(1, "Copyright is required"),
+  address: z.string().min(1, "Address is required"),
+
+  businessRegistrationNumber: z.string().optional().default(""),
+  legalRepresentative: z.string().optional().default(""),
+  socialLinks: z
+    .array(
+      z.object({
+        name: z.string(),
+        url: z.string().url(),
+        type: z.enum(SOCIAL_TYPES_LIST),
+        icon: z.string(),
+      }),
+    )
+    .default([]),
+});
 
 export const sellerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -128,7 +162,7 @@ export const bannersSettingsSchema = z.object({
 });
 
 export const settingsTypeSchema = z.object({
-  site: siteSettingsUpdateSchema.optional(),
+  site: siteSettingsTypeSchema.optional(),
   sellers: sellersSettingsUpdateSchema.optional(),
   stores: storesSettingsUpdateSchema.default([]),
   banners: bannersSettingsSchema.optional(),

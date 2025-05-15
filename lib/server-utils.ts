@@ -11,7 +11,7 @@ export const getFullPublicAssetPath = (fileName: string) => {
   return path.join(getPublicDir(), fileName);
 };
 
-const writeFileToDisk = async ({
+export const writeFileToDisk = async ({
   file,
   fullFilePath,
 }: {

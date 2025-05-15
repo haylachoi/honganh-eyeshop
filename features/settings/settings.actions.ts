@@ -28,14 +28,36 @@ export const createOrUpdateSiteSettingsAction = modifyQueryClient
   })
   .schema(siteSettingsUpdateSchema)
   .action(async ({ parsedInput }) => {
-    if (!parsedInput.logo.startsWith("/")) {
-      const logo = await saveLogo({
-        content: parsedInput.logo,
-      });
-      parsedInput.logo = logo;
-    }
+    const iconLink =
+      parsedInput.logo instanceof File
+        ? await saveLogo({
+            file: parsedInput.logo,
+          })
+        : parsedInput.logo;
 
-    await settingsRepository.updateSiteSettings({ input: parsedInput });
+    const newSocialLinks = await Promise.all(
+      parsedInput.socialLinks.map(async (link, index) => {
+        const icon = link.icon;
+        if (icon instanceof File) {
+          const path = await writePublicImageToDisk({
+            file: icon,
+            to: "icons",
+            fileName: `site_social_${index}.svg`,
+          });
+          return { ...link, icon: path };
+        }
+        const path = icon;
+        return { ...link, icon: path };
+      }),
+    );
+
+    await settingsRepository.updateSiteSettings({
+      input: {
+        ...parsedInput,
+        logo: iconLink,
+        socialLinks: newSocialLinks,
+      },
+    });
     revalidateTag(cacheTag);
   });
 

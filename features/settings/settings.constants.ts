@@ -1,6 +1,7 @@
 import { SettingType } from "./settings.types";
 
 export const STORE_TYPES_LIST = ["showroom", "warehouse", "other"] as const;
+export const SOCIAL_TYPES_LIST = ["chat", "network", "video"] as const;
 export const DEFAULT_SETTINGS: Required<SettingType> = {
   site: {
     name: "Kính mắt Hồng Anh",
@@ -13,6 +14,7 @@ export const DEFAULT_SETTINGS: Required<SettingType> = {
     address: "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội",
     businessRegistrationNumber: "1234567890",
     legalRepresentative: "Nguyễn Văn Nhật",
+    socialLinks: [],
   },
   sellers: {
     socialIcons: {

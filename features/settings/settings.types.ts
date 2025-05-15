@@ -4,6 +4,7 @@ import {
   bannersSettingsUpdateSchema,
   sellersSettingsUpdateSchema,
   settingsTypeSchema,
+  siteSettingsTypeSchema,
   siteSettingsUpdateSchema,
   storesSettingsUpdateSchema,
 } from "./settings.validator";
@@ -11,7 +12,8 @@ import {
 export type SettingType = z.infer<typeof settingsTypeSchema>;
 
 export type SiteSettingsUpdateType = z.infer<typeof siteSettingsUpdateSchema>;
-export type SiteSettingsDbInputType = SiteSettingsUpdateType;
+export type SiteSettingsType = z.infer<typeof siteSettingsTypeSchema>;
+export type SiteSettingsDbInputType = SiteSettingsType;
 
 export type SellersSettingsUpdateType = z.infer<
   typeof sellersSettingsUpdateSchema

@@ -1,4 +1,7 @@
-import { STORE_TYPES_LIST } from "@/features/settings/settings.constants";
+import {
+  SOCIAL_TYPES_LIST,
+  STORE_TYPES_LIST,
+} from "@/features/settings/settings.constants";
 import { settingsTypeSchema } from "@/features/settings/settings.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
@@ -24,6 +27,14 @@ const settingSchema = new Schema<SettingModel>(
       // copyright: { type: String, required: true },
       businessRegistrationNumber: { type: String },
       legalRepresentative: { type: String },
+      socialLinks: [
+        {
+          name: { type: String, required: true },
+          url: { type: String, required: true },
+          type: { type: String, enum: SOCIAL_TYPES_LIST, required: true },
+          icon: { type: String },
+        },
+      ],
     },
     sellers: {
       socialIcons: {

@@ -1,15 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BannersSettingsType,
   SellersSettingsUpdateType,
-  SiteSettingsUpdateType,
+  SiteSettingsType,
   StoresSettingsUpdateType,
 } from "@/features/settings/settings.types";
 import { SiteFormUpdate } from "./_components/site-form.update";
@@ -20,10 +13,10 @@ import { StoreFormUpdate } from "./_components/store-form.update";
 import { SearchParams } from "@/types";
 import { BannersFormUpdate } from "./_components/banner-form.update";
 
-const siteDefaultValues: SiteSettingsUpdateType = DEFAULT_SETTINGS.site;
+const siteDefaultValues: SiteSettingsType = DEFAULT_SETTINGS.site;
 const SiteSettingsProvider = async () => {
   const result = await getSettings();
-  const defaultValues: SiteSettingsUpdateType =
+  const defaultValues: SiteSettingsType =
     result.success && result.data.site ? result.data.site : siteDefaultValues;
 
   return <SiteFormUpdate defaultValues={defaultValues} />;
@@ -125,13 +118,7 @@ const SettingsPage = async ({
 
         {tabsInfo.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{tab.title}</CardTitle>
-                <CardDescription>{tab.description}</CardDescription>
-              </CardHeader>
-              <CardContent>{tab.content}</CardContent>
-            </Card>
+            {tab.content}
           </TabsContent>
         ))}
       </Tabs>
