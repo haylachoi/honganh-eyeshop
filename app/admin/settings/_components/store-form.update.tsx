@@ -1,28 +1,56 @@
 "use client";
 
+import { useEffect } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import SubmitButton from "@/components/custom-ui/submit-button";
 import { TrashIcon } from "lucide-react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
-import { settingsTypeSchema } from "@/features/settings/settings.validator";
-import { z } from "zod";
 import { toast } from "sonner";
+import { updateSearchParam } from "@/lib/utils";
 import { onActionError } from "@/lib/actions/action.helper";
 import { useAction } from "next-safe-action/hooks";
+
+import { settingsTypeSchema } from "@/features/settings/settings.validator";
 import { createOrUpdateStoresSettingsAction } from "@/features/settings/settings.actions";
-import FormCheckbox from "@/components/shared/form/form-check-box";
 import { STORE_TYPES_LIST } from "@/features/settings/settings.constants";
+
 import FormTextInput from "@/components/shared/form/form-text-input";
 import FormSelectInput from "@/components/shared/form/form-select-input";
-import { useEffect } from "react";
-import { updateSearchParam } from "@/lib/utils";
+import FormCheckbox from "@/components/shared/form/form-check-box";
+import { SettingCard } from "./setting-card";
 
 const updateSchema = settingsTypeSchema.pick({ stores: true });
 type StoresFormType = z.infer<typeof updateSchema>;
+
+// Field configs
+const storeFields = [
+  { name: "name", label: "Tên cửa hàng" },
+  { name: "description", label: "Mô tả" },
+] as const;
+
+const addressFields = [
+  { name: "address", label: "Địa chỉ" },
+  { name: "district", label: "Quận/Thành phố" },
+  { name: "province", label: "Tỉnh/Thành phố" },
+  { name: "postalCode", label: "Mã bưu chính" },
+] as const;
+
+const contactFields = [
+  { name: "phone", label: "Số điện thoại" },
+  { name: "email", label: "Email" },
+  { name: "facebook", label: "Facebook" },
+] as const;
+
+const locationFields = [
+  { name: "latitude", label: "Latitude" },
+  { name: "longitude", label: "Longitude" },
+  { name: "googleMapLink", label: "Google Map URL" },
+] as const;
 
 export const StoreFormUpdate = ({
   defaultValues,
@@ -55,111 +83,87 @@ export const StoreFormUpdate = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {fields.map((field, index) => (
-          <div key={field.id} className="space-y-4 relative">
-            <div className="flex justify-between items-center">
-              <div className="font-semibold text-lg">Cửa hàng {index + 1}</div>
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => remove(index)}
+        <ul className="flex flex-col gap-8">
+          {fields.map((field, index) => (
+            <li key={field.id}>
+              <SettingCard
+                title={
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">
+                      Cửa hàng {index + 1}
+                    </h3>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => remove(index)}
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </Button>
+                  </div>
+                }
               >
-                <TrashIcon className="h-5 w-5" />
-              </Button>
-            </div>
+                <div className="space-y-4">
+                  {storeFields.map(({ name, label }) => (
+                    <FormTextInput
+                      key={name}
+                      control={form.control}
+                      name={`stores.${index}.${name}`}
+                      label={label}
+                    />
+                  ))}
 
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.name`}
-              label="Tên cửa hàng"
-            />
+                  <FormSelectInput
+                    control={form.control}
+                    name={`stores.${index}.type`}
+                    label="Loại cửa hàng"
+                    list={STORE_TYPES_LIST}
+                  />
 
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.description`}
-              label="Mô tả"
-            />
+                  {addressFields.map(({ name, label }) => (
+                    <FormTextInput
+                      key={name}
+                      control={form.control}
+                      name={`stores.${index}.addressInfo.${name}`}
+                      label={label}
+                    />
+                  ))}
 
-            <FormSelectInput
-              control={form.control}
-              name={`stores.${index}.type`}
-              label="Loại cửa hàng"
-              list={STORE_TYPES_LIST}
-            />
+                  {contactFields.map(({ name, label }) => (
+                    <FormTextInput
+                      key={name}
+                      control={form.control}
+                      name={`stores.${index}.contactInfo.${name}`}
+                      label={label}
+                    />
+                  ))}
 
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.addressInfo.address`}
-              label="Địa chỉ"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.addressInfo.district`}
-              label="Quận/Thành phố"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.addressInfo.province`}
-              label="Tỉnh/Thành phố"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.addressInfo.postalCode`}
-              label="Mã bưu chính"
-            />
+                  {locationFields.map(({ name, label }) => (
+                    <FormTextInput
+                      key={name}
+                      control={form.control}
+                      name={`stores.${index}.location.${name}`}
+                      label={label}
+                    />
+                  ))}
 
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.contactInfo.phone`}
-              label="Số điện thoại"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.contactInfo.email`}
-              label="Email"
-            />
+                  <FormTextInput
+                    control={form.control}
+                    name={`stores.${index}.openingHours`}
+                    label="Giờ hoạt động"
+                    placeholder="Ví dụ: 8:00 - 17:00"
+                  />
 
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.contactInfo.facebook`}
-              label="Facebook"
-            />
-
-            {/* Location */}
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.location.latitude`}
-              label="Latitude"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.location.longitude`}
-              label="Longitude"
-            />
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.location.googleMapLink`}
-              label="Google Map URL"
-            />
-
-            {/* Giờ hoạt động */}
-            <FormTextInput
-              control={form.control}
-              name={`stores.${index}.openingHours`}
-              label="Giờ hoạt động"
-              placeholder="Ví dụ: 8:00 - 17:00"
-            />
-
-            <FormCheckbox
-              label="Đang mở cửa"
-              control={form.control}
-              name={`stores.${index}.isOpenNow`}
-            />
-
-            {index < fields.length - 1 && <Separator className="my-6" />}
-          </div>
-        ))}
+                  <FormCheckbox
+                    control={form.control}
+                    name={`stores.${index}.isOpenNow`}
+                    label="Đang mở cửa"
+                  />
+                </div>
+              </SettingCard>
+            </li>
+          ))}
+        </ul>
 
         <Button
           type="button"
@@ -174,7 +178,11 @@ export const StoreFormUpdate = ({
                 province: "",
                 postalCode: "",
               },
-              location: { latitude: 0, longitude: 0, googleMapLink: "" },
+              location: {
+                latitude: 0,
+                longitude: 0,
+                googleMapLink: "",
+              },
               contactInfo: {
                 phone: "",
                 email: "",

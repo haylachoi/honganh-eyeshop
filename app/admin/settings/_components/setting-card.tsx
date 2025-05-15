@@ -11,8 +11,8 @@ export const SettingCard = ({
   description,
   children,
 }: {
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description?: string;
   children: React.ReactNode;
 }) => {
   return (
