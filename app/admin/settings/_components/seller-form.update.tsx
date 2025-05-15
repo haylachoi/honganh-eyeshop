@@ -79,7 +79,7 @@ export const SellerFormUpdate = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <SettingCard
           title="Thôn tin liên lạc"
-          description="Thông tin về thông tin liên lạc qua mạng xã."
+          description="Thông tin về thông tin liên lạc qua mạng xã hội."
         >
           <ul className="grid grid-cols-3 gap-2">
             {iconKeys.map((key, index) => {
