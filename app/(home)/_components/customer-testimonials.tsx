@@ -1,6 +1,5 @@
 import { Quote } from "lucide-react";
 import Image from "next/image";
-import { Heading } from "./heading";
 
 const testimonials = [
   {
@@ -32,10 +31,6 @@ export const CustomerTestimonials = () => {
       <h2 className="text-primary text-center font-bold text-4xl">
         Khách hàng nói về chúng tôi
       </h2>
-      {/* <Heading */}
-      {/*   className="text-center mx-auto" */}
-      {/*   title="Khách hàng nói về chúng tôi" */}
-      {/* /> */}
       <ul className="grid gap-12 mt-8 md:max-w-[700px] mx-auto">
         {testimonials.map((testimonial, index) => (
           <li
