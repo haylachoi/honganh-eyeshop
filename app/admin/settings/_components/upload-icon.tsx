@@ -6,11 +6,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { compressImage } from "@/lib/utils";
 import { UploadCloudIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
 
+// todo: remove this
 export const UploadIcon = <T extends FieldValues>({
   name,
   control,
@@ -80,16 +82,23 @@ export const UploadIcon = <T extends FieldValues>({
     </div>
   );
 };
+type UploadFileIconProps<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
+  defaultValue: string;
+  toWebp?: {
+    quality: number;
+    maxWidth: number;
+  };
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
 export const UploadFileIcon = <T extends FieldValues>({
   name,
   control,
   defaultValue,
-}: {
-  name: Path<T>;
-  control: Control<T>;
-  defaultValue: string;
-}) => {
+  toWebp,
+  ...inputProps
+}: UploadFileIconProps<T>) => {
   const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(
     typeof defaultValue === "string" ? defaultValue : null,
   );
@@ -101,6 +110,7 @@ export const UploadFileIcon = <T extends FieldValues>({
       }
     };
   }, [logoPreviewUrl]);
+
   return (
     <div className="flex flex-row-reverse justify-end gap-4 border border-input rounded-md p-4 h-[80px]">
       {logoPreviewUrl && (
@@ -127,16 +137,23 @@ export const UploadFileIcon = <T extends FieldValues>({
               <Input
                 className="hidden"
                 type="file"
-                accept=".svg"
                 {...rest}
-                onChange={(e) => {
+                {...inputProps}
+                onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-
-                  const objectUrl = URL.createObjectURL(file);
+                  let newFile = file;
+                  if (toWebp) {
+                    newFile = await compressImage(
+                      file,
+                      toWebp.quality,
+                      toWebp.maxWidth,
+                    );
+                  }
+                  const objectUrl = URL.createObjectURL(newFile);
                   setLogoPreviewUrl(objectUrl);
 
-                  onChange(file);
+                  onChange(newFile);
                   e.target.value = "";
                 }}
               />
