@@ -30,7 +30,7 @@ export const writePublicImageToDisk = async ({
   fileName,
 }: {
   file: File;
-  to: "products" | "blogs" | "icons";
+  to: "products" | "blogs" | "icons" | "others";
   fileName: string;
 }) => {
   const basePath = path.join(BASE_IMAGES_FOLDER, to, fileName);

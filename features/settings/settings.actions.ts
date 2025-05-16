@@ -13,6 +13,7 @@ import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { revalidateTag } from "next/cache";
 import { saveIcon, saveLogo } from "./settings.utils";
 import { writePublicImageToDisk } from "@/lib/server-utils";
+import { BannersSettingsDbInputType } from "./settings.types";
 
 const resource: Resource = "settings";
 const cacheTag = CACHE_CONFIG.SETTINGS.ALL.TAGS[0];
@@ -102,29 +103,77 @@ export const createOrUpdateBannersSettingsAction = modifyQueryClient
   .action(async ({ parsedInput }) => {
     const {
       benefits: { items },
+      homeHero,
     } = parsedInput;
+
+    // Save benefit icons
     const dbBenefits = await Promise.all(
       items.map(async (benefit, index) => {
         if (benefit.icon instanceof File) {
           const path = await writePublicImageToDisk({
             file: benefit.icon,
             to: "icons",
-            fileName: `benefit${index}.svg`,
+            fileName: `banner_benefit${index}.svg`,
           });
 
           return { ...benefit, icon: path };
         } else {
           const path = benefit.icon;
-          return { ...benefit, icon: path };
+          return {
+            ...benefit,
+            icon: path,
+          };
         }
       }),
     );
 
-    await settingsRepository.updateBannersSettings({
-      input: {
-        benefits: { ...parsedInput.benefits, items: dbBenefits },
-      },
-    });
+    // Save homeHero images if exists
+    let dbHomeHero: BannersSettingsDbInputType["homeHero"];
+    if (homeHero) {
+      const responsiveTypes = ["mobile", "tablet", "desktop"] as const;
+
+      dbHomeHero = {
+        ...homeHero,
+        ...Object.fromEntries(
+          await Promise.all(
+            responsiveTypes.map(async (type) => {
+              const responsive = homeHero[type];
+              const imageUrl = responsive.image.url;
+
+              if (imageUrl instanceof File) {
+                const extension = imageUrl.name.split(".").pop() ?? "png";
+                const fileName = `banner_homeHero_${type}.${extension}`;
+                const savedUrl = await writePublicImageToDisk({
+                  file: imageUrl,
+                  to: "others",
+                  fileName,
+                });
+
+                return [
+                  type,
+                  {
+                    ...responsive,
+                    image: {
+                      url: savedUrl,
+                    },
+                  },
+                ];
+              }
+
+              return [type, responsive];
+            }),
+          ),
+        ),
+      };
+    }
+
+    const input: BannersSettingsDbInputType = {
+      ...parsedInput,
+      benefits: { ...parsedInput.benefits, items: dbBenefits },
+      homeHero: dbHomeHero,
+    };
+
+    await settingsRepository.updateBannersSettings({ input });
 
     revalidateTag(cacheTag);
   });

@@ -121,7 +121,7 @@ export const UploadFileIcon = <T extends FieldValues>({
           <FormItem>
             <FormLabel className="font-normal cursor-pointer">
               <UploadCloudIcon />
-              Upload Logo
+              Upload File
             </FormLabel>
             <FormControl>
               <Input

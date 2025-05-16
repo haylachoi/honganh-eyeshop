@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { SOCIAL_TYPES_LIST, STORE_TYPES_LIST } from "./settings.constants";
+import {
+  ANCHOR_LIST,
+  SOCIAL_TYPES_LIST,
+  STORE_TYPES_LIST,
+} from "./settings.constants";
 
 const socialMediaSchema = z
   .union([z.string().url("Invalid URL"), z.literal("")])
@@ -137,16 +141,59 @@ const benefitBaseSchema = {
   details: z.string().optional(),
 };
 
+const positionSchema = z.object({
+  anchor: z.enum(ANCHOR_LIST),
+  xValue: z.coerce.number(),
+  yValue: z.coerce.number(),
+});
+
+const contentBlockSchema = z.object({
+  isActive: z.boolean(),
+  value: z.string(),
+  size: z.coerce.number(),
+  position: positionSchema,
+});
+
+const callToActionSchema = contentBlockSchema.extend({
+  url: z.string(),
+});
+
+export const responsiveSchema = z.object({
+  image: z.object({
+    url: z.string(),
+  }),
+  mainTitle: contentBlockSchema,
+  subTitle: contentBlockSchema,
+  callToAction: callToActionSchema,
+});
+
+export const responsiveUpdateSchema = z.object({
+  image: z.object({
+    url: z.union([z.string(), z.instanceof(File)]),
+  }),
+  mainTitle: contentBlockSchema,
+  subTitle: contentBlockSchema,
+  callToAction: callToActionSchema,
+});
+
 export const bannersSettingsUpdateSchema = z.object({
   benefits: z.object({
     isActive: z.boolean(),
     items: z.array(
       z.object({
         ...benefitBaseSchema,
-        icon: z.union([z.string(), z.instanceof(File)]),
+        icon: z.union([z.string().default(""), z.instanceof(File)]),
       }),
     ),
   }),
+  homeHero: z
+    .object({
+      isActive: z.boolean(),
+      mobile: responsiveUpdateSchema,
+      tablet: responsiveUpdateSchema,
+      desktop: responsiveUpdateSchema,
+    })
+    .optional(),
 });
 
 export const bannersSettingsSchema = z.object({
@@ -159,6 +206,14 @@ export const bannersSettingsSchema = z.object({
       }),
     ),
   }),
+  homeHero: z
+    .object({
+      isActive: z.boolean(),
+      mobile: responsiveSchema,
+      tablet: responsiveSchema,
+      desktop: responsiveSchema,
+    })
+    .optional(),
 });
 
 export const settingsTypeSchema = z.object({

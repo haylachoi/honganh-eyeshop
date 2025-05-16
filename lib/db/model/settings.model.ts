@@ -1,4 +1,5 @@
 import {
+  ANCHOR_LIST,
   SOCIAL_TYPES_LIST,
   STORE_TYPES_LIST,
 } from "@/features/settings/settings.constants";
@@ -13,6 +14,59 @@ export interface SettingModel extends Document, DbModel {
   createdAt: Date;
   updatedAt: Date;
 }
+
+const positionSchema = new mongoose.Schema(
+  {
+    anchor: {
+      type: String,
+      enum: ANCHOR_LIST,
+      required: true,
+    },
+    xValue: { type: Number, required: true },
+    yValue: { type: Number, required: true },
+  },
+  { _id: false },
+);
+
+const contentBlockSchema = new mongoose.Schema(
+  {
+    isActive: { type: Boolean, required: true },
+    value: { type: String, required: true },
+    size: { type: Number, required: true },
+    position: { type: positionSchema, required: true },
+  },
+  { _id: false },
+);
+
+const callToActionSchema = new mongoose.Schema(
+  {
+    ...contentBlockSchema.obj,
+    url: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+const responsiveSchema = new mongoose.Schema(
+  {
+    image: {
+      url: { type: String },
+    },
+    mainTitle: { type: contentBlockSchema, required: true },
+    subTitle: { type: contentBlockSchema, required: true },
+    callToAction: { type: callToActionSchema, required: true },
+  },
+  { _id: false },
+);
+
+const benefitItemSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    details: { type: String },
+    icon: { type: String, required: true }, // bản upload sử dụng file path
+  },
+  { _id: false },
+);
 
 const settingSchema = new Schema<SettingModel>(
   {
@@ -91,14 +145,19 @@ const settingSchema = new Schema<SettingModel>(
     banners: {
       benefits: {
         isActive: { type: Boolean, required: true },
-        items: [
+        items: [benefitItemSchema],
+      },
+      homeHero: {
+        type: new mongoose.Schema(
           {
-            title: { type: String, required: true },
-            description: { type: String, required: true },
-            details: { type: String },
-            icon: { type: String, required: true },
+            isActive: { type: Boolean, required: true },
+            mobile: responsiveSchema,
+            tablet: responsiveSchema,
+            desktop: responsiveSchema,
           },
-        ],
+          { _id: false },
+        ),
+        required: false,
       },
     },
   },

@@ -9,16 +9,16 @@ const Hero = async () => {
   return (
     <div className="bg-secondary max-md:px-[2px]">
       <div className="bg-[url('/home/hero-image.jpg')] bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative">
-        <div className="lg:block uppercase text-6xl text-primary font-bold absolute top-1/3 lg:top-2/3  lg:-right-1/5 xl:-right-1/3">
+        <div className="lg:block uppercase text-4xl md:text-6xl text-primary font-bold absolute top-1/3 lg:top-2/3  lg:-right-1/5 xl:-right-1/3">
           Thoải mái
         </div>
         <div className="space-y-6 absolute top-5/11 lg:top-1/4 lg:-left-2/9">
-          <div className="text-4xl max-w-[320px] text-foreground/70">
+          <div className="text-2xl md:text-4xl max-w-[320px] text-foreground/70">
             Đẹp hơn với kính của Hồng Anh
           </div>
           <Link
             href="/"
-            className="p-4 py-2 inline-flex bg-primary text-primary-foreground text-2xl items-center gap-6"
+            className="p-4 py-2 inline-flex bg-primary text-primary-foreground text-xl md:text-2xl items-center gap-6"
           >
             Mua Ngay
             <MoveRightIcon className="size-8" />
