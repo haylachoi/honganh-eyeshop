@@ -88,8 +88,22 @@ export const BannersFormUpdate = ({
         type="number"
       />
 
+      <FormTextInput
+        control={form.control}
+        name={`homeHero.${device}.${block}.color`}
+        label="Màu chữ"
+      />
+
+      {block === "callToAction" && (
+        <FormTextInput
+          control={form.control}
+          name={`homeHero.${device}.${block}.bgColor`}
+          label="Màu nền"
+        />
+      )}
+
       <FormSelectInput
-        label="Anchor"
+        label="Gốc tọa độ"
         name={`homeHero.${device}.${block}.position.anchor`}
         control={form.control}
         list={ANCHOR_LIST}
@@ -100,13 +114,11 @@ export const BannersFormUpdate = ({
           control={form.control}
           name={`homeHero.${device}.${block}.position.xValue`}
           label="X"
-          type="number"
         />
         <FormTextInput
           control={form.control}
           name={`homeHero.${device}.${block}.position.yValue`}
           label="Y"
-          type="number"
         />
       </div>
 
@@ -114,7 +126,7 @@ export const BannersFormUpdate = ({
         <FormTextInput
           control={form.control}
           name={`homeHero.${device}.${block}.url`}
-          label="Liên kết"
+          label="Link"
         />
       )}
     </div>
@@ -216,6 +228,10 @@ export const BannersFormUpdate = ({
               <UploadFileIcon
                 name={`homeHero.${device}.image.url`}
                 control={form.control}
+                toWebp={{
+                  quality: 1,
+                  maxWidth: 1900,
+                }}
                 defaultValue={
                   defaultValues.homeHero?.[device]?.image?.url ?? ""
                 }

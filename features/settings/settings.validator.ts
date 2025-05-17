@@ -143,19 +143,21 @@ const benefitBaseSchema = {
 
 const positionSchema = z.object({
   anchor: z.enum(ANCHOR_LIST),
-  xValue: z.coerce.number(),
-  yValue: z.coerce.number(),
+  xValue: z.string(),
+  yValue: z.string(),
 });
 
 const contentBlockSchema = z.object({
   isActive: z.boolean(),
   value: z.string(),
   size: z.coerce.number(),
+  color: z.string(),
   position: positionSchema,
 });
 
 const callToActionSchema = contentBlockSchema.extend({
   url: z.string(),
+  bgColor: z.string().default(""),
 });
 
 export const responsiveSchema = z.object({

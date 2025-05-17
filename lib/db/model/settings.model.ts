@@ -22,8 +22,8 @@ const positionSchema = new mongoose.Schema(
       enum: ANCHOR_LIST,
       required: true,
     },
-    xValue: { type: Number, required: true },
-    yValue: { type: Number, required: true },
+    xValue: { type: String, required: true },
+    yValue: { type: String, required: true },
   },
   { _id: false },
 );
@@ -33,6 +33,7 @@ const contentBlockSchema = new mongoose.Schema(
     isActive: { type: Boolean, required: true },
     value: { type: String, required: true },
     size: { type: Number, required: true },
+    color: { type: String, required: true },
     position: { type: positionSchema, required: true },
   },
   { _id: false },
@@ -42,6 +43,7 @@ const callToActionSchema = new mongoose.Schema(
   {
     ...contentBlockSchema.obj,
     url: { type: String, required: true },
+    bgColor: { type: String, required: true },
   },
   { _id: false },
 );
