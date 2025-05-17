@@ -9,7 +9,7 @@ import {
   storesSettingsUpdateSchema,
 } from "./settings.validator";
 
-export type SettingType = z.infer<typeof settingsTypeSchema>;
+export type SettingsType = z.infer<typeof settingsTypeSchema>;
 
 export type SiteSettingsUpdateType = z.infer<typeof siteSettingsUpdateSchema>;
 export type SiteSettingsType = z.infer<typeof siteSettingsTypeSchema>;

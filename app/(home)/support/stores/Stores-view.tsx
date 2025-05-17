@@ -1,16 +1,16 @@
 "use client";
 
-import { SettingType } from "@/features/settings/settings.types";
+import { SettingsType } from "@/features/settings/settings.types";
 import { useMemo, useState } from "react";
 
-export const StoresView = ({ stores }: { stores: SettingType["stores"] }) => {
+export const StoresView = ({ stores }: { stores: SettingsType["stores"] }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
 
   const selectedStore = stores[selectedIndex];
 
-  const getMapLink = (store: SettingType["stores"][number]) => {
+  const getMapLink = (store: SettingsType["stores"][number]) => {
     if (store.location.googleMapLink && store.location.googleMapLink !== "")
       return store.location.googleMapLink;
     return `https://www.google.com/maps?q=${store.location.latitude},${store.location.longitude}&z=15&output=embed`;

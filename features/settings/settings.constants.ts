@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SettingType } from "./settings.types";
+import { SettingsType } from "./settings.types";
 import { responsiveSchema } from "./settings.validator";
 
 export const STORE_TYPES_LIST = ["showroom", "warehouse", "other"] as const;
@@ -54,7 +54,7 @@ const defaultResponsive: z.infer<typeof responsiveSchema> = {
   },
 };
 
-export const DEFAULT_SETTINGS: Required<SettingType> = {
+export const DEFAULT_SETTINGS: Required<SettingsType> = {
   site: {
     name: "Kính mắt Hồng Anh",
     logo: "https://www.honganh.com/images/logo.png",
