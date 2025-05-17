@@ -25,10 +25,12 @@ const MiddleSection = ({ product }: { product: ProductType }) => {
             </TabTrigger>
           ))}
         </TabList>
-        <TabPanel value={header[0]}>
+        <TabPanel className="mt-4" value={header[0]}>
           <DetailsSection attributes={product.attributes} />
         </TabPanel>
-        <TabPanel value={header[1]}>{product.description}</TabPanel>
+        <TabPanel className="mt-4" value={header[1]}>
+          {product.description}
+        </TabPanel>
       </Tabs>
     </div>
   );
@@ -42,7 +44,7 @@ const DetailsSection = ({
   attributes: ProductType["attributes"];
 }) => {
   return (
-    <div className="mt-6">
+    <div className="">
       <table className="table-auto max-w-[40rem] border-collapse border border-gray-200 dark:border-gray-700 text-sm">
         <thead className="bg-gray-100 dark:bg-gray-800">
           <tr>

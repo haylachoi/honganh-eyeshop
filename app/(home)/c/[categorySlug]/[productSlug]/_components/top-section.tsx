@@ -1,3 +1,5 @@
+"use client";
+
 import { ProductType } from "@/features/products/product.types";
 import React from "react";
 import ImageSection from "./image-section";
