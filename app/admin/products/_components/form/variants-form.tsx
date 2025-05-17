@@ -24,6 +24,7 @@ import {
   VariantImageUploader,
   VariantMultiImageUploader,
 } from "./image-uploader";
+import { TrashIcon } from "lucide-react";
 
 export const VariantsForm = <T extends ProductUpdateType | ProductInputType>({
   name,
@@ -149,14 +150,14 @@ const VariantAttributeForm = ({ VariantIndex }: { VariantIndex: number }) => {
               name={`variants.${VariantIndex}.attributes.${index}.value`}
               placeholder="Nhập giá trị"
             />
-            {/* todo: use trash icon */}
+
             <Button
               type="button"
               tabIndex={-1}
               variant="destructive"
               onClick={() => remove(index)}
             >
-              X
+              <TrashIcon />
             </Button>
           </li>
         ))}

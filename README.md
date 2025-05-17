@@ -47,7 +47,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - make first Image in page priority to improve largest content paint
 - add href to main navigation
-- generate metadata
-- generate sitemap
-- don't delete token
-- use find method from cache_all for get something by ...
