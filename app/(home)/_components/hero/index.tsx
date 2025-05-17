@@ -11,7 +11,6 @@ const Hero = async () => {
       <Suspense fallback={<div></div>}>
         <HeroProvider />
       </Suspense>
-      <HeroProvider />
       <div className="w-full">
         <Suspense fallback={<div></div>}>
           <BenefitProvider />
@@ -85,7 +84,7 @@ const HeroProvider = async () => {
           {data.subTitle.value}
         </p>
       )}
-      {data.callToAction.isActive && (
+      {data.callToAction.isActive ? (
         <Link
           href={data.callToAction.url || "#"}
           style={{
@@ -99,6 +98,11 @@ const HeroProvider = async () => {
           {data.callToAction.value}
           <MoveRightIcon className="size-8" />
         </Link>
+      ) : (
+        <Link
+          href={data.callToAction.url || "#"}
+          className="absolute bg-transparent inset-0 cursor-pointer"
+        ></Link>
       )}
     </>
   );
