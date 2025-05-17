@@ -163,6 +163,8 @@ const callToActionSchema = contentBlockSchema.extend({
 export const responsiveSchema = z.object({
   image: z.object({
     url: z.string(),
+    width: z.string(),
+    ratio: z.string(),
   }),
   mainTitle: contentBlockSchema,
   subTitle: contentBlockSchema,
@@ -172,6 +174,8 @@ export const responsiveSchema = z.object({
 export const responsiveUpdateSchema = z.object({
   image: z.object({
     url: z.union([z.string(), z.instanceof(File)]),
+    width: z.string(),
+    ratio: z.string(),
   }),
   mainTitle: contentBlockSchema,
   subTitle: contentBlockSchema,

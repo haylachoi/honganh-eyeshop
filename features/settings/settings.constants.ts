@@ -14,6 +14,8 @@ export const ANCHOR_LIST = [
 const defaultResponsive: z.infer<typeof responsiveSchema> = {
   image: {
     url: "",
+    width: "",
+    ratio: "",
   },
   mainTitle: {
     isActive: false,

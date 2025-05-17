@@ -237,6 +237,20 @@ export const BannersFormUpdate = ({
                 }
               />
 
+              <FormTextInput
+                control={form.control}
+                name={`homeHero.${device}.image.width`}
+                label="Chiều rộng ảnh"
+                placeholder="Chiều rộng ảnh (vd: 100%, 1000px, ...)"
+              />
+
+              <FormTextInput
+                control={form.control}
+                name={`homeHero.${device}.image.ratio`}
+                label="Tỉ lệ"
+                placeholder="Tỉ lệ (vd: 16/9, 4/3, ...)"
+              />
+
               {["mainTitle", "subTitle", "callToAction"].map((block) =>
                 renderContentBlockInputs(device, block as ContentBlockType),
               )}

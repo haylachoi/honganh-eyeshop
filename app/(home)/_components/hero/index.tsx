@@ -114,9 +114,11 @@ const HeroProvider = async () => {
           "--home-hero-image__desktop": `url(${homeHero.desktop.image.url})`,
           "--home-hero-image__tablet": `url(${homeHero.tablet.image.url})`,
           "--home-hero-image__mobile": `url(${homeHero.mobile.image.url})`,
+          width: homeHero.desktop.image.width,
+          aspectRatio: homeHero.desktop.image.ratio,
         } as React.CSSProperties
       }
-      className="home_hero bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative"
+      className="home_hero bg-cover bg-center bg-no-repeat mx-auto relative"
     >
       {/* Desktop */}
       <div className="hidden lg:block">{renderContent(homeHero.desktop)}</div>

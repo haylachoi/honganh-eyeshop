@@ -52,6 +52,8 @@ const responsiveSchema = new mongoose.Schema(
   {
     image: {
       url: { type: String },
+      width: { type: String },
+      ratio: { type: String },
     },
     mainTitle: { type: contentBlockSchema, required: true },
     subTitle: { type: contentBlockSchema, required: true },
