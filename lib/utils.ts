@@ -326,6 +326,11 @@ export const getLink = {
     }
     return `${ENDPOINTS.SEARCH}?${params.toString()}`;
   },
+  support: {
+    home({ supportSlug }: { supportSlug: string }) {
+      return `${ENDPOINTS.SUPPORT.HOME}/${supportSlug}`;
+    },
+  },
 };
 
 export const getFromLocalStorage = <T>(key: string, defaultValue: T) => {

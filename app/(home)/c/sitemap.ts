@@ -26,7 +26,7 @@ export default async function sitemap({
         }),
       ),
       priority: SITEMAP_CONFIG.PRODUCT.PRIORITY,
-      changefreq: SITEMAP_CONFIG.PRODUCT.CHANGE_FREQUENCY,
+      changeFrequency: SITEMAP_CONFIG.PRODUCT.CHANGE_FREQUENCY,
       lastModified: product.updatedAt,
     }));
   }
@@ -40,7 +40,7 @@ export default async function sitemap({
         }),
       ),
       priority: SITEMAP_CONFIG.CATEGORY.PRIORITY,
-      changefreq: SITEMAP_CONFIG.CATEGORY.CHANGE_FREQUENCY,
+      changeFrequency: SITEMAP_CONFIG.CATEGORY.CHANGE_FREQUENCY,
       lastModified: category.updatedAt,
     }));
   }

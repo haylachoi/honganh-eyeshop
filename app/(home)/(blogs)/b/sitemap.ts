@@ -26,7 +26,7 @@ export default async function sitemap({
         }),
       ),
       priority: SITEMAP_CONFIG.BLOG.PRIORITY,
-      changefreq: SITEMAP_CONFIG.BLOG.CHANGE_FREQUENCY,
+      changeFrequency: SITEMAP_CONFIG.BLOG.CHANGE_FREQUENCY,
       lastModified: blog.updatedAt,
     }));
   }

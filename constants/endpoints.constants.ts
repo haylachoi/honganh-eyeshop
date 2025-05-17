@@ -31,6 +31,7 @@ export const ENDPOINTS = {
   POLICY: "/policy",
   SEARCH: "/search",
   SUPPORT: {
+    HOME: "/support",
     ABOUT_US: "/support/about-us",
     CONTACT: "/support/contact",
     STORES: "/support/stores",
