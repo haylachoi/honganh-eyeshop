@@ -1,39 +1,10 @@
-import { getSupportPages } from "@/features/support-pages/support-pages.queries";
-import { Metadata } from "next";
 import { SupportPagesHeading } from "../_components/heading";
 import { getSettings } from "@/features/settings/settings.queries";
 import { SettingsType } from "@/features/settings/settings.types";
 import Image from "next/image";
 import { formatPhone } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Liên hệ | Hồng Anh Eyewear",
-  description:
-    "Liên hệ với cửa hàng kính mắt Hồng Anh – chúng tôi luôn sẵn sàng hỗ trợ bạn.",
-};
-
-const ContactPage = async () => {
-  const result = await getSupportPages({
-    slug: "contact",
-  });
-  if (!result.success) {
-    return <DefaultContactPage />;
-  }
-
-  const pageInfo = result.data;
-  return (
-    <div>
-      <div
-        className="support-container"
-        dangerouslySetInnerHTML={{ __html: pageInfo.content }}
-      />
-    </div>
-  );
-};
-
-export default ContactPage;
-
-const DefaultContactPage = async () => {
+export const ContactDefaultPage = async () => {
   const settingsResult = await getSettings();
   const settings = settingsResult.success ? settingsResult.data : null;
 

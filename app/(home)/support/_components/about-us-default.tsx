@@ -1,37 +1,8 @@
+import { SupportPagesHeading } from "./heading";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
-import { getSupportPages } from "@/features/support-pages/support-pages.queries";
-import type { Metadata } from "next";
 import Link from "next/link";
-import { SupportPagesHeading } from "../_components/heading";
 
-export const metadata: Metadata = {
-  title: "Về chúng tôi - Hồng Anh",
-  description:
-    "Hồng Anh – Cửa hàng kính mắt uy tín, cung cấp kính thời trang, kính cận và kính râm chất lượng. Miễn phí đo mắt, giao hàng toàn quốc.",
-};
-
-const AboutUsPage = async () => {
-  const result = await getSupportPages({
-    slug: "about-us",
-  });
-  if (!result.success) {
-    return <DefaultAboutUsPage />;
-  }
-
-  const pageInfo = result.data;
-  return (
-    <div>
-      <div
-        className="support-container"
-        dangerouslySetInnerHTML={{ __html: pageInfo.content }}
-      />
-    </div>
-  );
-};
-
-export default AboutUsPage;
-
-const DefaultAboutUsPage = () => {
+export const AboutUsDefaultPage = () => {
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 space-y-12">
       <section className="text-center">

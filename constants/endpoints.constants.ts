@@ -63,14 +63,3 @@ export const ADMIN_ENDPOINTS = {
 export const API_ENDPOINTS = {
   VIEW_COUNT: "/api/viewCount",
 };
-
-export const AVAILABEL_SUPPORT_PAGES = [
-  {
-    slug: "about-us",
-    title: "Về chúng tôi",
-  },
-  {
-    slug: "contact",
-    title: "Liên hệ với chúng tôi",
-  },
-];
