@@ -1,10 +1,7 @@
 import Blogcard from "@/components/shared/blog-card";
 import { BlogType } from "@/features/blogs/blog.types";
-import { QueryResult } from "@/lib/query/query.type";
 
-export const BlogsContent = ({ data }: { data: QueryResult<BlogType[]> }) => {
-  const items = data.success ? data.data : [];
-
+export const BlogsContent = ({ items }: { items: BlogType[] }) => {
   return (
     <div>
       <ul className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-rows-[auto_1fr] gap-x-8 gap-y-10">

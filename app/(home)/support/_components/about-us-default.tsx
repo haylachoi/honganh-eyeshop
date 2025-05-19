@@ -1,6 +1,4 @@
 import { SupportPagesHeading } from "./heading";
-import { ENDPOINTS } from "@/constants/endpoints.constants";
-import Link from "next/link";
 
 export const AboutUsDefaultPage = () => {
   return (

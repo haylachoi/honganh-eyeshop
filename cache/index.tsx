@@ -150,7 +150,7 @@ const next_cache = {
       return { items: result, total: blogs.length };
     },
     searchByQuery: unstable_cache(
-      blogsRepository.searchBlogsByQuery,
+      blogsRepository.searchBlogsIncludeTotalItemsByQuery,
       CACHE_CONFIG.BLOGS.BY_QUERY.KEY_PARTS,
       {
         tags: CACHE_CONFIG.BLOGS.BY_QUERY.TAGS,

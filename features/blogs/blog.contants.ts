@@ -37,6 +37,7 @@ export const BLOG_FILTER_NAME_VALUES = [
   "slug",
   "author",
   "tags",
+  "isPublished",
 ] as const;
 
 export const BLOG_FILTER_NAMES = createUppercaseMap(BLOG_FILTER_NAME_VALUES);

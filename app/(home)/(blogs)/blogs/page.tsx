@@ -1,32 +1,28 @@
-import {
-  countBlogsByQuery,
-  searchBlogsByQuery,
-} from "@/features/blogs/blog.queries";
+import { searchBlogsByQuery } from "@/features/blogs/blog.queries";
 import { BlogsContent } from "./_components/blogs-content";
 import { PAGE_SIZE } from "@/constants";
 import { BlogsPagination } from "./_components/blogs-pagination";
 import Image from "next/image";
+import { BLOG_FILTER_NAMES } from "@/features/blogs/blog.contants";
 
 const size = PAGE_SIZE.BLOGS.SM;
 const page = 1;
 
 const BlogsPage = async () => {
-  const tags = "";
-  const blogsCount = await countBlogsByQuery({
+  const result = await searchBlogsByQuery({
     params: {
-      tags: tags ? tags : "",
-    },
-  });
-
-  const total = blogsCount.success ? blogsCount.data : 0;
-
-  const data = await searchBlogsByQuery({
-    params: {
-      tags: tags ?? "",
+      [BLOG_FILTER_NAMES.ISPUBLISHED]: "1",
     },
     page: Number(page),
     size: size,
   });
+
+  if (!result.success) {
+    throw new Error("Blogs not found");
+  }
+
+  const total = result.data.total;
+  const items = result.data.items;
 
   return (
     <div className="container flex flex-col gap-4">
@@ -46,7 +42,7 @@ const BlogsPage = async () => {
           </p>
         </div>
       </div>
-      <BlogsContent data={data} />
+      <BlogsContent items={items} />
       <BlogsPagination total={total} page={Number(page)} size={Number(size)} />
     </div>
   );

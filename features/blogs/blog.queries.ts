@@ -62,15 +62,16 @@ export const searchBlogsByQuery = safeQuery
     }),
   )
   .query(async ({ parsedInput: { params, page, size, sortBy, orderBy } }) => {
-    const filterQuery = createBlogQueryFilter({ input: params });
+    const query = createBlogQueryFilter({ input: params });
     const sortOptions = createBlogSortingOptions({ sortBy, orderBy });
 
     const input = {
-      filterQuery,
+      query,
       limit: size,
       sortOptions,
       skip: (page - 1) * size,
     };
+
     const blogs = await next_cache.blogs.searchByQuery(input);
 
     return blogs;

@@ -14,13 +14,17 @@ export const createBlogQueryFilter = ({
   input?: Record<string, string>;
 }): FilterQuery<BlogType> => {
   if (!input) return {};
-  const conditions: FilterQuery<BlogType>[] = [
-    {
-      isPublished: true,
-    },
-  ];
+  const conditions: FilterQuery<BlogType>[] = [];
+  const {
+    [BLOG_FILTER_NAMES.TAGS]: tagsFilter,
+    [BLOG_FILTER_NAMES.ISPUBLISHED]: isPublishedFilter,
+  } = input;
 
-  const { [BLOG_FILTER_NAMES.TAGS]: tagsFilter } = input;
+  if (isPublishedFilter) {
+    conditions.push({
+      isPublished: true,
+    });
+  }
 
   if (tagsFilter) {
     conditions.push({

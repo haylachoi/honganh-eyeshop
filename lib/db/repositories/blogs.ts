@@ -178,7 +178,7 @@ const searchBlogsIncludeTotalItemsByQuery = async ({
   limit = MAX_SEARCH_RESULT,
 }: {
   query: FilterQuery<BlogType>;
-  sortOptions?: Record<string, 1 | -1>;
+  sortOptions?: QueryOptions<BlogType>;
   skip?: number;
   limit?: number;
 }) => {
