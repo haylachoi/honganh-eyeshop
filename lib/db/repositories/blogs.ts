@@ -132,7 +132,6 @@ const getBlogBySlug = async (slug: string) => {
 };
 
 const countBlogsByQuery = async (filterQuery: FilterQuery<BlogType>) => {
-  await new Promise((r) => setTimeout(r, 2000));
   await connectToDatabase();
   const result = await Blog.countDocuments(filterQuery);
   return result;
