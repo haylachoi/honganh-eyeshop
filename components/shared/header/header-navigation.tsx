@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/custom-ui/accordion";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
+import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { cn, getLink } from "@/lib/utils";
 import { ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";
@@ -56,7 +57,9 @@ const links: LinkType[] = [
           },
           {
             title: "Giảm giá",
-            href: `${ENDPOINTS.ON_SALE}`,
+            href: getLink.search({
+              queries: [{ key: FILTER_NAME.SALE, value: "1" }],
+            }),
           },
           {
             title: "Sắp về",
