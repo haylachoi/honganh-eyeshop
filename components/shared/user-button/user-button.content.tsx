@@ -42,7 +42,7 @@ const UserButtonContent = ({ user }: { user: SafeUserInfoFromSession }) => {
               initials
             )}
           </div>
-          <span>{user.name}</span>
+          <span className="max-md:hidden truncate max-w-24">{user.name}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
