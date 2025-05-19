@@ -8,6 +8,7 @@ import { CartButton } from "./cart-button";
 import UserButton from "../user-button";
 import SearchBox from "./search-box";
 import Image from "next/image";
+import { RerenderOnNavigate } from "../rerender-on-navigate";
 
 const TopHeader = ({ className }: { className?: string }) => {
   return (
@@ -22,7 +23,9 @@ const TopHeader = ({ className }: { className?: string }) => {
             className="hidden"
           />
           <div className="max-lg:bg-background overflow-y-auto">
-            <NavigationMenu className="max-lg:container h-full" />
+            <RerenderOnNavigate>
+              <NavigationMenu className="max-lg:container h-full" />
+            </RerenderOnNavigate>
           </div>
           <label
             htmlFor="header-navigation-trigger"
