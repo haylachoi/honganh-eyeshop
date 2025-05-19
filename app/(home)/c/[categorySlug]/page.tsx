@@ -5,7 +5,10 @@ import {
   getFilterByCategorySlug,
   searchProductByQuery,
 } from "@/features/filter/filter.queries";
-import { getPriceFilterOptions } from "@/features/filter/filter.utils";
+import {
+  getPriceFilterOptions,
+  getSaleFilterOptions,
+} from "@/features/filter/filter.utils";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
@@ -82,9 +85,12 @@ const FilterProvider = async ({ categorySlug }: { categorySlug: string }) => {
   if (!result.success) {
     return <div>Error</div>;
   }
-  const filter = result.data;
 
-  filter.push(getPriceFilterOptions());
+  const filter = [
+    getSaleFilterOptions(),
+    ...result.data,
+    getPriceFilterOptions(),
+  ];
 
   return <FilterView attributes={filter} />;
 };

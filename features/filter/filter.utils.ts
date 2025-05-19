@@ -21,3 +21,16 @@ export const getPriceFilterOptions = () => {
     ],
   };
 };
+
+export const getSaleFilterOptions = () => {
+  return {
+    name: FILTER_NAME.SALE,
+    displayName: FILTER_NAME.SALE,
+    values: [
+      {
+        value: "Đang giảm giá",
+        valueSlug: "1",
+      },
+    ],
+  };
+};

@@ -3,4 +3,5 @@ export const FILTER_NAME = {
   PRICE: "price",
   SEARCH: "search",
   TAG: "tag",
+  SALE: "sale",
 };

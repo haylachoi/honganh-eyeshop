@@ -4,7 +4,10 @@ import { getAllCategories } from "@/features/categories/category.queries";
 import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { getGlobalFilters } from "@/features/filter/filter.queries";
 import { FilterGroupType } from "@/features/filter/filter.types";
-import { getPriceFilterOptions } from "@/features/filter/filter.utils";
+import {
+  getPriceFilterOptions,
+  getSaleFilterOptions,
+} from "@/features/filter/filter.utils";
 import { getAllTags } from "@/features/tags/tag.queries";
 
 export async function generateStaticParams() {
@@ -55,6 +58,7 @@ const FilterProvider = async () => {
   };
 
   const attributes = [
+    getSaleFilterOptions(),
     ...attrRes.data,
     categoryFilter,
     tagFilter,

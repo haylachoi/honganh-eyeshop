@@ -23,6 +23,7 @@ export const createProductQueryFilter = ({
     [FILTER_NAME.PRICE]: priceFilters,
     [FILTER_NAME.SEARCH]: searchFilter,
     [FILTER_NAME.TAG]: tagFilter,
+    [FILTER_NAME.SALE]: saleFilter,
     ...attrFilters
   } = input;
 
@@ -59,6 +60,12 @@ export const createProductQueryFilter = ({
     });
   }
 
+  if (saleFilter) {
+    conditions.push({
+      highestDiscount: { $gt: 0 },
+    });
+  }
+
   if (priceFilters) {
     const localFilter: FilterQuery<ProductType>[] = [];
     priceFilters.split(",").forEach((pfilter) => {
@@ -87,5 +94,6 @@ export const createProductQueryFilter = ({
     ? { $and: conditions }
     : {};
 
+  console.log(JSON.stringify(query, null, 2));
   return query;
 };
