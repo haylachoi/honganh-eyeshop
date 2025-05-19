@@ -14,12 +14,12 @@ import { ChevronDown } from "lucide-react";
 
 const SORT_DESCRIPTIONS = {
   [SORTING_OPTIONS.NAME]: {
-    [SORTING_OPTIONS.ASC]: "A to Z",
-    [SORTING_OPTIONS.DESC]: "Z to A",
+    [SORTING_OPTIONS.ASC]: "A - Z",
+    [SORTING_OPTIONS.DESC]: "Z - A",
   },
   [SORTING_OPTIONS.PRICE]: {
-    [SORTING_OPTIONS.ASC]: "Low to High",
-    [SORTING_OPTIONS.DESC]: "High to Low",
+    [SORTING_OPTIONS.ASC]: "Thấp - cao",
+    [SORTING_OPTIONS.DESC]: "Cao - thấp",
   },
 } as const;
 
