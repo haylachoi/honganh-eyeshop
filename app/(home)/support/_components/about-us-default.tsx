@@ -50,18 +50,18 @@ export const AboutUsDefaultPage = () => {
         </ul>
       </section>
 
-      <section className="text-center pt-8 border-t">
-        <p className="text-gray-700 mb-2">
-          📍 123 Đường ABC, Quận XYZ, TP. HCM
-        </p>
-        <p className="text-gray-700 mb-4">📞 Hotline: 0909 123 456</p>
-        <Link
-          href={ENDPOINTS.SUPPORT.CONTACT}
-          className="inline-block bg-primary text-white px-6 py-2 rounded hover:bg-primary/80 transition"
-        >
-          Liên hệ với chúng tôi
-        </Link>
-      </section>
+      {/* <section className="text-center pt-8 border-t"> */}
+      {/*   <p className="text-gray-700 mb-2"> */}
+      {/*     📍 123 Đường ABC, Quận XYZ, TP. HCM */}
+      {/*   </p> */}
+      {/*   <p className="text-gray-700 mb-4">📞 Hotline: 0909 123 456</p> */}
+      {/*   <Link */}
+      {/*     href={ENDPOINTS.SUPPORT.CONTACT} */}
+      {/*     className="inline-block bg-primary text-white px-6 py-2 rounded hover:bg-primary/80 transition" */}
+      {/*   > */}
+      {/*     Liên hệ với chúng tôi */}
+      {/*   </Link> */}
+      {/* </section> */}
     </main>
   );
 };
