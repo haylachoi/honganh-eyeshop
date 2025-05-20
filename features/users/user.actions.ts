@@ -23,6 +23,7 @@ import { VERIFYTOKEN_DURATION_IN_MILISECOND } from "../auth/auth.constants";
 import { sendVerificationEmail } from "../email/email.utils";
 import { IdSchema } from "@/lib/validator";
 import { ADMIN_ROLES } from "../authorization/authorization.constants";
+import { ERROR_MESSAGES } from "@/constants/messages.constants";
 
 const cacheTag = CACHE_CONFIG.USERS.ALL.TAGS[0];
 
@@ -39,7 +40,8 @@ export const createAdminAccountAction = getAuthActionClient({
   .schema(adminUserInputSchema)
   .action(async ({ parsedInput }) => {
     const salt = generateSalt();
-    const input = {
+
+    const input: Parameters<typeof userRepository.createUser>[0] = {
       name: parsedInput.name,
       email: parsedInput.email,
       phone: parsedInput.phone,
@@ -49,9 +51,11 @@ export const createAdminAccountAction = getAuthActionClient({
         password: parsedInput.password,
         salt,
       }),
-      isverified: false,
+      isVerified: false,
       isLocked: false,
+      provider: "credentials",
     };
+
     const user = await userRepository.createUser(input);
     revalidateTag(cacheTag);
 
@@ -205,6 +209,13 @@ export const changeCustomerPasswordAction = getAuthActionClient({
         throw new NotFoundError({
           resource: "user",
         });
+      }
+
+      if (!user.password || !user.salt) {
+        return {
+          success: false,
+          message: ERROR_MESSAGES.USER.NOT_CREDENTIALS,
+        };
       }
 
       const userHashedPw = await hashPassword({

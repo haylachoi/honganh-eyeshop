@@ -1,5 +1,6 @@
 import { MongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
+import { AUTH_PROVIDERS_TYPE_LIST } from "../users/user.constants";
 
 export const userNameSchema = z.string().min(2).trim();
 export const userEmailSchema = z.string().min(3).trim();
@@ -65,6 +66,18 @@ export const signUpSchema = z.object({
   phone: userPhoneSchema,
   password: passwordSchema,
   salt: saltSchema,
+  isVerified: z.boolean(),
+  provider: z.enum(AUTH_PROVIDERS_TYPE_LIST),
+  isLocked: z.boolean(),
+});
+
+export const userDbInputFromProviderSchema = z.object({
+  name: userNameSchema,
+  email: userEmailSchema,
+  role: roleSchema,
+  provider: z.enum(AUTH_PROVIDERS_TYPE_LIST),
+  providerId: z.string(),
+  isVerified: z.boolean(),
 });
 
 export const emailVerificationTypeSchema = z

@@ -5,10 +5,10 @@ import {
   phoneSchema,
 } from "@/lib/validator";
 import { z } from "zod";
+import { AUTH_PROVIDERS_TYPE_LIST } from "./user.constants";
 
 export const userNameSchema = z.string().min(2).trim();
 export const userEmailSchema = z.string().min(3).trim();
-export const userPhoneSchema = z.string().min(5).trim();
 const saltSchema = z.string();
 export const shippingAddressSchema = z.object({
   address: z.string().trim(),
@@ -25,12 +25,14 @@ const baseUserSchema = z.object({
   email: userEmailSchema,
   role: roleSchema,
   avatar: avatarSchema,
-  phone: userPhoneSchema,
-  password: passwordSchema,
-  salt: saltSchema,
+  phone: phoneSchema.optional(),
+  password: passwordSchema.optional(),
+  salt: saltSchema.optional(),
   isVerified: z.boolean().optional(),
   isLocked: z.boolean().optional(),
   shippingAddress: shippingAddressSchema.optional(),
+  providerId: z.string().optional(),
+  provider: z.enum(AUTH_PROVIDERS_TYPE_LIST).optional(),
 });
 
 export const userSchema = baseUserSchema
@@ -47,7 +49,7 @@ export const adminUserInputSchema = z
   .object({
     name: userNameSchema,
     email: userEmailSchema,
-    phone: userPhoneSchema,
+    phone: phoneSchema,
     role: roleSchema,
     password: passwordSchema,
     confirmPassword: passwordSchema,
@@ -74,6 +76,7 @@ export const safeUserInfoSchema = baseUserSchema
     avatar: true,
     phone: true,
     shippingAddress: true,
+    provider: true,
   })
   .extend({
     _id: MongoIdSchema,
@@ -99,7 +102,7 @@ export const safeAdminUserInfoSchema = baseUserSchema
 export const customerInfoUpdateSchema = z.object({
   id: IdSchema,
   name: z.string().min(2).trim(),
-  phone: z.string().min(5).trim(),
+  phone: phoneSchema.optional(),
 });
 
 export const shippingAddressUpdateSchema = shippingAddressSchema.extend({

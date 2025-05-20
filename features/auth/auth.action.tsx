@@ -29,7 +29,8 @@ export const signUpAction = actionClient
   .action(async ({ parsedInput }) => {
     const salt = generateSalt();
     const role: Role = "customer";
-    const input = {
+
+    const input: Parameters<typeof userRepository.createUser>[0] = {
       name: parsedInput.name,
       email: parsedInput.email,
       phone: parsedInput.phone,
@@ -39,7 +40,8 @@ export const signUpAction = actionClient
         password: parsedInput.password,
         salt,
       }),
-      isverified: false,
+      isVerified: false,
+      provider: "credentials",
       isLocked: false,
     };
     const user = await userRepository.createUser(input);
@@ -341,6 +343,13 @@ export const signIn = actionClient
         message: ERROR_MESSAGES.USER.NOT_FOUND,
       };
     }
+    if (user.provider !== "credentials") {
+      return {
+        success: false,
+        message: ERROR_MESSAGES.USER.NOT_CREDENTIALS,
+      };
+    }
+
     if (user.isLocked) {
       return {
         success: false,
@@ -354,6 +363,14 @@ export const signIn = actionClient
         needVerify: true,
       };
     }
+
+    if (!user.password || !user.salt) {
+      return {
+        success: false,
+        message: ERROR_MESSAGES.USER.NOT_CREDENTIALS,
+      };
+    }
+
     const isMatched = await comparePasswords({
       password: parsedInput.password,
       salt: user.salt,

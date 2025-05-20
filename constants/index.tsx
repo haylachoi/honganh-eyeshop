@@ -9,7 +9,7 @@ export const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
   process.env.BASE_URL ||
   process.env.NEXT_PUBLIC_BASE_URL ||
-  "https://localhost:3000";
+  "http://localhost:3000";
 
 export const SESSION_NAME = "session";
 export const MIN_CHARACTER_LENGTH_FOR_SEARCH = 3;

@@ -5,7 +5,10 @@ import User from "@/lib/db/model/user.model";
 import { UNVERIFIED_ACCOUNT_CLEANUP_DAYS } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id } from "@/types";
-import { SignUpType } from "@/features/auth/auth.type";
+import {
+  SignUpType,
+  UserDbInputFromProviderType,
+} from "@/features/auth/auth.type";
 import {
   safeAdminUserInfoSchema,
   userSchema,
@@ -72,6 +75,15 @@ const getUserByEmail = async ({
 const createUser = async (input: SignUpType) => {
   await connectToDatabase();
   const result = await User.create(input);
+  const user = userSchema.parse(result);
+  return user;
+};
+
+const createUserFromProvider = async (input: UserDbInputFromProviderType) => {
+  await connectToDatabase();
+  console.log("create", input);
+  const result = await User.create(input);
+  console.log("result", result);
   const user = userSchema.parse(result);
   return user;
 };
@@ -207,6 +219,7 @@ const userRepository = {
   getUserById,
   getSafeUserById,
   createUser,
+  createUserFromProvider,
   updateUserInfo,
   changePassword,
   deleteUsers,

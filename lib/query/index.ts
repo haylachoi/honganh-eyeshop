@@ -17,8 +17,8 @@ const DEFAULT_SERVER_ERROR_MESSAGE = "Something went wrong";
 
 export const safeQuery = new SafeQuery({
   errorHandler: (error): QueryError => {
-    console.error(error);
     if (error instanceof ZodError) {
+      console.error(error);
       return {
         message: DEFAULT_SERVER_ERROR_MESSAGE,
       };
@@ -28,13 +28,22 @@ export const safeQuery = new SafeQuery({
       error instanceof mongoose.mongo.MongoServerError &&
       error.code === 11000
     ) {
+      console.error(error);
       const duplicateField = Object.keys(error.keyValue)[0];
       return {
         message: `${duplicateField} already exists`,
       };
     }
 
+    if (error instanceof AuthenticationError) {
+      return {
+        message: error.message,
+        type: error.type,
+      };
+    }
+
     if (error instanceof AppError) {
+      console.error(error);
       return {
         message: error.message,
         type: error.type,

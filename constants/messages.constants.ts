@@ -39,6 +39,7 @@ export const ERROR_MESSAGES = {
   USER: {
     NOT_FOUND: "Người dùng không tồn tại",
     NOT_VERIFIED: "Tài khoản chưa được xác minh",
+    NOT_CREDENTIALS: "Tài khoản không được đăng ký với mật khẩu",
     LOCKED: "Tài khoản đã bị khóa",
   },
   BLOG: {

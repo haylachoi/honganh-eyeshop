@@ -11,6 +11,7 @@ import { LucideMail, LucideLock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
+import Image from "next/image";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -110,6 +111,21 @@ export default function LoginForm() {
             {isPending && <AnimateLoadingIcon />}
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={() => (window.location.href = "/api/auth/google")}
+          className="mt-4 cursor-pointer w-full flex items-center justify-center gap-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-none py-2 transition"
+        >
+          <Image
+            src="/google-icon.svg"
+            alt="Google"
+            height={20}
+            width={20}
+            className="size-5"
+          />
+          Đăng nhập với Google
+        </button>
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Chưa có tài khoản?{" "}
