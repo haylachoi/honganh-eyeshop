@@ -14,6 +14,7 @@ import {
   MAX_BLOG_PAGES_FOR_STATIC,
 } from "@/features/blogs/blog.contants";
 import { PAGE_NUMBER_REGEX } from "@/constants/regex";
+import { Metadata } from "next";
 
 const size = PAGE_SIZE.BLOGS.SM;
 const countBlogs = cache(() =>
@@ -23,6 +24,28 @@ const countBlogs = cache(() =>
     },
   }),
 );
+
+export const metadata: Metadata = {
+  title: "Blog | Hồng Anh - Chia sẻ kiến thức, mẹo hay",
+  description: `Tổng hợp các bài viết mới nhất về kính, thời trang và mẹo hay cho bạn từ Hồng Anh.`,
+  openGraph: {
+    title: "Blog | Hồng Anh",
+    description:
+      "Khám phá các bài viết chia sẻ kiến thức mới nhất từ Hồng Anh.",
+    url: getLink.blog.home({
+      page: 1,
+    }),
+    type: "website",
+    images: [
+      {
+        url: "/blogs-home-page.webp",
+        width: 1200,
+        height: 630,
+        alt: "Hồng Anh Blog",
+      },
+    ],
+  },
+};
 
 export async function generateStaticParams() {
   const result = await countBlogs();

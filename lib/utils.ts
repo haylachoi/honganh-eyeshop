@@ -276,7 +276,14 @@ export const getLink = {
     view({ blogSlug }: { blogSlug: string }) {
       return `${ENDPOINTS.BLOGS.view}/${blogSlug}`;
     },
-    home(props?: { page: number }) {
+    home(props?: { page: number; tag?: string }) {
+      if (props && props.tag) {
+        const { page, tag } = props;
+        if (!page) return `${ENDPOINTS.BLOGS.home}/tags/${tag}`;
+        if (page === 1) return `${ENDPOINTS.BLOGS.home}/tags/${tag}`;
+        return `${ENDPOINTS.BLOGS.home}/tags/${tag}/${getPageNumber(page)}`;
+      }
+
       if (!props) return `${ENDPOINTS.BLOGS.home}`;
       const { page } = props;
       if (page === 1) return `${ENDPOINTS.BLOGS.home}`;

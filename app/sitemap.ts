@@ -17,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: SITEMAP_CONFIG.HOME.CHANGE_FREQUENCY,
     },
     {
+      url: getFullLink(ENDPOINTS.BLOGS.home),
+      lastModified: new Date().toISOString(),
+      priority: SITEMAP_CONFIG.HOME.PRIORITY,
+      changeFrequency: SITEMAP_CONFIG.HOME.CHANGE_FREQUENCY,
+    },
+    {
       url: getFullLink(`${ENDPOINTS.SUPPORT.HOME}/sitemap/0.xml`),
     },
     ...buildSitemap(ENDPOINTS.CATEGORIES, SITE_COUNT.CATEGORY),

@@ -4,9 +4,34 @@ import { PAGE_SIZE } from "@/constants";
 import { BlogsPagination } from "./_components/blogs-pagination";
 import Image from "next/image";
 import { BLOG_FILTER_NAMES } from "@/features/blogs/blog.contants";
+import { getLink } from "@/lib/utils";
+import { Metadata } from "next";
 
 const size = PAGE_SIZE.BLOGS.SM;
 const page = 1;
+
+export const metadata: Metadata = {
+  title: "Blog | Hồng Anh - Chia sẻ kiến thức, mẹo hay",
+  description:
+    "Tổng hợp các bài viết mới nhất về kính, thời trang và mẹo hay cho bạn từ Hồng Anh.",
+  openGraph: {
+    title: "Blog | Hồng Anh",
+    description:
+      "Khám phá các bài viết chia sẻ kiến thức mới nhất từ Hồng Anh.",
+    url: getLink.blog.home({
+      page: 1,
+    }),
+    type: "website",
+    images: [
+      {
+        url: "/blogs-home-page.webp",
+        width: 1200,
+        height: 630,
+        alt: "Hồng Anh Blog",
+      },
+    ],
+  },
+};
 
 const BlogsPage = async () => {
   const result = await searchBlogsByQuery({

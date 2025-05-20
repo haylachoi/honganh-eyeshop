@@ -2,7 +2,8 @@
 
 import { BlogType, TOCEntry } from "@/features/blogs/blog.types";
 import { useActiveId } from "@/hooks/use-active-id";
-import { cn, dateFormatter } from "@/lib/utils";
+import { cn, dateFormatter, getLink } from "@/lib/utils";
+import Link from "next/link";
 import { JSX } from "react";
 
 const BlogView = ({ blog }: { blog: BlogType }) => {
@@ -26,7 +27,15 @@ const BlogView = ({ blog }: { blog: BlogType }) => {
           <ul className="flex gap-2">
             {blog.tags.map((tag) => (
               <li key={tag}>
-                <span className="text-primary/90 capitalize">#{tag}</span>
+                <Link
+                  href={getLink.blog.home({
+                    tag,
+                    page: 1,
+                  })}
+                  className="text-primary/90 capitalize"
+                >
+                  #{tag}
+                </Link>
               </li>
             ))}
           </ul>
