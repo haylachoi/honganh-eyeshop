@@ -7,6 +7,7 @@ import { APP_NAME, BASE_URL } from "@/constants";
 import { getFullLink } from "@/lib/utils";
 import { CustomerTestimonials } from "./_components/customer-testimonials";
 import Hero from "./_components/hero";
+import { LoadingIndicator } from "@/components/shared/loading-indicator";
 
 const sections = [
   Hero,
@@ -66,7 +67,7 @@ const HomePage = () => {
   return (
     <div className="space-y-12">
       {sections.map((Section, index) => (
-        <Suspense key={index} fallback={<div>Loading...</div>}>
+        <Suspense key={index} fallback={<LoadingIndicator />}>
           <Section />
         </Suspense>
       ))}

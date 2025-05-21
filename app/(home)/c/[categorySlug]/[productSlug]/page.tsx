@@ -14,6 +14,7 @@ import { getFullLink, getLink } from "@/lib/utils";
 import { APP_NAME, PRICE_CURRENCY } from "@/constants";
 import { ProductType } from "@/features/products/product.types";
 import { RelatedProductsView } from "./_components/related-products";
+import { LoadingIndicator } from "@/components/shared/loading-indicator";
 
 const getProduct = cache(
   async ({
@@ -105,11 +106,11 @@ const ProductPage = async ({ params }: { params: Params }) => {
       <ViewCount />
       <ProductView product={product} />
       <ReviewForm productId={product.id} />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingIndicator />}>
         <ReviewsProvider productId={product.id} />
       </Suspense>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingIndicator />}>
         <RelatedProductsProvider product={product} />
       </Suspense>
     </div>

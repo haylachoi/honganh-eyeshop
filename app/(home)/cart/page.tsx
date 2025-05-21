@@ -1,6 +1,7 @@
 import { getCartWithProductDetailBySession } from "@/features/cart/cart.queries";
 import { Suspense } from "react";
 import CartView from "./cart-view";
+import { LoadingIndicator } from "@/components/shared/loading-indicator";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,7 @@ const CartPage = async () => {
 
   return (
     <div className="container">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingIndicator />}>
         <CartView className="overflow-x-hidden" cartPromise={cartResult} />
       </Suspense>
     </div>

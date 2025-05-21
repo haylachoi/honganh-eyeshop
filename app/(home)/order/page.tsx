@@ -4,6 +4,7 @@ import {
 } from "@/features/orders/order.queries";
 import OrdersView from "./customer-orders-view";
 import { Suspense } from "react";
+import { LoadingIndicator } from "@/components/shared/loading-indicator";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ const CustomerOrderPage = async () => {
 
   return (
     <div className="container">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingIndicator />}>
         <OrdersView data={ordersPromise} total={total} size={size} />
       </Suspense>
     </div>
