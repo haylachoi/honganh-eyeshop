@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BannersSettingsType,
-  SellersSettingsUpdateType,
+  SellersSettingsType,
   SiteSettingsType,
   StoresSettingsUpdateType,
 } from "@/features/settings/settings.types";
@@ -15,6 +15,7 @@ import { BannersFormUpdate } from "./_components/banner-form.update";
 import { SupportPages } from "./_components/support-pages-";
 
 const siteDefaultValues: SiteSettingsType = DEFAULT_SETTINGS.site;
+
 const SiteSettingsProvider = async () => {
   const result = await getSettings();
   const defaultValues: SiteSettingsType =
@@ -23,11 +24,11 @@ const SiteSettingsProvider = async () => {
   return <SiteFormUpdate defaultValues={defaultValues} />;
 };
 
-const sellerDefaultValues: SellersSettingsUpdateType = DEFAULT_SETTINGS.sellers;
+const sellerDefaultValues: SellersSettingsType = DEFAULT_SETTINGS.sellers;
 
 const SellerSettingsProvider = async () => {
   const result = await getSettings();
-  const defaultValues: SellersSettingsUpdateType =
+  const defaultValues: SellersSettingsType =
     result.success && result.data.sellers
       ? result.data.sellers
       : sellerDefaultValues;

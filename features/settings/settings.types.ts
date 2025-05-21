@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   bannersSettingsSchema,
   bannersSettingsUpdateSchema,
+  sellersSettingsSchema,
   sellersSettingsUpdateSchema,
   settingsTypeSchema,
   siteSettingsTypeSchema,
@@ -18,7 +19,8 @@ export type SiteSettingsDbInputType = SiteSettingsType;
 export type SellersSettingsUpdateType = z.infer<
   typeof sellersSettingsUpdateSchema
 >;
-export type SellersSettingsDbInputType = SellersSettingsUpdateType;
+export type SellersSettingsType = z.infer<typeof sellersSettingsSchema>;
+export type SellersSettingsDbInputType = SellersSettingsType;
 
 export type StoresSettingsUpdateType = z.infer<
   typeof storesSettingsUpdateSchema

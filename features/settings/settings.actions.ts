@@ -11,9 +11,13 @@ import {
 import settingsRepository from "@/lib/db/repositories/settings";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { revalidateTag } from "next/cache";
-import { saveIcon, saveLogo } from "./settings.utils";
+import { saveLogo } from "./settings.utils";
 import { writePublicImageToDisk } from "@/lib/server-utils";
-import { BannersSettingsDbInputType } from "./settings.types";
+import {
+  BannersSettingsDbInputType,
+  SellersSettingsDbInputType,
+} from "./settings.types";
+import { DEFAULT_SETTINGS } from "./settings.constants";
 
 const resource: Resource = "settings";
 const cacheTag = CACHE_CONFIG.SETTINGS.ALL.TAGS[0];
@@ -70,18 +74,38 @@ export const createOrUpdateSellersSettingsAction = modifyQueryClient
   .action(async ({ parsedInput }) => {
     const icons = parsedInput.socialIcons;
 
+    const newIcons: SellersSettingsDbInputType["socialIcons"] =
+      DEFAULT_SETTINGS.sellers.socialIcons;
+
     for (const key of Object.keys(icons) as (keyof typeof icons)[]) {
       const icon = icons[key];
-      if (!icon.url.startsWith("/")) {
-        const path = await saveIcon({
-          content: icon.url,
+
+      if (icon.url instanceof File) {
+        const path = await writePublicImageToDisk({
+          file: icon.url,
+          to: "icons",
           fileName: `seller_${key}.svg`,
         });
-        icon.url = path;
+
+        newIcons[key] = {
+          ...icon,
+          url: path,
+        };
+      } else {
+        newIcons[key] = {
+          name: icon.name,
+          url: icon.url,
+        };
       }
     }
 
-    await settingsRepository.updateSellersSettings({ input: parsedInput });
+    await settingsRepository.updateSellersSettings({
+      input: {
+        ...parsedInput,
+        socialIcons: newIcons,
+      },
+    });
+
     revalidateTag(cacheTag);
   });
 

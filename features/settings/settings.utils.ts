@@ -1,27 +1,9 @@
-import {
-  getFullPublicAssetPath,
-  writeFileToDisk,
-  writeStringToFile,
-} from "@/lib/server-utils";
+import { getFullPublicAssetPath, writeFileToDisk } from "@/lib/server-utils";
 import { exec } from "child_process";
 import path from "path";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
-
-export const saveIcon = async ({
-  content,
-  fileName,
-  to = "/icons",
-}: {
-  content: string;
-  fileName: string;
-  to?: "/icons";
-}) => {
-  const path = await writeStringToFile({ content, fileName, to });
-
-  return path;
-};
 
 export const saveLogo = async ({ file }: { file: File }) => {
   const fileName = "logo.svg";

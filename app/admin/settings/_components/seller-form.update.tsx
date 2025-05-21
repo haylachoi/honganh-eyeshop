@@ -17,8 +17,11 @@ import FormCheckbox from "@/components/shared/form/form-check-box";
 import FormTextInput from "@/components/shared/form/form-text-input";
 import { useEffect } from "react";
 import { updateSearchParam } from "@/lib/utils";
-import { SellersSettingsUpdateType } from "@/features/settings/settings.types";
-import { UploadIcon } from "./upload-icon";
+import {
+  SellersSettingsType,
+  SellersSettingsUpdateType,
+} from "@/features/settings/settings.types";
+import { UploadFileIcon } from "./upload-icon";
 import { SettingCard } from "./setting-card";
 
 const updateSchema = sellersSettingsUpdateSchema;
@@ -29,7 +32,7 @@ const iconKeys = ["icon1", "icon2", "icon3"] as const;
 export const SellerFormUpdate = ({
   defaultValues,
 }: {
-  defaultValues: SellersFormType;
+  defaultValues: SellersSettingsType;
 }) => {
   const form = useForm<SellersFormType>({
     resolver: zodResolver(updateSchema),
@@ -92,10 +95,11 @@ export const SellerFormUpdate = ({
                     label={`Tên Social media ${index + 1}`}
                   />
                   {name?.trim() && (
-                    <UploadIcon
+                    <UploadFileIcon
                       name={`socialIcons.${key}.url`}
                       control={form.control}
                       defaultValue={defaultValues?.socialIcons?.[key]?.url}
+                      accept=".svg"
                     />
                   )}
                 </li>

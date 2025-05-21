@@ -68,6 +68,11 @@ export const sellerSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+const IconUpdateSchema = z.object({
+  name: z.string(),
+  url: z.union([z.string(), z.instanceof(File)]),
+});
+
 const iconSchema = z.object({
   name: z.string(),
   url: z.string(),
@@ -75,11 +80,20 @@ const iconSchema = z.object({
 
 export const sellersSettingsUpdateSchema = z.object({
   socialIcons: z.object({
+    icon1: IconUpdateSchema,
+    icon2: IconUpdateSchema,
+    icon3: IconUpdateSchema,
+  }),
+  list: z.array(sellerSchema).default([]),
+});
+
+export const sellersSettingsSchema = z.object({
+  socialIcons: z.object({
     icon1: iconSchema,
     icon2: iconSchema,
     icon3: iconSchema,
   }),
-  list: z.array(sellerSchema).default([]),
+  list: z.array(sellerSchema),
 });
 
 export const storeSchema = z.object({
@@ -224,7 +238,7 @@ export const bannersSettingsSchema = z.object({
 
 export const settingsTypeSchema = z.object({
   site: siteSettingsTypeSchema.optional(),
-  sellers: sellersSettingsUpdateSchema.optional(),
+  sellers: sellersSettingsSchema.optional(),
   stores: storesSettingsUpdateSchema.default([]),
   banners: bannersSettingsSchema.optional(),
 });
