@@ -70,9 +70,11 @@ const links: LinkType[] = [
         ],
       },
       {
-        title: "Kính rẻ",
-        image: "/navigation/cheap-glasses.jpg",
-        href: `${ENDPOINTS.CHEAP_GLASSES}`,
+        title: "Hot",
+        image: "/navigation/cheap-glasses.webp",
+        href: getLink.search({
+          queries: [{ key: "tag", value: "deal-hot" }],
+        }),
       },
     ],
   },
@@ -81,20 +83,22 @@ const links: LinkType[] = [
     contents: [
       {
         title: "Bài viết",
-        links: [
-          { title: "Kính", href: "/" },
-          { title: "Kính nam", href: "/" },
-          { title: "Kính nữ", href: "/" },
-        ],
+        links: [{ title: "", href: "/" }],
       },
       {
         title: "Hướng dẫn",
-        links: [{ title: "Mua online", href: `${ENDPOINTS.ORDER_ONLINE}` }],
+        links: [
+          {
+            title: "Hệ thống cửa hàng",
+            href: `${ENDPOINTS.SUPPORT.STORES}`,
+          },
+        ],
       },
       {
         title: "Hỗ trợ",
         links: [
           { title: "Về chúng tôi", href: `${ENDPOINTS.SUPPORT.ABOUT_US}` },
+          { title: "Liên hệ", href: `${ENDPOINTS.SUPPORT.CONTACT}` },
         ],
       },
     ],

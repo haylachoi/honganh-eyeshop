@@ -3,12 +3,17 @@ import { loadEnvConfig } from "@next/env";
 import { connectToDatabase } from ".";
 import User from "./model/user.model";
 import { generateSalt, hashPassword } from "../utils";
+import Tag from "./model/tag.model";
 
 loadEnvConfig(cwd());
 
 const main = async () => {
   try {
     await connectToDatabase(process.env.MONGODB_URI);
+
+    await Tag.create({
+      name: "deal-hot",
+    });
 
     const salt = generateSalt();
     await User.create({

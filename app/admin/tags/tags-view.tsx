@@ -48,13 +48,14 @@ const TagItem = ({ tag }: { tag: TagType }) => {
     return <TagFormUpdate defaultValues={tag} setIsEditing={setIsEditing} />;
   }
 
-  const isTrendingOrNewArrival =
-    tag.name === "trending" || tag.name === "new-arrival";
+  const isProtected = ["trending", "new-arrival", "deal-hot"].includes(
+    tag.name,
+  );
 
   return (
     <div className="grid grid-cols-[1fr_auto] gap-4 border-b border-input">
       <span>{tag.name}</span>
-      <div className={cn("", isTrendingOrNewArrival && "invisible")}>
+      <div className={cn("", isProtected && "invisible")}>
         <Button
           type="button"
           variant="ghost"
