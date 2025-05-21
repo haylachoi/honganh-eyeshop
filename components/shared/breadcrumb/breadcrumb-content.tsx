@@ -37,7 +37,7 @@ export const BreadcrumbContent = ({
   console.log(breadcrumbsMap, breadcrumbs);
 
   return (
-    <nav className="">
+    <nav className="py-2">
       <ul className="flex items-center gap-3">
         {breadcrumbs.map((crumb) => (
           <li
