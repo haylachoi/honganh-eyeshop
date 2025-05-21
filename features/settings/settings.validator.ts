@@ -148,6 +148,7 @@ export const storeSchema = z.object({
 });
 
 export const storesSettingsUpdateSchema = z.array(storeSchema);
+export const storesSettingsSchema = z.array(storeSchema);
 
 const benefitBaseSchema = {
   title: z.string().min(1, "Title is required"),
@@ -239,6 +240,6 @@ export const bannersSettingsSchema = z.object({
 export const settingsTypeSchema = z.object({
   site: siteSettingsTypeSchema.optional(),
   sellers: sellersSettingsSchema.optional(),
-  stores: storesSettingsUpdateSchema.default([]),
+  stores: storesSettingsSchema.default([]),
   banners: bannersSettingsSchema.optional(),
 });
