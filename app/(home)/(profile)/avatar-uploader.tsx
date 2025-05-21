@@ -9,15 +9,17 @@ import { updateCustomerAvatarAction } from "@/features/users/user.actions";
 import AnimateLoadingIcon from "@/components/custom-ui/animate-loading-icon";
 import { Camera, Check, X } from "lucide-react";
 import { Id } from "@/types";
-import { compressImage, formatFileSize } from "@/lib/utils";
+import { compressImage, formatFileSize, getInitials } from "@/lib/utils";
 import { MAX_IMAGE_SIZE } from "@/constants";
 
 export default function AvatarUpload({
   defaultUrl,
   id,
+  name,
 }: {
   id: Id;
   defaultUrl?: string;
+  name: string;
 }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -61,13 +63,17 @@ export default function AvatarUpload({
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <div className="relative size-32 rounded-full border border-foreground">
-        <Image
-          src={previewUrl || defaultUrl || "/avatar-placeholder.png"}
-          alt="Avatar"
-          fill
-          className="object-cover inline-block size-32 rounded-full"
-        />
+      <div className="relative size-32 rounded-full border border-foreground flex items-center justify-center bg-background text-primary font-bold text-4xl">
+        {previewUrl || defaultUrl ? (
+          <Image
+            src={previewUrl || defaultUrl || "/avatar-placeholder.svg"}
+            alt="Avatar"
+            fill
+            className="object-cover inline-block size-32 rounded-full"
+          />
+        ) : (
+          getInitials(name)
+        )}
         <div className="absolute bottom-2 right-2 z-10 bg-white/70 backdrop-blur-sm p-1 rounded-full cursor-pointer hover:bg-white transition">
           <label className="cursor-pointer">
             <Camera className="w-6 h-6 text-gray-700" />

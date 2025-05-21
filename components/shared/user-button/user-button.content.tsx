@@ -17,6 +17,7 @@ import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { getInitials } from "@/lib/utils";
 
 const UserButtonContent = ({ user }: { user: SafeUserInfoFromSession }) => {
   const { execute: logout } = useAction(logoutAction, {
@@ -80,10 +81,3 @@ const UserButtonContent = ({ user }: { user: SafeUserInfoFromSession }) => {
 };
 
 export default UserButtonContent;
-
-function getInitials(name: string) {
-  if (!name) return "";
-  const words = name.trim().split(" ");
-  if (words.length === 1) return words[0][0].toUpperCase();
-  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-}
