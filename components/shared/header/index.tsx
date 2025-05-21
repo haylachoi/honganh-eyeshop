@@ -1,11 +1,11 @@
 import React from "react";
-import TopHeader from "./top-header";
 import BottomHeader from "./bottom-header";
+import { ShowWhenScroll } from "./show-when-scroll";
 
 const Header = async () => {
   return (
-    <header className="bg-amber-300">
-      <TopHeader className="" />
+    <header className="">
+      <ShowWhenScroll />
       <BottomHeader />
     </header>
   );

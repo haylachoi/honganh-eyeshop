@@ -12,7 +12,13 @@ import { RerenderOnNavigate } from "../rerender-on-navigate";
 
 const TopHeader = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("h-[48px] w-full lg:relative z-index-40", className)}>
+    <div
+      id="top-header"
+      className={cn(
+        "h-[48px] w-full  bg-background border-b border-input",
+        className,
+      )}
+    >
       <div className="container h-full flex items-center justify-between gap-4">
         <Logo />
         <div className="max-lg:h-0 h-full max-lg:overflow-hidden max-lg:has-[>#header-navigation-trigger:checked]:grid max-lg:absolute z-50 left-0 top-[48px] max-lg:w-full max-lg:has-[>#header-navigation-trigger:checked]:h-[calc(100dvh-48px)] grid-rows-[auto_auto_1fr] transition-all">

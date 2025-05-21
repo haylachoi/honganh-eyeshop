@@ -277,7 +277,7 @@ const SearchBox = () => {
       {/* overlay */}
       <div
         className={cn(
-          "cursor-pointer fixed z-10 inset-0 top-[48px] bg-foreground/50 transition-opacity",
+          "cursor-pointer fixed z-10 h-dvh inset-0 top-[48px] bg-foreground/50 transition-opacity",
           isOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none",
