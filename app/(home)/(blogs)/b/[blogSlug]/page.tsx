@@ -10,6 +10,7 @@ import { cache } from "react";
 import { getFullLink, getLink } from "@/lib/utils";
 import { APP_NAME } from "@/constants";
 import { Metadata } from "next";
+import Image from "next/image";
 
 const getBlog = cache(async ({ blogSlug }: { blogSlug: string }) => {
   const result = await getBlogBySlug(blogSlug);
@@ -77,10 +78,9 @@ const BlogPage = async ({ params }: { params: params }) => {
     publisher: {
       "@type": "Organization",
       name: APP_NAME,
-      // todo: change logo url
       logo: {
         "@type": "ImageObject",
-        url: "https://www.honganh.com/logo.png",
+        url: getFullLink("/logo.svg"),
       },
     },
     mainEntityOfPage: {
@@ -97,8 +97,9 @@ const BlogPage = async ({ params }: { params: params }) => {
       />
       <BlogView blog={blog} />
       <div className="grid grid-cols-[100px_1fr] gap-4 my-8">
-        {/* todo: add logo */}
-        <div>logo</div>
+        <div>
+          <Image src="/logo.svg" alt="logo" width={100} height={100} />
+        </div>
         <div>
           <p className="text-xl font-bold mb-2">Kính mắt Hồng anh</p>
           <p>
