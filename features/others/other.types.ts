@@ -6,9 +6,3 @@ export type BenefitInfo = {
   description: string;
   Icon: IconType;
 };
-
-export type PolicyPreview = {
-  title: string;
-  description?: string;
-  slug: string;
-};

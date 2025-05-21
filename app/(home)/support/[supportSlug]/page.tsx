@@ -2,6 +2,8 @@ import { AVAILABEL_SUPPORT_PAGES } from "@/features/support-pages/support-pages.
 import { getSupportPages } from "@/features/support-pages/support-pages.queries";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { AboutUsDefaultPage } from "../_components/about-us-default";
+import { ContactDefaultPage } from "../_components/contact-default";
 
 type Params = Promise<{ supportSlug: string }>;
 
@@ -31,6 +33,19 @@ export const generateMetadata = async ({
   };
 };
 
+export const generateStaticParams = async () => {
+  return AVAILABEL_SUPPORT_PAGES.map((page) => ({
+    slug: page.slug,
+  }));
+};
+
+export const revalidate = 86400;
+
+const defaultPage: Record<string, React.FC> = {
+  "about-us": AboutUsDefaultPage,
+  contact: ContactDefaultPage,
+};
+
 const SupportPage = async ({ params }: { params: Params }) => {
   const { supportSlug } = await params;
 
@@ -43,8 +58,9 @@ const SupportPage = async ({ params }: { params: Params }) => {
   const supportPageResult = await getSupportPages({ slug: supportSlug });
 
   if (!supportPageResult.success) {
-    if (pageInfo.defaultPage) {
-      return pageInfo.defaultPage();
+    if (defaultPage[supportSlug]) {
+      const DefaultPage = defaultPage[supportSlug];
+      return <DefaultPage />;
     }
     return notFound();
   }

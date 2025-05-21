@@ -12,6 +12,7 @@ import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
 import { StoreFormUpdate } from "./_components/store-form.update";
 import { SearchParams } from "@/types";
 import { BannersFormUpdate } from "./_components/banner-form.update";
+import { SupportPages } from "./_components/support-pages-";
 
 const siteDefaultValues: SiteSettingsType = DEFAULT_SETTINGS.site;
 const SiteSettingsProvider = async () => {
@@ -87,6 +88,12 @@ const tabsInfo = [
     title: "Banner",
     description: "Thông tin về banner.",
     content: <BannersSettingsProvider />,
+  },
+  {
+    value: "support",
+    title: "Trang hỗ trợ",
+    description: "Thông tin về trang hỗ trợ.",
+    content: <SupportPages />,
   },
 ];
 

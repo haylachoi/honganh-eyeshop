@@ -1,7 +1,7 @@
 import { ENDPOINTS } from "@/constants/endpoints.constants";
-import { getPolicyPreviews } from "@/features/others/other.services";
 import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
 import { getSettings } from "@/features/settings/settings.queries";
+import { POLICY_PAGE } from "@/features/support-pages/support-pages.constants";
 import { cn, formatPhone } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
@@ -14,7 +14,7 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
 
   const siteSettings = settings.site || DEFAULT_SETTINGS.site;
 
-  const policyPreviews = await getPolicyPreviews();
+  const policyPages = POLICY_PAGE;
   return (
     <footer className={cn("bg-foreground text-background py-12", className)}>
       <div className="container grid lg:grid-cols-2 gap-6">
@@ -61,10 +61,10 @@ const Footer = async ({ className }: Readonly<{ className?: string }>) => {
           <div>
             <FooterGroupTitle title="Chính sách" />
             <ul>
-              {policyPreviews.map((policyPreview) => (
-                <li key={policyPreview.slug}>
-                  <Link href={`/${ENDPOINTS.POLICY}/${policyPreview.slug}`}>
-                    {policyPreview.title}
+              {policyPages.map((policy) => (
+                <li key={policy.slug}>
+                  <Link href={`${ENDPOINTS.SUPPORT.HOME}/${policy.slug}`}>
+                    {policy.title}
                   </Link>
                 </li>
               ))}

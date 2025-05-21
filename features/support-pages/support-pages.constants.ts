@@ -1,23 +1,4 @@
-import { AboutUsDefaultPage } from "@/app/(home)/support/_components/about-us-default";
-import { ContactDefaultPage } from "@/app/(home)/support/_components/contact-default";
-
-export const AVAILABEL_SUPPORT_PAGES = [
-  {
-    slug: "about-us",
-    title: "Về chúng tôi",
-    description:
-      "Tìm hiểu về Hồng Anh Eyewear – lịch sử, sứ mệnh và tầm nhìn phát triển.",
-    keywords: ["Hồng Anh", "giới thiệu", "về chúng tôi", "kính mắt", "eyewear"],
-    defaultPage: AboutUsDefaultPage,
-  },
-  {
-    slug: "contact",
-    title: "Liên hệ với chúng tôi",
-    description:
-      "Liên hệ với cửa hàng kính mắt Hồng Anh – chúng tôi luôn sẵn sàng hỗ trợ bạn.",
-    keywords: ["liên hệ", "kính mắt", "Hồng Anh", "địa chỉ", "số điện thoại"],
-    defaultPage: ContactDefaultPage,
-  },
+export const POLICY_PAGE = [
   {
     slug: "terms-of-service",
     title: "Điều khoản dịch vụ",
@@ -54,3 +35,23 @@ export const AVAILABEL_SUPPORT_PAGES = [
     keywords: ["đổi trả", "trả hàng", "kính mắt", "chính sách", "Hồng Anh"],
   },
 ];
+
+export const MODIFIABLE_SUPPORT_PAGES = [
+  ...POLICY_PAGE,
+  {
+    slug: "about-us",
+    title: "Về chúng tôi",
+    description:
+      "Tìm hiểu về Hồng Anh Eyewear – lịch sử, sứ mệnh và tầm nhìn phát triển.",
+    keywords: ["Hồng Anh", "giới thiệu", "về chúng tôi", "kính mắt", "eyewear"],
+  },
+  {
+    slug: "contact",
+    title: "Liên hệ với chúng tôi",
+    description:
+      "Liên hệ với cửa hàng kính mắt Hồng Anh – chúng tôi luôn sẵn sàng hỗ trợ bạn.",
+    keywords: ["liên hệ", "kính mắt", "Hồng Anh", "địa chỉ", "số điện thoại"],
+  },
+];
+
+export const AVAILABEL_SUPPORT_PAGES = [...MODIFIABLE_SUPPORT_PAGES];

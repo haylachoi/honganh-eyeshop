@@ -337,6 +337,9 @@ export const getLink = {
     home({ supportSlug }: { supportSlug: string }) {
       return `${ENDPOINTS.SUPPORT.HOME}/${supportSlug}`;
     },
+    update({ supportSlug }: { supportSlug: string }) {
+      return `${ADMIN_ENDPOINTS.SUPPORT.SEGMENT}/${supportSlug}/update`;
+    },
   },
 };
 
