@@ -20,7 +20,6 @@ type topContextProps = {
 };
 
 export const TopContext = React.createContext<topContextProps>({
-  // todo: create empty product
   product: {} as ProductType,
   currentImage: "",
   setCurrentImage: () => {},
