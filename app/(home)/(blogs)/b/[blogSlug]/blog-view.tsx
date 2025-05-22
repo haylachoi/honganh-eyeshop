@@ -44,7 +44,7 @@ const BlogView = ({ blog }: { blog: BlogType }) => {
       <div className="md:grid lg:grid-cols-[1fr_400px] gap-8 items-start">
         <div className="blog-container">
           <div
-            className="blog_post"
+            className="blog_post mt-2"
             dangerouslySetInnerHTML={{ __html: blog.content }}
           ></div>
         </div>
