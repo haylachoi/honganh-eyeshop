@@ -6,18 +6,20 @@ import { UserAvatar } from "@/components/shared/user-avatar";
 import { auth } from "@/features/auth/auth.auth";
 import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { SidebarToggle } from "./sidebar-toggle";
+import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
 export const AdminSidebar = async () => {
   const user = await auth();
   return (
-    <div className="@container sticky top-0 border-r border-input h-dvh grid grid-rows-[auto_1fr_auto] px-4 gap-4">
-      <div className="border-b border-input py-4">
-        <div className="flex items-center justify-between h-[60px]">
+    <div className="@container sticky top-0 border-r border-input h-dvh grid grid-rows-[auto_1fr_auto] px-4 gap-2">
+      <div className="py-2">
+        <div className="flex items-center justify-between h-[80px] overflow-hidden">
           <Link
             href={ENDPOINTS.HOME}
             className="text-2xl font-bold hidden @sidebar:inline-block"
           >
-            Logo
+            <Image src="/logo.svg" alt="logo" width={40} height={40} />
           </Link>
           <label className="cursor-pointer">
             <SidebarToggle />
@@ -25,13 +27,22 @@ export const AdminSidebar = async () => {
             <PanelLeftClose className="w-5 h-5 hidden @sidebar:inline-block" />
           </label>
         </div>
-        <div className="flex items-center gap-2">
-          <UserAvatar
-            user={user}
-            className="size-6 rounded-full overflow-hidden"
-          />
-          <p className="hidden @sidebar:inline-block">{user?.name}</p>
+        <Separator />
+        <div className="my-2">
+          <div className="flex items-center gap-2 h-[40px] my-2">
+            <UserAvatar
+              user={user}
+              className="size-6 rounded-full overflow-hidden border border-foreground shrink-0"
+            />
+            <div className="hidden @sidebar:inline-block font-medium">
+              {user?.name}
+            </div>
+          </div>
+          <div className="hidden @sidebar:inline-block text-center text-muted-foreground w-full">
+            {user?.role}
+          </div>
         </div>
+        <Separator />
       </div>
       <div className="overflow-y-auto">
         <AdminNavigation />
