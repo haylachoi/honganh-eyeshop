@@ -13,7 +13,7 @@ const ACTIONS = Object.keys(ACTION_LABELS) as (keyof typeof ACTION_LABELS)[];
 
 const PermissionsPage = () => {
   return (
-    <div className="p-6">
+    <div className="max-w-xl mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Quyền theo vai trò</h1>
 
       {SHOWN_ROLES.map((role) => {
