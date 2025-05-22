@@ -12,6 +12,7 @@ export const ENDPOINTS = {
     USER_INFO: "/user-info",
     USER_PASSWORD: "/user-password",
     USER_ADDRESS: "/user-address",
+    USER_PERMISSION: "/user-permission",
   },
   CART: "/cart",
   CHECKOUT: "/checkout",

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, MapPin, Lock } from "lucide-react";
+import { User, MapPin, Lock, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
+import { useAuth } from "@/hooks/use-auth";
 
 const info = [
   {
@@ -25,11 +26,24 @@ const info = [
 ];
 
 export function ProfileSidebar({ className }: { className?: string }) {
+  const { user } = useAuth();
   const pathname = usePathname();
+  const buttonInfo = info;
 
+  if (
+    user &&
+    user.role !== "customer" &&
+    !buttonInfo.some((item) => item.href === ENDPOINTS.PROFILE.USER_PERMISSION)
+  ) {
+    buttonInfo.push({
+      title: "Quyền truy cập",
+      href: ENDPOINTS.PROFILE.USER_PERMISSION,
+      icon: <Shield className="w-4 h-4 mr-2" />,
+    });
+  }
   return (
     <ul className={cn("", className)}>
-      {info.map((item) => (
+      {buttonInfo.map((item) => (
         <li key={item.title}>
           <Link
             href={item.href}
