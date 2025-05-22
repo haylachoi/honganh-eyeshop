@@ -15,13 +15,18 @@ const main = async () => {
       name: "deal-hot",
     });
 
+    const name = process.env.ADMIN_NAME;
+    const email = process.env.ADMIN_EMAIL;
+    const phone = process.env.ADMIN_PHONE;
+    const password = process.env.ADMIN_PASSWORD ?? "123456";
+
     const salt = generateSalt();
     await User.create({
-      name: "Nguyễn Văn Nhật",
-      email: "lala@gmail.com",
-      phone: "1234567890",
+      name,
+      email,
+      phone,
       password: await hashPassword({
-        password: "123",
+        password,
         salt,
       }),
       salt,
