@@ -291,6 +291,22 @@ const updateStatusOrder = async ({
   }
 };
 
+const updatePaymentStatusOrder = async ({
+  orderId,
+  status,
+}: {
+  orderId: string;
+  status: OrderType["paymentStatus"];
+}) => {
+  await connectToDatabase();
+  const updatedDoc = await Order.findOneAndUpdate(
+    { orderId },
+    { $set: { paymentStatus: status } },
+    { new: true },
+  );
+  return updatedDoc;
+};
+
 const ordersRepository = {
   getLast30DaysOrders,
   getOrderByOrderId,
@@ -299,6 +315,7 @@ const ordersRepository = {
   getOrdersByQuery,
   createOrder,
   updateStatusOrder,
+  updatePaymentStatusOrder,
   countOrdersByUserId,
   countOrders,
 };

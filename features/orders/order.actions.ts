@@ -17,7 +17,11 @@ import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
 import { IdSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
-import { createOrderImages, generateOrderId } from "./order.utils";
+import {
+  createOrderImages,
+  createVnpayUrl,
+  generateOrderId,
+} from "./order.utils";
 import { ORDER_STATUS_MAPS } from "./order.constants";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 
@@ -87,7 +91,7 @@ export const createOrderAction = customerActionClient
       items,
     });
 
-    const result = await ordersRepository.createOrder({
+    await ordersRepository.createOrder({
       input: {
         ...parsedInput,
         orderId,
@@ -113,7 +117,22 @@ export const createOrderAction = customerActionClient
     });
 
     revalidateTag(orderCacheTag);
-    return result;
+
+    if (parsedInput.paymentMethod === "vnpay") {
+      const paymentUrl = await createVnpayUrl({
+        orderId,
+        amount: total,
+      });
+
+      return {
+        success: true,
+        paymentUrl,
+      };
+    }
+
+    return {
+      success: true,
+    };
   });
 
 export const completeOrderAction = modifyOrderActionClient

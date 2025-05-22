@@ -6,10 +6,11 @@ import {
 } from "@/lib/validator";
 import { z } from "zod";
 import { variantAttributeSchema } from "../products/product.validator";
+import { PAYMENT_METHOD_LIST } from "./checkout.constants";
 
 // general
 const moneySchema = MoneySchema;
-export const paymentMethodSchema = z.enum(["cod", "online"]);
+export const paymentMethodSchema = z.enum(PAYMENT_METHOD_LIST);
 
 // base
 const customerInfoSchema = z.object({

@@ -1,6 +1,7 @@
 "use client";
 
 import SubmitButton from "@/components/custom-ui/submit-button";
+import { VNPAY_ENABLE } from "@/constants";
 import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { updateCartAfterOrder } from "@/features/cart/cart.utils";
 import { updateCheckoutAction } from "@/features/checkouts/checkout.actions";
@@ -16,6 +17,7 @@ import { useCheckoutStore } from "@/hooks/use-checkout";
 import { cn, currencyFormatter } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
 import { useDebounce } from "use-debounce";
@@ -96,13 +98,21 @@ const CheckoutForm = ({
   const [productErrors, setProductErrors] = React.useState<
     ValidatedItemInfo[] | undefined
   >(undefined);
+  const router = useRouter();
 
   const { execute, isPending } = useAction(createOrderAction, {
-    onSuccess: () => {
+    onSuccess: (result) => {
       if (!checkout.userId) {
         updateCartAfterOrder(checkout.items);
       }
+
       toast.success(TOAST_MESSAGES.ORDER.CREATE.SUCCESS);
+      if (result.data) {
+        const { success, paymentUrl } = result.data;
+        if (success && paymentUrl) {
+          router.push(paymentUrl);
+        }
+      }
     },
     onError: (e) => {
       const serverError = e.error?.serverError;
@@ -192,6 +202,17 @@ const CheckoutForm = ({
                 />
                 <span>COD</span>
               </label>
+              {VNPAY_ENABLE && (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="vnpay"
+                    defaultChecked={checkout.paymentMethod === "vnpay"}
+                  />
+                  <span>VNPAY</span>
+                </label>
+              )}
             </div>
           </div>
           <SubmitButton label="Đặt hàng" isLoading={isPending} />

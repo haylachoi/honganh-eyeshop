@@ -1,3 +1,4 @@
+import { PAYMENT_METHOD_LIST } from "@/features/checkouts/checkout.constants";
 import { checkoutTypeSchema } from "@/features/checkouts/checkout.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
@@ -34,9 +35,11 @@ const checkoutSchema = new Schema<CheckoutModel>(
       district: { type: String },
       city: { type: String },
     },
+    // todo: use enum
     paymentMethod: {
       type: String,
       required: true,
+      enum: PAYMENT_METHOD_LIST,
     },
     shippingFee: {
       type: Number,

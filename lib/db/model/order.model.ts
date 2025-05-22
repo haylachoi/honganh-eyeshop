@@ -1,3 +1,4 @@
+import { PAYMENT_METHOD_LIST } from "@/features/checkouts/checkout.constants";
 import {
   ORDER_STATUS,
   PAYMENT_STATUS,
@@ -112,7 +113,7 @@ const orderSchema = new Schema<OrderModel>(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["online", "cod"],
+      enum: PAYMENT_METHOD_LIST,
     },
     paymentStatus: {
       type: String,

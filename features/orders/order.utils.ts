@@ -4,6 +4,10 @@ import path from "path";
 import fs from "fs/promises";
 import { cwd } from "process";
 import { CheckoutItemType } from "../checkouts/checkout.types";
+import qs from "qs";
+import crypto from "crypto";
+import moment from "moment-timezone";
+
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 10);
 
 export const generateOrderId = () => {
@@ -50,4 +54,65 @@ export const createOrderImages = async ({
   );
 
   return updatedItems;
+};
+
+export function sortObjectVnPay(
+  obj: Record<string, string>,
+): Record<string, string> {
+  const sorted: Record<string, string> = {};
+  const keys = Object.keys(obj).map(encodeURIComponent).sort();
+
+  for (const key of keys) {
+    const decodedKey = decodeURIComponent(key);
+    const encodedValue = encodeURIComponent(obj[decodedKey]).replace(
+      /%20/g,
+      "+",
+    );
+    sorted[decodedKey] = encodedValue;
+  }
+
+  return sorted;
+}
+
+export const createVnpayUrl = async ({
+  orderId,
+  amount,
+}: {
+  orderId: string;
+  amount: number;
+}) => {
+  const clientIp = "127.0.0.1";
+  const tmnCode = process.env.VNP_TMNCODE!;
+  const secretKey = process.env.VNP_HASH_SECRET!;
+  const vnpUrl = process.env.VNP_URL!;
+  const returnUrl = `${process.env.BASE_URL}/checkout/vnpay-return`;
+
+  // Định dạng theo Asia/Ho_Chi_Minh chuẩn VNPAY yêu cầu
+  const createDate = moment().tz("Asia/Ho_Chi_Minh").format("YYYYMMDDHHmmss");
+
+  const vnp_Params: Record<string, string> = {
+    vnp_Version: "2.1.0",
+    vnp_Command: "pay",
+    vnp_TmnCode: tmnCode,
+    vnp_Locale: "vn",
+    vnp_CurrCode: "VND",
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: `Thanh toan don hang ${orderId}`,
+    vnp_OrderType: "other",
+    vnp_Amount: (amount * 100).toString(),
+    vnp_ReturnUrl: returnUrl,
+    vnp_IpAddr: clientIp,
+    vnp_CreateDate: createDate,
+  };
+
+  // Sắp xếp tham số theo thứ tự alphabet
+  const sortedParams = sortObjectVnPay(vnp_Params);
+
+  const signData = qs.stringify(sortedParams, { encode: false });
+  const hmac = crypto.createHmac("sha512", secretKey);
+  const secureHash = hmac.update(signData).digest("hex");
+
+  // Thêm secureHash vào cuối URL
+  const paymentUrl = `${vnpUrl}?${signData}&vnp_SecureHash=${secureHash}`;
+  return paymentUrl;
 };

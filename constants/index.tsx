@@ -108,3 +108,7 @@ export const ZALO_LINK = `https://zalo.me/${ZALO_PHONE}`;
 export const FACEBOOK_LINK = `https://m.me/${FACEBOOK_USERNAME}`;
 
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);
+export const VNPAY_ENABLE = false;
+// export const VNPAY_ENABLE = process.env.PAYMENT_METHODS
+//   ? process.env.PAYMENT_METHODS.split(",").includes("vnpay")
+//   : false;
