@@ -13,6 +13,7 @@ import { checkValidCouponCodeAction } from "@/features/coupons/coupon.actions";
 import { calculateDiscount } from "@/features/coupons/coupon.utils";
 import { createOrderAction } from "@/features/orders/order.actions";
 import { orderInputSchema } from "@/features/orders/order.validator";
+import { SafeUserInfo } from "@/features/users/user.types";
 import { useCheckoutStore } from "@/hooks/use-checkout";
 import { cn, currencyFormatter } from "@/lib/utils";
 import { useAction } from "next-safe-action/hooks";
@@ -34,64 +35,83 @@ const formatZodError = (error: ZodError): Record<string, string> => {
   }, {});
 };
 
-const getFormFields = (checkout: CheckoutType) => [
+const getFormFields = ({
+  checkout,
+  defaultUserInfo,
+}: {
+  checkout: CheckoutType;
+  defaultUserInfo: Pick<
+    SafeUserInfo,
+    "name" | "phone" | "email" | "shippingAddress"
+  >;
+}) => [
   {
     label: "Tên khách hàng",
     name: "customer.name",
     type: "text",
-    // value: checkout?.customer?.name,
-    value: checkout?.customer?.name || "hihi",
+    value: checkout?.customer?.name || defaultUserInfo.name,
   },
   {
     label: "Email",
     name: "customer.email",
     type: "text",
-    // value: checkout?.customer?.email,
-    value: checkout?.customer?.email || "hihi@gmail.com",
+    value: checkout?.customer?.email || defaultUserInfo.email,
   },
   {
     label: "Số điện thoại",
     name: "customer.phone",
     type: "tel",
-    // value: checkout?.customer?.phone,
-    value: checkout?.customer?.phone || "123456789",
+    value: checkout?.customer?.phone || defaultUserInfo.phone,
   },
   {
     label: "Địa chỉ",
     name: "shippingAddress.address",
     type: "text",
-    // value: checkout?.shippingAddress?.address,
-    value: checkout?.shippingAddress?.address || "address flsldfk",
+    value:
+      checkout?.shippingAddress?.address ||
+      defaultUserInfo.shippingAddress?.address ||
+      "",
   },
   {
     label: "Phường/xã",
     name: "shippingAddress.ward",
     type: "text",
-    // value: checkout?.shippingAddress?.ward,
-    value: checkout?.shippingAddress?.ward || "ward flsldfk",
+    value:
+      checkout?.shippingAddress?.ward ||
+      defaultUserInfo.shippingAddress?.ward ||
+      "",
   },
   {
     label: "Quận/huyện",
     name: "shippingAddress.district",
     type: "text",
-    // value: checkout?.shippingAddress?.district,
-    value: checkout?.shippingAddress?.district || "district flsldfk",
+    value:
+      checkout?.shippingAddress?.district ||
+      defaultUserInfo.shippingAddress?.district ||
+      "",
   },
   {
     label: "Thành phố/tỉnh",
     name: "shippingAddress.city",
     type: "text",
-    // value: checkout?.shippingAddress?.city,
-    value: checkout?.shippingAddress?.city || "city flsldfk",
+    value:
+      checkout?.shippingAddress?.city ||
+      defaultUserInfo.shippingAddress?.city ||
+      "",
   },
 ];
 
 const CheckoutForm = ({
   checkout,
   className,
+  defaultUserInfo,
 }: {
   checkout: CheckoutType;
   className?: string;
+  defaultUserInfo: Pick<
+    SafeUserInfo,
+    "name" | "phone" | "email" | "shippingAddress"
+  >;
 }) => {
   const coupon = useCheckoutStore((state) => state.coupon);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
@@ -178,7 +198,7 @@ const CheckoutForm = ({
     >
       <div className="">
         <form action={onSubmit} className="flex flex-col gap-4">
-          {getFormFields(checkout).map((field) => (
+          {getFormFields({ checkout, defaultUserInfo }).map((field) => (
             <FormInput
               key={field.name}
               label={field.label}

@@ -72,6 +72,7 @@ export const safeUserInfoFromSessionSchema = baseUserSchema
 export const safeUserInfoSchema = baseUserSchema
   .pick({
     name: true,
+    email: true,
     role: true,
     avatar: true,
     phone: true,

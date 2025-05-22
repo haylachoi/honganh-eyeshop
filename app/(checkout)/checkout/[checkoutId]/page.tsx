@@ -4,10 +4,43 @@ import { CompletedCheckoutView } from "./completed-checkout-view";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
+import { auth } from "@/features/auth/auth.auth";
+import { SafeUserInfo } from "@/features/users/user.types";
+import { getSafeUserInfo } from "@/features/users/user.queries";
 
 type Params = Promise<{ checkoutId: string }>;
 const CheckoutPage = async ({ params }: { params: Params }) => {
   const { checkoutId } = await params;
+  const sessionUser = await auth();
+
+  let defaultUserInfo: Pick<
+    SafeUserInfo,
+    "name" | "phone" | "email" | "shippingAddress"
+  > = {
+    name: "",
+    phone: "",
+    email: "",
+    shippingAddress: {
+      address: "",
+      ward: "",
+      district: "",
+      city: "",
+    },
+  };
+
+  if (sessionUser) {
+    const userResult = await getSafeUserInfo();
+    if (userResult.success) {
+      const user = userResult.data;
+      defaultUserInfo = {
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+        shippingAddress: user.shippingAddress,
+      };
+    }
+  }
+
   const checkoutResult = await getCheckoutById(checkoutId);
   if (!checkoutResult.success) {
     return <CheckoutNotFound />;
@@ -23,7 +56,11 @@ const CheckoutPage = async ({ params }: { params: Params }) => {
         <>
           <h1 className="container text-3xl font-bold mb-4">Checkout</h1>
           <div className="lg:bg-[linear-gradient(to_right,var(--background)_50%,var(--secondary)_50%)] lg:border-t border-input pt-4">
-            <CheckoutForm className="container" checkout={checkout} />
+            <CheckoutForm
+              className="container"
+              checkout={checkout}
+              defaultUserInfo={defaultUserInfo}
+            />
           </div>
         </>
       )}
