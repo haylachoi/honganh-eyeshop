@@ -143,9 +143,26 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
                               <Link
                                 className="inline-block w-full"
                                 href={link.href}
+                                // close nav bar when navigate
+                                onClick={() => {
+                                  const trigger = document.getElementById(
+                                    "header-navigation-trigger",
+                                  ) as HTMLInputElement | null;
+                                  if (trigger?.checked) {
+                                    trigger.checked = false;
+                                  }
+
+                                  const mainNavEle = document.querySelector(
+                                    "[data-accordion-active]:hover",
+                                  );
+                                  mainNavEle?.classList.remove("group");
+                                  setTimeout(() => {
+                                    mainNavEle?.classList.add("group");
+                                  }, 0);
+                                }}
                               >
                                 {link.title}
-                              </Link>{" "}
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -155,7 +172,17 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
 
                   return (
                     <li key={content.title}>
-                      <Link href={content.href}>
+                      <Link
+                        href={content.href}
+                        onClick={() => {
+                          const trigger = document.getElementById(
+                            "header-navigation-trigger",
+                          ) as HTMLInputElement | undefined;
+                          if (trigger?.checked) {
+                            trigger.checked = false;
+                          }
+                        }}
+                      >
                         <Image
                           className="w-full h-auto max-h-[200px] object-cover object-center"
                           src={content.image}
