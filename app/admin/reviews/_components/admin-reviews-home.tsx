@@ -36,6 +36,7 @@ import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useFetchReviews } from "../_hooks/use-fetch-reviews";
 import { ColumnHeaderButton } from "@/components/shared/table/column-header-button";
+import { dateFormatter } from "@/lib/utils";
 
 export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   {
@@ -103,6 +104,21 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("rating")}</div>
+    ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: () => {
+      return (
+        <ColumnHeaderButton onSort="createdAt">
+          Ngày tạo <ArrowUpDown />
+        </ColumnHeaderButton>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">
+        {dateFormatter.format(new Date(row.original.createdAt))}
+      </div>
     ),
   },
   {
