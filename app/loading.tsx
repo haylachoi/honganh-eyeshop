@@ -1,5 +1,5 @@
+import { GlobalLoading } from "@/components/shared/global-loading";
+
 export default function Loading() {
-  return (
-    <div className="container flex justify-center items-center">Loading...</div>
-  );
+  return <GlobalLoading />;
 }

@@ -1,3 +1,5 @@
+import { GlobalLoading } from "@/components/shared/global-loading";
+
 export default function Loading() {
-  return <div className="loading">Loading...</div>;
+  <GlobalLoading />;
 }
