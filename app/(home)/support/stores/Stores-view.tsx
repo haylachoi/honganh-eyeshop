@@ -59,7 +59,7 @@ export const StoresView = ({ stores }: { stores: SettingsType["stores"] }) => {
       </div>
 
       {/* Danh sách cửa hàng + bộ lọc */}
-      <div className="overflow-y-auto space-y-4 pr-2">
+      <div className="overflow-y-auto space-y-4">
         {/* Bộ lọc */}
         <div className="flex flex-col gap-2 md:flex-row">
           <select
