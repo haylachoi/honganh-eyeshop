@@ -26,8 +26,8 @@ export async function POST() {
     const timeSinceLastUpdate = now - viewCache.lastUpdated;
 
     const shouldUpdate =
-      viewCache.count >= VIEWS_COUNT_CONFIG.MAX_VIEW_ACCUMULATION ||
-      timeSinceLastUpdate >= VIEWS_COUNT_CONFIG.DB_FLUSH_THRESHOLD;
+      viewCache.count >= VIEWS_COUNT_CONFIG.maxViewAccumulate ||
+      timeSinceLastUpdate >= VIEWS_COUNT_CONFIG.dbFlushThreshold;
 
     if (shouldUpdate) {
       await dashboardRepository.addTotalViews({

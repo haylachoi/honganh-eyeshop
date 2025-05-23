@@ -1,0 +1,19 @@
+{
+  "appName": "Kính mắt Hồng Anh",
+  "slogan": "Nét đẹp từ ánh nhìn đầu tiên",
+  "sessionName": "session",
+  "minCharacterLengthForSearch": 3,
+  "maxSearchResult": 10,
+  "maxImageSize": 102400,
+  "priceCurrency": "VND",
+  "unVerifiedAccountCleanupDays": 7,
+  "shippingFee": 0,
+  "paymentMethod": {
+    "vnpay": false
+  },
+  "viewCount": {
+    "delayThreshold": 5000,
+    "maxViewAccumulate": 10,
+    "dbFlushThreshold": 120000
+  }
+}

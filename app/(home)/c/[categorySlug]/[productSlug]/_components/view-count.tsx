@@ -21,7 +21,7 @@ export const ViewCount = () => {
           "Content-Type": "application/json",
         },
       });
-    }, VIEWS_COUNT_CONFIG.DELAY_THRESHOLD);
+    }, VIEWS_COUNT_CONFIG.delayThreshold);
 
     return () => clearTimeout(timer);
   }, [user]);
