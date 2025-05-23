@@ -6,6 +6,7 @@ import { BlogsContent } from "../../_components/blogs-content";
 import { BlogsPagination } from "../../_components/blogs-pagination";
 import { getFullLink, getLink } from "@/lib/utils";
 import { Metadata } from "next";
+import { getSettings } from "@/features/settings/settings.services";
 
 const size = PAGE_SIZE.BLOGS.SM;
 const page = 1;
@@ -20,6 +21,9 @@ export const generateMetadata = async ({
   params: Promise<Params>;
 }): Promise<Metadata> => {
   const { blogTag } = await params;
+  const settings = await getSettings();
+  const appName = settings?.site?.name || APP_NAME;
+
   return {
     title: "Blog | Hồng Anh - Chia sẻ kiến thức, mẹo hay",
     description: `Tổng hợp các bài viết mới nhất về kính, thời trang và mẹo hay cho bạn liên quan đến #${blogTag} từ Hồng Anh.`,
@@ -34,7 +38,7 @@ export const generateMetadata = async ({
     openGraph: {
       locale: "vi_VN",
       type: "article",
-      siteName: APP_NAME,
+      siteName: appName,
       url: getFullLink(getLink.blog.home({ page: 1, tag: blogTag })),
       images: [
         {

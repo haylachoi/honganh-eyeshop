@@ -89,24 +89,6 @@ export const VIEWS_COUNT_CONFIG = {
   DB_FLUSH_THRESHOLD: 60 * 1000 * 2,
 };
 
-const ADDRESS = "123 Nguyễn Văn Nhật, Đồng Nai, Hà Nội";
-const PHONE = "123-456-7890";
-const EMAIL = "nv@nv.com.vn";
-export const PHONE_LINK = `tel:${PHONE}`;
-export const EMAIL_LINK = `mailto:${EMAIL}`;
-
-export const STORE_INFO = {
-  NAME: APP_NAME,
-  ADDRESS,
-  PHONE,
-  EMAIL,
-};
-
-const ZALO_PHONE = process.env.NEXT_PUBLIC_ZALO_PHONE;
-const FACEBOOK_USERNAME = process.env.NEXT_PUBLIC_FACEBOOK_USERNAME;
-export const ZALO_LINK = `https://zalo.me/${ZALO_PHONE}`;
-export const FACEBOOK_LINK = `https://m.me/${FACEBOOK_USERNAME}`;
-
 export const SHIPPING_FEE = Number(process.env.SHIPPING_FEE ?? 0);
 export const VNPAY_ENABLE = false;
 // export const VNPAY_ENABLE = process.env.PAYMENT_METHODS

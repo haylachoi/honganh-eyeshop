@@ -15,6 +15,7 @@ import { APP_NAME, PRICE_CURRENCY } from "@/constants";
 import { ProductType } from "@/features/products/product.types";
 import { RelatedProductsView } from "./_components/related-products";
 import { LoadingIndicator } from "@/components/shared/loading-indicator";
+import { getSettings } from "@/features/settings/settings.services";
 
 const getProduct = cache(
   async ({
@@ -38,6 +39,8 @@ type Params = Promise<{ categorySlug: string; productSlug: string }>;
 export const generateMetadata = async ({ params }: { params: Params }) => {
   const { categorySlug, productSlug } = await params;
   const product = await getProduct({ categorySlug, productSlug });
+  const settings = await getSettings();
+  const appName = settings?.site?.name || APP_NAME;
 
   return {
     title: product.name,
@@ -55,7 +58,7 @@ export const generateMetadata = async ({ params }: { params: Params }) => {
     openGraph: {
       locale: "vi_VN",
       type: "website",
-      siteName: APP_NAME,
+      siteName: appName,
       url: getFullLink(getLink.product.home({ categorySlug, productSlug })),
       images: [
         {

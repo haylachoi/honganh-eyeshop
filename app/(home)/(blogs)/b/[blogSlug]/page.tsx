@@ -11,6 +11,7 @@ import { getFullLink, getLink } from "@/lib/utils";
 import { APP_NAME } from "@/constants";
 import { Metadata } from "next";
 import Image from "next/image";
+import { getSettings } from "@/features/settings/settings.services";
 
 const getBlog = cache(async ({ blogSlug }: { blogSlug: string }) => {
   const result = await getBlogBySlug(blogSlug);
@@ -29,7 +30,13 @@ export const generateMetadata = async ({
   params: params;
 }): Promise<Metadata> => {
   const { blogSlug } = await params;
-  const blog = await getBlog({ blogSlug });
+  const [blog, settings] = await Promise.all([
+    getBlog({ blogSlug }),
+    getSettings(),
+  ]);
+
+  const appName = settings?.site?.name || APP_NAME;
+
   return {
     title: blog.title,
     description: blog.description,
@@ -44,7 +51,7 @@ export const generateMetadata = async ({
     openGraph: {
       locale: "vi_VN",
       type: "article",
-      siteName: APP_NAME,
+      siteName: appName,
       url: getFullLink(getLink.blog.view({ blogSlug })),
       images: [
         {
@@ -60,8 +67,12 @@ export const generateMetadata = async ({
 
 const BlogPage = async ({ params }: { params: params }) => {
   const { blogSlug } = await params;
+  const [settings, blog] = await Promise.all([
+    getSettings(),
+    getBlog({ blogSlug }),
+  ]);
 
-  const blog = await getBlog({ blogSlug });
+  const appName = settings?.site?.name || APP_NAME;
 
   const blogJsonLd = {
     "@context": "https://schema.org",
@@ -77,7 +88,7 @@ const BlogPage = async ({ params }: { params: params }) => {
     },
     publisher: {
       "@type": "Organization",
-      name: APP_NAME,
+      name: appName,
       logo: {
         "@type": "ImageObject",
         url: getFullLink("/logo.svg"),

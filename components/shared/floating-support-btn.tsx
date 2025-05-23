@@ -1,14 +1,14 @@
-import { getSettings } from "@/features/settings/settings.queries";
+import { getSettings } from "@/features/settings/settings.services";
 import Image from "next/image";
 import Link from "next/link";
 
 export const FloatingSupportBtn = async () => {
-  const settingsResult = await getSettings();
-  if (!settingsResult.success) {
+  const settings = await getSettings();
+  const siteSettings = settings?.site;
+  if (!siteSettings) {
     return null;
   }
-  const settings = settingsResult.data;
-  const siteSettings = settings.site;
+
   return (
     <ul className="fixed bottom-[30px] right-[10px] flex flex-col gap-2">
       {siteSettings?.socialLinks

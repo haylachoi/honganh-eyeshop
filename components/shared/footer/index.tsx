@@ -1,20 +1,16 @@
 import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
-import { getSettings } from "@/features/settings/settings.queries";
+import { getSettings } from "@/features/settings/settings.services";
 import { POLICY_PAGE } from "@/features/support-pages/support-pages.constants";
 import { cn, formatPhone } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 
 const Footer = async ({ className }: Readonly<{ className?: string }>) => {
-  const settingsResult = await getSettings();
-  const settings = settingsResult.success
-    ? settingsResult.data
-    : DEFAULT_SETTINGS;
-
-  const siteSettings = settings.site || DEFAULT_SETTINGS.site;
-
+  const settings = await getSettings();
+  const siteSettings = settings?.site || DEFAULT_SETTINGS.site;
   const policyPages = POLICY_PAGE;
+
   return (
     <footer className={cn("bg-foreground text-background py-12", className)}>
       <div className="container grid lg:grid-cols-2 gap-6">

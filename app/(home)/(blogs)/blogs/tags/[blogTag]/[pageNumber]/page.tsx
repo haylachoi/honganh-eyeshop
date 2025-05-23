@@ -8,6 +8,7 @@ import { PAGE_NUMBER_REGEX } from "@/constants/regex";
 import { BlogsContent } from "../../../_components/blogs-content";
 import { BlogsPagination } from "../../../_components/blogs-pagination";
 import { Metadata } from "next";
+import { getSettings } from "@/features/settings/settings.services";
 
 const size = PAGE_SIZE.BLOGS.SM;
 
@@ -20,6 +21,8 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   const { blogTag, pageNumber } = await params;
   const page = Number(pageNumber.match(PAGE_NUMBER_REGEX)?.[1]);
+  const settings = await getSettings();
+  const appName = settings?.site?.name || APP_NAME;
 
   return {
     title: "Blog | Hồng Anh - Chia sẻ kiến thức, mẹo hay",
@@ -35,7 +38,7 @@ export const generateMetadata = async ({
     openGraph: {
       locale: "vi_VN",
       type: "article",
-      siteName: APP_NAME,
+      siteName: appName,
       url: getLink.blog.home({ page, tag: blogTag }),
       images: [
         {

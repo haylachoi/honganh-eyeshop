@@ -1,5 +1,5 @@
-import { getSettings } from "@/features/settings/settings.queries";
 import { getBenefitInfos } from "@/features/others/other.services";
+import { getSettings } from "@/features/settings/settings.services";
 
 export const Benefit = ({ className }: { className?: string }) => {
   return (
@@ -10,8 +10,8 @@ export const Benefit = ({ className }: { className?: string }) => {
 };
 
 const BenefitProvider = async () => {
-  const result = await getSettings();
-  const benefits = result.success ? result.data.banners?.benefits : null;
+  const settings = await getSettings();
+  const benefits = settings?.banners?.benefits;
 
   if (!benefits || !benefits.isActive) {
     const benefitInfos = await getBenefitInfos();

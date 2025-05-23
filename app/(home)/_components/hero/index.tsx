@@ -1,8 +1,8 @@
 import { MoveRightIcon } from "lucide-react";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import { getSettings } from "@/features/settings/settings.queries";
 import { Benefit } from "@/components/shared/benefit";
+import { getSettings } from "@/features/settings/settings.services";
 
 const Hero = async () => {
   return (
@@ -55,8 +55,8 @@ const getPositionStyle = (position: {
 };
 
 const HeroProvider = async () => {
-  const result = await getSettings();
-  const homeHero = result.success ? result.data.banners?.homeHero : null;
+  const settings = await getSettings();
+  const homeHero = settings?.banners?.homeHero;
   if (!homeHero || !homeHero.isActive) {
     return <HeroDefault />;
   }

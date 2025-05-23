@@ -1,15 +1,12 @@
 import { DEFAULT_SETTINGS } from "@/features/settings/settings.constants";
-import { getSettings } from "@/features/settings/settings.queries";
 import { StoresView } from "./Stores-view";
 import { SupportPagesHeading } from "../_components/heading";
+import { getSettings } from "@/features/settings/settings.services";
 
 const StoresPage = async () => {
-  const settingsResult = await getSettings();
-  const settings = settingsResult.success
-    ? settingsResult.data
-    : DEFAULT_SETTINGS;
+  const settings = await getSettings();
 
-  const storesSettings = settings.stores || DEFAULT_SETTINGS.stores;
+  const storesSettings = settings?.stores ?? DEFAULT_SETTINGS.stores;
 
   return (
     <div className="container">

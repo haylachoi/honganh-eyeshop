@@ -1,13 +1,11 @@
 import { SupportPagesHeading } from "../_components/heading";
-import { getSettings } from "@/features/settings/settings.queries";
 import { SettingsType } from "@/features/settings/settings.types";
 import Image from "next/image";
 import { formatPhone } from "@/lib/utils";
+import { getSettings } from "@/features/settings/settings.services";
 
 export const ContactDefaultPage = async () => {
-  const settingsResult = await getSettings();
-  const settings = settingsResult.success ? settingsResult.data : null;
-
+  const settings = await getSettings();
   return (
     <div className="container lg:max-w-4xl mx-auto py-12">
       <SupportPagesHeading>Liên hệ với chúng tôi</SupportPagesHeading>
