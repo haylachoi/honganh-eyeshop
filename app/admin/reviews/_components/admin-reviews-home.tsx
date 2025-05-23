@@ -11,8 +11,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
@@ -25,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,8 +31,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-// import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
+import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useFetchReviews } from "../_hooks/use-fetch-reviews";
+import { ColumnHeaderButton } from "@/components/shared/table/column-header-button";
 
 export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   {
@@ -65,15 +65,12 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   {
     accessorFn: (row) => row.user.name,
     id: "user.name",
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <ColumnHeaderButton onSort="user.name">
           Người dùng
           <ArrowUpDown />
-        </Button>
+        </ColumnHeaderButton>
       );
     },
     cell: ({ row }) => (
@@ -83,15 +80,12 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   {
     accessorFn: (row) => row.product?.name,
     id: "product.name",
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <ColumnHeaderButton onSort="product.name">
           Sản phẩm
           <ArrowUpDown />
-        </Button>
+        </ColumnHeaderButton>
       );
     },
     cell: ({ row }) => (
@@ -100,15 +94,11 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   },
   {
     accessorKey: "rating",
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Rating
-          <ArrowUpDown />
-        </Button>
+        <ColumnHeaderButton onSort="rating">
+          Rating <ArrowUpDown />
+        </ColumnHeaderButton>
       );
     },
     cell: ({ row }) => (
@@ -117,15 +107,11 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   },
   {
     accessorKey: "isDeleted",
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Đã Ẩn
-          <ArrowUpDown />
-        </Button>
+        <ColumnHeaderButton onSort="isDeleted">
+          Đã ẩn <ArrowUpDown />
+        </ColumnHeaderButton>
       );
     },
     cell: ({ row }) => (
@@ -141,17 +127,32 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
   },
   {
     id: "actions",
-    // header: ({ table }) => <HeaderButton table={table} />,
     enableHiding: false,
     cell: ({ row }) => <ActionButton review={row.original} />,
   },
 ];
-export const AdminReviewsHome = ({
-  reviews,
-}: {
-  reviews: ReviewWithFullInfoType[];
-}) => {
+
+export const AdminReviewsHome = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") ?? "1");
+  const size = parseInt(
+    searchParams.get("size") || PAGE_SIZE.REVIEWS.SM.toString(),
+    10,
+  );
+
+  const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
+  const orderBy =
+    searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const { data, isPending } = useFetchReviews({
+    page,
+    size,
+    sortBy,
+    orderBy,
+  });
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -159,14 +160,22 @@ export const AdminReviewsHome = ({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const total = data?.total || 0;
+  const totalPages = Math.ceil(total / size);
+  const goToPage = (newPage: number) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`);
+  };
+
   const table = useReactTable({
-    data: reviews,
+    data: data?.items || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
@@ -181,16 +190,16 @@ export const AdminReviewsHome = ({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Lọc tên sp..."
-          value={
-            (table.getColumn("product.name")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("product.name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {/* <Input */}
+        {/*   placeholder="Lọc tên..." */}
+        {/*   value={ */}
+        {/*     (table.getColumn("product.name")?.getFilterValue() as string) ?? "" */}
+        {/*   } */}
+        {/*   onChange={(event) => */}
+        {/*     table.getColumn("product.name")?.setFilterValue(event.target.value) */}
+        {/*   } */}
+        {/*   className="max-w-sm" */}
+        {/* /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -239,7 +248,16 @@ export const AdminReviewsHome = ({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isPending ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Đang tải...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -261,7 +279,7 @@ export const AdminReviewsHome = ({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Không có dữ liệu
                 </TableCell>
               </TableRow>
             )}
@@ -277,16 +295,16 @@ export const AdminReviewsHome = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => goToPage(page - 1)}
+            disabled={page <= 1 || isPending}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => goToPage(page + 1)}
+            disabled={page >= totalPages || isPending}
           >
             Next
           </Button>

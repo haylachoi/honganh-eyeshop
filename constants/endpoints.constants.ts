@@ -64,4 +64,6 @@ export const ADMIN_ENDPOINTS = {
 
 export const API_ENDPOINTS = {
   VIEW_COUNT: "/api/viewCount",
+  reviews: "/api/review",
+  orders: "/api/orders",
 };

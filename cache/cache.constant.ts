@@ -140,6 +140,11 @@ export const CACHE_CONFIG = {
       TAGS: ["review"],
       TIME: 3600,
     },
+    COUNT: {
+      KEY_PARTS: ["review_count"],
+      TAGS: ["review"],
+      TIME: 3600,
+    },
   },
   DASHBOARD: {
     DAILY: {

@@ -222,6 +222,14 @@ const next_cache = {
           revalidate: CACHE_CONFIG.REVIEWS.ALL.TIME,
         },
       ),
+      countReviews: unstable_cache(
+        reviewRepository.countReviews,
+        CACHE_CONFIG.REVIEWS.COUNT.KEY_PARTS,
+        {
+          tags: CACHE_CONFIG.REVIEWS.COUNT.TAGS,
+          revalidate: CACHE_CONFIG.REVIEWS.COUNT.TIME,
+        },
+      ),
     },
   },
 

@@ -1,18 +1,19 @@
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
-import { getAllOrders } from "@/features/orders/order.queries";
+import { getAllReviewsWithFullInfo } from "@/features/reviews/review.queries";
 import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 import { NextRequest, NextResponse } from "next/server";
 
-// todo: remove this, use params
-const size = PAGE_SIZE.ORDER.ALL.MD;
+const defaultSize = PAGE_SIZE.REVIEWS.SM;
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
+  const size = parseInt(searchParams.get("size") || defaultSize.toString(), 10);
   const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
   const orderBy =
     searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
+
   try {
-    const result = await getAllOrders({
+    const result = await getAllReviewsWithFullInfo({
       page,
       size,
       sortBy,

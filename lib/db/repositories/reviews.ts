@@ -13,7 +13,17 @@ import { Id } from "@/types";
 import Order from "../model/order.model";
 import { REVIEW_CONSTANT } from "@/features/reviews/review.constants";
 
-const getAllReviewsWithFullInfo = async () => {
+const getAllReviewsWithFullInfo = async ({
+  skip = 0,
+  limit,
+  sortBy = "createdAt",
+  orderBy = -1,
+}: {
+  skip?: number;
+  limit: number;
+  sortBy?: string;
+  orderBy?: 1 | -1;
+}) => {
   await connectToDatabase();
 
   const reviews = await Review.aggregate([
@@ -68,6 +78,9 @@ const getAllReviewsWithFullInfo = async () => {
         user: 1,
       },
     },
+    { $sort: { [sortBy]: orderBy } }, // <-- Sắp xếp
+    { $skip: skip }, // <-- Bỏ qua
+    { $limit: limit }, // <-- Giới hạn số lượng
   ]);
 
   const result = reviewWithFullInfoSchema.array().parse(reviews);
@@ -142,6 +155,12 @@ const getReviewByProductIdAndUserId = async ({
   const result = review ? ReviewTypeSchema.parse(review) : null;
 
   return result;
+};
+
+const countReviews = async () => {
+  await connectToDatabase();
+  const count = await Review.countDocuments();
+  return count;
 };
 
 const createReview = async (input: ReviewDbInputType) => {
@@ -630,6 +649,7 @@ const reviewRepository = {
   getReviewsByProductId,
   getReviewsWithUserNameByProductId,
   getReviewByProductIdAndUserId,
+  countReviews,
   createReview,
   hideReview,
   restoreReview,

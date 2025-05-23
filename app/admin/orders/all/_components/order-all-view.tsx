@@ -41,6 +41,7 @@ import { ColumnHeaderButton } from "./column-header-button";
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 export const columns: ColumnDef<OrderType>[] = [
   {
@@ -231,7 +232,7 @@ const OrdersAllView = () => {
 
   const { data, isPending } = useQuery({
     queryKey: [
-      "orders_all",
+      CACHE_CONFIG.ORDER.ALL.KEY_PARTS[0],
       {
         page,
         sortBy,
