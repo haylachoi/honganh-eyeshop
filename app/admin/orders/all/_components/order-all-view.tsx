@@ -30,18 +30,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { OrderType } from "@/features/orders/order.types";
-import { Input } from "@/components/ui/input";
 import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { TooltipWrapper } from "@/components/shared/tooltip";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { ColumnHeaderButton } from "./column-header-button";
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
-import { CACHE_CONFIG } from "@/cache/cache.constant";
+import { useFetchAllOrders } from "../_hooks/use-fetch-orders";
+import { toast } from "sonner";
 
 export const columns: ColumnDef<OrderType>[] = [
   {
@@ -81,8 +80,14 @@ export const columns: ColumnDef<OrderType>[] = [
     },
     cell: ({ row }) => (
       <TooltipWrapper render={row.original.orderId}>
-        {/* to do: create copy order Id */}
-        <div className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div
+          className="lowercase max-w-30 overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer"
+          onClick={() => {
+            navigator.clipboard.writeText(row.original.orderId);
+            toast.success("Copied to clipboard!");
+          }}
+          title="Click to copy"
+        >
           {row.original.orderId}
         </div>
       </TooltipWrapper>
@@ -221,35 +226,23 @@ export const columns: ColumnDef<OrderType>[] = [
   },
 ];
 
-const size = PAGE_SIZE.ORDER.ALL.MD;
-
 const OrdersAllView = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") ?? "1");
+  const size = parseInt(
+    searchParams.get("size") || PAGE_SIZE.ORDER.ALL.MD.toString(),
+    10,
+  );
+
   const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
   const orderBy =
     searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
 
-  const { data, isPending } = useQuery({
-    queryKey: [
-      CACHE_CONFIG.ORDER.ALL.KEY_PARTS[0],
-      {
-        page,
-        sortBy,
-        orderBy,
-      },
-    ],
-    queryFn: async () => {
-      const res = await fetch(
-        `/api/orders?page=${page}&${SORTING_OPTIONS.SORT_BY}=${sortBy}&${SORTING_OPTIONS.ORDER_BY}=${orderBy}`,
-      );
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
-        throw new Error(json.message || "Failed to fetch orders");
-      }
-      return json.data as { total: number; items: OrderType[] };
-    },
+  const { data, isPending } = useFetchAllOrders({
+    page,
+    size,
+    sortBy,
+    orderBy,
   });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -291,16 +284,6 @@ const OrdersAllView = () => {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Lọc tên..."
-          value={
-            (table.getColumn("customer.name")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("customer.name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
