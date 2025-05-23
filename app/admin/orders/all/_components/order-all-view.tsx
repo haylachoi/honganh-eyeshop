@@ -35,12 +35,12 @@ import { TooltipWrapper } from "@/components/shared/tooltip";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ColumnHeaderButton } from "./column-header-button";
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
 import { useFetchAllOrders } from "../_hooks/use-fetch-orders";
 import { toast } from "sonner";
+import { ColumnHeaderButton } from "@/components/shared/table/column-header-button";
 
 export const columns: ColumnDef<OrderType>[] = [
   {

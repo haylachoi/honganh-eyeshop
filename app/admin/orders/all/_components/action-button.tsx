@@ -9,7 +9,7 @@ import React from "react";
 import { OrderType } from "@/features/orders/order.types";
 import { ItemButton } from "./item-button";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { CACHE_CONFIG } from "@/cache/cache.constant";
 
 const getDialogInfo = (
   order: OrderType,
@@ -44,21 +44,11 @@ export const ActionButton = ({ order }: { order: OrderType }) => {
   const onClose = () => setIsOpen(false);
 
   const queryClient = useQueryClient();
-  const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") ?? "1");
-  const sortBy = searchParams.get("sortBy") || "createdAt";
-  const orderBy = searchParams.get("orderBy") || "DESC";
 
   const onSuccess = () => {
     queryClient.invalidateQueries({
-      queryKey: [
-        "orders_all",
-        {
-          page,
-          sortBy,
-          orderBy,
-        },
-      ],
+      queryKey: [CACHE_CONFIG.ORDER.ALL.KEY_PARTS[0]],
+      exact: false,
     });
   };
 
