@@ -60,7 +60,7 @@ const BlogsPage = async ({ params }: { params: Promise<Params> }) => {
   });
 
   if (!result.success) {
-    throw new Error("Blogs not found");
+    throw new Error("Something went wrong");
   }
 
   const total = result.data.total;
