@@ -6,7 +6,6 @@ import {
   createBlogQueryFilter,
   createBlogSortingOptions,
 } from "./blog.queries-builder";
-import { PAGE_SIZE } from "@/constants";
 import next_cache from "@/cache";
 
 const resource = "blog";
@@ -46,17 +45,28 @@ export const getPublishedBlogsByTag = safeQuery
     return blogs;
   });
 
-export const getRecentPublishedBlogs = safeQuery.query(async () => {
-  const blogs = await next_cache.blogs.recent();
-  return blogs;
-});
+export const getRecentPublishedBlogs = safeQuery
+  .schema(
+    z.object({
+      limit: z.number(),
+      skip: z.number(),
+    }),
+  )
+  .query(async () => {
+    const blogs = await next_cache.blogs.recent({
+      limit: 10,
+      skip: 0,
+      isPublished: true,
+    });
+    return blogs;
+  });
 
 export const searchBlogsByQuery = safeQuery
   .schema(
     z.object({
       params: z.record(z.string()).optional(),
       page: z.number().min(1).default(1),
-      size: z.number().min(1).max(100).default(PAGE_SIZE.BLOGS.SM),
+      size: z.number(),
       sortBy: z.string().optional(),
       orderBy: z.string().optional(),
     }),

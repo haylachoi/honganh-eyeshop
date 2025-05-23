@@ -1,5 +1,6 @@
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-view";
+import { PAGE_SIZE } from "@/constants";
 import { getCategoryBySlug } from "@/features/categories/category.queries";
 import {
   getFilterByCategorySlug,
@@ -64,6 +65,7 @@ export default CategoryPage;
 const ProductProvider = async ({ categorySlug }: { categorySlug: string }) => {
   const result = await searchProductByQuery({
     params: { category: categorySlug },
+    size: PAGE_SIZE.PRODUCTS.MD,
   });
   const products = result.success ? result.data.products : [];
   const total = result.success ? result.data.total : 0;

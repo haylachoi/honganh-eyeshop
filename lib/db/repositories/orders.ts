@@ -5,7 +5,6 @@ import {
 } from "@/features/orders/order.types";
 import Order from "../model/order.model";
 import { connectToDatabase } from "..";
-import { PAGE_SIZE } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { orderTypeSchema } from "@/features/orders/order.validator";
 import { NotFoundError } from "@/lib/error";
@@ -18,12 +17,12 @@ import { Id } from "@/types";
 
 const getAllOrders = async ({
   skip = 0,
-  limit = PAGE_SIZE.ORDER.HISTORY.SM,
+  limit,
   sortBy = "createdAt",
   orderBy = -1,
 }: {
   skip?: number;
-  limit?: number;
+  limit: number;
   sortBy?: string;
   orderBy?: 1 | -1;
 }) => {
@@ -57,11 +56,11 @@ const getLast30DaysOrders = async () => {
 const getOrdersByUserId = async ({
   userId,
   offset = 0,
-  limit = PAGE_SIZE.ORDER.HISTORY.SM,
+  limit,
 }: {
   userId: Id;
   offset?: number;
-  limit?: number;
+  limit: number;
 }) => {
   await connectToDatabase();
 

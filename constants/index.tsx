@@ -4,6 +4,21 @@ import config from "@/app-config.json";
 export const APP_NAME = config.appName; // fallback app name
 export const SOLOGAN = config.slogan; // fallback app slogan
 
+export const SESSION_NAME = config.sessionName;
+export const MIN_CHARACTER_LENGTH_FOR_SEARCH =
+  config.minCharacterLengthForSearch;
+export const MAX_SEARCH_RESULT = config.maxSearchResult;
+
+export const MAX_IMAGE_SIZE = config.maxImageSize;
+export const PRICE_CURRENCY = config.priceCurrency;
+
+export const UNVERIFIED_ACCOUNT_CLEANUP_DAYS =
+  config.unVerifiedAccountCleanupDays;
+
+export const VIEWS_COUNT_CONFIG = config.viewCount;
+export const SHIPPING_FEE = config.shippingFee;
+export const VNPAY_ENABLE = config.paymentMethod.vnpay;
+
 // todo: remove local host
 export const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
@@ -11,23 +26,10 @@ export const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
   "http://localhost:3000";
 
-export const SESSION_NAME = config.sessionName;
-export const MIN_CHARACTER_LENGTH_FOR_SEARCH =
-  config.minCharacterLengthForSearch;
-export const MAX_SEARCH_RESULT = config.maxSearchResult;
-
-export const PRODUCTS_PER_PAGE = 12;
+export const JOB_SECRET = process.env.JOB_SECRET;
 
 export const BASE_IMAGES_FOLDER = "images";
 export const IMAGES_FOlDERS = ["users", "products", "blogs", "orders"] as const;
-
-export const MAX_IMAGE_SIZE = config.maxImageSize;
-export const PRICE_CURRENCY = config.priceCurrency;
-
-export const JOB_SECRET = process.env.JOB_SECRET;
-
-export const UNVERIFIED_ACCOUNT_CLEANUP_DAYS =
-  config.unVerifiedAccountCleanupDays;
 
 export const PAGE_SIZE = {
   TRENDING: {
@@ -83,7 +85,3 @@ export const SORTING_OPTIONS = {
   ASC: "asc",
   DESC: "desc",
 };
-
-export const VIEWS_COUNT_CONFIG = config.viewCount;
-export const SHIPPING_FEE = config.shippingFee;
-export const VNPAY_ENABLE = config.paymentMethod.vnpay;

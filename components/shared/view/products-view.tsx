@@ -7,10 +7,10 @@ import React from "react";
 import SortingOptions from "../sorting-options";
 import { searchProductByQuery } from "@/features/filter/filter.actions";
 import { ProductType } from "@/features/products/product.types";
-import { PRODUCTS_PER_PAGE } from "@/constants";
+import { PAGE_SIZE } from "@/constants";
 import { Loader } from "lucide-react";
 
-const pageSize = PRODUCTS_PER_PAGE;
+const pageSize = PAGE_SIZE.PRODUCTS.MD;
 
 const emptyProductsInfo = {
   page: 0,
@@ -55,7 +55,7 @@ const ProductsView = ({
     total: number;
   }>(!searchParams.toString() ? defaultProductsInfo : emptyProductsInfo);
 
-  const fetchData = (props?: { page?: number; size?: number }) => {
+  const fetchData = (props?: { page?: number }) => {
     const params = Object.fromEntries(searchParams.entries());
     if (defaultFilter) {
       Object.entries(defaultFilter).forEach(([key, value]) => {
@@ -68,6 +68,7 @@ const ProductsView = ({
     execute({
       params,
       ...props,
+      size: pageSize,
     });
   };
   const hasMounted = React.useRef(false);

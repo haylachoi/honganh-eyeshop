@@ -1,7 +1,7 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { MAX_SEARCH_RESULT } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
 import { searchBlogResultSchema } from "@/features/filter/filter.validator";
@@ -57,42 +57,46 @@ const getAllBlogs = async () => {
   return result;
 };
 
-const getBlogsByTags = async ({
-  tags,
-  limit = PAGE_SIZE.BLOGS.SM,
-  skip = 0,
-}: {
-  tags?: string[];
-  limit?: number;
-  skip?: number;
-} = {}) => {
-  await connectToDatabase();
-  const matchStage = tags ? { tags: { $in: tags } } : {};
-
-  const result = await Blog.aggregate([
-    { $match: matchStage },
-    {
-      $facet: {
-        total: [{ $count: "count" }],
-        items: [
-          { $sort: { updatedAt: -1 } },
-          { $skip: skip },
-          { $limit: limit },
-        ],
-      },
-    },
-  ]);
-
-  const items: BlogType[] = result[0].items.map(blogTypeSchema.parse);
-  const total: number = result[0].total[0]?.count || 0;
-  return { items, total };
-};
+// const getBlogsByTags = async ({
+//   tags,
+//   limit,
+//   skip,
+// }: {
+//   tags?: string[];
+//   limit: number;
+//   skip: number;
+// }) => {
+//   await connectToDatabase();
+//   const matchStage = tags ? { tags: { $in: tags } } : {};
+//
+//   const result = await Blog.aggregate([
+//     { $match: matchStage },
+//     {
+//       $facet: {
+//         total: [{ $count: "count" }],
+//         items: [
+//           { $sort: { updatedAt: -1 } },
+//           { $skip: skip },
+//           { $limit: limit },
+//         ],
+//       },
+//     },
+//   ]);
+//
+//   const items: BlogType[] = result[0].items.map(blogTypeSchema.parse);
+//   const total: number = result[0].total[0]?.count || 0;
+//   return { items, total };
+// };
 
 const getRecentBlogs = async ({
-  limit = PAGE_SIZE.BLOGS.SM,
-  skip = 0,
+  limit,
+  skip,
   isPublished = true,
-} = {}) => {
+}: {
+  limit: number;
+  skip: number;
+  isPublished?: boolean;
+}) => {
   await connectToDatabase();
   const query: FilterQuery<BlogType> = {};
   if (isPublished) {
@@ -317,7 +321,7 @@ const blogsRepository = {
   getBlogsByIds,
   getBlogBySlug,
   getRecentBlogs,
-  getBlogsByTags,
+  // getBlogsByTags,
   searchBlogsByQuery,
   searchBlogsIncludeTotalItemsByQuery,
   searchBlogAndSimpleReturnByQuery,

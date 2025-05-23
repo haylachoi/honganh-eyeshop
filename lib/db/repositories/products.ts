@@ -4,7 +4,7 @@ import {
 } from "@/features/products/product.types";
 import { connectToDatabase } from "..";
 import Product from "../model/product.model";
-import { MAX_SEARCH_RESULT, PAGE_SIZE } from "@/constants";
+import { MAX_SEARCH_RESULT } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id, QueryFilter } from "@/types";
 import {
@@ -189,12 +189,12 @@ const getProductsByQueryAndProjection = async ({
 
 const getProductByTags = async ({
   tags,
-  limit = PAGE_SIZE.TRENDING.MD,
+  limit,
   includePrivateProducts = false,
   skip = 0,
 }: {
   tags: string[];
-  limit?: number;
+  limit: number;
   includePrivateProducts?: boolean;
   skip?: number;
 }) => {

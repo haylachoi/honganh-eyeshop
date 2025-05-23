@@ -5,10 +5,11 @@ import {
 import OrdersView from "./customer-orders-view";
 import { Suspense } from "react";
 import { LoadingIndicator } from "@/components/shared/loading-indicator";
+import { PAGE_SIZE } from "@/constants";
 
 export const dynamic = "force-dynamic";
 
-const size = 3;
+const size = PAGE_SIZE.ORDER.HISTORY.MD;
 const CustomerOrderPage = async () => {
   const ordersPromise = getOrderByUserId({
     page: 0,

@@ -6,7 +6,6 @@ import {
 } from "@/lib/query";
 import { orderIdSchema } from "./order.validator";
 import { NotFoundError } from "@/lib/error";
-import { PAGE_SIZE } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import next_cache from "@/cache";
 import { z } from "zod";
@@ -19,7 +18,7 @@ export const getAllOrders = getAuthQueryClient({
   .schema(
     z.object({
       page: z.number().optional().default(1),
-      size: z.number().optional().default(PAGE_SIZE.ORDER.HISTORY.SM),
+      size: z.number(),
       sortBy: z.string().optional().default("createdAt"),
       orderBy: z
         .union([z.literal(1), z.literal(-1)])
@@ -54,7 +53,7 @@ export const getOrderByUserId = authCustomerQueryClient
   .schema(
     z.object({
       page: z.number().optional().default(0),
-      size: z.number().optional().default(PAGE_SIZE.ORDER.HISTORY.SM),
+      size: z.number(),
     }),
   )
   .query(async ({ ctx, parsedInput }) => {

@@ -3,7 +3,6 @@ import { z } from "zod";
 import { categorySlugSchema } from "../categories/category.validator";
 import { getLink } from "@/lib/utils";
 import { blogSlugSchema } from "../blogs/blog.validators";
-import { PRODUCTS_PER_PAGE } from "@/constants";
 
 const filterNameSchema = z.string();
 const filterValueSchema = z.object({
@@ -47,7 +46,7 @@ export const filterTypeSchema = filterInputSchema
 export const searchInputSchema = z.object({
   params: z.record(z.string()),
   page: z.number().optional().default(0),
-  size: z.number().optional().default(PRODUCTS_PER_PAGE),
+  size: z.number(),
 });
 
 export const searchProductResultSchema = z

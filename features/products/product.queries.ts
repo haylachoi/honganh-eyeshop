@@ -3,7 +3,6 @@ import { authQueryClient, safeQuery } from "@/lib/query";
 import { z } from "zod";
 import { getProductBySlugQuerySchema } from "./product.validator";
 import { IdSchema } from "@/lib/validator";
-import { PAGE_SIZE } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { NotFoundError } from "@/lib/error";
 import next_cache from "@/cache";
@@ -36,7 +35,7 @@ export const getPublishedProductsByTags = safeQuery
     z.object({
       tags: z.array(z.string()),
       page: z.number().optional().default(0),
-      size: z.number().optional().default(PAGE_SIZE.PRODUCTS.MD),
+      size: z.number(),
     }),
   )
   .query(async ({ parsedInput: { tags, page, size } }) => {
