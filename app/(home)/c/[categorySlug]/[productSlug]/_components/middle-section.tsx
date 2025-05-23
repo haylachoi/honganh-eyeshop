@@ -29,7 +29,7 @@ const MiddleSection = ({ product }: { product: ProductType }) => {
           <DetailsSection attributes={product.attributes} />
         </TabPanel>
         <TabPanel className="mt-4" value={header[1]}>
-          {product.description}
+          <pre>{product.description}</pre>
         </TabPanel>
       </Tabs>
     </div>
