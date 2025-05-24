@@ -10,6 +10,7 @@ import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
   ProductDbInputSchema,
+  productPreviewTypeSchema,
   ProductTypeSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
@@ -100,10 +101,7 @@ const searchProductByQuery = async ({
     },
   ]);
 
-  const products: ProductType[] = result[0].products.map(
-    ProductTypeSchema.parse,
-  );
-
+  const products = productPreviewTypeSchema.array().parse(result[0].products);
   const total: number = result[0].total[0]?.count || 0;
 
   return {

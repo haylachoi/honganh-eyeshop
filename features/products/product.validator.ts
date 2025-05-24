@@ -187,12 +187,34 @@ export const productTypeWithoutTransformSchema = z.object({
   updatedAt: updatedAtSchema,
 });
 
+// todo: rename to camleCase
 export const ProductTypeSchema = productTypeWithoutTransformSchema.transform(
   ({ _id, ...rest }) => ({
     ...rest,
     id: _id.toString(),
   }),
 );
+
+export const productPreviewTypeSchema = productTypeWithoutTransformSchema
+  .pick({
+    _id: true,
+    name: true,
+    slug: true,
+    minPrice: true,
+    maxPrice: true,
+    highestDiscount: true,
+    variants: true,
+  })
+  .extend({
+    category: z.object({
+      name: z.string(),
+      slug: z.string(),
+    }),
+  })
+  .transform(({ _id, ...rest }) => ({
+    ...rest,
+    id: _id.toString(),
+  }));
 
 export const getProductBySlugQuerySchema = z.object({
   categorySlug: z.string().optional(),

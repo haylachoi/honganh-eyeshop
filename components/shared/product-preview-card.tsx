@@ -39,6 +39,7 @@ export const PreviewCard = ({
         <div className="p-4">
           <p className="text-xl truncate">{product.name}</p>
           <div className="flex gap-2">
+            {/* todo: fix price overflow */}
             <span className="text-foreground font-bold">
               {minPrice === maxPrice
                 ? formater.format(minPrice)

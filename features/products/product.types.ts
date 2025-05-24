@@ -4,6 +4,7 @@ import {
   attributeSchema,
   ProductDbInputSchema,
   ProductInputSchema,
+  productPreviewTypeSchema,
   ProductTypeSchema,
   productUpdateSchema,
 } from "./product.validator";
@@ -25,7 +26,7 @@ export type ProductUpdateType = z.infer<typeof productUpdateSchema>;
 export type ProductType = z.infer<typeof ProductTypeSchema>;
 export type AttributeType = z.infer<typeof attributeSchema>;
 
-export type ProductPreview = ProductType;
+export type ProductPreview = z.output<typeof productPreviewTypeSchema>;
 
 export type MongoId = string;
 

@@ -6,7 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import React from "react";
 import SortingOptions from "../sorting-options";
 import { searchProductByQuery } from "@/features/filter/filter.actions";
-import { ProductType } from "@/features/products/product.types";
+import { ProductPreview } from "@/features/products/product.types";
 import { PAGE_SIZE } from "@/constants";
 import { Loader } from "lucide-react";
 
@@ -25,7 +25,7 @@ const ProductsView = ({
   defaultFilter?: Record<string, string>;
   defaultProductsInfo?: {
     page: number;
-    products: ProductType[];
+    products: ProductPreview[];
     total: number;
   };
 }) => {
@@ -51,7 +51,7 @@ const ProductsView = ({
 
   const [productsInfo, setProductsInfo] = React.useState<{
     page: number;
-    products: ProductType[];
+    products: ProductPreview[];
     total: number;
   }>(!searchParams.toString() ? defaultProductsInfo : emptyProductsInfo);
 
