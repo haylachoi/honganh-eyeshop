@@ -13,6 +13,7 @@ import {
 } from "./product.queries-builder";
 import { typesenseProductName, typesenseProductSchema } from "./product.schema";
 import { defaultProductSearchParrams } from "./product.constants";
+import { DEFAULT_SORTING, SORTING_KEYWORDS } from "@/constants";
 
 const collectionName = typesenseProductName;
 
@@ -30,6 +31,7 @@ export const populateProductsCollection = async () => {
   const input = products.map((product) => ({
     id: product.id,
     name: product.name,
+    slug: product.slug,
     nameNoAccent: product.nameNoAccent,
     category: {
       name: product.category.name,
@@ -41,9 +43,10 @@ export const populateProductsCollection = async () => {
     highestDiscount: product.highestDiscount,
     attributes: product.attributes,
     tags: product.tags,
+    variants: product.variants,
   }));
 
-  await truncateCollection(collectionName);
+  // await truncateCollection(collectionName);
   await importDocuments(collectionName, input);
 };
 
@@ -67,6 +70,12 @@ export const searchProducts = async ({
   size: number;
 }) => {
   const filterString = buildTypesenseQuery({ filter });
+  if (!sortBy) {
+    sortBy = DEFAULT_SORTING.products[SORTING_KEYWORDS.sort_by];
+  }
+  if (!orderBy) {
+    orderBy = DEFAULT_SORTING.products[SORTING_KEYWORDS.order_by];
+  }
   const sortString = buildTypesenseSorting({ sortBy, orderBy });
 
   const result = await searchDocuments(collectionName, {
@@ -81,6 +90,8 @@ export const searchProducts = async ({
   });
   return {
     total: result.found,
+    page: result.page,
+    size: size,
     items: result.hits?.map((hit) => hit.document) ?? [],
   };
 };

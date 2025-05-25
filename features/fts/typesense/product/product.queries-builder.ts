@@ -5,7 +5,9 @@ const buildTypesenseAttFilter = (attrFilters: Record<string, string>): string =>
     .map(([key, valueStr]) =>
       valueStr
         .split(",")
-        .map((v) => `(attributes.name:${key} && attributes.value:${v.trim()})`)
+        .map(
+          (v) => `(attributes.name:${key} && attributes.valueSlug:${v.trim()})`,
+        )
         .join(" || "),
     )
     .map((group) => `(${group})`)
@@ -29,9 +31,19 @@ const buildTypesenseCategoryFilter = (categoryFilter?: string) => {
 };
 
 const buildTypesensePriceFilter = (range?: string): string | undefined => {
-  if (!range) return;
-  const [min, max] = range.split("-");
-  return `(prices:[${min}..${max}])`;
+  const filters = range
+    ?.split(",")
+    .map((r) => {
+      const [a, b] = r.split("-").map(Number);
+      if (!a && !b) return null;
+      if (!a) return `(prices:<=${b})`;
+      if (!b) return `(prices:>=${a})`;
+      return a < b ? `(prices:[${a}..${b}])` : `(prices:>=${a})`;
+    })
+    .filter(Boolean)
+    .join(" || ");
+
+  return filters ? `(${filters})` : undefined;
 };
 
 const buildTypesenseSaleFilter = (sale?: string): string | undefined =>
