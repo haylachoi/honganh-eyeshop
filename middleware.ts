@@ -12,7 +12,7 @@ const protectedRoutes = [
 
 export async function middleware(request: NextRequest) {
   const response = (await middlewareAuth(request)) ?? NextResponse.next();
-  await updateSession();
+  // await updateSession();
 
   return response;
 }

@@ -38,6 +38,7 @@ export const VIEWS_COUNT_CONFIG = config.viewCount;
 
 // 8. Pagination
 export const PAGE_SIZE = {
+  DEFAULT: 10,
   TRENDING: { SM: 8, MD: 12, LG: 20, XL: 30 },
   NEW_ARRIVAL: { SM: 8, MD: 12, LG: 20, XL: 30 },
   PRODUCTS: { SM: 8, MD: 12, LG: 20, XL: 30 },
@@ -54,10 +55,36 @@ export const SORT_BY_VALUES = ["asc", "desc"] as const;
 export const SORT_BY_OPTIONS = createUppercaseMap(SORT_BY_VALUES);
 
 export const SORTING_OPTIONS = {
-  SORT_BY: "sort_by",
+  SORT_BY: "sortBy",
   NAME: "name",
   PRICE: "minPrice",
-  ORDER_BY: "order_by",
+  ORDER_BY: "orderBy",
   ASC: "asc",
   DESC: "desc",
 };
+
+export const KEYWORDS = {
+  pagination: {
+    page: "page",
+    size: "size",
+  },
+  sorting: {
+    sort_by: "sortBy",
+    order_by: "orderBy",
+    name: "name",
+    price: "minprice",
+    asc: "asc",
+    desc: "desc",
+  },
+  filter: {
+    category: "category",
+    price: "price",
+    search: "search",
+    tag: "tag",
+    sale: "sale",
+  },
+};
+
+export const FILTER_KEYWORDS = KEYWORDS.filter;
+export const SORTING_KEYWORDS = KEYWORDS.sorting;
+export const PAGINATION_KEYWORDS = KEYWORDS.pagination;
