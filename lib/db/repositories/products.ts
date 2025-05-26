@@ -17,7 +17,7 @@ import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
 import { FilterQuery, ProjectionType } from "mongoose";
 import { searchProductResultType } from "@/features/filter/filter.types";
-import { searchProductResultSchema } from "@/features/filter/filter.validator";
+import { searchProductResultTransformSchema } from "@/features/filter/filter.validator";
 
 const getAllProducts = async () => {
   await connectToDatabase();
@@ -163,7 +163,7 @@ const searchProductAndSimpleReturnByQuery = async ({
   ]);
 
   const products: searchProductResultType[] = result[0].products.map(
-    searchProductResultSchema.parse,
+    searchProductResultTransformSchema.parse,
   );
   const total: number = result[0].total[0]?.count || 0;
 

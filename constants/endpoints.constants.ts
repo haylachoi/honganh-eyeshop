@@ -69,4 +69,5 @@ export const API_ENDPOINTS = {
   products: {
     search: "/api/products/search",
   },
+  globalSearch: "/api/global-search",
 };

@@ -1,8 +1,8 @@
 import { KEYWORDS, PAGE_SIZE } from "@/constants";
-import { searchProducts as dbSearchProducts } from "@/features/filter/filter.services";
-import { searchProducts as typesenseSearchProducts } from "@/features/fts/typesense/product/product.service";
 import { NextRequest, NextResponse } from "next/server";
 import { SEARCH_ENGINE } from "@/constants";
+import { searchProducts as dbSearchProducts } from "@/features/filter/filter.services";
+import { searchProducts as typesenseSearchProducts } from "@/features/fts/typesense/product/product.service";
 
 const searchProducts = SEARCH_ENGINE.typesense
   ? typesenseSearchProducts

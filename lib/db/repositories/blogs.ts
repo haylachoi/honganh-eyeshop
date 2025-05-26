@@ -4,7 +4,7 @@ import Blog from "../model/blog.model";
 import { MAX_SEARCH_RESULT } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
-import { searchBlogResultSchema } from "@/features/filter/filter.validator";
+import { searchBlogResultTranformSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
 import { Id } from "@/types";
@@ -201,7 +201,7 @@ const searchBlogAndSimpleReturnByQuery = async ({
     },
   ]);
   const blogs: SearchBlogResultType[] = result[0].blogs.map(
-    searchBlogResultSchema.parse,
+    searchBlogResultTranformSchema.parse,
   );
   const total: number = result[0].total[0]?.count || 0;
 

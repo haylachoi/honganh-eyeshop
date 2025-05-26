@@ -49,7 +49,15 @@ export const searchInputSchema = z.object({
   size: z.number(),
 });
 
-export const searchProductResultSchema = z
+export const searchProductResultSchema = z.object({
+  id: IdSchema,
+  name: z.string(),
+  price: z.number(),
+  link: z.string(),
+  image: z.string(),
+});
+
+export const searchProductResultTransformSchema = z
   .object({
     _id: MongoIdSchema,
     name: z.string(),
@@ -69,7 +77,14 @@ export const searchProductResultSchema = z
     }),
   }));
 
-export const searchBlogResultSchema = z
+export const searchBlogResultSchema = z.object({
+  id: IdSchema,
+  title: z.string(),
+  link: z.string(),
+  image: z.string(),
+});
+
+export const searchBlogResultTranformSchema = z
   .object({
     _id: MongoIdSchema,
     title: z.string(),
@@ -82,3 +97,14 @@ export const searchBlogResultSchema = z
     link: getLink.blog.view({ blogSlug: slug }),
     id: _id.toString(),
   }));
+
+export const globalSearchResultSchema = z.object({
+  products: z.object({
+    items: z.array(searchProductResultSchema),
+    total: z.number(),
+  }),
+  blogs: z.object({
+    items: z.array(searchBlogResultSchema),
+    total: z.number(),
+  }),
+});

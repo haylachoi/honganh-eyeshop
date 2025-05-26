@@ -1,10 +1,14 @@
-import { searchBlogs as typesenseSearchBlogs } from "@/features/fts/typesense/blog/blog.service";
-import { searchBlogs as dbSearchBlogs } from "@/features/filter/filter.services";
 import { NextRequest, NextResponse } from "next/server";
 import { KEYWORDS, PAGE_SIZE, SEARCH_ENGINE } from "@/constants";
 import { getLink } from "@/lib/utils";
-import { searchProducts as dbSearchProducts } from "@/features/filter/filter.services";
+
+import {
+  searchProducts as dbSearchProducts,
+  searchBlogs as dbSearchBlogs,
+} from "@/features/filter/filter.services";
 import { searchProducts as typesenseSearchProducts } from "@/features/fts/typesense/product/product.service";
+import { searchBlogs as typesenseSearchBlogs } from "@/features/fts/typesense/blog/blog.service";
+import { GlobalSearchResult } from "@/features/filter/filter.types";
 
 const searchProducts = SEARCH_ENGINE.typesense
   ? typesenseSearchProducts
@@ -14,49 +18,59 @@ const searchBlogs = SEARCH_ENGINE.typesense
   ? typesenseSearchBlogs
   : dbSearchBlogs;
 
-export const POST = async (req: NextRequest) => {
-  const body = await req.json();
-  const {
-    [KEYWORDS.filter.search]: search,
-    [KEYWORDS.pagination.page]: pageStr,
-    [KEYWORDS.pagination.size]: sizeStr,
-  } = body;
+const getInputFromRequest = async (req: NextRequest, isPost = false) => {
+  const source = isPost
+    ? await req.json()
+    : Object.fromEntries(new URL(req.url).searchParams.entries());
 
-  const input = {
-    search,
-    page: Number(pageStr) || 1,
-    size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
+  const search = source[KEYWORDS.filter.search];
+  const page = Number(source[KEYWORDS.pagination.page]) || 1;
+  const size = Number(source[KEYWORDS.pagination.size]) || PAGE_SIZE.DEFAULT;
+
+  return { search, page, size };
+};
+
+const formatSearchResult = async (input: {
+  search: string;
+  page: number;
+  size: number;
+}) => {
+  const [products, blogs] = await Promise.all([
+    searchProducts(input),
+    searchBlogs(input),
+  ]);
+  const result: GlobalSearchResult = {
+    products: {
+      items: products.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        link: getLink.product.home({
+          productSlug: item.slug,
+          categorySlug: item.category.slug,
+        }),
+        image: item.variants[0]?.images[0],
+        price: item.variants[0]?.price,
+      })),
+      total: products.total,
+    },
+    blogs: {
+      items: blogs.items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        link: item.link,
+        image: item.image,
+      })),
+      total: blogs.total,
+    },
   };
 
+  return result;
+};
+
+export const POST = async (req: NextRequest) => {
   try {
-    const products = await searchProducts(input);
-    const blogs = await searchBlogs(input);
-
-    const data = {
-      products: {
-        items: products.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          link: getLink.product.home({
-            productSlug: item.slug,
-            categorySlug: item.category.slug,
-          }),
-          image: item.variants[0]?.images[0],
-          price: item.variants[0]?.price,
-        })),
-        total: products.total,
-      },
-      blogs: {
-        items: blogs.items.map((item) => ({
-          id: item.id,
-          title: item.title,
-          link: item.link,
-          image: item.image,
-        })),
-        total: blogs.total,
-      },
-    };
-
+    const input = await getInputFromRequest(req, true);
+    const data = await formatSearchResult(input);
     return NextResponse.json({ success: true, data });
   } catch (e) {
     console.error(e);
@@ -65,28 +79,9 @@ export const POST = async (req: NextRequest) => {
 };
 
 export const GET = async (req: NextRequest) => {
-  const { searchParams } = new URL(req.url);
-  const {
-    [KEYWORDS.pagination.page]: pageStr,
-    [KEYWORDS.pagination.size]: sizeStr,
-    [KEYWORDS.filter.search]: search,
-  } = Object.fromEntries(searchParams.entries());
-
-  const input = {
-    search,
-    page: Number(pageStr) || 1,
-    size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
-  };
-
   try {
-    const products = await searchProducts(input);
-    const blogs = await searchBlogs(input);
-
-    const data = {
-      products,
-      blogs,
-    };
-
+    const input = await getInputFromRequest(req);
+    const data = await formatSearchResult(input);
     return NextResponse.json({ success: true, data });
   } catch (e) {
     console.error(e);
