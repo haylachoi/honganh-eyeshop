@@ -80,19 +80,23 @@ const getProductByIds = async ({ ids }: { ids: string[] }) => {
 };
 
 const searchProductByQuery = async ({
-  query,
+  search,
+  filter,
   sortOptions = {},
   skip = 0,
-  limit = MAX_SEARCH_RESULT,
+  limit,
 }: {
-  query: FilterQuery<ProductType>;
+  search: FilterQuery<ProductType>;
+  filter: FilterQuery<ProductType>;
   sortOptions?: Record<string, 1 | -1>;
   skip?: number;
-  limit?: number;
+  limit: number;
 }) => {
   await connectToDatabase();
+
   const result = await Product.aggregate([
-    { $match: query },
+    { $match: search },
+    { $match: filter },
     {
       $facet: {
         total: [{ $count: "count" }],
@@ -292,7 +296,6 @@ const getCountInStockOfVariant = async (input: {
 };
 
 const createProduct = async (input: ProductDbInputType) => {
-  console.log(input);
   await connectToDatabase();
   const result = await Product.create(input);
   return result._id.toString();

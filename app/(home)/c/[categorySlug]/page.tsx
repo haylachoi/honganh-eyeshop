@@ -1,15 +1,18 @@
 import FilterView from "@/components/shared/filter";
-import ProductsView from "@/components/shared/view/products-view";
-import { PAGE_SIZE } from "@/constants";
+import ProductsView from "@/components/shared/view/products-views";
+import { DEFAULT_SORTING, FILTER_KEYWORDS, PAGE_SIZE } from "@/constants";
 import { getCategoryBySlug } from "@/features/categories/category.queries";
 import {
   getFilterByCategorySlug,
   searchProductByQuery,
 } from "@/features/filter/filter.queries";
+import { FilterGroupType } from "@/features/filter/filter.types";
 import {
   getPriceFilterOptions,
   getSaleFilterOptions,
 } from "@/features/filter/filter.utils";
+import { getAllTags } from "@/features/tags/tag.queries";
+import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
@@ -63,19 +66,25 @@ const CategoryPage = async (props: { params: Promise<Params> }) => {
 export default CategoryPage;
 
 const ProductProvider = async ({ categorySlug }: { categorySlug: string }) => {
+  const size = PAGE_SIZE.DEFAULT;
   const result = await searchProductByQuery({
-    params: { category: categorySlug },
-    size: PAGE_SIZE.PRODUCTS.MD,
+    params: {
+      category: categorySlug,
+      ...DEFAULT_SORTING.products,
+    },
+    size,
+    page: 1,
   });
-  const products = result.success ? result.data.products : [];
+  const products = result.success ? result.data.items : [];
   const total = result.success ? result.data.total : 0;
 
   return (
     <ProductsView
       defaultFilter={{ category: categorySlug }}
-      defaultProductsInfo={{
-        page: 0,
-        products,
+      defaultProductsInfoWhenNoParams={{
+        page: 1,
+        items: products,
+        size,
         total,
       }}
     />
@@ -83,14 +92,29 @@ const ProductProvider = async ({ categorySlug }: { categorySlug: string }) => {
 };
 
 const FilterProvider = async ({ categorySlug }: { categorySlug: string }) => {
-  const result = await getFilterByCategorySlug(categorySlug);
-  if (!result.success) {
-    return <div>Error</div>;
+  const [attrRes, tagRes] = await Promise.all([
+    getFilterByCategorySlug(categorySlug),
+    getAllTags(),
+  ]);
+
+  if (!attrRes.success || !tagRes.success) {
+    throw new Error(DEFAULT_SERVER_ERROR_MESSAGE);
   }
+
+  const tagFilter: FilterGroupType = {
+    name: FILTER_KEYWORDS.tag,
+    displayName: FILTER_KEYWORDS.tag,
+    values: tagRes.data.map((t) => ({
+      value: t.name,
+      valueSlug: t.name,
+    })),
+  };
 
   const filter = [
     getSaleFilterOptions(),
-    ...result.data,
+    ...attrRes.data,
+    tagFilter,
+
     getPriceFilterOptions(),
   ];
 

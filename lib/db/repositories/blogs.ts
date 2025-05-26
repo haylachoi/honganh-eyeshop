@@ -57,37 +57,6 @@ const getAllBlogs = async () => {
   return result;
 };
 
-// const getBlogsByTags = async ({
-//   tags,
-//   limit,
-//   skip,
-// }: {
-//   tags?: string[];
-//   limit: number;
-//   skip: number;
-// }) => {
-//   await connectToDatabase();
-//   const matchStage = tags ? { tags: { $in: tags } } : {};
-//
-//   const result = await Blog.aggregate([
-//     { $match: matchStage },
-//     {
-//       $facet: {
-//         total: [{ $count: "count" }],
-//         items: [
-//           { $sort: { updatedAt: -1 } },
-//           { $skip: skip },
-//           { $limit: limit },
-//         ],
-//       },
-//     },
-//   ]);
-//
-//   const items: BlogType[] = result[0].items.map(blogTypeSchema.parse);
-//   const total: number = result[0].total[0]?.count || 0;
-//   return { items, total };
-// };
-
 const getRecentBlogs = async ({
   limit,
   skip,
@@ -140,14 +109,6 @@ const countBlogsByQuery = async (filterQuery: FilterQuery<BlogType>) => {
   const result = await Blog.countDocuments(filterQuery);
   return result;
 };
-
-// const countBlogsByTags = async (tags: string[]) => {
-//   await connectToDatabase();
-//   const query = tags.length > 0 ? { tags: { $in: tags } } : {};
-//   const result = await Blog.countDocuments(query);
-//
-//   return result;
-// };
 
 const searchBlogsByQuery = async ({
   filterQuery,
@@ -208,26 +169,23 @@ const searchBlogsIncludeTotalItemsByQuery = async ({
 };
 
 const searchBlogAndSimpleReturnByQuery = async ({
-  queries,
-  includeDraft,
-  limit = MAX_SEARCH_RESULT,
+  search,
+  limit,
+  skip = 0,
 }: {
-  queries: FilterQuery<BlogType>[];
-  includeDraft: boolean;
-  limit?: number;
+  search: FilterQuery<BlogType>;
+  limit: number;
+  skip?: number;
 }) => {
   await connectToDatabase();
 
-  if (!includeDraft) {
-    queries.push({
-      isPublished: true,
-    });
-  }
   const result = await Blog.aggregate([
-    ...queries.map((query) => ({ $match: query })),
+    { $match: search },
     {
       $facet: {
         blogs: [
+          { $skip: skip },
+          { $limit: limit },
           {
             $project: {
               _id: 1,
@@ -237,7 +195,6 @@ const searchBlogAndSimpleReturnByQuery = async ({
               updatedAt: 1,
             },
           },
-          { $limit: limit },
         ],
         total: [{ $count: "count" }],
       },
@@ -321,12 +278,10 @@ const blogsRepository = {
   getBlogsByIds,
   getBlogBySlug,
   getRecentBlogs,
-  // getBlogsByTags,
   searchBlogsByQuery,
   searchBlogsIncludeTotalItemsByQuery,
   searchBlogAndSimpleReturnByQuery,
   countBlogsByQuery,
-  // countBlogsByTags,
   createBlog,
   updateBlog,
   setPublishedStatus,

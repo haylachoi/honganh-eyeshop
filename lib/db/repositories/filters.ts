@@ -76,10 +76,8 @@ export const createFilter = async () => {
     { $unwind: "$attributes" },
     {
       $group: {
-        _id: {
-          name: "$attributes.name",
-          displayName: "$attributes.displayName",
-        },
+        _id: "$attributes.name",
+        displayName: { $first: "$attributes.displayName" }, // hoặc $last
         values: {
           $addToSet: {
             value: "$attributes.value",
@@ -91,8 +89,8 @@ export const createFilter = async () => {
     {
       $project: {
         _id: 0,
-        name: "$_id.name",
-        displayName: "$_id.displayName",
+        name: "$_id",
+        displayName: "$displayName",
         values: 1,
       },
     },

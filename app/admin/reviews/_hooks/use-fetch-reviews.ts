@@ -15,6 +15,7 @@ export const useFetchReviews = ({
   sortBy: string;
   orderBy: string;
 }) => {
+  // todo: stringify params of queryKey
   const query = useQuery({
     queryKey: [
       CACHE_CONFIG.REVIEWS.ALL.KEY_PARTS[0],

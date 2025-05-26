@@ -35,3 +35,11 @@ export const passwordSchema = z
   .string()
   .trim()
   .regex(PASSWORD_REGEX, PASSWORD_ERROR_MESSAGE);
+
+export const paginationInfoSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
+  z.object({
+    total: z.number(),
+    page: z.number(),
+    size: z.number(),
+    items: z.array(itemSchema),
+  });

@@ -14,6 +14,7 @@ import {
 import { typesenseProductName, typesenseProductSchema } from "./product.schema";
 import { defaultProductSearchParrams } from "./product.constants";
 import { DEFAULT_SORTING, SORTING_KEYWORDS } from "@/constants";
+import { ProductPreview } from "@/features/products/product.types";
 
 const collectionName = typesenseProductName;
 
@@ -78,7 +79,7 @@ export const searchProducts = async ({
   }
   const sortString = buildTypesenseSorting({ sortBy, orderBy });
 
-  const result = await searchDocuments(collectionName, {
+  const result = await searchDocuments<ProductPreview>(collectionName, {
     q: search ?? "*",
     query_by: "name,nameNoAccent",
     infix: ["always", "always"],

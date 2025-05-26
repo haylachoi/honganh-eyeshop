@@ -9,17 +9,17 @@ import {
   ComboboxSelected,
   ComboboxTrigger,
 } from "@/components/custom-ui/combobox";
-import { SORTING_OPTIONS } from "@/constants";
+import { SORTING_KEYWORDS } from "@/constants";
 import { ChevronDown } from "lucide-react";
 
 const SORT_DESCRIPTIONS = {
-  [SORTING_OPTIONS.NAME]: {
-    [SORTING_OPTIONS.ASC]: "A - Z",
-    [SORTING_OPTIONS.DESC]: "Z - A",
+  [SORTING_KEYWORDS.name]: {
+    [SORTING_KEYWORDS.asc]: "A - Z",
+    [SORTING_KEYWORDS.desc]: "Z - A",
   },
-  [SORTING_OPTIONS.PRICE]: {
-    [SORTING_OPTIONS.ASC]: "Thấp - cao",
-    [SORTING_OPTIONS.DESC]: "Cao - thấp",
+  [SORTING_KEYWORDS.price]: {
+    [SORTING_KEYWORDS.asc]: "Thấp - cao",
+    [SORTING_KEYWORDS.desc]: "Cao - thấp",
   },
 } as const;
 
@@ -36,13 +36,13 @@ const SortingOptions = ({ className }: SortingOptionsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const currentSort = searchParams.get(SORTING_OPTIONS.SORT_BY) ?? "";
-  const currentOrder = searchParams.get(SORTING_OPTIONS.ORDER_BY) ?? "";
+  const currentSort = searchParams.get(SORTING_KEYWORDS.sort_by) ?? "";
+  const currentOrder = searchParams.get(SORTING_KEYWORDS.order_by) ?? "";
 
   const handleSortChange = (sortKey: string, orderKey: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set(SORTING_OPTIONS.SORT_BY, sortKey);
-    params.set(SORTING_OPTIONS.ORDER_BY, orderKey);
+    params.set(SORTING_KEYWORDS.sort_by, sortKey);
+    params.set(SORTING_KEYWORDS.order_by, orderKey);
 
     router.replace(`?${params.toString()}`);
   };

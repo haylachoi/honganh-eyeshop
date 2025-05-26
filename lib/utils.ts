@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import { BASE_URL, SORTING_OPTIONS } from "@/constants";
+import { BASE_URL, DEFAULT_SORTING, SORTING_KEYWORDS } from "@/constants";
 import slugify from "slugify";
 import { AddressType, SearchParams } from "@/types";
 import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
@@ -48,18 +48,26 @@ export const getQueryOption = ({
   sortBy,
   orderBy,
 }: {
-  sortBy: string;
-  orderBy: string;
+  sortBy?: string;
+  orderBy?: string;
 }): Record<string, 1 | -1> | undefined => {
   if (
-    ![SORTING_OPTIONS.NAME, SORTING_OPTIONS.PRICE].includes(sortBy) ||
-    ![SORTING_OPTIONS.ASC, SORTING_OPTIONS.DESC].includes(orderBy)
+    !sortBy ||
+    !orderBy ||
+    ![SORTING_KEYWORDS.name, SORTING_KEYWORDS.price].includes(sortBy) ||
+    ![SORTING_KEYWORDS.asc, SORTING_KEYWORDS.desc].includes(orderBy)
   ) {
-    return { [SORTING_OPTIONS.NAME]: 1 };
+    return {
+      [DEFAULT_SORTING.products[SORTING_KEYWORDS.sort_by]]:
+        DEFAULT_SORTING.products[SORTING_KEYWORDS.order_by] ===
+        SORTING_KEYWORDS.asc
+          ? 1
+          : -1,
+    };
   }
 
   return {
-    [sortBy]: orderBy === SORTING_OPTIONS.ASC ? 1 : -1,
+    [sortBy]: orderBy === SORTING_KEYWORDS.asc ? 1 : -1,
   };
 };
 

@@ -34,7 +34,6 @@ export const BreadcrumbContent = ({
   if (!pathname?.[1]) return null;
 
   const breadcrumbs = generateBreadcrumbs(pathname, breadcrumbsMap);
-  console.log(breadcrumbsMap, breadcrumbs);
 
   return (
     <nav className="py-2">

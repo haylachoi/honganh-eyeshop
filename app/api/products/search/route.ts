@@ -1,7 +1,12 @@
 import { KEYWORDS, PAGE_SIZE } from "@/constants";
-// import { searchProducts } from "@/features/fts/typesense/product/product.service";
-import { searchProducts } from "@/features/fts/typesense/product/product.service";
+import { searchProducts as dbSearchProducts } from "@/features/filter/filter.services";
+import { searchProducts as typesenseSearchProducts } from "@/features/fts/typesense/product/product.service";
 import { NextRequest, NextResponse } from "next/server";
+import { SEARCH_ENGINE } from "@/constants";
+
+const searchProducts = SEARCH_ENGINE.typesense
+  ? typesenseSearchProducts
+  : dbSearchProducts;
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();

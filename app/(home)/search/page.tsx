@@ -1,7 +1,7 @@
 import FilterView from "@/components/shared/filter";
-import ProductsView from "@/components/shared/view/products-view";
+import ProductsView from "@/components/shared/view/products-views";
+import { FILTER_KEYWORDS } from "@/constants";
 import { getAllCategories } from "@/features/categories/category.queries";
-import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { getGlobalFilters } from "@/features/filter/filter.queries";
 import { FilterGroupType } from "@/features/filter/filter.types";
 import {
@@ -9,6 +9,7 @@ import {
   getSaleFilterOptions,
 } from "@/features/filter/filter.utils";
 import { getAllTags } from "@/features/tags/tag.queries";
+import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 
 export async function generateStaticParams() {
   return [];
@@ -36,11 +37,11 @@ const FilterProvider = async () => {
   ]);
 
   if (!attrRes.success || !categoryRes.success || !tagRes.success) {
-    return <div>Error</div>;
+    throw new Error(DEFAULT_SERVER_ERROR_MESSAGE);
   }
 
   const categoryFilter: FilterGroupType = {
-    name: FILTER_NAME.CATEGORY,
+    name: FILTER_KEYWORDS.category,
     displayName: "Danh mục",
     values: categoryRes.data.map((c) => ({
       value: c.name,
@@ -49,8 +50,8 @@ const FilterProvider = async () => {
   };
 
   const tagFilter: FilterGroupType = {
-    name: FILTER_NAME.TAG,
-    displayName: FILTER_NAME.TAG,
+    name: FILTER_KEYWORDS.tag,
+    displayName: FILTER_KEYWORDS.tag,
     values: tagRes.data.map((t) => ({
       value: t.name,
       valueSlug: t.name,

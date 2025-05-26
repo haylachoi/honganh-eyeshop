@@ -1,7 +1,6 @@
 "use client";
 
-import { MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
-import { searchAction } from "@/features/filter/filter.actions";
+import { FILTER_KEYWORDS, MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
 import { FILTER_NAME } from "@/features/filter/filter.constants";
 import {
   SearchBlogResultType,
@@ -9,12 +8,12 @@ import {
 } from "@/features/filter/filter.types";
 import { cn, currencyFormatter, getLink } from "@/lib/utils";
 import { LoaderIcon, SearchIcon, X } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useDebounce } from "use-debounce";
+import { useQuery } from "@tanstack/react-query";
 
 const defaultSearchResult = {
   products: {
@@ -30,35 +29,15 @@ const defaultSearchResult = {
 const SearchBox = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState("");
-  const [debounceSearch] = useDebounce(search, 500);
+  const [debounceSearch] = useDebounce(search, 300);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [searchResult, setSearchResult] = React.useState<{
-    products: {
-      result: searchProductResultType[];
-      total: number;
-    };
-    blogs: {
-      result: SearchBlogResultType[];
-      total: number;
-    };
-  }>(defaultSearchResult);
   const ref = React.useRef<HTMLDivElement>(null);
-  const { execute: searchProducts, isPending } = useAction(searchAction, {
-    onSuccess: (result) => {
-      if (result.data) {
-        setSearchResult({
-          products: {
-            result: result.data.products.result,
-            total: result.data.products.total,
-          },
-          blogs: {
-            result: result.data.blogs.result,
-            total: result.data.blogs.total,
-          },
-        });
-      }
-    },
-  });
+
+  const { data: searchResult = defaultSearchResult, isFetching: isPending } =
+    useGlobalSearch(
+      debounceSearch,
+      debounceSearch.length >= MIN_CHARACTER_LENGTH_FOR_SEARCH,
+    );
 
   React.useEffect(() => {
     if (search && !isOpen) {
@@ -68,16 +47,9 @@ const SearchBox = () => {
   }, [search]);
 
   React.useEffect(() => {
-    if (
-      debounceSearch &&
-      debounceSearch.length >= MIN_CHARACTER_LENGTH_FOR_SEARCH
-    ) {
-      searchProducts(debounceSearch);
-    }
     if (debounceSearch === "") {
-      setSearchResult(defaultSearchResult);
+      setIsOpen(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceSearch]);
 
   React.useEffect(() => {
@@ -92,6 +64,7 @@ const SearchBox = () => {
     <div
       className="relative flex items-center gap-2 px-2 md:bg-secondary"
       onKeyUp={(e) => {
+        // todo: fix esc key can't close
         if (e.key === "Escape") {
           setIsOpen(false);
         }
@@ -210,6 +183,7 @@ const SearchBox = () => {
                 {searchResult.products.result.length === 0 && (
                   <p>Không tìm thấy sản phẩm nào</p>
                 )}
+                {/* todo : limit hight  */}
                 <ul className="flex flex-col gap-4">
                   {searchResult.products.result.map((product) => (
                     <li key={product.id}>
@@ -222,6 +196,7 @@ const SearchBox = () => {
                         }}
                       >
                         <Image
+                          className="w-[80px] aspect-[18/9] overflow-hidden"
                           src={product.image}
                           alt={product.name}
                           width={80}
@@ -257,6 +232,7 @@ const SearchBox = () => {
                         }}
                       >
                         <Image
+                          className="w-[80px] aspect-[18/9] overflow-hidden"
                           src={product.image}
                           alt={product.title}
                           width={80}
@@ -289,3 +265,41 @@ const SearchBox = () => {
 };
 
 export default SearchBox;
+
+type GlobalSearchResult = {
+  products: {
+    result: searchProductResultType[];
+    total: number;
+  };
+  blogs: {
+    result: SearchBlogResultType[];
+    total: number;
+  };
+};
+
+export const useGlobalSearch = (query: string, enabled: boolean) => {
+  return useQuery<GlobalSearchResult>({
+    queryKey: ["global-search", query],
+    queryFn: async () => {
+      const res = await fetch("/api/global-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [FILTER_KEYWORDS.search]: query }),
+      });
+      if (!res.ok) throw new Error("Search failed");
+      const data = await res.json();
+
+      return {
+        products: {
+          result: data?.data?.products?.items ?? [],
+          total: data?.data?.products?.total ?? 0,
+        },
+        blogs: {
+          result: data?.data?.blogs?.items ?? [],
+          total: data?.data?.blogs?.total ?? 0,
+        },
+      };
+    },
+    enabled,
+  });
+};

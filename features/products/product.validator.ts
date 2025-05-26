@@ -197,7 +197,6 @@ export const ProductTypeSchema = productTypeWithoutTransformSchema.transform(
 
 export const productPreviewTypeSchema = productTypeWithoutTransformSchema
   .pick({
-    _id: true,
     name: true,
     slug: true,
     minPrice: true,
@@ -206,14 +205,25 @@ export const productPreviewTypeSchema = productTypeWithoutTransformSchema
     variants: true,
   })
   .extend({
+    _id: MongoIdSchema.optional(),
+    id: IdSchema.optional(),
     category: z.object({
       name: z.string(),
       slug: z.string(),
     }),
   })
+  .refine(
+    ({ id, _id }) => {
+      return id || _id;
+    },
+    {
+      message: "Id is required",
+      path: ["id"],
+    },
+  )
   .transform(({ _id, ...rest }) => ({
     ...rest,
-    id: _id.toString(),
+    id: _id?.toString() || (rest.id as string),
   }));
 
 export const getProductBySlugQuerySchema = z.object({

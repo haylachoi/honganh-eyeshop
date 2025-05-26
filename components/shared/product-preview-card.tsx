@@ -14,6 +14,7 @@ export const PreviewCard = ({
   const formater = currencyFormatter;
   const imageUrl = product.variants[0].images[0] ?? "/images/none-image.png";
   const { minPrice, maxPrice } = product;
+
   return (
     <div
       className={cn(

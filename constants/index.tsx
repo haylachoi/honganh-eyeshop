@@ -66,13 +66,13 @@ export const SORTING_OPTIONS = {
 export const KEYWORDS = {
   pagination: {
     page: "page",
-    size: "size",
+    size: "page_size",
   },
   sorting: {
     sort_by: "sortBy",
     order_by: "orderBy",
     name: "name",
-    price: "minprice",
+    price: "minPrice",
     asc: "asc",
     desc: "desc",
   },
@@ -88,3 +88,12 @@ export const KEYWORDS = {
 export const FILTER_KEYWORDS = KEYWORDS.filter;
 export const SORTING_KEYWORDS = KEYWORDS.sorting;
 export const PAGINATION_KEYWORDS = KEYWORDS.pagination;
+
+export const DEFAULT_SORTING = {
+  products: {
+    [SORTING_KEYWORDS.sort_by]: "name",
+    [SORTING_KEYWORDS.order_by]: SORTING_KEYWORDS.desc,
+  },
+};
+
+export const SEARCH_ENGINE = config.searchEngine;

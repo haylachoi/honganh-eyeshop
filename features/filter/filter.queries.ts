@@ -1,12 +1,17 @@
 import { customerQueryClient, safeQuery } from "@/lib/query";
 import { IdSchema } from "@/lib/validator";
 import { categorySlugSchema } from "../categories/category.validator";
-import { SORTING_OPTIONS } from "@/constants";
-import { createProductQueryFilter } from "./filter.queries-builder";
+import { FILTER_KEYWORDS, SORTING_KEYWORDS } from "@/constants";
+import {
+  createProductQueryFilter,
+  createSearchQuery,
+  createSortingQuery,
+} from "./filter.queries-builder";
 import { getQueryOption } from "@/lib/utils";
 import productRepository from "@/lib/db/repositories/products";
 import { searchInputSchema } from "./filter.validator";
 import next_cache from "@/cache";
+import { searchProducts } from "./filter.services";
 
 export const getFilterByCategoryId = customerQueryClient
   .schema(IdSchema)
@@ -31,26 +36,18 @@ export const searchProductByQuery = safeQuery
   .schema(searchInputSchema)
   .query(async ({ parsedInput: { page, size, params } }) => {
     const {
-      [SORTING_OPTIONS.SORT_BY]: sortBy,
-      [SORTING_OPTIONS.ORDER_BY]: orderBy,
+      [SORTING_KEYWORDS.sort_by]: sortBy,
+      [SORTING_KEYWORDS.order_by]: orderBy,
+      [FILTER_KEYWORDS.search]: search,
       ...restInput
     } = params;
 
-    const query = createProductQueryFilter({
-      input: restInput,
-      includePrivateProduct: false,
-    });
-    const sortOptions = getQueryOption({ sortBy, orderBy });
-
-    const result = await productRepository.searchProductByQuery({
-      query,
-      sortOptions,
-      limit: size,
-      skip: page * size,
-    });
-
-    return {
-      ...result,
+    return searchProducts({
+      search,
+      filter: restInput,
+      sortBy,
+      orderBy,
       page,
-    };
+      size,
+    });
   });

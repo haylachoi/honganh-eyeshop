@@ -70,12 +70,12 @@ export const upsertDocument = async (collectionName: string, document: any) => {
     .upsert(document);
 };
 
-export const searchDocuments = async (
+export const searchDocuments = async <T extends Record<string, any>>(
   collectionName: string,
   query: SearchParams | SearchParamsWithPreset,
 ) => {
   const result = await typesenseClient
-    .collections(collectionName)
+    .collections<T>(collectionName)
     .documents()
     .search(query);
   return result;

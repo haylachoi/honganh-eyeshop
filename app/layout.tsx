@@ -5,7 +5,9 @@ import { Rubik } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { APP_NAME, BASE_URL } from "@/constants";
 import { getSettings } from "@/features/settings/settings.services";
+import { TansTackQueryClientProvider } from "@/components/shared/query-client-provider";
 
+// todo : change font
 const rubik = Rubik({
   subsets: ["latin"], // Hỗ trợ chữ Latin
   variable: "--font-rubik",
@@ -35,9 +37,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* todo : use className*/}
       <body className={`${rubik.variable} antialiased scroll-smooth`}>
         <NextTopLoader showSpinner={false} />
-        {children}
+        <TansTackQueryClientProvider>{children}</TansTackQueryClientProvider>
         <Toaster />
       </body>
     </html>

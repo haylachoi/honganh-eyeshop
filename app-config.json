@@ -8,6 +8,9 @@
   "priceCurrency": "VND",
   "unVerifiedAccountCleanupDays": 7,
   "shippingFee": 0,
+  "searchEngine": {
+    "typesense": false
+  },
   "paymentMethod": {
     "vnpay": false
   },

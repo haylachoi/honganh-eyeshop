@@ -45,7 +45,7 @@ export const filterTypeSchema = filterInputSchema
 
 export const searchInputSchema = z.object({
   params: z.record(z.string()),
-  page: z.number().optional().default(0),
+  page: z.number().optional().default(1),
   size: z.number(),
 });
 
