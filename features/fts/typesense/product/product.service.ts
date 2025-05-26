@@ -5,7 +5,7 @@ import {
   getCollections,
   importDocuments,
   searchDocuments,
-  truncateCollection,
+  // truncateCollection,
 } from "../typesense.utils";
 import {
   buildTypesenseQuery,
@@ -55,14 +55,14 @@ export const deleteProductCollection = async () => {
 };
 
 export const searchProducts = async ({
-  query,
+  search,
   filter,
   page,
   size,
   sortBy,
   orderBy,
 }: {
-  query?: string;
+  search?: string;
   filter?: Record<string, string>;
   sortBy?: string;
   orderBy?: string;
@@ -79,7 +79,7 @@ export const searchProducts = async ({
   const sortString = buildTypesenseSorting({ sortBy, orderBy });
 
   const result = await searchDocuments(collectionName, {
-    q: query ?? "*",
+    q: search ?? "*",
     query_by: "name,nameNoAccent",
     infix: ["always", "always"],
     filter_by: filterString,

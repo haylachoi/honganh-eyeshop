@@ -3,7 +3,7 @@ import {
   deleteCollection,
   importDocuments,
   searchDocuments,
-  truncateCollection,
+  // truncateCollection,
 } from "../typesense.utils";
 import blogsRepository from "@/lib/db/repositories/blogs";
 import { getLink } from "@/lib/utils";
@@ -28,21 +28,21 @@ export const populateBlogsCollection = async () => {
     updatedAt: blog.updatedAt,
   }));
 
-  await truncateCollection(collectionName);
+  // await truncateCollection(collectionName);
   await importDocuments(collectionName, input);
 };
 
 export const searchBlogs = async ({
-  query,
+  search,
   page,
   size,
 }: {
-  query?: string;
+  search?: string;
   page: number;
   size: number;
 }) => {
   const result = await searchDocuments(collectionName, {
-    q: query ?? "*",
+    q: search ?? "*",
     query_by: "title,titleNoAccent",
     infix: ["always", "always"],
     ...defaultBlogSearchParrams,
@@ -52,6 +52,8 @@ export const searchBlogs = async ({
 
   return {
     total: result.found,
+    page: result.page,
+    size,
     items: result.hits?.map((hit) => hit.document) ?? [],
   };
 };

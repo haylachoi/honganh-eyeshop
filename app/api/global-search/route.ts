@@ -6,13 +6,13 @@ import { KEYWORDS, PAGE_SIZE } from "@/constants";
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const {
-    [KEYWORDS.filter.search]: query,
+    [KEYWORDS.filter.search]: search,
     [KEYWORDS.pagination.page]: pageStr,
     [KEYWORDS.pagination.size]: sizeStr,
   } = body;
 
   const input = {
-    query,
+    search,
     page: Number(pageStr) || 1,
     size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
   };
@@ -38,11 +38,11 @@ export const GET = async (req: NextRequest) => {
   const {
     [KEYWORDS.pagination.page]: pageStr,
     [KEYWORDS.pagination.size]: sizeStr,
-    [KEYWORDS.filter.search]: query,
+    [KEYWORDS.filter.search]: search,
   } = Object.fromEntries(searchParams.entries());
 
   const input = {
-    query,
+    search,
     page: Number(pageStr) || 1,
     size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
   };

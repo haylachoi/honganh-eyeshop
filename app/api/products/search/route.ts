@@ -1,29 +1,30 @@
 import { KEYWORDS, PAGE_SIZE } from "@/constants";
+// import { searchProducts } from "@/features/fts/typesense/product/product.service";
 import { searchProducts } from "@/features/fts/typesense/product/product.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const {
-    [KEYWORDS.filter.search]: query,
-    [KEYWORDS.pagination.page]: page,
-    [KEYWORDS.pagination.size]: size,
+    [KEYWORDS.filter.search]: search,
+    [KEYWORDS.pagination.page]: pageStr,
+    [KEYWORDS.pagination.size]: sizeStr,
     [KEYWORDS.sorting.sort_by]: sortBy,
     [KEYWORDS.sorting.order_by]: orderBy,
     ...filter
   } = body;
 
   try {
-    const result = await searchProducts({
-      query,
+    const data = await searchProducts({
+      search,
       filter,
-      page,
-      size,
+      page: Number(pageStr) || 1,
+      size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
       sortBy,
       orderBy,
     });
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json({ success: true, data });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ success: false }, { status: 500 });
@@ -42,8 +43,8 @@ export const GET = async (req: NextRequest) => {
   } = Object.fromEntries(searchParams.entries());
 
   try {
-    const result = await searchProducts({
-      query: search,
+    const data = await searchProducts({
+      search,
       filter: rest,
       page: Number(pageStr) || 1,
       size: Number(sizeStr) || PAGE_SIZE.DEFAULT,
@@ -51,7 +52,7 @@ export const GET = async (req: NextRequest) => {
       orderBy,
     });
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json({ success: true, data });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ success: false }, { status: 500 });
