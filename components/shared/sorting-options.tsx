@@ -30,9 +30,13 @@ const getDescription = (sortBy?: string, orderBy?: string) =>
 
 interface SortingOptionsProps {
   className?: string;
+  isShalowRouting?: boolean;
 }
 
-const SortingOptions = ({ className }: SortingOptionsProps) => {
+const SortingOptions = ({
+  className,
+  isShalowRouting = true,
+}: SortingOptionsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -44,7 +48,13 @@ const SortingOptions = ({ className }: SortingOptionsProps) => {
     params.set(SORTING_KEYWORDS.sort_by, sortKey);
     params.set(SORTING_KEYWORDS.order_by, orderKey);
 
-    router.replace(`?${params.toString()}`);
+    if (isShalowRouting) {
+      window.history.replaceState(null, "", `?${params.toString()}`);
+    } else {
+      router.replace(`?${params.toString()}`, {
+        scroll: false,
+      });
+    }
   };
 
   return (
