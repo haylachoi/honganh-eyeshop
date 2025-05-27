@@ -7,6 +7,7 @@ import {
   createBlogSortingOptions,
 } from "./blog.queries-builder";
 import next_cache from "@/cache";
+import blogsRepository from "@/lib/db/repositories/blogs";
 
 const resource = "blog";
 const blogQueryClient = getAuthQueryClient({
@@ -72,17 +73,17 @@ export const searchBlogsByQuery = safeQuery
     }),
   )
   .query(async ({ parsedInput: { params, page, size, sortBy, orderBy } }) => {
-    const query = createBlogQueryFilter({ input: params });
+    const filterQuery = createBlogQueryFilter({ input: params });
     const sortOptions = createBlogSortingOptions({ sortBy, orderBy });
 
     const input = {
-      query,
+      filterQuery,
       limit: size,
       sortOptions,
       skip: (page - 1) * size,
     };
 
-    const blogs = await next_cache.blogs.searchByQuery(input);
+    const blogs = await blogsRepository.searchBlogsByQuery(input);
 
     return blogs;
   });

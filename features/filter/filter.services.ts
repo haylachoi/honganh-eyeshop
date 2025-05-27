@@ -61,7 +61,6 @@ export const searchBlogs = async ({
   const result = await blogsRepository.searchBlogAndSimpleReturnByQuery({
     search: search
       ? {
-          // todo: slugify search
           titleNoAccent: { $regex: removeDiacritics(search), $options: "i" },
           isPublished: true,
         }

@@ -47,4 +47,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - make first Image in page priority to improve largest content paint
 - add href to main navigation
-- fix naming conflix: filter attributesca and keywors (ex: attributes.size vs pagination.size)

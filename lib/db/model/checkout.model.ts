@@ -35,7 +35,6 @@ const checkoutSchema = new Schema<CheckoutModel>(
       district: { type: String },
       city: { type: String },
     },
-    // todo: use enum
     paymentMethod: {
       type: String,
       required: true,

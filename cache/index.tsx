@@ -149,14 +149,14 @@ const next_cache = {
       const result = blogs.slice(size * page, size * page + size);
       return { items: result, total: blogs.length };
     },
-    searchByQuery: unstable_cache(
-      blogsRepository.searchBlogsIncludeTotalItemsByQuery,
-      CACHE_CONFIG.BLOGS.BY_QUERY.KEY_PARTS,
-      {
-        tags: CACHE_CONFIG.BLOGS.BY_QUERY.TAGS,
-        revalidate: CACHE_CONFIG.BLOGS.BY_QUERY.TIME,
-      },
-    ),
+    // searchByQuery: unstable_cache(
+    //   blogsRepository.searchBlogsIncludeTotalItemsByQuery,
+    //   CACHE_CONFIG.BLOGS.BY_QUERY.KEY_PARTS,
+    //   {
+    //     tags: CACHE_CONFIG.BLOGS.BY_QUERY.TAGS,
+    //     revalidate: CACHE_CONFIG.BLOGS.BY_QUERY.TIME,
+    //   },
+    // ),
     countByQuery: unstable_cache(
       blogsRepository.countBlogsByQuery,
       CACHE_CONFIG.BLOGS.COUNT_ITEMS.KEY_PARTS,

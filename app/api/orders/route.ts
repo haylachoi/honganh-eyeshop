@@ -3,7 +3,6 @@ import { getAllOrders } from "@/features/orders/order.queries";
 import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 import { NextRequest, NextResponse } from "next/server";
 
-// todo: remove this, use params
 const size = PAGE_SIZE.ORDER.ALL.MD;
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

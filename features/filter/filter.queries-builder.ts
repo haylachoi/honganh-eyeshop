@@ -32,7 +32,6 @@ export const createProductQueryFilter = ({
 
   if (!input) return conditions[0];
 
-  // todo : use keyword
   const {
     [FILTER_KEYWORDS.category]: categoryFilter,
     [FILTER_KEYWORDS.price]: priceFilters,

@@ -1,9 +1,13 @@
 import { BlogDbInputType, BlogType } from "@/features/blogs/blog.types";
 import { connectToDatabase } from "..";
 import Blog from "../model/blog.model";
-import { MAX_SEARCH_RESULT } from "@/constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
-import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
+import {
+  FilterQuery,
+  PipelineStage,
+  QueryOptions,
+  UpdateQuery,
+} from "mongoose";
 import { searchBlogResultTranformSchema } from "@/features/filter/filter.validator";
 import { blogTypeSchema } from "@/features/blogs/blog.validators";
 import { SearchBlogResultType } from "@/features/filter/filter.types";
@@ -122,50 +126,35 @@ const searchBlogsByQuery = async ({
   limit?: number;
 }) => {
   await connectToDatabase();
-  let query = Blog.find(filterQuery).sort(sortOptions);
-  if (skip) {
-    query = query.skip(skip);
+
+  const itemsPipeline: PipelineStage.FacetPipelineStage[] = [];
+
+  if (sortOptions) {
+    itemsPipeline.push({ $sort: sortOptions });
   }
-  if (limit) {
-    query = query.limit(limit);
+
+  if (typeof skip === "number") {
+    itemsPipeline.push({ $skip: skip });
   }
 
-  const result = await query.lean();
-  const items: BlogType[] = result.map((item) => blogTypeSchema.parse(item));
+  if (typeof limit === "number") {
+    itemsPipeline.push({ $limit: limit });
+  }
 
-  return items;
-};
-
-const searchBlogsIncludeTotalItemsByQuery = async ({
-  query,
-  sortOptions = {},
-  skip = 0,
-  limit = MAX_SEARCH_RESULT,
-}: {
-  query: FilterQuery<BlogType>;
-  sortOptions?: QueryOptions<BlogType>;
-  skip?: number;
-  limit?: number;
-}) => {
-  await connectToDatabase();
   const result = await Blog.aggregate([
-    { $match: query },
+    { $match: filterQuery },
     {
       $facet: {
-        total: [{ $count: "count" }],
-        items: [{ $sort: sortOptions }, { $skip: skip }, { $limit: limit }],
+        items: itemsPipeline,
+        totalCount: [{ $count: "count" }],
       },
     },
   ]);
 
-  const items: BlogType[] = result[0].items.map(blogTypeSchema.parse);
+  const items = blogTypeSchema.array().parse(result[0].items);
+  const total = result[0].totalCount[0]?.count || 0;
 
-  const total: number = result[0].total[0]?.count || 0;
-
-  return {
-    items,
-    total,
-  };
+  return { items, total };
 };
 
 const searchBlogAndSimpleReturnByQuery = async ({
@@ -279,7 +268,6 @@ const blogsRepository = {
   getBlogBySlug,
   getRecentBlogs,
   searchBlogsByQuery,
-  searchBlogsIncludeTotalItemsByQuery,
   searchBlogAndSimpleReturnByQuery,
   countBlogsByQuery,
   createBlog,
