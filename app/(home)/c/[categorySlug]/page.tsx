@@ -1,3 +1,4 @@
+import next_cache from "@/cache";
 import FilterView from "@/components/shared/filter";
 import ProductsView from "@/components/shared/view/products-views";
 import { DEFAULT_SORTING, FILTER_KEYWORDS, PAGE_SIZE } from "@/constants";
@@ -16,9 +17,11 @@ import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
-  return [];
+  const categories = await next_cache.categories.getAll();
+  return categories.map((category) => ({
+    categorySlug: category.slug,
+  }));
 }
-export const dynamic = "force-static";
 export const revalidate = 3600;
 
 type Params = { categorySlug: string };
