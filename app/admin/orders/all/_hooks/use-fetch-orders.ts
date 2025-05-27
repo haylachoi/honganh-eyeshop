@@ -17,13 +17,8 @@ export const useFetchAllOrders = ({
 }) => {
   const query = useQuery({
     queryKey: [
-      CACHE_CONFIG.ORDER.ALL.KEY_PARTS[0],
-      {
-        page,
-        sortBy,
-        orderBy,
-        size,
-      },
+      ...CACHE_CONFIG.ORDER.ALL.KEY_PARTS,
+      JSON.stringify({ page, size, sortBy, orderBy }),
     ],
     queryFn: async () => {
       const params = new URLSearchParams({

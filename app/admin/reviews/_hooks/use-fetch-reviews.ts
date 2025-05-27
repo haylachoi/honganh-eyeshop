@@ -15,16 +15,10 @@ export const useFetchReviews = ({
   sortBy: string;
   orderBy: string;
 }) => {
-  // todo: stringify params of queryKey
   const query = useQuery({
     queryKey: [
       CACHE_CONFIG.REVIEWS.ALL.KEY_PARTS[0],
-      {
-        page,
-        sortBy,
-        orderBy,
-        size,
-      },
+      JSON.stringify({ page, size, sortBy, orderBy }),
     ],
     queryFn: async () => {
       const params = new URLSearchParams({
