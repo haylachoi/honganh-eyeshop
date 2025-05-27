@@ -12,6 +12,18 @@ import { APP_NAME } from "@/constants";
 import { Metadata } from "next";
 import Image from "next/image";
 import { getSettings } from "@/features/settings/settings.services";
+import next_cache from "@/cache";
+
+type params = Promise<{ blogSlug: string }>;
+
+export const generateStaticParams = async () => {
+  const blogs = await next_cache.blogs.all();
+  return blogs.map((blog) => ({
+    blogSlug: blog.slug,
+  }));
+};
+
+export const revalidate = 604800;
 
 const getBlog = cache(async ({ blogSlug }: { blogSlug: string }) => {
   const result = await getBlogBySlug(blogSlug);
@@ -21,8 +33,6 @@ const getBlog = cache(async ({ blogSlug }: { blogSlug: string }) => {
 
   return result.data;
 });
-
-type params = Promise<{ blogSlug: string }>;
 
 export const generateMetadata = async ({
   params,
