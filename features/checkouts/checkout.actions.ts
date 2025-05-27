@@ -4,7 +4,7 @@ import { customerActionClient } from "@/lib/actions";
 import { checkoutInputSchema } from "./checkout.validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { z } from "zod";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import {
   AuthenticationError,
   NotFoundError,
@@ -47,7 +47,7 @@ export const updateCheckoutAction = customerActionClient
   })
   .schema(
     z.object({
-      id: IdSchema,
+      id: idSchema,
       name: z.string(),
       value: z.string().optional(),
     }),

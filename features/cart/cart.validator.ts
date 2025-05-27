@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, mongoIdSchema } from "@/lib/validator";
 import {
   productTypeWithoutTransformSchema,
   variantTypeSchema,
@@ -13,7 +13,7 @@ const quantitySchema = z.coerce
 
 // base
 const baseCartItemSchema = z.object({
-  productId: IdSchema,
+  productId: idSchema,
   variantId: z.string().uuid(),
   quantity: quantitySchema,
 });
@@ -34,7 +34,7 @@ export const cartItemDisplaySchema = productTypeWithoutTransformSchema
   })
   .extend({
     variant: variantTypeSchema,
-    productId: MongoIdSchema,
+    productId: mongoIdSchema,
     quantity: quantitySchema.default(1),
   })
   .transform(({ productId, ...rest }) => ({
@@ -44,7 +44,7 @@ export const cartItemDisplaySchema = productTypeWithoutTransformSchema
 
 export const cartItemTypeSchema = z
   .object({
-    productId: MongoIdSchema,
+    productId: mongoIdSchema,
     variantId: z.string().uuid(),
     quantity: z.coerce.number().int(),
     // .min(1, "Quantity must be at least 1"),
@@ -55,14 +55,14 @@ export const cartItemTypeSchema = z
   }));
 
 export const cartInputSchema = z.object({
-  userId: IdSchema,
+  userId: idSchema,
   item: cartItemInputSchema,
 });
 
 export const cartTypeWithoutTransformSchema = z.object({
-  _id: MongoIdSchema,
+  _id: mongoIdSchema,
   items: z.array(cartItemTypeSchema),
-  userId: MongoIdSchema,
+  userId: mongoIdSchema,
 });
 
 export const cartTypeSchema = cartTypeWithoutTransformSchema.transform(

@@ -5,57 +5,40 @@ import Category from "@/lib/db/model/category.model";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id } from "@/types";
 import {
-  CategoryType,
   CategoryUpdateType,
   CategoryInputType,
 } from "@/features/categories/category.types";
-import { CategoryTypeSchema } from "@/features/categories/category.validator";
+import { categoryTypeSchema } from "@/features/categories/category.validator";
 import mongoose from "mongoose";
 import Product from "../model/product.model";
 import { NotFoundError } from "@/lib/error";
-
-// const getCategories = async () => {
-//   await connectToDatabase();
-//   const categories = await Category.find().sort({ name: -1 }).lean();
-//
-//   const result = categories.map((category) => ({
-//     ...category,
-//     _id: category._id.toString(),
-//   })) as CategoryType[];
-//
-//   return result;
-// };
 
 const getAllCategories = async () => {
   await connectToDatabase();
   const categories = await Category.find().lean();
 
-  const result = categories.map(({ _id, ...category }) => ({
-    ...category,
-    id: _id.toString(),
-  })) as CategoryType[];
-
+  const result = categoryTypeSchema.array().parse(categories);
   return result;
 };
 
 const getCategoryById = async (id: Id) => {
   await connectToDatabase();
   const result = await Category.findById(id).lean();
-  const category = CategoryTypeSchema.parse(result);
+  const category = categoryTypeSchema.parse(result);
   return category;
 };
 
 const getCategoryBySlug = async (slug: string) => {
   await connectToDatabase();
   const result = await Category.findOne({ slug }).lean();
-  const category = CategoryTypeSchema.parse(result);
+  const category = categoryTypeSchema.parse(result);
   return category;
 };
 
 const createCategory = async (input: CategoryInputType) => {
   await connectToDatabase();
   const result = await Category.create(input);
-  const category = CategoryTypeSchema.parse(result);
+  const category = categoryTypeSchema.parse(result);
   return category;
 };
 

@@ -1,8 +1,8 @@
-import { ProductTypeSchema } from "@/features/products/product.validator";
+import { productTypeSchema } from "@/features/products/product.validator";
 import mongoose, { Document, Model, model, models, Schema } from "mongoose";
 import { z } from "zod";
 
-type DbModel = z.input<typeof ProductTypeSchema>;
+type DbModel = z.input<typeof productTypeSchema>;
 export interface ProductModel extends Document, DbModel {
   _id: mongoose.Types.ObjectId;
   createdAt: Date;

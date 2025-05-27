@@ -18,7 +18,7 @@ import {
   CategoryUpdateType,
   CategoryType,
 } from "@/features/categories/category.types";
-import { CategoryUpdateSchema } from "@/features/categories/category.validator";
+import { categoryUpdateSchema } from "@/features/categories/category.validator";
 import { updateCategoryAction } from "@/features/categories/category.actions";
 import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ const CategoryUpdateForm = ({ category }: { category: CategoryType }) => {
   const router = useRouter();
 
   const form = useForm<CategoryUpdateType>({
-    resolver: zodResolver(CategoryUpdateSchema),
+    resolver: zodResolver(categoryUpdateSchema),
     defaultValues: category,
   });
   const { execute, isPending } = useAction(updateCategoryAction, {

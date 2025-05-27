@@ -1,8 +1,8 @@
 "use server";
 
 import {
-  CategoryInputSchema,
-  CategoryUpdateSchema,
+  categoryInputSchema,
+  categoryUpdateSchema,
 } from "./category.validator";
 import { revalidateTag } from "next/cache";
 import categoriesRepository from "@/lib/db/repositories/categories";
@@ -33,7 +33,7 @@ export const createCategoryAction = createCategoryActionClient
   .metadata({
     actionName: "createCategoryAction",
   })
-  .schema(CategoryInputSchema)
+  .schema(categoryInputSchema)
   .action(async ({ parsedInput }) => {
     await categoriesRepository.createCategory(parsedInput);
     revalidateTag(categoriesCacheTag);
@@ -43,7 +43,7 @@ export const updateCategoryAction = modifyCategoryActionClient
   .metadata({
     actionName: "updateCategoryAction",
   })
-  .schema(CategoryUpdateSchema)
+  .schema(categoryUpdateSchema)
   .action(async ({ parsedInput }) => {
     await categoriesRepository.updateCategory(parsedInput);
     revalidateTag(categoriesCacheTag);

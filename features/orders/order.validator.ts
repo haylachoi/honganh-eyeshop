@@ -1,4 +1,4 @@
-import { IdSchema, MoneySchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, MoneySchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { dbCouponInputSchema } from "../coupons/coupon.validator";
 import {
@@ -49,13 +49,13 @@ const baseOrderSchema = z.object({
 });
 
 export const orderInputSchema = baseOrderSchema.extend({
-  checkoutid: IdSchema,
+  checkoutid: idSchema,
   couponCode: z.string().min(1, "Mã không được để trống").optional(),
 });
 
 export const orderDbInputSchema = baseOrderSchema.extend({
   orderId: orderIdSchema,
-  userId: MongoIdSchema.optional(),
+  userId: mongoIdSchema.optional(),
   coupon: orderCouponSchema.optional(),
   items: z.array(checkoutItemSchema),
   discount: moneySchema,
@@ -70,7 +70,7 @@ export const orderDbInputSchema = baseOrderSchema.extend({
 
 export const orderTypeSchema = orderDbInputSchema
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     completedAt: z.date().optional(),
     createdAt: z.date(),
   })

@@ -1,13 +1,13 @@
 import { z } from "zod";
 import {
-  ReviewDbInputSchema,
-  ReviewInputSchema,
-  ReviewTypeSchema,
+  reviewDbInputSchema,
+  reviewInputSchema,
+  reviewTypeSchema,
   reviewWithFullInfoSchema,
 } from "./review.validator";
 
-export type ReviewInputType = z.infer<typeof ReviewInputSchema>;
-export type ReviewDbInputType = z.input<typeof ReviewDbInputSchema>;
-export type ReviewType = z.infer<typeof ReviewTypeSchema>;
+export type ReviewInputType = z.infer<typeof reviewInputSchema>;
+export type ReviewDbInputType = z.input<typeof reviewDbInputSchema>;
+export type ReviewType = z.infer<typeof reviewTypeSchema>;
 
 export type ReviewWithFullInfoType = z.infer<typeof reviewWithFullInfoSchema>;

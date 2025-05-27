@@ -21,7 +21,7 @@ import { createVerificationToken } from "../auth/auth.utils";
 import { emailVerificationTokenRepository } from "@/lib/db/repositories/email-verification";
 import { VERIFYTOKEN_DURATION_IN_MILISECOND } from "../auth/auth.constants";
 import { sendVerificationEmail } from "../email/email.utils";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { ADMIN_ROLES } from "../authorization/authorization.constants";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 
@@ -254,7 +254,7 @@ export const lockUserAction = getAuthActionClient({
   .metadata({
     actionName: "lockUser",
   })
-  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .schema(z.object({ ids: z.union([idSchema, z.array(idSchema)]) }))
   .action(async ({ parsedInput }) => {
     const { ids } = parsedInput;
 
@@ -274,7 +274,7 @@ export const unlockUserAction = getAuthActionClient({
   .metadata({
     actionName: "unlockUser",
   })
-  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .schema(z.object({ ids: z.union([idSchema, z.array(idSchema)]) }))
   .action(async ({ parsedInput }) => {
     const { ids } = parsedInput;
 
@@ -294,7 +294,7 @@ export const deleteUserAction = getAuthActionClient({
   .metadata({
     actionName: "deleteUser",
   })
-  .schema(z.object({ ids: z.union([IdSchema, z.array(IdSchema)]) }))
+  .schema(z.object({ ids: z.union([idSchema, z.array(idSchema)]) }))
   .action(async ({ parsedInput }) => {
     const { ids } = parsedInput;
 
@@ -314,7 +314,7 @@ export const changeUserRoleAction = getAuthActionClient({
   .metadata({
     actionName: "changeUserRole",
   })
-  .schema(z.object({ id: IdSchema, role: z.enum(ADMIN_ROLES) }))
+  .schema(z.object({ id: idSchema, role: z.enum(ADMIN_ROLES) }))
   .action(async ({ parsedInput }) => {
     const { id, role } = parsedInput;
 

@@ -1,4 +1,4 @@
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
 // base
@@ -66,7 +66,7 @@ export const dbCouponInputSchema = baseCouponSchema.extend({
 
 export const couponUpdateSchemaWithoutTransform = baseCouponSchema
   .extend({
-    id: IdSchema,
+    id: idSchema,
   })
   .refine((data) => new Date(data.expiryDate) > new Date(data.startDate), {
     message: "Ngày hết hạn phải lớn hơn ngày bắt đầu",
@@ -84,7 +84,7 @@ export const couponUpdateSchema = couponUpdateSchemaWithoutTransform.transform(
 );
 
 export const couponTypeWithoutTransformSchema = baseCouponSchema.extend({
-  _id: MongoIdSchema,
+  _id: mongoIdSchema,
   startDate: dateSchema,
   expiryDate: dateSchema,
 });

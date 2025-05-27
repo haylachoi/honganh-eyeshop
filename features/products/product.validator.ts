@@ -1,4 +1,4 @@
-import { MoneySchema, IdSchema, MongoIdSchema } from "@/lib/validator";
+import { MoneySchema, idSchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import {
   attributeDisplayNameSchema,
@@ -77,7 +77,7 @@ export const baseProductSchema = z.object({
   tags: z.array(tagSchema),
 });
 
-export const ProductInputSchema = baseProductSchema
+export const productInputSchema = baseProductSchema
   .extend({
     variants: z.array(baseVariantSchema),
   })
@@ -97,11 +97,11 @@ export const ProductInputSchema = baseProductSchema
     };
   });
 
-export const ProductDbInputSchema = z.object({
+export const productDbInputSchema = z.object({
   name: nameSchema,
   nameNoAccent: nameSchema,
   slug: slugSchema,
-  category: z.object({ _id: IdSchema, name: z.string(), slug: z.string() }),
+  category: z.object({ _id: idSchema, name: z.string(), slug: z.string() }),
   attributes: z.array(attributeSchema),
   brand: brandSchema,
   description: descriptionSchema,
@@ -120,7 +120,7 @@ export const ProductDbInputSchema = z.object({
 
 export const productUpdateSchema = baseProductSchema
   .extend({
-    id: IdSchema,
+    id: idSchema,
     variants: z.array(variantUpdateSchema),
   })
   .refine(
@@ -144,12 +144,12 @@ export const variantTypeSchema = baseVariantSchema
   .extend({ images: z.array(z.string()) });
 
 export const productTypeWithoutTransformSchema = z.object({
-  _id: MongoIdSchema,
+  _id: mongoIdSchema,
   name: nameSchema,
   nameNoAccent: nameSchema,
   slug: slugSchema,
   category: z
-    .object({ _id: MongoIdSchema, name: z.string(), slug: z.string() })
+    .object({ _id: mongoIdSchema, name: z.string(), slug: z.string() })
     .transform(({ _id, ...rest }) => ({
       ...rest,
       id: _id.toString(),
@@ -161,7 +161,7 @@ export const productTypeWithoutTransformSchema = z.object({
   isPublished: isPublishedSchema,
   isAvailable: isAvailableSchema,
   tags: z
-    .array(z.object({ _id: MongoIdSchema, name: z.string() }))
+    .array(z.object({ _id: mongoIdSchema, name: z.string() }))
     .transform((tag) =>
       tag.map(({ _id, ...rest }) => ({
         ...rest,
@@ -187,8 +187,7 @@ export const productTypeWithoutTransformSchema = z.object({
   updatedAt: updatedAtSchema,
 });
 
-// todo: rename to camleCase
-export const ProductTypeSchema = productTypeWithoutTransformSchema.transform(
+export const productTypeSchema = productTypeWithoutTransformSchema.transform(
   ({ _id, ...rest }) => ({
     ...rest,
     id: _id.toString(),
@@ -205,8 +204,8 @@ export const productPreviewTypeSchema = productTypeWithoutTransformSchema
     variants: true,
   })
   .extend({
-    _id: MongoIdSchema.optional(),
-    id: IdSchema.optional(),
+    _id: mongoIdSchema.optional(),
+    id: idSchema.optional(),
     category: z.object({
       name: z.string(),
       slug: z.string(),

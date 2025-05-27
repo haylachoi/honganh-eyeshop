@@ -1,7 +1,7 @@
 "use server";
 
 import { getAuthActionClient } from "@/lib/actions";
-import { ProductInputSchema, productUpdateSchema } from "./product.validator";
+import { productInputSchema, productUpdateSchema } from "./product.validator";
 import productRepository from "@/lib/db/repositories/products";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
@@ -37,7 +37,7 @@ export const createProductAction = createProductActionClient
   .metadata({
     actionName: "createProduct",
   })
-  .schema(ProductInputSchema)
+  .schema(productInputSchema)
   .action(async ({ parsedInput }) => {
     const newVariants = await transformCreateInputVariantToDbVariant({
       variants: parsedInput.variants,

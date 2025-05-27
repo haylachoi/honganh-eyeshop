@@ -15,7 +15,7 @@ import { revalidateTag } from "next/cache";
 import { validateItems } from "../checkouts/checkout.utils";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import {
   createOrderImages,
@@ -141,7 +141,7 @@ export const completeOrderAction = modifyOrderActionClient
   })
   .schema(
     z.object({
-      id: z.union([IdSchema, z.array(IdSchema)]),
+      id: z.union([idSchema, z.array(idSchema)]),
       date: z.date(),
     }),
   )
@@ -160,7 +160,7 @@ export const confirmOrderAction = modifyOrderActionClient
   })
   .schema(
     z.object({
-      id: z.union([IdSchema, z.array(IdSchema)]),
+      id: z.union([idSchema, z.array(idSchema)]),
       date: z.date(),
     }),
   )
@@ -179,7 +179,7 @@ export const rejectOrderAction = modifyOrderActionClient
   })
   .schema(
     z.object({
-      id: z.union([IdSchema, z.array(IdSchema)]),
+      id: z.union([idSchema, z.array(idSchema)]),
       date: z.date(),
       reason: z.string().optional(),
     }),

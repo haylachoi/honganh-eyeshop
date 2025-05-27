@@ -1,8 +1,8 @@
 import { Id } from "@/types";
 import {
-  CategoryInputSchema,
-  CategoryTypeSchema,
-  CategoryUpdateSchema,
+  categoryInputSchema,
+  categoryTypeSchema,
+  categoryUpdateSchema,
 } from "./category.validator";
 import { z } from "zod";
 
@@ -26,6 +26,6 @@ export type CategoryAttributeType = {
 //   attributes: CategoryAttributeType[];
 // };
 
-export type CategoryType = z.output<typeof CategoryTypeSchema>;
-export type CategoryInputType = z.infer<typeof CategoryInputSchema>;
-export type CategoryUpdateType = z.infer<typeof CategoryUpdateSchema>;
+export type CategoryType = z.output<typeof categoryTypeSchema>;
+export type CategoryInputType = z.infer<typeof categoryInputSchema>;
+export type CategoryUpdateType = z.infer<typeof categoryUpdateSchema>;

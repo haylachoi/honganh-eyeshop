@@ -2,7 +2,7 @@
 import { TOAST_MESSAGES } from "@/constants/messages.constants";
 import { createReviewAction } from "@/features/reviews/review.actions";
 import { ReviewType } from "@/features/reviews/review.type";
-import { ReviewInputSchema } from "@/features/reviews/review.validator";
+import { reviewInputSchema } from "@/features/reviews/review.validator";
 import { onActionError } from "@/lib/actions/action.helper";
 import { Id } from "@/types";
 import { Star } from "lucide-react";
@@ -54,7 +54,7 @@ export const ReviewForm = ({ productId }: { productId: Id }) => {
   const onSubmit = (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
     data.productId = productId;
-    const parsedData = ReviewInputSchema.parse(data);
+    const parsedData = reviewInputSchema.parse(data);
     execute(parsedData);
   };
 

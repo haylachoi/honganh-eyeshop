@@ -9,9 +9,9 @@ import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { Id, QueryFilter } from "@/types";
 import {
   getProductBySlugQuerySchema,
-  ProductDbInputSchema,
+  productDbInputSchema,
   productPreviewTypeSchema,
-  ProductTypeSchema,
+  productTypeSchema,
 } from "@/features/products/product.validator";
 import { z } from "zod";
 import { NotFoundError } from "@/lib/error";
@@ -24,17 +24,17 @@ const getAllProducts = async () => {
   const products = await Product.find().lean();
 
   const result = products.map((product) =>
-    ProductTypeSchema.parse(product),
+    productTypeSchema.parse(product),
   ) as ProductType[];
 
   return result;
 };
 
-type QueryType = z.input<typeof ProductTypeSchema>;
+type QueryType = z.input<typeof productTypeSchema>;
 const getProductByQuery = async (query: QueryFilter<QueryType>) => {
   await connectToDatabase();
   const products = await Product.find(query).lean();
-  const result = products.map((product) => ProductTypeSchema.parse(product));
+  const result = products.map((product) => productTypeSchema.parse(product));
   return result;
 };
 
@@ -66,7 +66,7 @@ const getPublishedProductsForEachCategory = async () => {
       name: categoryWithProduct.category.name,
       slug: categoryWithProduct.category.slug,
     },
-    products: ProductTypeSchema.array().parse(categoryWithProduct.products),
+    products: productTypeSchema.array().parse(categoryWithProduct.products),
   }));
 
   return result;
@@ -75,7 +75,7 @@ const getPublishedProductsForEachCategory = async () => {
 const getProductByIds = async ({ ids }: { ids: string[] }) => {
   await connectToDatabase();
   const products = await Product.find({ _id: { $in: ids } }).lean();
-  const result = ProductTypeSchema.array().parse(products);
+  const result = productTypeSchema.array().parse(products);
   return result;
 };
 
@@ -225,7 +225,7 @@ const getProductByTags = async ({
   ]);
 
   const products: ProductType[] = result[0].products.map(
-    ProductTypeSchema.parse,
+    productTypeSchema.parse,
   );
   const total: number = result[0].total[0]?.count || 0;
 
@@ -246,7 +246,7 @@ const getProductBySlug = async ({
   }
   const result = await Product.findOne(query);
 
-  const product = result ? ProductTypeSchema.parse(result) : null;
+  const product = result ? productTypeSchema.parse(result) : null;
   return product;
 };
 
@@ -263,7 +263,7 @@ const getProductById = async ({
     query.isPublished = true;
   }
   const result = await Product.find(query).lean();
-  const product = ProductTypeSchema.parse(result[0]);
+  const product = productTypeSchema.parse(result[0]);
   return product;
 };
 
@@ -308,7 +308,7 @@ const createProducts = async (input: ProductDbInputType[]) => {
 };
 
 const updateProduct = async (
-  input: z.infer<typeof ProductDbInputSchema> & { id: string },
+  input: z.infer<typeof productDbInputSchema> & { id: string },
 ) => {
   const { id, ...updateData } = input;
 

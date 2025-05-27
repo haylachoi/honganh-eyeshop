@@ -1,4 +1,4 @@
-import { MongoIdSchema } from "@/lib/validator";
+import { mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { AUTH_PROVIDERS_TYPE_LIST } from "../users/user.constants";
 
@@ -17,7 +17,7 @@ export const signInInputSchema = z.object({
 
 export const userSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     name: userNameSchema,
     email: userEmailSchema,
     role: roleSchema,
@@ -36,7 +36,7 @@ export const userSchema = z
 export const userWithoutPasswordSchema = z
   .object({
     // _id: IdSchema,
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     name: userNameSchema,
     avatar: avatarSchema,
     role: roleSchema,
@@ -82,7 +82,7 @@ export const userDbInputFromProviderSchema = z.object({
 
 export const emailVerificationTypeSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     email: userEmailSchema,
     token: z.string(),
     sentAt: z.date(),
@@ -95,7 +95,7 @@ export const emailVerificationTypeSchema = z
 
 export const passwordResetTokenTypeSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     email: userEmailSchema,
     token: z.string(),
     sentAt: z.date(),

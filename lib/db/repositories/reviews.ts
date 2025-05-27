@@ -2,7 +2,7 @@ import { ReviewDbInputType, ReviewType } from "@/features/reviews/review.type";
 import { connectToDatabase } from "..";
 import Review from "../model/review.model";
 import {
-  ReviewTypeSchema,
+  reviewTypeSchema,
   reviewWithFullInfoSchema,
 } from "@/features/reviews/review.validator";
 import Product from "../model/product.model";
@@ -128,14 +128,14 @@ const getReviewsWithUserNameByProductId = async ({
     },
   ]);
 
-  const result = reviews.map((review) => ReviewTypeSchema.parse(review));
+  const result = reviews.map((review) => reviewTypeSchema.parse(review));
   return result;
 };
 
 const getReviewsByProductId = async ({ productId }: { productId: Id }) => {
   await connectToDatabase();
   const reviews = await Review.find({ productId }).lean();
-  const result = reviews.map((review) => ReviewTypeSchema.parse(review));
+  const result = reviews.map((review) => reviewTypeSchema.parse(review));
   return result;
 };
 
@@ -152,7 +152,7 @@ const getReviewByProductIdAndUserId = async ({
     userId,
   }).lean();
 
-  const result = review ? ReviewTypeSchema.parse(review) : null;
+  const result = review ? reviewTypeSchema.parse(review) : null;
 
   return result;
 };
@@ -250,7 +250,7 @@ const createReview = async (input: ReviewDbInputType) => {
     const review = new Review(input);
     await review.save({ session });
 
-    const result = ReviewTypeSchema.parse(review);
+    const result = reviewTypeSchema.parse(review);
     await session.commitTransaction();
     return result;
   } catch (error) {

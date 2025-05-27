@@ -1,4 +1,4 @@
-import { MongoIdSchema } from "@/lib/validator";
+import { mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
 // export const TagSchema = z.object({
@@ -22,7 +22,7 @@ export const tagUpdateSchema = z.object({
 
 export const tagTypeSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     name: nameSchema,
   })
   .transform(({ _id, ...rest }) => ({

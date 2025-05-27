@@ -1,9 +1,9 @@
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { userNameSchema } from "../auth/auth.validator";
 
 const baseReviewSchema = z.object({
-  productId: IdSchema,
+  productId: idSchema,
   comment: z.string().optional(),
   rating: z.coerce
     .number()
@@ -12,17 +12,17 @@ const baseReviewSchema = z.object({
     .max(5, "Rating must be at most 5"),
 });
 
-export const ReviewInputSchema = baseReviewSchema;
+export const reviewInputSchema = baseReviewSchema;
 
-export const ReviewDbInputSchema = baseReviewSchema.extend({
-  userId: IdSchema,
+export const reviewDbInputSchema = baseReviewSchema.extend({
+  userId: idSchema,
 });
 
-export const ReviewTypeSchema = baseReviewSchema
+export const reviewTypeSchema = baseReviewSchema
   .extend({
-    _id: MongoIdSchema,
-    userId: MongoIdSchema,
-    productId: MongoIdSchema,
+    _id: mongoIdSchema,
+    userId: mongoIdSchema,
+    productId: mongoIdSchema,
     createdAt: z.date(),
     updatedAt: z.date(),
     name: userNameSchema.optional(),
@@ -37,16 +37,16 @@ export const ReviewTypeSchema = baseReviewSchema
 
 export const reviewWithFullInfoSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     rating: z.number(),
     comment: z.string().optional(),
     isDeleted: z.boolean().optional(),
     createdAt: z.date(),
     updatedAt: z.date(),
-    productId: MongoIdSchema,
+    productId: mongoIdSchema,
     product: z
       .object({
-        _id: MongoIdSchema,
+        _id: mongoIdSchema,
         slug: z.string(),
         name: z.string(),
         category: z.object({
@@ -60,7 +60,7 @@ export const reviewWithFullInfoSchema = z
       .optional(),
     user: z
       .object({
-        _id: MongoIdSchema,
+        _id: mongoIdSchema,
         name: z.string(),
       })
       .transform(({ _id, ...rest }) => ({

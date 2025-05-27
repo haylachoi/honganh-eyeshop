@@ -1,6 +1,6 @@
 import { getAuthQueryClient, safeQuery } from "@/lib/query";
 import { blogSlugSchema } from "./blog.validators";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { z } from "zod";
 import {
   createBlogQueryFilter,
@@ -20,7 +20,7 @@ export const getAllBlogs = blogQueryClient.query(async () => {
 });
 
 export const getBlogById = blogQueryClient
-  .schema(IdSchema)
+  .schema(idSchema)
   .query(async ({ parsedInput }) => {
     const blog = await next_cache.blogs.byId(parsedInput);
     return blog;

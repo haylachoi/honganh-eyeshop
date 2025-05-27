@@ -1,4 +1,4 @@
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 
 const titleSchema = z.string().trim().min(3).max(200);
@@ -29,7 +29,7 @@ const contentSchema = z.string();
 const isPublishedSchema = z.boolean().default(true);
 const authorSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     name: z.string(),
   })
   .transform(({ _id, ...res }) => ({
@@ -43,7 +43,7 @@ export const baseBlogSchema = z.object({
   description: descriptionSchema,
   wallImage: wallImageSchema,
   images: imagesSchema,
-  authorId: IdSchema,
+  authorId: idSchema,
   content: contentSchema,
   isPublished: isPublishedSchema,
   toc: tocSchema,
@@ -64,7 +64,7 @@ export const blogDbInputSchema = blogInputSchema
   });
 
 export const blogUpdateSchema = blogInputSchema.extend({
-  id: IdSchema,
+  id: idSchema,
   deletedImages: imagesSchema,
 });
 
@@ -75,7 +75,7 @@ export const blogTypeSchema = blogInputSchema
     imageSources: true,
   })
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     author: authorSchema,
     titleNoAccent: titleSchema,
     wallImage: z.string(),

@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ProductInputSchema } from "@/features/products/product.validator";
+import { productInputSchema } from "@/features/products/product.validator";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { createProductAction } from "@/features/products/product.actions";
@@ -72,7 +72,7 @@ const ProductCreateForm = ({
     onError: onActionError,
   });
   const form = useForm<ProductInputType>({
-    resolver: zodResolver(ProductInputSchema),
+    resolver: zodResolver(productInputSchema),
     defaultValues,
   });
 

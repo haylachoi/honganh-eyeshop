@@ -2,10 +2,10 @@ import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import checkoutsRepository from "@/lib/db/repositories/checkouts";
 import { AuthenticationError, NotFoundError } from "@/lib/error";
 import { customerQueryClient } from "@/lib/query";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 
 export const getCheckoutById = customerQueryClient
-  .schema(IdSchema)
+  .schema(idSchema)
   .query(async ({ parsedInput, ctx }) => {
     const result = await checkoutsRepository.getCheckoutById(parsedInput);
     if (!result) {

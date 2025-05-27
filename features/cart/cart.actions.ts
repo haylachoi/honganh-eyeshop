@@ -8,7 +8,7 @@ import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { revalidateTag } from "next/cache";
 import { NotFoundError, ValidationError } from "@/lib/error";
 import { z } from "zod";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { UPDATE_CART_ITEM_MODES } from "./cart.constant";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 
@@ -72,7 +72,7 @@ export const updateItemQuantity = authCustomerActionClient
   })
   .schema(
     z.object({
-      productId: IdSchema,
+      productId: idSchema,
       variantId: z.string().uuid(),
       quantity: z.number().min(1),
       mode: z.enum(UPDATE_CART_ITEM_MODES),
@@ -136,7 +136,7 @@ export const removeItemFromCart = authCustomerActionClient
   })
   .schema(
     z.object({
-      productId: IdSchema,
+      productId: idSchema,
       variantId: z.string().uuid(),
     }),
   )

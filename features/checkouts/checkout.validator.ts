@@ -1,8 +1,8 @@
 import {
-  IdSchema,
+  idSchema,
   imageUrlSchema,
   MoneySchema,
-  MongoIdSchema,
+  mongoIdSchema,
 } from "@/lib/validator";
 import { z } from "zod";
 import { variantAttributeSchema } from "../products/product.validator";
@@ -20,7 +20,7 @@ const customerInfoSchema = z.object({
 });
 
 const baseItemSchema = z.object({
-  productId: IdSchema,
+  productId: idSchema,
   variantId: z.string().uuid(),
   productName: z.string(),
   productUrl: z.string(),
@@ -41,7 +41,7 @@ export const checkoutItemInputSchema = baseItemSchema;
 
 export const checkoutItemSchema = baseItemSchema
   .extend({
-    productId: MongoIdSchema,
+    productId: mongoIdSchema,
     variantId: z.string().uuid(),
   })
   .transform(({ productId, ...rest }) => ({
@@ -69,13 +69,13 @@ export const checkoutInputSchema = baseCheckoutSchema
   });
 
 export const checkoutDbInputSchema = baseCheckoutSchema.extend({
-  userId: MongoIdSchema.optional(),
+  userId: mongoIdSchema.optional(),
   isOrderd: z.boolean().default(false),
 });
 
 export const checkoutTypeSchema = checkoutDbInputSchema
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     isOrderd: z.boolean().default(false),
     orderId: z.string().optional(),
   })

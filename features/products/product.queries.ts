@@ -2,7 +2,7 @@ import productRepository from "@/lib/db/repositories/products";
 import { authQueryClient, safeQuery } from "@/lib/query";
 import { z } from "zod";
 import { getProductBySlugQuerySchema } from "./product.validator";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { NotFoundError } from "@/lib/error";
 import next_cache from "@/cache";
@@ -21,7 +21,7 @@ export const getPublishedProductsForEachCategory = safeQuery.query(async () => {
 export const getProductById = safeQuery
   .schema(
     z.object({
-      id: IdSchema,
+      id: idSchema,
       includePrivateProduct: z.boolean().optional().default(false),
     }),
   )

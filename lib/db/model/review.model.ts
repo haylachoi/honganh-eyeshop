@@ -1,8 +1,8 @@
-import { ReviewTypeSchema } from "@/features/reviews/review.validator";
+import { reviewTypeSchema } from "@/features/reviews/review.validator";
 import mongoose, { Model, model, models, Schema, Document } from "mongoose";
 import { z } from "zod";
 
-type DbModel = z.input<typeof ReviewTypeSchema> & {
+type DbModel = z.input<typeof reviewTypeSchema> & {
   _id: mongoose.Types.ObjectId;
   productId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;

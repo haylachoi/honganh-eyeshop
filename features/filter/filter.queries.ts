@@ -1,5 +1,5 @@
 import { customerQueryClient, safeQuery } from "@/lib/query";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { categorySlugSchema } from "../categories/category.validator";
 import { FILTER_KEYWORDS, SORTING_KEYWORDS } from "@/constants";
 import {
@@ -14,7 +14,7 @@ import next_cache from "@/cache";
 import { searchProducts } from "./filter.services";
 
 export const getFilterByCategoryId = customerQueryClient
-  .schema(IdSchema)
+  .schema(idSchema)
   .query(async ({ parsedInput }) => {
     const result = await next_cache.filters.getByCategoryId(parsedInput);
     return result;

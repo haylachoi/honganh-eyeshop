@@ -1,6 +1,6 @@
 import {
-  IdSchema,
-  MongoIdSchema,
+  idSchema,
+  mongoIdSchema,
   passwordSchema,
   phoneSchema,
 } from "@/lib/validator";
@@ -37,7 +37,7 @@ const baseUserSchema = z.object({
 
 export const userSchema = baseUserSchema
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
   })
   .strip()
   .transform(({ _id, ...rest }) => ({
@@ -66,7 +66,7 @@ export const safeUserInfoFromSessionSchema = baseUserSchema
     avatar: true,
   })
   .extend({
-    id: IdSchema,
+    id: idSchema,
   });
 
 export const safeUserInfoSchema = baseUserSchema
@@ -80,7 +80,7 @@ export const safeUserInfoSchema = baseUserSchema
     provider: true,
   })
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
   })
   .transform(({ _id, ...rest }) => ({
     ...rest,
@@ -93,7 +93,7 @@ export const safeAdminUserInfoSchema = baseUserSchema
     salt: true,
   })
   .extend({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
   })
   .transform(({ _id, ...rest }) => ({
     ...rest,
@@ -101,18 +101,18 @@ export const safeAdminUserInfoSchema = baseUserSchema
   }));
 
 export const customerInfoUpdateSchema = z.object({
-  id: IdSchema,
+  id: idSchema,
   name: z.string().min(2).trim(),
   phone: phoneSchema.optional(),
 });
 
 export const shippingAddressUpdateSchema = shippingAddressSchema.extend({
-  id: IdSchema,
+  id: idSchema,
 });
 
 export const passwordChangeSchema = z
   .object({
-    id: IdSchema,
+    id: idSchema,
     currentPassword: passwordSchema,
     newPassword: passwordSchema,
     confirmNewPassword: passwordSchema,

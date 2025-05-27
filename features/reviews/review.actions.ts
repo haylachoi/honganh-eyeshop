@@ -1,9 +1,9 @@
 "use server";
 
 import { authCustomerActionClient, getAuthActionClient } from "@/lib/actions";
-import { ReviewInputSchema } from "./review.validator";
+import { reviewInputSchema } from "./review.validator";
 import reviewRepository from "@/lib/db/repositories/reviews";
-import { IdSchema } from "@/lib/validator";
+import { idSchema } from "@/lib/validator";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
@@ -24,7 +24,7 @@ export const createReviewAction = createReviewActionClient
   .metadata({
     actionName: "createReview",
   })
-  .schema(ReviewInputSchema)
+  .schema(reviewInputSchema)
   .action(
     async ({
       parsedInput,
@@ -65,7 +65,7 @@ export const canUserReviewAction = authCustomerActionClient
   })
   .schema(
     z.object({
-      productId: IdSchema,
+      productId: idSchema,
     }),
   )
   .action(async ({ parsedInput, ctx }) => {
@@ -81,7 +81,7 @@ export const hidenReviewAction = modifyReviewActionClient
   })
   .schema(
     z.object({
-      reviewId: IdSchema,
+      reviewId: idSchema,
     }),
   )
   .action(async ({ parsedInput }) => {
@@ -99,7 +99,7 @@ export const restoreReviewAction = modifyReviewActionClient
   })
   .schema(
     z.object({
-      reviewId: IdSchema,
+      reviewId: idSchema,
     }),
   )
   .action(async ({ parsedInput }) => {
@@ -118,7 +118,7 @@ export const deleteReviewAction = modifyReviewActionClient
   })
   .schema(
     z.object({
-      reviewId: z.union([IdSchema, z.array(IdSchema)]),
+      reviewId: z.union([idSchema, z.array(idSchema)]),
     }),
   )
   .action(async ({ parsedInput }) => {

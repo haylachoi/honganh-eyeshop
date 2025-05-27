@@ -1,4 +1,4 @@
-import { IdSchema, MongoIdSchema } from "@/lib/validator";
+import { idSchema, mongoIdSchema } from "@/lib/validator";
 import { z } from "zod";
 import { categorySlugSchema } from "../categories/category.validator";
 import { getLink } from "@/lib/utils";
@@ -25,7 +25,7 @@ export const filterGroupSchema = z.object({
 });
 
 export const filterInputSchema = z.object({
-  categoryId: IdSchema.optional(),
+  categoryId: idSchema.optional(),
   categorySlug: categorySlugSchema.optional(),
   name: filterNameSchema,
   displayName: filterNameSchema,
@@ -34,8 +34,8 @@ export const filterInputSchema = z.object({
 
 export const filterTypeSchema = filterInputSchema
   .extend({
-    _id: MongoIdSchema,
-    categoryId: MongoIdSchema,
+    _id: mongoIdSchema,
+    categoryId: mongoIdSchema,
   })
   .transform(({ _id, categoryId, ...rest }) => ({
     ...rest,
@@ -50,7 +50,7 @@ export const searchInputSchema = z.object({
 });
 
 export const searchProductResultSchema = z.object({
-  id: IdSchema,
+  id: idSchema,
   name: z.string(),
   price: z.number(),
   link: z.string(),
@@ -59,7 +59,7 @@ export const searchProductResultSchema = z.object({
 
 export const searchProductResultTransformSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     name: z.string(),
     slug: z.string(),
     category: z.object({
@@ -78,7 +78,7 @@ export const searchProductResultTransformSchema = z
   }));
 
 export const searchBlogResultSchema = z.object({
-  id: IdSchema,
+  id: idSchema,
   title: z.string(),
   link: z.string(),
   image: z.string(),
@@ -86,7 +86,7 @@ export const searchBlogResultSchema = z.object({
 
 export const searchBlogResultTranformSchema = z
   .object({
-    _id: MongoIdSchema,
+    _id: mongoIdSchema,
     title: z.string(),
     slug: blogSlugSchema,
     image: z.string(),

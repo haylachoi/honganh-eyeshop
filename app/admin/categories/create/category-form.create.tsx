@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CategoryInputType } from "@/features/categories/category.types";
-import { CategoryInputSchema } from "@/features/categories/category.validator";
+import { categoryInputSchema } from "@/features/categories/category.validator";
 import { createCategoryAction } from "@/features/categories/category.actions";
 import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ const defaultValues: CategoryInputType = {
 const CategoryCreateForm = () => {
   const router = useRouter();
   const form = useForm<CategoryInputType>({
-    resolver: zodResolver(CategoryInputSchema),
+    resolver: zodResolver(categoryInputSchema),
     defaultValues,
   });
   const { execute, isPending } = useAction(createCategoryAction, {
