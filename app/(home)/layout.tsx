@@ -15,7 +15,7 @@ export default function Layout({
         <Header />
         <Breadcrumb />
       </div>
-      <div className="">{children}</div>
+      <div className="max-sm:max-w-dvw">{children}</div>
       <Footer className="mt-12" />
       <Suspense fallback={null}>
         <FloatingSupportBtn />
