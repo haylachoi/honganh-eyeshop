@@ -2,7 +2,7 @@ import { ProductType } from "@/features/products/product.types";
 import { cn, currencyFormatter } from "@/lib/utils";
 import React from "react";
 import { TopContext } from "./top-section";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const getGroupedAttributes = (
   variants: Pick<ProductType, "variants">["variants"],
@@ -33,7 +33,6 @@ function VariantSelector({
   );
 
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const selectedAttrs = React.useMemo(() => {
     const entries: [string, string][] = [];
@@ -84,7 +83,7 @@ function VariantSelector({
     }
 
     if (shouldUpdate) {
-      router.replace(`?${params.toString()}`);
+      window.history.replaceState(null, "", `?${params.toString()}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -123,13 +122,11 @@ function VariantSelector({
     }
 
     if (shouldUpdate) {
-      router.replace(`?${params.toString()}`, {
-        scroll: false,
-      });
+      window.history.replaceState(null, "", `?${params.toString()}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, groupedAttributes, router]);
+  }, [searchParams, groupedAttributes]);
 
   React.useEffect(() => {
     setCurrentVariant(currentVariant);
@@ -155,11 +152,9 @@ function VariantSelector({
     } else {
       params.set(name, value); // chọn mới
     }
-
-    router.replace(`?${params.toString()}`, {
-      scroll: false,
-    });
+    window.history.replaceState(null, "", `?${params.toString()}`);
   };
+
   const formatter = currencyFormatter;
   return (
     <div className="space-y-4">

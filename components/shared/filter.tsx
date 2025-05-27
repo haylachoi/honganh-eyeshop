@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterGroupType } from "@/features/filter/filter.types";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Accordion,
   AccordionContent,
@@ -13,7 +13,6 @@ import React from "react";
 
 const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const setSearchParam = ({ name, value }: { name: string; value: string }) => {
     const params = new URLSearchParams(searchParams);
     const existingValue = params.get(name);
@@ -40,17 +39,13 @@ const FilterView = ({ attributes }: { attributes: FilterGroupType[] }) => {
       params.set(name, value);
     }
 
-    router.replace(`?${params.toString()}`, {
-      scroll: false,
-    });
+    window.history.replaceState(null, "", `?${params.toString()}`);
   };
 
   const clearFilter = () => {
     const params = new URLSearchParams();
 
-    router.replace(`?${params.toString()}`, {
-      scroll: false,
-    });
+    window.history.replaceState(null, "", `?${params.toString()}`);
   };
 
   return (
