@@ -1,7 +1,6 @@
 "use client";
 
-import { MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
-import { FILTER_NAME } from "@/features/filter/filter.constants";
+import { FILTER_KEYWORDS, MIN_CHARACTER_LENGTH_FOR_SEARCH } from "@/constants";
 import { cn, getLink } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -60,7 +59,7 @@ const SearchBox = () => {
             getLink.search({
               queries: [
                 {
-                  key: FILTER_NAME.SEARCH,
+                  key: FILTER_KEYWORDS.search,
                   value: search,
                 },
               ],

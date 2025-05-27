@@ -1,8 +1,8 @@
-import { SORTING_OPTIONS } from "@/constants";
 import { useQuery } from "@tanstack/react-query";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { API_ENDPOINTS } from "@/constants/endpoints.constants";
 import { ReviewWithFullInfoType } from "@/features/reviews/review.type";
+import { SORTING_KEYWORDS } from "@/constants";
 
 export const useFetchReviews = ({
   page,
@@ -30,8 +30,8 @@ export const useFetchReviews = ({
       const params = new URLSearchParams({
         page: String(page),
         size: String(size),
-        [SORTING_OPTIONS.SORT_BY]: sortBy,
-        [SORTING_OPTIONS.ORDER_BY]: orderBy,
+        [SORTING_KEYWORDS.sort_by]: sortBy,
+        [SORTING_KEYWORDS.order_by]: orderBy,
       });
 
       const res = await fetch(`${API_ENDPOINTS.reviews}?${params.toString()}`);

@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { SORTING_OPTIONS } from "@/constants";
+import { SORTING_KEYWORDS } from "@/constants";
 
 type SortHandler =
   | string
@@ -27,17 +27,17 @@ export const ColumnHeaderButton = ({
     if (typeof onSort === "function") {
       onSort({ router, searchParams });
     } else if (typeof onSort === "string") {
-      const currentSort = searchParams.get(SORTING_OPTIONS.SORT_BY);
+      const currentSort = searchParams.get(SORTING_KEYWORDS.sort_by);
       const currentOrder =
-        searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
+        searchParams.get(SORTING_KEYWORDS.order_by) || SORTING_KEYWORDS.desc;
       const newOrder =
-        currentSort === onSort && currentOrder === SORTING_OPTIONS.ASC
-          ? SORTING_OPTIONS.DESC
-          : SORTING_OPTIONS.ASC;
+        currentSort === onSort && currentOrder === SORTING_KEYWORDS.asc
+          ? SORTING_KEYWORDS.desc
+          : SORTING_KEYWORDS.asc;
 
       const newParams = new URLSearchParams(searchParams);
-      newParams.set(SORTING_OPTIONS.SORT_BY, onSort);
-      newParams.set(SORTING_OPTIONS.ORDER_BY, newOrder);
+      newParams.set(SORTING_KEYWORDS.sort_by, onSort);
+      newParams.set(SORTING_KEYWORDS.order_by, newOrder);
 
       router.replace(`?${newParams.toString()}`);
     }

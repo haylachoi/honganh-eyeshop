@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/custom-ui/accordion";
+import { FILTER_KEYWORDS } from "@/constants";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
-import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { cn, getLink } from "@/lib/utils";
 import { ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";
@@ -58,7 +58,7 @@ const links: LinkType[] = [
           {
             title: "Giảm giá",
             href: getLink.search({
-              queries: [{ key: FILTER_NAME.SALE, value: "1" }],
+              queries: [{ key: FILTER_KEYWORDS.sale, value: "1" }],
             }),
           },
           {

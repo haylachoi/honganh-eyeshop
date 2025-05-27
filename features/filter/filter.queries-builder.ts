@@ -1,8 +1,11 @@
 import { FilterQuery } from "mongoose";
 import { ProductType } from "../products/product.types";
 import { normalizeSearchParams, removeDiacritics } from "@/lib/utils";
-import { FILTER_NAME } from "./filter.constants";
-import { DEFAULT_SORTING, SORTING_KEYWORDS } from "@/constants";
+import {
+  DEFAULT_SORTING,
+  FILTER_KEYWORDS,
+  SORTING_KEYWORDS,
+} from "@/constants";
 
 export const createSearchQuery = ({ search }: { search?: string }) => {
   if (!search) return {};
@@ -31,11 +34,11 @@ export const createProductQueryFilter = ({
 
   // todo : use keyword
   const {
-    [FILTER_NAME.CATEGORY]: categoryFilter,
-    [FILTER_NAME.PRICE]: priceFilters,
-    [FILTER_NAME.SEARCH]: searchFilter,
-    [FILTER_NAME.TAG]: tagFilter,
-    [FILTER_NAME.SALE]: saleFilter,
+    [FILTER_KEYWORDS.category]: categoryFilter,
+    [FILTER_KEYWORDS.price]: priceFilters,
+    [FILTER_KEYWORDS.search]: searchFilter,
+    [FILTER_KEYWORDS.tag]: tagFilter,
+    [FILTER_KEYWORDS.sale]: saleFilter,
     ...attrFilters
   } = input;
 

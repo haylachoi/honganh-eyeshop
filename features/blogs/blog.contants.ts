@@ -10,6 +10,7 @@ import ImageResize from "tiptap-extension-resize-image";
 import { HeadingWithId } from "@/components/shared/editor/extensions/heading-with-id-ext";
 import { createUppercaseMap } from "@/lib/utils";
 
+// todo : move to other file
 export const TIPTAP_EXTENSIONS = [
   StarterKit,
   LineHeightExtension.configure({
@@ -41,10 +42,10 @@ export const BLOG_FILTER_NAME_VALUES = [
 ] as const;
 
 export const BLOG_FILTER_NAMES = createUppercaseMap(BLOG_FILTER_NAME_VALUES);
-export const BLOG_ORDER_BY_VALUES = ["name", "updatedAt"] as const;
+export const BLOG_SORT_BY_VALUES = ["name", "updatedAt"] as const;
 
 export const BLOG_SORTING_OPTIONS = {
-  ORDER_BY: createUppercaseMap(BLOG_ORDER_BY_VALUES),
+  SORT_BY: createUppercaseMap(BLOG_SORT_BY_VALUES),
 };
 
 export const MAX_BLOG_PAGES_FOR_STATIC = 10;

@@ -1,4 +1,3 @@
-import { createUppercaseMap } from "../lib/utils";
 import config from "@/app-config.json";
 
 // 1. App Info
@@ -51,18 +50,6 @@ export const PAGE_SIZE = {
 };
 
 // 9. Sorting
-export const SORT_BY_VALUES = ["asc", "desc"] as const;
-export const SORT_BY_OPTIONS = createUppercaseMap(SORT_BY_VALUES);
-
-export const SORTING_OPTIONS = {
-  SORT_BY: "sortBy",
-  NAME: "name",
-  PRICE: "minPrice",
-  ORDER_BY: "orderBy",
-  ASC: "asc",
-  DESC: "desc",
-};
-
 export const KEYWORDS = {
   pagination: {
     page: "page",

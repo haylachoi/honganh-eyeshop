@@ -1,4 +1,4 @@
-import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
+import { PAGE_SIZE, SORTING_KEYWORDS } from "@/constants";
 import { getAllOrders } from "@/features/orders/order.queries";
 import { DEFAULT_SERVER_ERROR_MESSAGE } from "@/lib/error";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,15 +8,15 @@ const size = PAGE_SIZE.ORDER.ALL.MD;
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = parseInt(searchParams.get("page") || "1", 10);
-  const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
+  const sortBy = searchParams.get(SORTING_KEYWORDS.sort_by) || "createdAt";
   const orderBy =
-    searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
+    searchParams.get(SORTING_KEYWORDS.order_by) || SORTING_KEYWORDS.desc;
   try {
     const result = await getAllOrders({
       page,
       size,
       sortBy,
-      orderBy: orderBy === SORTING_OPTIONS.ASC ? 1 : -1,
+      orderBy: orderBy === SORTING_KEYWORDS.asc ? 1 : -1,
     });
 
     if (!result.success) {

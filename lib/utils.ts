@@ -1,11 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import crypto from "crypto";
-import { BASE_URL, DEFAULT_SORTING, SORTING_KEYWORDS } from "@/constants";
+import {
+  BASE_URL,
+  DEFAULT_SORTING,
+  KEYWORDS,
+  SORTING_KEYWORDS,
+} from "@/constants";
 import slugify from "slugify";
 import { AddressType, SearchParams } from "@/types";
 import { ENDPOINTS, ADMIN_ENDPOINTS } from "@/constants/endpoints.constants";
-import { FILTER_NAME } from "@/features/filter/filter.constants";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 export function cn(...inputs: ClassValue[]) {
@@ -328,10 +332,10 @@ export const getLink = {
   },
   tag: {
     trending() {
-      return `${ENDPOINTS.SEARCH}?${FILTER_NAME.TAG}=trending`;
+      return `${ENDPOINTS.SEARCH}?${KEYWORDS.filter.tag}=trending`;
     },
     newArrival() {
-      return `${ENDPOINTS.SEARCH}?${FILTER_NAME.TAG}=new-arrival`;
+      return `${ENDPOINTS.SEARCH}?${KEYWORDS.filter.tag}=new-arrival`;
     },
   },
   search({ queries }: { queries: { key: string; value: string }[] }) {

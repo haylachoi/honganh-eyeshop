@@ -1,8 +1,8 @@
-import { SORTING_OPTIONS } from "@/constants";
 import { useQuery } from "@tanstack/react-query";
 import { CACHE_CONFIG } from "@/cache/cache.constant";
 import { API_ENDPOINTS } from "@/constants/endpoints.constants";
 import { OrderType } from "@/features/orders/order.types";
+import { SORTING_KEYWORDS } from "@/constants";
 
 export const useFetchAllOrders = ({
   page,
@@ -29,8 +29,8 @@ export const useFetchAllOrders = ({
       const params = new URLSearchParams({
         page: String(page),
         size: String(size),
-        [SORTING_OPTIONS.SORT_BY]: sortBy,
-        [SORTING_OPTIONS.ORDER_BY]: orderBy,
+        [SORTING_KEYWORDS.sort_by]: sortBy,
+        [SORTING_KEYWORDS.order_by]: orderBy,
       });
 
       const res = await fetch(`${API_ENDPOINTS.orders}?${params.toString()}`);

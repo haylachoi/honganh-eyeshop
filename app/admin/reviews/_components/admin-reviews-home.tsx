@@ -30,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ActionButton } from "./action-button";
-import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
+import { PAGE_SIZE, SORTING_KEYWORDS } from "@/constants";
 import { useSearchParams } from "next/navigation";
 import { useFetchReviews } from "../_hooks/use-fetch-reviews";
 import { ColumnHeaderButton } from "@/components/shared/table/column-header-button";
@@ -154,9 +154,9 @@ export const AdminReviewsHome = () => {
     10,
   );
 
-  const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
+  const sortBy = searchParams.get(SORTING_KEYWORDS.sort_by) || "createdAt";
   const orderBy =
-    searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
+    searchParams.get(SORTING_KEYWORDS.order_by) || SORTING_KEYWORDS.desc;
 
   const { data, isPending } = useFetchReviews({
     page,

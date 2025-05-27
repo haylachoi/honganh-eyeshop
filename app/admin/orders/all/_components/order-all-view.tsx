@@ -33,7 +33,7 @@ import { TooltipWrapper } from "@/components/shared/tooltip";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSearchParams } from "next/navigation";
-import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
+import { PAGE_SIZE, SORTING_KEYWORDS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
 import { useFetchAllOrders } from "../_hooks/use-fetch-orders";
@@ -232,9 +232,9 @@ const OrdersAllView = () => {
     10,
   );
 
-  const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
+  const sortBy = searchParams.get(SORTING_KEYWORDS.sort_by) || "createdAt";
   const orderBy =
-    searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
+    searchParams.get(SORTING_KEYWORDS.order_by) || SORTING_KEYWORDS.desc;
 
   const { data, isPending } = useFetchAllOrders({
     page,

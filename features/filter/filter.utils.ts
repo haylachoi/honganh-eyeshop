@@ -1,9 +1,9 @@
+import { FILTER_KEYWORDS } from "@/constants";
 import { currencyFormatter } from "@/lib/utils";
-import { FILTER_NAME } from "./filter.constants";
 
 export const getPriceFilterOptions = () => {
   return {
-    name: FILTER_NAME.PRICE,
+    name: FILTER_KEYWORDS.price,
     displayName: "Giá",
     values: [
       {
@@ -24,8 +24,8 @@ export const getPriceFilterOptions = () => {
 
 export const getSaleFilterOptions = () => {
   return {
-    name: FILTER_NAME.SALE,
-    displayName: FILTER_NAME.SALE,
+    name: FILTER_KEYWORDS.sale,
+    displayName: FILTER_KEYWORDS.sale,
     values: [
       {
         value: "Đang giảm giá",
