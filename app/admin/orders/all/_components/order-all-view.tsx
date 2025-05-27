@@ -1,11 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -34,7 +32,7 @@ import { currencyFormatter, dateFormatter } from "@/lib/utils";
 import { TooltipWrapper } from "@/components/shared/tooltip";
 import { ORDER_STATUS_DISPLAY_MAPS } from "@/features/orders/order.constants";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
 import { HeaderButton } from "./header-action-button";
 import { ActionButton } from "./action-button";
@@ -245,37 +243,26 @@ const OrdersAllView = () => {
     orderBy,
   });
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const router = useRouter();
 
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / size);
   const goToPage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search);
     params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`);
+    window.history.replaceState({}, "", `?${params.toString()}`);
   };
 
   const table = useReactTable({
-    data: data?.items || [],
+    data: useMemo(() => data?.items || [], [data]), // useMemo to prevent infinite rerender
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
     },

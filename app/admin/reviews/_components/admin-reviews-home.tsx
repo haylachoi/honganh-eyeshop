@@ -5,8 +5,6 @@ import React from "react";
 
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -33,7 +31,7 @@ import {
 } from "@/components/ui/table";
 import { ActionButton } from "./action-button";
 import { PAGE_SIZE, SORTING_OPTIONS } from "@/constants";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useFetchReviews } from "../_hooks/use-fetch-reviews";
 import { ColumnHeaderButton } from "@/components/shared/table/column-header-button";
 import { dateFormatter } from "@/lib/utils";
@@ -149,7 +147,6 @@ export const columns: ColumnDef<ReviewWithFullInfoType>[] = [
 ];
 
 export const AdminReviewsHome = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") ?? "1");
   const size = parseInt(
@@ -160,7 +157,6 @@ export const AdminReviewsHome = () => {
   const sortBy = searchParams.get(SORTING_OPTIONS.SORT_BY) || "createdAt";
   const orderBy =
     searchParams.get(SORTING_OPTIONS.ORDER_BY) || SORTING_OPTIONS.DESC;
-  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const { data, isPending } = useFetchReviews({
     page,
@@ -169,9 +165,6 @@ export const AdminReviewsHome = () => {
     orderBy,
   });
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -181,23 +174,17 @@ export const AdminReviewsHome = () => {
   const goToPage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search);
     params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`);
+    window.history.replaceState({}, "", `?${params.toString()}`);
   };
 
   const table = useReactTable({
     data: data?.items || [],
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
     },
