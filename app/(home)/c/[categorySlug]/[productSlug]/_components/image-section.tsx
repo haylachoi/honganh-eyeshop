@@ -5,6 +5,11 @@ import React from "react";
 import { TopContext } from "./top-section";
 import { cn } from "@/lib/utils";
 
+// use same size for primary image and carousel image to avoid download 2 version of image
+const imageSize = {
+  width: 600,
+  height: 300,
+};
 const ImageSection = ({ product }: { product: ProductType }) => {
   const images = product.variants.flatMap((variant) => variant.images);
   const { currentImage, setCurrentImage } = React.use(TopContext);
@@ -32,8 +37,8 @@ const ImageSection = ({ product }: { product: ProductType }) => {
           className="w-full h-full object-cover"
           src={currentImage}
           alt={product.name}
-          width={600}
-          height={300}
+          width={imageSize.width}
+          height={imageSize.height}
           priority
         />
 
@@ -65,8 +70,8 @@ const ImageSection = ({ product }: { product: ProductType }) => {
               image.imageUrl === currentImage &&
                 "p-1 border-2 border-foreground",
             )}
-            width={250}
-            height={125}
+            width={imageSize.width}
+            height={imageSize.height}
             onClick={() => setCurrentImage(image.imageUrl)}
           />
         )}

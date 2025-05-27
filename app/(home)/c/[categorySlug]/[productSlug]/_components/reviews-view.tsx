@@ -17,7 +17,7 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
         .map((review) => (
           <li
             key={review.id}
-            className="px-8 py-4 not-last:border-b border-primary"
+            className="px-2 md:px-8 py-4 not-last:border-b border-primary"
           >
             <div className="">
               <div className="flex gap-8 items-baseline">

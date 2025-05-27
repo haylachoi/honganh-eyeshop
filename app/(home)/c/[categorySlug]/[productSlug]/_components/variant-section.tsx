@@ -201,7 +201,7 @@ function VariantSelector({
             )}
             <span className="mx-3 text-foreground/70 text-sm">
               {currentVariant.countInStock <= 100
-                ? `Còn: ${currentVariant.countInStock} sản phẩm`
+                ? `Còn: ${currentVariant.countInStock} SP`
                 : ""}
             </span>
           </div>
