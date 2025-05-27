@@ -16,7 +16,7 @@ const BenefitProvider = async () => {
   if (!benefits || !benefits.isActive) {
     const benefitInfos = await getBenefitInfos();
     return (
-      <ul className="container py-6 grid grid-cols-[repeat(auto-fit,minmax(min(250px,100%),1fr))] gap-4">
+      <ul className="container py-6 grid grid-cols-[repeat(auto-fit,minmax(min(330px,100%),1fr))] gap-4">
         {benefitInfos.map((benefitInfo) => (
           <li
             key={benefitInfo.title}

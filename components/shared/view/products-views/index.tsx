@@ -1,6 +1,6 @@
 "use client";
 
-import { PreviewCard } from "../../product-preview-card";
+import { ProductPreviewCard } from "../../product-preview-card";
 import SortingOptions from "../../sorting-options";
 import { ProductPreview } from "@/features/products/product.types";
 import { Loader } from "lucide-react";
@@ -48,7 +48,7 @@ const ProductsView = ({
       <ul className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
         {allProducts.map((product) => (
           <li key={product.id}>
-            <PreviewCard className="w-full" product={product} />
+            <ProductPreviewCard className="w-full" product={product} />
           </li>
         ))}
       </ul>

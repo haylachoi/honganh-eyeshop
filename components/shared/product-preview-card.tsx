@@ -4,7 +4,7 @@ import { ProductPreview } from "@/features/products/product.types";
 import { cn, currencyFormatter, getLink } from "@/lib/utils";
 import Link from "next/link";
 
-export const PreviewCard = ({
+export const ProductPreviewCard = ({
   product,
   className,
 }: {
@@ -18,7 +18,7 @@ export const PreviewCard = ({
   return (
     <div
       className={cn(
-        "w-full border-5 border-secondary border-t-transparent border-r-transparent",
+        "w-full border-5 border-secondary border-t-transparent border-r-transparent overflow-hidden",
         className,
       )}
     >
@@ -37,9 +37,9 @@ export const PreviewCard = ({
           width={200}
           height={100}
         />
-        <div className="p-4">
+        <div className="md:px-4 py-4">
           <p className="text-xl truncate">{product.name}</p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-baseline">
             {/* todo: fix price overflow */}
             <span className="text-foreground font-bold">
               {minPrice === maxPrice
@@ -47,7 +47,7 @@ export const PreviewCard = ({
                 : `${formater.format(minPrice)} - ${formater.format(maxPrice)}`}
             </span>
             {product.variants[0].originPrice !== product.variants[0].price && (
-              <span className="text-foreground/60 line-through">
+              <span className="text-foreground/60 line-through text-sm md:text-base">
                 {formater.format(product.variants[0].originPrice)}
               </span>
             )}
