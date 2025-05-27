@@ -16,6 +16,19 @@ import { ProductType } from "@/features/products/product.types";
 import { RelatedProductsView } from "./_components/related-products";
 import { LoadingIndicator } from "@/components/shared/loading-indicator";
 import { getSettings } from "@/features/settings/settings.services";
+import next_cache from "@/cache";
+
+export const revalidate = 3600;
+export const generateStaticParams = async () => {
+  const products = await next_cache.products.getAll();
+  if (!products) {
+    throw new Error("Products not found");
+  }
+  return products.map((product) => ({
+    categorySlug: product.category.slug,
+    productSlug: product.slug,
+  }));
+};
 
 const getProduct = cache(
   async ({
