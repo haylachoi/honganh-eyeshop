@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { Suspense } from "react";
 import { Benefit } from "@/components/shared/benefit";
 import { getSettings } from "@/features/settings/settings.services";
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 
 const Hero = async () => {
   return (
@@ -143,7 +144,7 @@ const HeroDefault = async () => {
           Đẹp hơn với kính của Hồng Anh
         </div>
         <Link
-          href="/"
+          href={ENDPOINTS.SEARCH}
           className="p-4 py-2 inline-flex bg-primary text-primary-foreground text-xl md:text-2xl items-center gap-6"
         >
           Mua Ngay
