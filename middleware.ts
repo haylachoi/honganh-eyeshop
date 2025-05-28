@@ -12,12 +12,19 @@ const protectedRoutes = [
 
 export async function middleware(request: NextRequest) {
   const response = (await middlewareAuth(request)) ?? NextResponse.next();
-  // await updateSession();
+  await updateSession();
 
   return response;
 }
 
 async function middlewareAuth(request: NextRequest) {
+  if (request.nextUrl.pathname === ENDPOINTS.AUTH.LOGIN) {
+    const result = await getSession();
+    if (result.success) {
+      return NextResponse.redirect(new URL(ENDPOINTS.HOME, request.url));
+    }
+  }
+
   if (protectedRoutes.includes(request.nextUrl.pathname)) {
     const result = await getSession();
     if (!result.success) {
