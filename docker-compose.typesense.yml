@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  typesense:
+    image: typesense/typesense:28.0
+    container_name: typesense
+    ports:
+      - "8108:8108"
+    command: >
+      --data-dir /data
+      --api-key=xyz
+    volumes:
+      - typesense-data:/data
+
+volumes:
+  typesense-data:
