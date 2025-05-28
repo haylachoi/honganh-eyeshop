@@ -84,3 +84,8 @@ export const DEFAULT_SORTING = {
 };
 
 export const SEARCH_ENGINE = config.searchEngine;
+
+export const GOOGLE_AUTH = {
+  clientId: process.env.GOOGLE_CLIENT_ID!,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+};

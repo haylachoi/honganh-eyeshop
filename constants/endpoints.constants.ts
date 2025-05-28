@@ -70,4 +70,9 @@ export const API_ENDPOINTS = {
     search: "/api/products/search",
   },
   globalSearch: "/api/global-search",
+  auth: {
+    google: {
+      callback: "/api/auth/google/callback",
+    },
+  },
 };

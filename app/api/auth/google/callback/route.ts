@@ -1,7 +1,15 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { loginWithGoogle } from "@/features/auth/auth.auth";
-import { BASE_URL } from "@/constants";
+import { GOOGLE_AUTH } from "@/constants";
+import { getFullLink } from "@/lib/utils";
+import { API_ENDPOINTS } from "@/constants/endpoints.constants";
+
+const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
+// url must be absolute link
+const CALLBACK_URL = getFullLink(API_ENDPOINTS.auth.google.callback);
+const REDIRECT_URL = getFullLink();
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
@@ -25,14 +33,14 @@ export async function GET(req: NextRequest) {
   }
 
   // Exchange code for access token
-  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+  const tokenRes = await fetch(GOOGLE_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       code,
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-      redirect_uri: "http://localhost:3000/api/auth/google/callback",
+      client_id: GOOGLE_AUTH.clientId,
+      client_secret: GOOGLE_AUTH.clientSecret,
+      redirect_uri: CALLBACK_URL,
       grant_type: "authorization_code",
     }),
   });
@@ -41,22 +49,24 @@ export async function GET(req: NextRequest) {
   const accessToken = tokenData.access_token;
 
   // Get user info
-  const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+  const googleRes = await fetch(GOOGLE_USERINFO_URL, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  const user = await userRes.json();
-  console.log("Google user:", user);
+  const data = await googleRes.json();
+  if (data && data.error) {
+    console.error("Google Error:", data);
+  }
 
-  if (user.email && user.name && user.id) {
+  if (data.email && data.name && data.id) {
     const result = await loginWithGoogle({
-      email: user.email,
-      name: user.name,
-      providerId: user.id,
+      email: data.email,
+      name: data.name,
+      providerId: data.id,
     });
 
     if (result.success) {
-      return NextResponse.redirect(new URL("/", BASE_URL));
+      return NextResponse.redirect(REDIRECT_URL);
     }
 
     return NextResponse.json({
