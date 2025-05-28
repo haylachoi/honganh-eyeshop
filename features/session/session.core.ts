@@ -18,15 +18,25 @@ export async function encrypt(payload: UserSessionPayload) {
     .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined = "") {
+export async function decrypt(session: string | undefined) {
+  if (!session) {
+    return;
+  }
+
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
     });
     return payload;
   } catch (e) {
-    console.error(e);
-    // throw e;
+    if (
+      typeof e === "object" &&
+      e !== null &&
+      "code" in e &&
+      e.code !== "ERR_JWS_INVALID"
+    ) {
+      console.error(e);
+    }
   }
 }
 
