@@ -1,7 +1,7 @@
 "use client";
 
 import { ReviewWithFullInfoType } from "@/features/reviews/review.type";
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   ColumnDef,
@@ -178,7 +178,7 @@ export const AdminReviewsHome = () => {
   };
 
   const table = useReactTable({
-    data: data?.items || [],
+    data: useMemo(() => data?.items || [], [data]),
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
