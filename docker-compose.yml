@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   app:
     build:
@@ -10,7 +8,9 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/mydb
+      # - MONGODB_URI=mongodb://mongo:27017/mydb
+    env_file:
+      - .env.production
     depends_on:
       - mongo
 
@@ -22,6 +22,17 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
+  cron:
+    build:
+      context: ./cron
+      dockerfile: Dockerfile.cron
+    environment:
+      - BASE_URL=http://app:3000
+    env_file:
+      - .env.production
+    depends_on:
+      - app
 
 volumes:
   mongo-data:
