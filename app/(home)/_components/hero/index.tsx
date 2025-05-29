@@ -135,7 +135,7 @@ const HeroProvider = async () => {
 };
 const HeroDefault = async () => {
   return (
-    <div className="bg-[url('/home/hero-image.jpg')] bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative">
+    <div className="bg-[url('/home/hero-image.webp')] bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative">
       <div className="lg:block uppercase text-4xl md:text-6xl text-primary font-bold absolute top-1/3 lg:top-2/3  lg:-right-1/5 xl:-right-1/3">
         Thoải mái
       </div>
