@@ -35,33 +35,39 @@ const formatZodError = (error: ZodError): Record<string, string> => {
   }, {});
 };
 
-const getFormFields = ({
-  checkout,
-  defaultUserInfo,
-}: {
-  checkout: CheckoutType;
-  defaultUserInfo: Pick<
-    SafeUserInfo,
-    "name" | "phone" | "email" | "shippingAddress"
-  >;
-}) => [
+const defaultUserInfo: Pick<
+  SafeUserInfo,
+  "name" | "phone" | "email" | "shippingAddress"
+> = {
+  name: "",
+  phone: "",
+  email: "",
+  shippingAddress: {
+    address: "",
+    ward: "",
+    district: "",
+    city: "",
+  },
+};
+
+const getFormFields = ({ checkout }: { checkout: CheckoutType }) => [
   {
     label: "Tên khách hàng",
     name: "customer.name",
     type: "text",
-    value: checkout?.customer?.name || defaultUserInfo.name,
+    value: checkout?.customer?.name || defaultUserInfo.name || "",
   },
   {
     label: "Email",
     name: "customer.email",
     type: "text",
-    value: checkout?.customer?.email || defaultUserInfo.email,
+    value: checkout?.customer?.email || defaultUserInfo.email || "",
   },
   {
     label: "Số điện thoại",
     name: "customer.phone",
     type: "tel",
-    value: checkout?.customer?.phone || defaultUserInfo.phone,
+    value: checkout?.customer?.phone || defaultUserInfo.phone || "",
   },
   {
     label: "Địa chỉ",
@@ -104,14 +110,9 @@ const getFormFields = ({
 const CheckoutForm = ({
   checkout,
   className,
-  defaultUserInfo,
 }: {
   checkout: CheckoutType;
   className?: string;
-  defaultUserInfo: Pick<
-    SafeUserInfo,
-    "name" | "phone" | "email" | "shippingAddress"
-  >;
 }) => {
   const coupon = useCheckoutStore((state) => state.coupon);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
@@ -198,7 +199,7 @@ const CheckoutForm = ({
     >
       <div className="">
         <form action={onSubmit} className="flex flex-col gap-4">
-          {getFormFields({ checkout, defaultUserInfo }).map((field) => (
+          {getFormFields({ checkout }).map((field) => (
             <FormInput
               key={field.name}
               label={field.label}
@@ -323,21 +324,32 @@ const FormInput = ({
   ...props
 }: React.ComponentProps<"input"> & {
   name: string;
-  value: string | undefined;
+  value: string;
   label: string;
   checkoutId: string;
   optional?: boolean;
   errors: Record<string, string>;
 }) => {
-  const [value, setValue] = React.useState<string>(initialValue ?? "");
+  const [value, setValue] = React.useState<string>(initialValue);
   const [debouncedValue] = useDebounce(value, 1000);
 
+  const isMounted = React.useRef(false);
+  const lastSentValue = React.useRef(initialValue);
+
   React.useEffect(() => {
-    updateCheckoutAction({
-      id: checkoutId,
-      name,
-      value: debouncedValue,
-    });
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    if (debouncedValue !== lastSentValue.current) {
+      updateCheckoutAction({
+        id: checkoutId,
+        name,
+        value: debouncedValue,
+      });
+      lastSentValue.current = debouncedValue;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue]);
 

@@ -12,6 +12,7 @@ import {
 } from "@/lib/error";
 import { ERROR_MESSAGES } from "@/constants/messages.constants";
 import { validateItems } from "./checkout.utils";
+import userRepository from "@/lib/db/repositories/user";
 
 export const createCheckoutAction = customerActionClient
   .metadata({
@@ -28,6 +29,17 @@ export const createCheckoutAction = customerActionClient
       });
     }
 
+    if (ctx.userId) {
+      const user = await userRepository.getUserById(ctx.userId);
+      parsedInput.shippingAddress = user?.shippingAddress;
+      parsedInput.customer = {
+        name: user?.name,
+        email: user?.email,
+        phone: user?.phone,
+      };
+    }
+
+    // todo: use shipping fee variable
     const result = await checkoutsRepository.createCheckout({
       ...parsedInput,
       userId: ctx.userId,
