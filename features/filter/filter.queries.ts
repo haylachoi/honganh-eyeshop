@@ -8,9 +8,7 @@ import { searchProducts } from "./filter.services";
 export const getFilterByCategorySlug = safeQuery
   .schema(categorySlugSchema)
   .query(async ({ parsedInput }) => {
-    console.log(parsedInput);
     const result = await next_cache.filters.getByCategorySlug(parsedInput);
-    console.log(result);
     return result;
   });
 

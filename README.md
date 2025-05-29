@@ -47,3 +47,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - make first Image in page priority to improve largest content paint
 - add href to main navigation
+- add cron: update typesense data
+- nginx: compress brotti
+- change hero image to webp

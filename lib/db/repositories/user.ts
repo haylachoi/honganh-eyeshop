@@ -81,9 +81,7 @@ const createUser = async (input: SignUpType) => {
 
 const createUserFromProvider = async (input: UserDbInputFromProviderType) => {
   await connectToDatabase();
-  console.log("create", input);
   const result = await User.create(input);
-  console.log("result", result);
   const user = userSchema.parse(result);
   return user;
 };

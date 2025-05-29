@@ -77,8 +77,7 @@ const CleanupInvalidCartItemsButton = ({
 
 const CreateFilterButton = ({ className }: { className: string }) => {
   const { execute, isPending } = useAction(createFilterAction, {
-    onSuccess: (result) => {
-      console.log(result);
+    onSuccess: () => {
       toast.success("Tạo bộ lọc thành công!");
     },
     onError: onActionError,

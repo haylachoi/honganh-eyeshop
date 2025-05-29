@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
 
-  console.log("ipn call");
   const vnp_SecureHash = queryParams["vnp_SecureHash"];
   delete queryParams["vnp_SecureHash"];
   delete queryParams["vnp_SecureHashType"];

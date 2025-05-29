@@ -23,16 +23,27 @@ services:
     volumes:
       - mongo-data:/data/db
 
-  cron:
+  nginx:
     build:
-      context: ./cron
-      dockerfile: Dockerfile.cron
-    environment:
-      - BASE_URL=http://app:3000
-    env_file:
-      - .env.production
+      context: ./nginx
+    ports:
+      - "80:80"
     depends_on:
       - app
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/brotli.conf:/etc/nginx/conf.d/brotli.conf:ro
+
+  # cron:
+  #   build:
+  #     context: ./cron
+  #     dockerfile: Dockerfile.cron
+  #   environment:
+  #     - BASE_URL=http://app:3000
+  #   env_file:
+  #     - .env.production
+  #   depends_on:
+  #     - app
 
 volumes:
   mongo-data:
