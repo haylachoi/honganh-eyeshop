@@ -1,5 +1,4 @@
 import React from "react";
-import { NavigationMenu } from "./header-navigation";
 import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import { CartButton } from "./cart-button";
 import UserButton from "../user-button";
 import SearchBox from "./search-box";
 import Image from "next/image";
+import { MainNavigationProvider } from "./main-navigation-provider";
 
 const TopHeader = ({ className }: { className?: string }) => {
   return (
@@ -28,7 +28,7 @@ const TopHeader = ({ className }: { className?: string }) => {
             className="hidden"
           />
           <div className="max-lg:bg-background overflow-y-auto">
-            <NavigationMenu className="max-lg:container h-full" />
+            <MainNavigationProvider />
           </div>
           <label
             htmlFor="header-navigation-trigger"

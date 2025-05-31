@@ -178,7 +178,12 @@ const BlogUpdateForm = ({
           name="tags"
           render={({ field }) => (
             <FormItem className="">
-              <FormLabel>Tags</FormLabel>
+              <FormLabel>
+                Tags{" "}
+                <span className="font-normal">
+                  (tag [nav] sẽ được hiển thị trên thanh điều hướng)
+                </span>
+              </FormLabel>
               <FormControl>
                 <TagInput
                   value={field.value}

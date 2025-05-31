@@ -1,110 +1,23 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/custom-ui/accordion";
-import { FILTER_KEYWORDS } from "@/constants";
-import { ENDPOINTS } from "@/constants/endpoints.constants";
-import { cn, getLink } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-type SubLinkType = {
-  title: string;
-  links: { title: string; href: string }[];
-};
-
-type SubImageLinkType = {
-  title: string;
-  image: string;
-  href: string;
-};
-type LinkType = {
-  title: string;
-  contents: (SubLinkType | SubImageLinkType)[];
-};
-const links: LinkType[] = [
-  {
-    title: "Kính mắt",
-    contents: [
-      {
-        title: "Mua ngay",
-        links: [
-          {
-            title: "Kính nam",
-            href: getLink.search({
-              queries: [{ key: "gender", value: "nam" }],
-            }),
-          },
-          {
-            title: "Kính nữ",
-            href: getLink.search({
-              queries: [{ key: "gender", value: "nu" }],
-            }),
-          },
-        ],
-      },
-      {
-        title: "Nổi bật",
-        links: [
-          {
-            title: "Phổ biến",
-            href: getLink.search({
-              queries: [{ key: "tag", value: "trending" }],
-            }),
-          },
-          {
-            title: "Giảm giá",
-            href: getLink.search({
-              queries: [{ key: FILTER_KEYWORDS.sale, value: "1" }],
-            }),
-          },
-          {
-            title: "Sắp về",
-            href: getLink.search({
-              queries: [{ key: "tag", value: "new-arrival" }],
-            }),
-          },
-        ],
-      },
-      {
-        title: "Hot",
-        image: "/navigation/cheap-glasses.webp",
-        href: getLink.search({
-          queries: [{ key: "tag", value: "deal-hot" }],
-        }),
-      },
-    ],
-  },
-  {
-    title: "Xem thêm",
-    contents: [
-      {
-        title: "Bài viết",
-        links: [{ title: "", href: "/" }],
-      },
-      {
-        title: "Hướng dẫn",
-        links: [
-          {
-            title: "Hệ thống cửa hàng",
-            href: `${ENDPOINTS.SUPPORT.STORES}`,
-          },
-        ],
-      },
-      {
-        title: "Hỗ trợ",
-        links: [
-          { title: "Về chúng tôi", href: `${ENDPOINTS.SUPPORT.ABOUT_US}` },
-          { title: "Liên hệ", href: `${ENDPOINTS.SUPPORT.CONTACT}` },
-        ],
-      },
-    ],
-  },
-];
-export const NavigationMenu = ({ className }: { className?: string }) => {
+import { LinkType } from "./main-navigation-provider";
+export const MainNavigation = ({
+  className,
+  links,
+}: {
+  className?: string;
+  links: LinkType[];
+}) => {
   return (
     <nav className={cn("w-full", className)}>
       <Accordion className="w-full lg:flex gap-4">

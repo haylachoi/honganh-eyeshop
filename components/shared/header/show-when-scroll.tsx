@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import TopHeader from "./top-header";
 
-export const ShowWhenScroll = () => {
+export const ShowWhenScroll = ({ children }: { children: React.ReactNode }) => {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollTop = useRef(0);
   const visibleRef = useRef(true); // lưu giá trị hiện tại
@@ -29,12 +28,13 @@ export const ShowWhenScroll = () => {
 
   return (
     <>
-      <TopHeader
+      <div
         className={`fixed top-0 left-0 w-full z-[1000] transition-transform duration-300 ease-in-out will-change-transform ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
-      />
-      <div className="h-[48px]" />
+      >
+        {children}
+      </div>
     </>
   );
 };
