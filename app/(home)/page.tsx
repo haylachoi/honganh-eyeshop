@@ -1,17 +1,18 @@
 import React, { Suspense } from "react";
-import Trending from "./_components/trending";
-import TopProducts from "./_components/top-products";
-import NewArrival from "./_components/new-arrival";
-import RecentBlog from "./_components/recent-blogs";
-import { APP_NAME, BASE_URL } from "@/constants";
-import { getFullLink } from "@/lib/utils";
 import { CustomerTestimonials } from "./_components/customer-testimonials";
 import Hero from "./_components/hero";
+import { APP_NAME, BASE_URL } from "@/constants";
+import { getFullLink } from "@/lib/utils";
 import { LoadingIndicator } from "@/components/shared/loading-indicator";
 import { getSettings } from "@/features/settings/settings.services";
+import dynamic from "next/dynamic";
+
+const Trending = dynamic(() => import("./_components/trending"));
+const TopProducts = dynamic(() => import("./_components/top-products"));
+const NewArrival = dynamic(() => import("./_components/new-arrival"));
+const RecentBlog = dynamic(() => import("./_components/recent-blogs"));
 
 const sections = [
-  Hero,
   Trending,
   TopProducts,
   NewArrival,
@@ -73,6 +74,7 @@ export const generateMetadata = async () => {
 const HomePage = () => {
   return (
     <div className="space-y-12">
+      <Hero />
       {sections.map((Section, index) => (
         <Suspense key={index} fallback={<LoadingIndicator />}>
           <Section />

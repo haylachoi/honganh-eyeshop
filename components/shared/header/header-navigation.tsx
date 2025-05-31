@@ -187,7 +187,7 @@ export const NavigationMenu = ({ className }: { className?: string }) => {
                           className="w-full h-auto max-h-[200px] object-cover object-center"
                           src={content.image}
                           alt=""
-                          width={600}
+                          width={400}
                           height={200}
                         />
                         <div className="text-lg font-medium flex justify-center items-center gap-4">

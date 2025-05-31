@@ -14,20 +14,17 @@ export const FloatingSupportBtn = async () => {
       {siteSettings?.socialLinks
         .filter((link) => link.url !== "" && link.icon !== "")
         .map((link) => (
-          <Link
-            key={link.name}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={link.icon}
-              alt={link.name}
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-          </Link>
+          <li key={link.name}>
+            <Link href={link.url} target="_blank" rel="noopener noreferrer">
+              <Image
+                src={link.icon}
+                alt={link.name}
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+            </Link>
+          </li>
         ))}
     </ul>
   );

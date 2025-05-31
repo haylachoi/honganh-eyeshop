@@ -1,16 +1,15 @@
 import { MoveRightIcon } from "lucide-react";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Benefit } from "@/components/shared/benefit";
 import { getSettings } from "@/features/settings/settings.services";
 import { ENDPOINTS } from "@/constants/endpoints.constants";
+import Image from "next/image";
 
 const Hero = async () => {
   return (
     <div className="bg-secondary max-md:px-[2px]">
-      <Suspense fallback={<div></div>}>
-        <HeroProvider />
-      </Suspense>
+      <HeroProvider />
       <div className="w-full">
         <Suspense fallback={<div></div>}>
           <Benefit />
@@ -133,9 +132,18 @@ const HeroProvider = async () => {
     </div>
   );
 };
-const HeroDefault = async () => {
+const HeroDefault = () => {
   return (
-    <div className="bg-[url('/home/hero-image.webp')] bg-cover bg-center bg-no-repeat max-h-[700px] aspect-square mx-auto relative">
+    <div className="max-h-[700px] aspect-square mx-auto relative">
+      <Image
+        src="/home/hero-image.webp"
+        alt="Hero Image"
+        fill
+        sizes="(max-width: 700px) 100vw, 700px"
+        className="object-cover object-center"
+        priority
+        fetchPriority="high"
+      />
       <div className="lg:block uppercase text-4xl md:text-6xl text-primary font-bold absolute top-1/3 lg:top-2/3  lg:-right-1/5 xl:-right-1/3">
         Thoải mái
       </div>

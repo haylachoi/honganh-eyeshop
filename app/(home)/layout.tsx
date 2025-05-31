@@ -1,6 +1,6 @@
+import Header from "@/components/shared/header";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Footer from "@/components/shared/footer";
-import Header from "@/components/shared/header";
 import { FloatingSupportBtn } from "@/components/shared/floating-support-btn";
 import { Suspense } from "react";
 
