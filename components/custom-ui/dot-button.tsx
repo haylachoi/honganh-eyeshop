@@ -14,14 +14,14 @@ const CarouselDotButton = ({
   onDotButtonClick,
 }: Props) => {
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div className={cn("flex items-center gap-4", className)}>
       {Array.from({ length: count }, (_, i) => i).map((n) => (
         <button
           key={n}
           onClick={() => onDotButtonClick(n)}
           aria-label={`slide ${n + 1}`}
           className={cn(
-            "size-[10px] bg-primary opacity-50 transition-all cursor-pointer",
+            "size-[16px] bg-primary opacity-50 transition-all cursor-pointer",
             current === n &&
               "scale-150 rotate-45 opacity-100 cursor-not-allowed",
           )}

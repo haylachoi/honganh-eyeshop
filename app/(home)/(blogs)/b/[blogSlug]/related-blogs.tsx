@@ -14,6 +14,7 @@ export const RelatedBlogs = ({ blogs }: { blogs: BlogType[] }) => {
           <Blogcard blog={blog} />
         </div>
       )}
+      isDotButtonVisible={{ desktop: true, mobile: false }}
     />
   );
 };

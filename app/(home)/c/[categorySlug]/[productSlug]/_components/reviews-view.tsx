@@ -10,7 +10,7 @@ export const ReviewsView = ({ reviews }: { reviews: ReviewType[] }) => {
   return (
     <ul className="border border-l-8 border-primary bg-background">
       {!reviews.length && (
-        <p className="w-full py-2 text-center">Chưa có bình luận nào</p>
+        <li className="w-full py-2 text-center">Chưa có bình luận nào</li>
       )}
       {reviews
         .filter((review) => !!review.comment)

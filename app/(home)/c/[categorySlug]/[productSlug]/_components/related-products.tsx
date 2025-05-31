@@ -19,7 +19,7 @@ export const RelatedProductsView = ({
         items={products}
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
         render={(product) => <ProductPreviewCard product={product} />}
-        // isDotButtonVisible={{ desktop: true, mobile: false }}
+        isDotButtonVisible={{ desktop: true, mobile: false }}
       />
     </div>
   );

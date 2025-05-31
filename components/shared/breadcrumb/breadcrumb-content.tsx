@@ -1,5 +1,6 @@
 "use client";
 
+import { ENDPOINTS } from "@/constants/endpoints.constants";
 import { House } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,7 +10,7 @@ function generateBreadcrumbs(
   breadcrumbsPath: Record<string, { label: string; href: string }>,
 ) {
   const breadcrumbs: { label: React.ReactNode; href: string }[] = [
-    { label: <House />, href: "/" },
+    { label: <House />, href: ENDPOINTS.HOME },
   ];
 
   const segments = pathname.split("/").filter(Boolean); // ignore empty
@@ -43,7 +44,11 @@ export const BreadcrumbContent = ({
             key={crumb.href}
             className="not-last:after:content-['>'] flex items-center gap-1"
           >
-            <Link href={crumb.href} className="hover:underline">
+            <Link
+              href={crumb.href}
+              aria-label={crumb.href === ENDPOINTS.HOME ? "Home" : undefined}
+              className="hover:underline"
+            >
               {crumb.label}
             </Link>
           </li>

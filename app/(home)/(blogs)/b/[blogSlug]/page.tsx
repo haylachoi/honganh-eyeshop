@@ -49,7 +49,7 @@ export const generateMetadata = async ({
 
   return {
     title: blog.title,
-    description: blog.description,
+    description: blog.description || "Blog của hồng Anh",
     robots: {
       index: true,
       follow: true,

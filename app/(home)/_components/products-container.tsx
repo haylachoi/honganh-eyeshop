@@ -17,7 +17,9 @@ export const ProductsContainer = ({
     return (
       <ul className="grid grid-cols-2 gap-2">
         {products.map((product) => (
-          <ProductPreviewCard product={product} key={product.id} />
+          <li key={product.id}>
+            <ProductPreviewCard product={product} />
+          </li>
         ))}
       </ul>
     );
