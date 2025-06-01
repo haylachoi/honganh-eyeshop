@@ -13,10 +13,7 @@ const TopHeader = ({ className }: { className?: string }) => {
   return (
     <div
       id="top-header"
-      className={cn(
-        "h-[48px] w-full  bg-background border-b border-input",
-        className,
-      )}
+      className={cn("h-[48px] w-full bg-background", className)}
     >
       <div className="container h-full flex items-center justify-between gap-4">
         <Logo />
@@ -27,7 +24,7 @@ const TopHeader = ({ className }: { className?: string }) => {
             id="header-navigation-trigger"
             className="hidden"
           />
-          <div className="max-lg:bg-background overflow-y-auto">
+          <div className="max-lg:bg-background overflow-y-auto h-full">
             <MainNavigationProvider />
           </div>
           <label

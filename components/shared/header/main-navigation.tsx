@@ -19,8 +19,8 @@ export const MainNavigation = ({
   links: LinkType[];
 }) => {
   return (
-    <nav className={cn("w-full", className)}>
-      <Accordion className="w-full lg:flex gap-4">
+    <nav className={cn("size-full", className)}>
+      <Accordion className="size-full lg:flex gap-4">
         {/* overlay */}
         <div className="fixed z-0 bg-foreground inset-0 top-[48px] pointer-events-none opacity-0 lg:has-[~[data-accordion-active]:hover]:opacity-70 transition-all"></div>
         {links.map((mainlink) => (
