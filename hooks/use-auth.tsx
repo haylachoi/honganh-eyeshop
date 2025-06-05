@@ -5,29 +5,35 @@ import { useEffect } from "react";
 type AuthState = {
   user: SafeUserInfoFromSession | null;
   isLoading: boolean;
+  hasFetched: boolean;
+  isFetching: boolean;
   fetchUser: () => Promise<void>;
 };
 
-const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoading: true,
+  isFetching: false,
+  hasFetched: false,
   fetchUser: async () => {
-    set({ isLoading: true });
+    const { hasFetched, isFetching } = get();
+    if (hasFetched || isFetching) return;
+
+    set({ isFetching: true, isLoading: true });
+
     try {
       const res = await fetch("/api/auth");
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error("Failed");
 
       const data = await res.json();
       if (data.success) {
-        set({ user: data.user });
-        return;
+        set({ user: data.user, hasFetched: true });
       }
     } catch (e) {
-      console.error("Failed to fetch user", e);
+      console.error("fetch error", e);
+      set({ hasFetched: false });
     } finally {
-      set({ isLoading: false });
+      set({ isFetching: false, isLoading: false });
     }
   },
 }));
@@ -37,8 +43,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchUser]);
 
   return { user, isLoading };
 };
