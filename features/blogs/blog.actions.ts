@@ -186,7 +186,7 @@ export const updateBlogAction = modifyBlogActionClient
       },
     });
 
-    await deleteFile(deletedImages);
+    await deleteFile(deletedImages.filter((image) => image.startsWith("/")));
 
     revalidateTag(blogCacheTags);
     return result;
@@ -208,7 +208,7 @@ export const deleteBlogAction = deleteBlogActionClient
     const deletedImages = blogs.flatMap((blog) => blog.images);
     deletedImages.push(...blogs.map((blog) => blog.wallImage));
 
-    deleteFile(deletedImages);
+    deleteFile(deletedImages.filter((image) => image.startsWith("/")));
     revalidateTag(blogCacheTags);
     return result;
   });

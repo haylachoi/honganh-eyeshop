@@ -78,7 +78,11 @@ export const createProductAction = createProductActionClient
       await productRepository.createProduct(input);
       revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
     } catch (error) {
-      deleteFile(newVariants.flatMap((variant) => variant.images));
+      deleteFile(
+        newVariants.flatMap((variant) =>
+          variant.images.filter((image) => image.startsWith("/")),
+        ),
+      );
       throw error;
     }
   });
@@ -129,7 +133,7 @@ export const updateProductAction = modifyProductActionClient
       (variant) => variant.deletedImages,
     );
     if (deletedImages.length > 0) {
-      await deleteFile(deletedImages);
+      await deleteFile(deletedImages.filter((image) => image.startsWith("/")));
     }
 
     revalidateTag(CACHE_CONFIG.PRODUCTS.ALL.TAGS[0]);
@@ -164,7 +168,9 @@ export const deleteProductAction = deleteProductActionClient
 
     await deleteFile(
       products.flatMap((product) =>
-        product.variants.flatMap((variant) => variant.images),
+        product.variants.flatMap((variant) =>
+          variant.images.filter((image) => image.startsWith("/")),
+        ),
       ),
     );
 
