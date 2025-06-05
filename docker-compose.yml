@@ -13,6 +13,8 @@ services:
       - .env.production
     depends_on:
       - mongo
+    volumes:
+      - app-build:/app # Mount build output vào volume chia sẻ
 
   mongo:
     image: mongo:latest
@@ -36,6 +38,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/brotli.conf:/etc/nginx/conf.d/brotli.conf:ro
       - ./nginx/default-location.conf:/etc/nginx/conf.d/default-location.conf:ro
+      - app-build:/app:ro # Nginx có thể đọc static file trong /app
 
   # cron:
   #   build:
@@ -50,3 +53,4 @@ services:
 
 volumes:
   mongo-data:
+  app-build:

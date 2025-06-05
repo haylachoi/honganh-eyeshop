@@ -50,3 +50,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - add cron: update typesense data
 - nginx: compress brotti
 - change hero image to webp
+- use http2 in nginx
+- use early hint in nginx

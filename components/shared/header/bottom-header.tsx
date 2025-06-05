@@ -12,6 +12,7 @@ const BottomHeader = () => {
           href={getLink.search({
             queries: [{ key: "tag", value: "deal-hot" }],
           })}
+          prefetch={false}
           className="flex items-center justify-start gap-2 group cursor-pointer"
         >
           <span>Hàng Hot</span>

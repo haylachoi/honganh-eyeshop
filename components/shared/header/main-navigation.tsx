@@ -56,6 +56,7 @@ export const MainNavigation = ({
                               <Link
                                 className="inline-block w-full"
                                 href={link.href}
+                                prefetch={false}
                                 // close nav bar when navigate
                                 onClick={() => {
                                   const trigger = document.getElementById(
@@ -87,6 +88,7 @@ export const MainNavigation = ({
                     <li key={content.title}>
                       <Link
                         href={content.href}
+                        prefetch={false}
                         onClick={() => {
                           const trigger = document.getElementById(
                             "header-navigation-trigger",
